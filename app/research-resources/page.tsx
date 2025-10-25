@@ -24,7 +24,7 @@ export default function ResearchResourcesPage() {
           {/* Document Card Template */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
             <div className="flex items-start gap-4">
-              <HiDocumentText className="text-4xl text-primary-600 flex-shrink-0" />
+              <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   AIM Motivation Framework - Comprehensive Foundation
@@ -49,7 +49,7 @@ export default function ResearchResourcesPage() {
           {/* Second Document */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
             <div className="flex items-start gap-4">
-              <HiDocumentText className="text-4xl text-primary-600 flex-shrink-0" />
+              <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   AIM Framework - Neuroscience Grounding
@@ -74,7 +74,7 @@ export default function ResearchResourcesPage() {
           {/* Third Document */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
             <div className="flex items-start gap-4">
-              <HiDocumentText className="text-4xl text-primary-600 flex-shrink-0" />
+              <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   AIM Framework - Cross-Domain Applications
@@ -99,7 +99,7 @@ export default function ResearchResourcesPage() {
           {/* Fourth Document */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
             <div className="flex items-start gap-4">
-              <HiDocumentText className="text-4xl text-primary-600 flex-shrink-0" />
+              <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   AIM Framework - Testable Predictions
