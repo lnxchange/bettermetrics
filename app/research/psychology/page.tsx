@@ -21,6 +21,24 @@ export default function PsychologyPage() {
         </div>
       </section>
 
+      {/* Hypothesis Status Banner */}
+      <div className="bg-amber-50 border-t-4 border-amber-400 p-6">
+        <div className="max-w-5xl mx-auto flex items-start gap-4">
+          <div className="text-3xl">⚠️</div>
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">
+              These are testable predictions, not established findings.
+            </h3>
+            <p className="text-gray-700">
+              We&apos;re seeking researchers to validate these hypotheses. 
+              <Link href="/research-resources" className="text-primary-600 hover:underline ml-2">
+                Access research materials →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
         
@@ -78,6 +96,59 @@ export default function PsychologyPage() {
               <p className="text-gray-600">
                 How mimetic desire can become pathological, leading to addiction and compulsive behaviors 
                 when social comparison becomes the primary motivational driver.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Novel Testable Predictions */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Novel Testable Predictions</h2>
+          
+          <div className="space-y-8">
+            <div className="border-l-4 border-primary-600 pl-4">
+              <h3 className="font-bold text-gray-900 mb-2">Prediction 4: Autonomy-Supportive Feedback Blocks I-to-M Drift</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>What AIM Uniquely Predicts:</strong> When intrinsically motivated activities become PUBLIC (visible rankings, social comparison), motivation drifts from I to M <strong>UNLESS</strong> autonomy-supportive feedback is provided. The drift is not inevitable—it&apos;s contextual and reversible.
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Why This Is Novel:</strong> SDT shows autonomy-support preserves intrinsic motivation. AIM predicts the MECHANISM: autonomy-support prevents wₘ from inflating. Can test whether <strong>private competence feedback</strong> preserves I even in competitive contexts.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Test Design:</strong> Students engaged in intrinsically interesting task. Condition A: Public leaderboard + controlling language. Condition B: Public leaderboard + autonomy-supportive feedback. Condition C: Private feedback only (control).
+                  <br/><strong>Required:</strong> Educational institution partnership, IRB approval, 100+ student participants
+                </div>
+                <div>
+                  <strong>Timeline:</strong> 6-week study
+                  <br/><strong>Status:</strong> Seeking education research partnership
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Falsification:</strong> If Condition B performs like Condition A, autonomy-support doesn&apos;t block M
+              </p>
+            </div>
+            
+            <div className="border-l-4 border-primary-600 pl-4">
+              <h3 className="font-bold text-gray-900 mb-2">Prediction 5: Mimetic Rivalry Produces Distinctive Escalation Pattern</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>What AIM Uniquely Predicts:</strong> In mimetic rivalry (two people wanting the same scarce object), desire INCREASES when the rival&apos;s interest is visible, even when the object&apos;s functional value is constant. This escalation is <strong>pre-conscious</strong> and produces distinctive bidding/pursuit patterns.
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Why This Is Novel:</strong> Game theory predicts competitive bidding but not ESCALATING desire. AIM predicts the desire itself intensifies through mirror-neuron observation. Can measure whether <strong>hiding rival bids</strong> reduces final prices.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Test Design:</strong> Auction format for non-essential goods. Condition A: Visible rival bids (standard eBay-style). Condition B: Blind bidding (rivals&apos; bids hidden until end).
+                  <br/><strong>Required:</strong> Behavioral lab, 200+ participants
+                </div>
+                <div>
+                  <strong>Timeline:</strong> Single-session experiment
+                  <br/><strong>Status:</strong> Ready for behavioral lab
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Falsification:</strong> If blind vs visible makes no difference, mimetic amplification claim fails
               </p>
             </div>
           </div>

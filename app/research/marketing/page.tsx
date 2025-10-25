@@ -21,6 +21,24 @@ export default function MarketingPage() {
         </div>
       </section>
 
+      {/* Hypothesis Status Banner */}
+      <div className="bg-amber-50 border-t-4 border-amber-400 p-6">
+        <div className="max-w-5xl mx-auto flex items-start gap-4">
+          <div className="text-3xl">⚠️</div>
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">
+              These are testable predictions, not established findings.
+            </h3>
+            <p className="text-gray-700">
+              We&apos;re seeking researchers to validate these hypotheses. 
+              <Link href="/research-resources" className="text-primary-600 hover:underline ml-2">
+                Access research materials →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
         

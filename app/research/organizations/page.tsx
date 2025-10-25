@@ -21,6 +21,24 @@ export default function OrganizationsPage() {
         </div>
       </section>
 
+      {/* Hypothesis Status Banner */}
+      <div className="bg-amber-50 border-t-4 border-amber-400 p-6">
+        <div className="max-w-5xl mx-auto flex items-start gap-4">
+          <div className="text-3xl">⚠️</div>
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">
+              These are testable predictions, not established findings.
+            </h3>
+            <p className="text-gray-700">
+              We&apos;re seeking researchers to validate these hypotheses. 
+              <Link href="/research-resources" className="text-primary-600 hover:underline ml-2">
+                Access research materials →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
         
@@ -78,6 +96,36 @@ export default function OrganizationsPage() {
               <p className="text-gray-600">
                 How organizations can shift from status tournaments driven by mimetic desire 
                 to mission-driven work supported by intrinsic motivation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Novel Testable Predictions */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Novel Testable Predictions</h2>
+          
+          <div className="space-y-8">
+            <div className="border-l-4 border-primary-600 pl-4">
+              <h3 className="font-bold text-gray-900 mb-2">Prediction 11: Diversified Recognition Prevents Mimetic Convergence on Single Status Marker</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>What AIM Uniquely Predicts:</strong> When organizations recognize achievements across <strong>multiple dimensions</strong> (creativity, collaboration, technical skill, mentorship), mimetic rivalry decreases because employees can&apos;t converge on a SINGLE scarce marker. This reduces wₘ-driven competition and preserves wᵢ.
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Why This Is Novel:</strong> Management research shows &quot;recognition matters&quot; but doesn&apos;t explain rivalry dynamics. AIM predicts that <strong>single metrics</strong> (sales numbers, publications) create mimetic tournaments. Diversification disperses mimetic targets, reducing rivalry.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Test Design:</strong> Compare teams with different recognition systems: Single-metric (ranked by one KPI) vs Multi-metric (recognized across 5-7 different dimensions). Track employee retention, reported burnout, innovation metrics, political behavior.
+                  <br/><strong>Required:</strong> HR analytics partnership, 12-month organizational tracking
+                </div>
+                <div>
+                  <strong>Timeline:</strong> 12-month organizational tracking
+                  <br/><strong>Status:</strong> Seeking HR analytics partnership
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Falsification:</strong> If single-metric performs better, mimetic rivalry mechanism fails
               </p>
             </div>
           </div>

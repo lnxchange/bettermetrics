@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 export const metadata: Metadata = {
   title: 'About the AIM Framework',
@@ -18,6 +19,36 @@ export default function AboutPage() {
           <p className="text-xl text-gray-600">
             A comprehensive foundation for understanding how people choose what to pursue
           </p>
+        </div>
+      </section>
+
+      {/* Hypothesis Statement */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-amber-50 p-8 rounded-xl border-2 border-amber-200">
+          <div className="flex justify-center mb-4">
+            <StatusBadge variant="pre-empirical" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+            The AIM Hypothesis: A Novel Theoretical Framework
+          </h2>
+          <div className="prose prose-lg max-w-none">
+            <p>
+              The AIM Motivation Framework is a <strong>proposed theoretical synthesis</strong> that 
+              distinguishes three neural sources of human motivation. It has <strong>not yet been empirically 
+              validated</strong> through peer-reviewed research, though it synthesizes established findings 
+              from neuroscience, behavioral economics, and psychology.
+            </p>
+            <div className="grid md:grid-cols-2 gap-4 my-6 text-sm">
+              <div>
+                <strong>Status:</strong> Pre-empirical validation (October 2025)<br/>
+                <strong>Grounding:</strong> Theoretical synthesis of existing neuroscience literature
+              </div>
+              <div>
+                <strong>Seeking:</strong> Research collaborators for empirical testing<br/>
+                <strong>Falsifiability:</strong> See testable predictions below
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

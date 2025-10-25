@@ -21,6 +21,24 @@ export default function EducationPage() {
         </div>
       </section>
 
+      {/* Hypothesis Status Banner */}
+      <div className="bg-amber-50 border-t-4 border-amber-400 p-6">
+        <div className="max-w-5xl mx-auto flex items-start gap-4">
+          <div className="text-3xl">⚠️</div>
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">
+              These are testable predictions, not established findings.
+            </h3>
+            <p className="text-gray-700">
+              We&apos;re seeking researchers to validate these hypotheses. 
+              <Link href="/research-resources" className="text-primary-600 hover:underline ml-2">
+                Access research materials →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
         
@@ -78,6 +96,36 @@ export default function EducationPage() {
               <p className="text-gray-600">
                 How academic competition becomes a status game through mimetic desire, 
                 leading to both achievement and harmful comparison patterns.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Novel Testable Predictions */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Novel Testable Predictions</h2>
+          
+          <div className="space-y-8">
+            <div className="border-l-4 border-primary-600 pl-4">
+              <h3 className="font-bold text-gray-900 mb-2">Prediction 10: Private-Then-Public Feedback Sequence Preserves Intrinsic Motivation</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>What AIM Uniquely Predicts:</strong> The SEQUENCE of feedback matters: giving private competence feedback BEFORE any public/comparative feedback will preserve wᵢ, while public-first feedback triggers I-to-M drift.
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Why This Is Novel:</strong> Educators know &quot;reduce social comparison&quot; but not HOW to sequence feedback. AIM predicts that once wᵢ is established privately, it&apos;s more resistant to mimetic pressure. Tests whether timing of social information affects motivation source.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Test Design:</strong> Students complete challenging task. Condition A: Private competence feedback → 1 week later → class ranking revealed. Condition B: Class ranking revealed → private feedback. Condition C: Private feedback only (control).
+                  <br/><strong>Required:</strong> Education partnership, 6-week classroom study
+                </div>
+                <div>
+                  <strong>Timeline:</strong> 6-week classroom study
+                  <br/><strong>Status:</strong> Ready for education partnership
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Falsification:</strong> If sequence doesn&apos;t matter, timing mechanism fails
               </p>
             </div>
           </div>

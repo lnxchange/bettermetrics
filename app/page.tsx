@@ -2,6 +2,7 @@ import { nanoid } from '@/lib/utils'
 import { Chat } from '@/components/chat'
 import Link from 'next/link'
 import { HiArrowRight, HiBeaker, HiLightBulb, HiAcademicCap } from 'react-icons/hi'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 export const runtime = 'edge'
 
@@ -64,28 +65,73 @@ export default function IndexPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Status Badge */}
+          <div className="flex justify-center mb-6">
+            <StatusBadge variant="hypothesis" />
+          </div>
+          
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Understanding Human Motivation: A Scientific Framework for Better Decisions
+              A New Hypothesis for Understanding Human Motivation
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              The AIM Motivation Framework reveals why we want what we want—distinguishing three neural sources 
-              (Appetites, Intrinsic Motivation, and Mimetic Desire) to transform how we approach economics, 
-              psychology, health, law, and policy.
+              The AIM Framework proposes three distinct neural sources—Appetites, Intrinsic Motivation, 
+              and Mimetic Desire—that drive human choice. We&apos;re seeking researchers to test and validate 
+              this promising theoretical framework.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
-                href="/about"
+                href="/research-resources"
                 className="px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition inline-flex items-center justify-center"
               >
-                Explore the Framework <HiArrowRight className="ml-2" />
+                For Researchers: Test This Hypothesis <HiArrowRight className="ml-2" />
               </Link>
               <Link 
-                href="/understand-your-motivations" 
+                href="/understand-yourself" 
                 className="px-8 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition inline-flex items-center justify-center"
               >
-                Understand Your Motivations <HiArrowRight className="ml-2" />
+                For Everyone: Understand Your Motivations <HiArrowRight className="ml-2" />
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The Hypothesis Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white p-8 rounded-xl border-2 border-primary-200">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">The AIM Hypothesis</h2>
+            <p className="text-lg text-gray-700 mb-6">
+              We propose that human motivation arises from three functionally distinct neural sources:
+            </p>
+            {/* Three source boxes */}
+            <div className="space-y-4 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-3xl">🍽️</span>
+                <div>
+                  <strong>Appetites (A)</strong> - Homeostatic needs (hunger, thirst, fatigue)
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-3xl">💡</span>
+                <div>
+                  <strong>Intrinsic Motivation (I)</strong> - Self-endorsed activities valued for their own sake
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-3xl">👥</span>
+                <div>
+                  <strong>Mimetic Desire (M)</strong> - Desires shaped by observing others and social norms
+                </div>
+              </div>
+            </div>
+            <div className="bg-amber-50 p-6 rounded-lg border border-amber-200">
+              <p className="font-semibold text-amber-900 mb-2">Status: Untested theoretical framework</p>
+              <p className="text-gray-700">
+                <strong>Grounding:</strong> Synthesizes neuroscience, behavioral economics, and mimetic theory<br/>
+                <strong>Seeking:</strong> Empirical validation across disciplines
+              </p>
             </div>
           </div>
         </div>
@@ -145,7 +191,7 @@ export default function IndexPage() {
       {/* Why AIM Matters */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">Why AIM Matters</h2>
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">If Validated, AIM Could...</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -154,7 +200,7 @@ export default function IndexPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Better Predictions</h3>
               <p className="text-gray-600">
-                Explains phenomena from inflation to rivalry. Generates precise, testable predictions 
+                Could explain phenomena from inflation to rivalry. Would generate precise, testable predictions 
                 that differentiate AIM from existing frameworks.
               </p>
             </div>
@@ -166,7 +212,7 @@ export default function IndexPage() {
               <h3 className="text-xl font-bold text-gray-900 mb-3">Practical Applications</h3>
               <p className="text-gray-600">
                 From designing fairer contracts to preventing domestic violence, from mental health 
-                to organizational culture—AIM provides actionable levers.
+                to organizational culture—AIM could provide actionable levers.
               </p>
             </div>
 
@@ -176,8 +222,8 @@ export default function IndexPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Scientific Rigor</h3>
               <p className="text-gray-600">
-                Grounded in neuroscience, validated by behavioral evidence, designed to be testable 
-                and falsifiable across disciplines.
+                Grounded in neuroscience, designed to be testable and falsifiable across disciplines. 
+                Seeking validation through empirical research.
               </p>
             </div>
           </div>

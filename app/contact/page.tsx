@@ -13,9 +13,26 @@ export default function ContactPage() {
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Get in Touch</h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 mb-8">
             Whether you&apos;re a researcher, practitioner, organization, or journalist—we&apos;d love to hear from you.
           </p>
+          
+          {/* AIM Chat Recommendation */}
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-8">
+            <h2 className="text-2xl font-bold text-blue-900 mb-3">Have Questions About AIM?</h2>
+            <p className="text-blue-800 mb-4">
+              For questions about the AIM Framework, testable predictions, or research applications, 
+              we encourage you to try our <strong>AIM Chat</strong> AI assistant first. It has access 
+              to the latest versions of our research documentation and can provide detailed answers 
+              about the framework&apos;s theoretical foundations and practical applications.
+            </p>
+            <Link 
+              href="/chat"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Try AIM Chat →
+            </Link>
+          </div>
         </div>
       </section>
 
