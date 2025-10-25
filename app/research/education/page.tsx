@@ -138,7 +138,7 @@ export default function EducationPage() {
         <section className="bg-primary-50 p-8 rounded-xl border-2 border-primary-200 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in Educational Research?</h2>
           <p className="text-gray-700 mb-6">
-            We're seeking educational researchers to test AIM predictions and explore applications in your field.
+            We&apos;re seeking educational researchers to test AIM predictions and explore applications in your field.
           </p>
           <Link 
             href="/contact"

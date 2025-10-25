@@ -222,7 +222,7 @@ export default function IndexPage() {
             Ask Our AI About the AIM Framework
           </h2>
           <p className="text-xl mb-8 text-primary-100">
-            Have questions? Our AI chatbot can answer questions about AIM's applications, 
+            Have questions? Our AI chatbot can answer questions about AIM&apos;s applications, 
             predictions, and research across all disciplines.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -230,7 +230,7 @@ export default function IndexPage() {
               href="/chat"
               className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition"
             >
-              Try asking: "How does AIM explain status goods?" (Sign in required)
+              Try asking: &ldquo;How does AIM explain status goods?&rdquo; (Sign in required)
             </Link>
           </div>
         </div>

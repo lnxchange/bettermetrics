@@ -27,12 +27,12 @@ export default function AboutPage() {
         <p>
           For decades, researchers across economics, psychology, and neuroscience have struggled 
           with a fundamental question: Why do we want what we want? Traditional models treat 
-          "preference" or "desire" as a single, undifferentiated force. But the reality is far 
+          &ldquo;preference&rdquo; or &ldquo;desire&rdquo; as a single, undifferentiated force. But the reality is far 
           more nuanced.
         </p>
         <p>
           The AIM Motivation Framework provides the answer by distinguishing three distinct neural 
-          sources of motivation that integrate through the brain's common-currency valuation system.
+          sources of motivation that integrate through the brain&apos;s common-currency valuation system.
         </p>
 
         <h2>The Three Sources in Detail</h2>
@@ -108,7 +108,7 @@ export default function AboutPage() {
             Mimetic Desire (M): Socially Transmitted Wanting
           </h3>
           <p className="text-gray-700 mb-4">
-            Desires sparked by observing others' goal-directed actions, social opinions, prestige 
+            Desires sparked by observing others&apos; goal-directed actions, social opinions, prestige 
             cues, and status signals. You want something because you see others wanting it.
           </p>
           <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -116,7 +116,7 @@ export default function AboutPage() {
               <h4 className="font-semibold text-gray-900 mb-2">Key Characteristics:</h4>
               <ul className="space-y-1 text-gray-600">
                 <li>• Observability-dependent</li>
-                <li>• Pre-conscious (don't remember source)</li>
+                <li>• Pre-conscious (don&apos;t remember source)</li>
                 <li>• Rivalry-prone</li>
                 <li>• Visibility-sensitive</li>
               </ul>
@@ -130,16 +130,16 @@ export default function AboutPage() {
           </div>
           <p className="text-gray-700 mt-4 font-semibold">
             Why it matters: Mimetic desire explains herding, bubbles, social anxiety, and status 
-            competition. It's not inherently bad—it enables culture and learning—but becomes 
+            competition. It&apos;s not inherently bad—it enables culture and learning—but becomes 
             problematic when it creates rivalry or overrides intrinsic aims.
           </p>
         </div>
 
         <h2>The Common-Currency Integration System</h2>
         <p>
-          The brain doesn't maintain separate decision systems for each source. Instead, the 
+          The brain doesn&apos;t maintain separate decision systems for each source. Instead, the 
           <strong> ventromedial prefrontal cortex (vmPFC)</strong> and <strong>ventral striatum (VS)</strong> 
-          compute a unified "common currency" of subjective value that integrates A, I, and M into a 
+          compute a unified &ldquo;common currency&rdquo; of subjective value that integrates A, I, and M into a 
           single priority signal used for choice.
         </p>
         
@@ -171,9 +171,9 @@ export default function AboutPage() {
                 prevent conflation—the same rigor required for good contracts.
               </p>
               <p className="text-gray-700 italic">
-                "I wasn't trying to invent new data or observations. All the neuroscience, all the 
+                &ldquo;I wasn&apos;t trying to invent new data or observations. All the neuroscience, all the 
                 behavioral evidence was already there. I just needed to put better boundaries around 
-                the categories of motivation. Once I did that, suddenly everything clicked."
+                the categories of motivation. Once I did that, suddenly everything clicked.&rdquo;
               </p>
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function AboutPage() {
         <div className="not-prose mt-12 p-8 bg-primary-50 rounded-xl border-2 border-primary-200 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Join the Research</h2>
           <p className="text-gray-700 mb-6">
-            AIM is a living framework. We're actively seeking researchers to test predictions, 
+            AIM is a living framework. We&apos;re actively seeking researchers to test predictions, 
             practitioners to apply interventions, and organizations to pilot system redesigns.
           </p>
           <Link 

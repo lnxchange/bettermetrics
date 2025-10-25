@@ -93,7 +93,7 @@ export default function UnderstandYourMotivationsPage() {
               <ul className="space-y-3 text-gray-600">
                 <li>• What activities do you do purely for enjoyment?</li>
                 <li>• When do you feel most energized and focused?</li>
-                <li>• What desires arise from seeing others' choices?</li>
+                <li>• What desires arise from seeing others&apos; choices?</li>
                 <li>• How do your motivations change in different contexts?</li>
               </ul>
             </div>
@@ -126,7 +126,7 @@ export default function UnderstandYourMotivationsPage() {
                 <li>• Recognize when someone is driven by different sources</li>
                 <li>• Adapt your communication style accordingly</li>
                 <li>• Avoid triggering unnecessary rivalry</li>
-                <li>• Support others' intrinsic motivations</li>
+                <li>• Support others&apos; intrinsic motivations</li>
               </ul>
             </div>
             
@@ -156,7 +156,7 @@ export default function UnderstandYourMotivationsPage() {
             Ask Our AI About Your Motivations
           </Link>
           <p className="text-sm text-gray-600 mt-4">
-            (Requires account - you'll be prompted to sign up or log in)
+            (Requires account - you&apos;ll be prompted to sign up or log in)
           </p>
         </section>
       </article>

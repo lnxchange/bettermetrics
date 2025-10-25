@@ -55,7 +55,7 @@ export function LoginForm({
     return error
   }
 
-  const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
 
