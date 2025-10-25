@@ -11,10 +11,18 @@ import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+    default: 'Use Better Metrics | AIM Motivation Framework',
+    template: '%s | Use Better Metrics'
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
+  description: 'The AIM Motivation Framework distinguishes three neural sources—Appetites, Intrinsic Motivation, and Mimetic Desire—to transform understanding across economics, psychology, health, law, and policy.',
+  keywords: ['AIM Framework', 'motivation science', 'behavioral economics', 'intrinsic motivation', 'mimetic desire'],
+  authors: [{ name: 'Yule Guttenbeil' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.usebettermetrics.com',
+    siteName: 'Use Better Metrics',
+  },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' }
