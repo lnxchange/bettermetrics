@@ -15,13 +15,11 @@ export async function middleware(req: NextRequest) {
     data: { session }
   } = await supabase.auth.getSession()
 
-  // OPTIONAL: this forces users to be logged in to use the chatbot.
-  // If you want to allow anonymous users, simply remove the check below.
-  if (
-    !session &&
-    !req.url.includes('/sign-in') &&
-    !req.url.includes('/sign-up')
-  ) {
+  // Only require authentication for chat-related routes
+  const isChatRoute = req.url.includes('/chat') || req.url.includes('/api/chat')
+  const isAuthRoute = req.url.includes('/sign-in') || req.url.includes('/sign-up')
+  
+  if (isChatRoute && !session) {
     const redirectUrl = req.nextUrl.clone()
     redirectUrl.pathname = '/sign-in'
     redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)

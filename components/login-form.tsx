@@ -47,7 +47,7 @@ export function LoginForm({
     const { error, data } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${location.origin}/api/auth/callback` }
+      options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` }
     })
 
     if (!error && !data.session)
@@ -72,63 +72,55 @@ export function LoginForm({
   }
 
   return (
-    <div {...props}>
-      <form onSubmit={handleOnSubmit}>
-        <fieldset className="flex flex-col gap-y-4">
-          <div className="flex flex-col gap-y-1">
-            <Label>Email</Label>
-            <Input
-              name="email"
-              type="email"
-              value={formState.email}
-              onChange={e =>
-                setFormState(prev => ({
-                  ...prev,
-                  email: e.target.value
-                }))
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-y-1">
-            <Label>Password</Label>
-            <Input
-              name="password"
-              type="password"
-              value={formState.password}
-              onChange={e =>
-                setFormState(prev => ({
-                  ...prev,
-                  password: e.target.value
-                }))
-              }
-            />
-          </div>
-        </fieldset>
+    <form onSubmit={handleOnSubmit} {...props}>
+      <Label>Email</Label>
+      <Input
+        name="email"
+        type="email"
+        value={formState.email}
+        onChange={e =>
+          setFormState(prev => ({
+            ...prev,
+            email: e.target.value
+          }))
+        }
+      />
+      
+      <Label>Password</Label>
+      <Input
+        name="password"
+        type="password"
+        value={formState.password}
+        onChange={e =>
+          setFormState(prev => ({
+            ...prev,
+            password: e.target.value
+          }))
+        }
+      />
 
-        <div className="mt-4 flex items-center">
-          <Button disabled={isLoading}>
-            {isLoading && <IconSpinner className="mr-2 animate-spin" />}
-            {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
-          </Button>
-          <p className="ml-4">
-            {action === 'sign-in' ? (
-              <>
-                Don&apos;t have an account?{' '}
-                <Link href="/sign-up" className="font-medium">
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <Link href="/sign-in" className="font-medium">
-                  Sign In
-                </Link>
-              </>
-            )}
-          </p>
-        </div>
-      </form>
-    </div>
+      <Button disabled={isLoading}>
+        {isLoading && <IconSpinner className="mr-2 animate-spin" />}
+        {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
+      </Button>
+      
+      <p>
+        {action === 'sign-in' ? (
+          <>
+            Don&apos;t have an account?{' '}
+            <Link href="/sign-up" className="font-medium">
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <>
+            Already have an account?{' '}
+            <Link href="/sign-in" className="font-medium">
+              Sign In
+            </Link>
+          </>
+        )}
+      </p>
+    </form>
   )
 }

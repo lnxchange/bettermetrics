@@ -53,10 +53,30 @@ export async function Header() {
           )}
         </div>
       </div>
+      
+      {/* AIM Framework Navigation */}
+      <div className="hidden md:flex items-center space-x-6">
+        <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+          About AIM
+        </Link>
+        <Link href="/research" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+          Research
+        </Link>
+        <Link href="/understand-your-motivations" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+          Understand Your Motivations
+        </Link>
+        <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+          Contact
+        </Link>
+        <Link href="/chat" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+          Try Chat
+        </Link>
+      </div>
+      
       <div className="flex items-center justify-end space-x-2">
         <a
           target="_blank"
-          href="https://github.com/thorwebdev/vercel-ai-chatbot"
+          href="https://github.com/lnxchange/bettermetrics"
           rel="noopener noreferrer"
           className={cn(buttonVariants({ variant: 'outline' }))}
         >
@@ -64,13 +84,11 @@ export async function Header() {
           <span className="ml-2 hidden md:flex">GitHub</span>
         </a>
         <a
-          href="https://github.com/thorwebdev/vercel-ai-chatbot"
-          target="_blank"
+          href="/contact"
           className={cn(buttonVariants())}
         >
-          <IconVercel className="mr-2" />
-          <span className="hidden sm:block">Deploy to Vercel</span>
-          <span className="sm:hidden">Deploy</span>
+          <span className="hidden sm:block">Collaborate</span>
+          <span className="sm:hidden">Contact</span>
         </a>
       </div>
     </header>
