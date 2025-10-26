@@ -52,14 +52,18 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   return (
     <>
       {/* Framework Status Banner */}
-      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-gray-700">
-        <strong>Note:</strong> AIM is a theoretical hypothesis seeking validation. 
-        Responses reflect proposed predictions, not established findings. This AI has access to the latest research documentation.
-        <Link href="/research-resources" className="text-primary-600 hover:underline ml-2">
+      <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-gray-700">
+        <strong>Note:</strong> AIM is a theoretical hypothesis seeking
+        validation. Responses reflect proposed predictions, not established
+        findings. This AI has access to the latest research documentation.
+        <Link
+          href="/research-resources"
+          className="ml-2 text-primary-600 hover:underline"
+        >
           Learn more →
         </Link>
       </div>
-      
+
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
         {messages.length ? (
           <>

@@ -3,7 +3,13 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -15,7 +21,10 @@ export default function ResearchDocumentsPage() {
   })
   const [batchFiles, setBatchFiles] = useState<FileList | null>(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState<{ completed: number; total: number }>({ completed: 0, total: 0 })
+  const [uploadProgress, setUploadProgress] = useState<{
+    completed: number
+    total: number
+  }>({ completed: 0, total: 0 })
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [hasMounted, setHasMounted] = useState(false)
@@ -28,7 +37,7 @@ export default function ResearchDocumentsPage() {
   // Fetch documents on page load (only after mount)
   useEffect(() => {
     if (!hasMounted) return
-    
+
     const fetchDocuments = async () => {
       try {
         // Add a small delay to ensure server is ready
@@ -38,7 +47,11 @@ export default function ResearchDocumentsPage() {
           const data = await response.json()
           setDocuments(data.documents || [])
         } else {
-          console.error('Response not ok:', response.status, response.statusText)
+          console.error(
+            'Response not ok:',
+            response.status,
+            response.statusText
+          )
         }
       } catch (error) {
         console.error('Error fetching documents:', error)
@@ -46,7 +59,7 @@ export default function ResearchDocumentsPage() {
         setIsLoading(false)
       }
     }
-    
+
     fetchDocuments()
   }, [hasMounted])
 
@@ -79,14 +92,19 @@ export default function ResearchDocumentsPage() {
     }
 
     try {
-      const response = await fetch(`/api/admin/documents?id=${documentId}&type=research`, {
-        method: 'DELETE'
-      })
+      const response = await fetch(
+        `/api/admin/documents?id=${documentId}&type=research`,
+        {
+          method: 'DELETE'
+        }
+      )
 
       if (response.ok) {
         toast.success('Document deleted successfully!')
         // Refresh the documents list
-        const refreshResponse = await fetch('/api/admin/documents?type=research')
+        const refreshResponse = await fetch(
+          '/api/admin/documents?type=research'
+        )
         if (refreshResponse.ok) {
           const data = await refreshResponse.json()
           setDocuments(data.documents || [])
@@ -110,7 +128,7 @@ export default function ResearchDocumentsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsUploading(true)
-    
+
     try {
       if (batchFiles && batchFiles.length > 0) {
         // Batch mode - multiple files
@@ -126,12 +144,12 @@ export default function ResearchDocumentsPage() {
             formDataToSend.append('title', file.name.replace(/\.[^/.]+$/, '')) // Remove extension
             formDataToSend.append('description', `Uploaded file: ${file.name}`)
             formDataToSend.append('file', file)
-            
+
             const response = await fetch('/api/admin/documents', {
               method: 'POST',
               body: formDataToSend
             })
-            
+
             if (response.ok) {
               successCount++
             } else {
@@ -142,14 +160,18 @@ export default function ResearchDocumentsPage() {
             errorCount++
             console.error(`Error processing ${file.name}:`, error)
           }
-          
+
           setUploadProgress({ completed: i + 1, total: batchFiles.length })
         }
 
         if (successCount > 0) {
-          toast.success(`Batch upload completed: ${successCount} files uploaded successfully`)
+          toast.success(
+            `Batch upload completed: ${successCount} files uploaded successfully`
+          )
           // Refresh the documents list
-          const refreshResponse = await fetch('/api/admin/documents?type=research')
+          const refreshResponse = await fetch(
+            '/api/admin/documents?type=research'
+          )
           if (refreshResponse.ok) {
             const data = await refreshResponse.json()
             setDocuments(data.documents || [])
@@ -161,7 +183,9 @@ export default function ResearchDocumentsPage() {
 
         // Reset batch files
         setBatchFiles(null)
-        const batchFileInput = document.getElementById('batch-files') as HTMLInputElement
+        const batchFileInput = document.getElementById(
+          'batch-files'
+        ) as HTMLInputElement
         if (batchFileInput) batchFileInput.value = ''
       } else {
         // Single file mode
@@ -169,23 +193,25 @@ export default function ResearchDocumentsPage() {
         formDataToSend.append('type', 'research')
         formDataToSend.append('title', formData.title)
         formDataToSend.append('description', formData.description)
-        
+
         const fileInput = document.getElementById('file') as HTMLInputElement
         if (fileInput.files?.[0]) {
           formDataToSend.append('file', fileInput.files[0])
         }
-        
+
         const response = await fetch('/api/admin/documents', {
           method: 'POST',
           body: formDataToSend
         })
-        
+
         if (response.ok) {
           toast.success('Document uploaded successfully!')
           setFormData({ title: '', description: '' })
           fileInput.value = ''
           // Refresh the documents list
-          const refreshResponse = await fetch('/api/admin/documents?type=research')
+          const refreshResponse = await fetch(
+            '/api/admin/documents?type=research'
+          )
           if (refreshResponse.ok) {
             const data = await refreshResponse.json()
             setDocuments(data.documents || [])
@@ -205,32 +231,30 @@ export default function ResearchDocumentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Research Documents</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Research Documents
+              </h1>
               <p className="mt-2 text-gray-600">
                 Manage research documents that are publicly accessible
               </p>
             </div>
             <Button asChild>
-              <Link href="/admin">
-                ← Back to Dashboard
-              </Link>
+              <Link href="/admin">← Back to Dashboard</Link>
             </Button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Upload Form */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
                 <CardTitle>Upload Documents</CardTitle>
-                <CardDescription>
-                  Add research documents
-                </CardDescription>
+                <CardDescription>Add research documents</CardDescription>
               </CardHeader>
               <CardContent>
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -242,7 +266,9 @@ export default function ResearchDocumentsPage() {
                       name="title"
                       placeholder="Document title"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      onChange={e =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -253,7 +279,12 @@ export default function ResearchDocumentsPage() {
                       placeholder="Brief description of the document"
                       rows={3}
                       value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value
+                        })
+                      }
                     />
                   </div>
                   <div>
@@ -264,7 +295,7 @@ export default function ResearchDocumentsPage() {
                       type="file"
                       accept=".pdf,.txt,.md,.docx"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="mt-1 text-xs text-gray-500">
                       Upload a single file
                     </p>
                   </div>
@@ -279,15 +310,16 @@ export default function ResearchDocumentsPage() {
                       accept=".pdf,.txt,.md,.docx"
                       onChange={handleBatchFileChange}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Select multiple files for batch upload (titles will be auto-generated from filenames)
+                    <p className="mt-1 text-xs text-gray-500">
+                      Select multiple files for batch upload (titles will be
+                      auto-generated from filenames)
                     </p>
                     {batchFiles && (
                       <div className="mt-2">
                         <p className="text-sm font-medium text-gray-700">
                           Selected {batchFiles.length} files:
                         </p>
-                        <ul className="text-sm text-gray-600 mt-1 max-h-32 overflow-y-auto">
+                        <ul className="mt-1 max-h-32 overflow-y-auto text-sm text-gray-600">
                           {Array.from(batchFiles).map((file, index) => (
                             <li key={index} className="truncate">
                               {file.name}
@@ -297,32 +329,41 @@ export default function ResearchDocumentsPage() {
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Upload Progress */}
                   {uploadProgress.total > 0 && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Upload Progress</span>
-                        <span>{uploadProgress.completed}/{uploadProgress.total}</span>
+                        <span>
+                          {uploadProgress.completed}/{uploadProgress.total}
+                        </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 w-full rounded-full bg-gray-200">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          className="h-2 rounded-full bg-blue-600 transition-all duration-300"
                           style={{
-                            width: `${(uploadProgress.completed / uploadProgress.total) * 100}%`
+                            width: `${
+                              (uploadProgress.completed /
+                                uploadProgress.total) *
+                              100
+                            }%`
                           }}
                         />
                       </div>
                     </div>
                   )}
-                  
-                  <Button type="submit" className="w-full" disabled={isUploading}>
-                    {isUploading 
+
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isUploading}
+                  >
+                    {isUploading
                       ? uploadProgress.total > 0
                         ? `Uploading... ${uploadProgress.completed}/${uploadProgress.total}`
                         : 'Uploading...'
-                      : 'Upload Document(s)'
-                    }
+                      : 'Upload Document(s)'}
                   </Button>
                 </form>
               </CardContent>
@@ -341,31 +382,46 @@ export default function ResearchDocumentsPage() {
               <CardContent>
                 <div className="space-y-4">
                   {!hasMounted || isLoading ? (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="py-8 text-center text-gray-500">
                       <p>Loading documents...</p>
                     </div>
                   ) : documents.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="py-8 text-center text-gray-500">
                       <p>No documents uploaded yet.</p>
-                      <p className="text-sm">Upload your first document using the form on the left.</p>
+                      <p className="text-sm">
+                        Upload your first document using the form on the left.
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {documents.map((doc) => (
-                        <div key={doc.id} className="border rounded-lg p-4">
+                      {documents.map(doc => (
+                        <div key={doc.id} className="rounded-lg border p-4">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <h3 className="font-medium text-gray-900">{doc.title}</h3>
-                              <p className="text-sm text-gray-600 mt-1">
+                              <h3 className="font-medium text-gray-900">
+                                {doc.title}
+                              </h3>
+                              <p className="mt-1 text-sm text-gray-600">
                                 {doc.description}
                               </p>
-                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                <span>Uploaded: {new Date(doc.created_at).toLocaleDateString()}</span>
-                                {doc.file_type && <span>Type: {doc.file_type}</span>}
-                                {doc.file_size && <span>Size: {(doc.file_size / 1024).toFixed(1)} KB</span>}
+                              <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                                <span>
+                                  Uploaded:{' '}
+                                  {new Date(
+                                    doc.created_at
+                                  ).toLocaleDateString()}
+                                </span>
+                                {doc.file_type && (
+                                  <span>Type: {doc.file_type}</span>
+                                )}
+                                {doc.file_size && (
+                                  <span>
+                                    Size: {(doc.file_size / 1024).toFixed(1)} KB
+                                  </span>
+                                )}
                               </div>
                             </div>
-                            <div className="flex gap-2 ml-4">
+                            <div className="ml-4 flex gap-2">
                               <Button
                                 size="sm"
                                 variant="outline"

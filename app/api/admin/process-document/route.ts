@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const supabase = createRouteHandlerClient<Database>({
       cookies: () => cookieStore
     })
-    
+
     const session = await auth({ cookieStore })
     if (!session?.user?.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -20,12 +20,17 @@ export async function POST(req: NextRequest) {
 
     const { documentId, documentType } = await req.json()
 
-    if (!documentId || !documentType || !['research', 'rag'].includes(documentType)) {
+    if (
+      !documentId ||
+      !documentType ||
+      !['research', 'rag'].includes(documentType)
+    ) {
       return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 })
     }
 
-    const tableName = documentType === 'research' ? 'research_documents' : 'rag_documents'
-    
+    const tableName =
+      documentType === 'research' ? 'research_documents' : 'rag_documents'
+
     // Get document from database
     const { data: document, error: fetchError } = await supabase
       .from(tableName)
@@ -39,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     // Process document for RAG
     const processor = new DocumentProcessor()
-    
+
     if (documentType === 'rag' && 'content' in document && document.content) {
       // Process text content directly
       await processor.processDocument(
@@ -51,17 +56,24 @@ export async function POST(req: NextRequest) {
     } else if (document.file_url) {
       // For now, we'll need to fetch the file content
       // This is a simplified version - in production you might want to store content in DB
-      return NextResponse.json({ 
-        error: 'File processing not yet implemented. Please use text content for RAG documents.' 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          error:
+            'File processing not yet implemented. Please use text content for RAG documents.'
+        },
+        { status: 400 }
+      )
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Document processed successfully' 
+    return NextResponse.json({
+      success: true,
+      message: 'Document processed successfully'
     })
   } catch (error) {
     console.error('API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

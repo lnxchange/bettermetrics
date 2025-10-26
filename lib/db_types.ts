@@ -52,10 +52,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "chats_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'chats_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -128,10 +128,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "rag_documents_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'rag_documents_uploaded_by_fkey'
+            columns: ['uploaded_by']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -171,10 +171,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "research_documents_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'research_documents_uploaded_by_fkey'
+            columns: ['uploaded_by']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -244,10 +244,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "buckets_owner_fkey"
-            columns: ["owner"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'buckets_owner_fkey'
+            columns: ['owner']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -311,10 +311,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
+            foreignKeyName: 'objects_bucketId_fkey'
+            columns: ['bucket_id']
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -386,4 +386,3 @@ export interface Database {
     }
   }
 }
-

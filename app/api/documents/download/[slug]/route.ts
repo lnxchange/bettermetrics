@@ -10,9 +10,9 @@ export async function GET(
     // TODO: Get filename from database by slug
     const filename = `${params.slug}.pdf`
     const filepath = path.join(process.cwd(), 'public', 'docs', filename)
-    
+
     const buffer = await readFile(filepath)
-    
+
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'application/pdf',

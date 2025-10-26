@@ -19,30 +19,41 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
 
 export function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
+    <footer className="border-t border-gray-200 bg-gray-50">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 md:grid-cols-4">
           {/* About */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">About AIM</h3>
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">
+              About AIM
+            </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/" className="hover:text-primary-600 transition">
+                <Link href="/" className="transition hover:text-primary-600">
                   Welcome to Use Better Metrics
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-primary-600 transition">
+                <Link
+                  href="/about"
+                  className="transition hover:text-primary-600"
+                >
                   Framework Overview
                 </Link>
               </li>
               <li>
-                <Link href="/understand-your-motivations" className="hover:text-primary-600 transition">
+                <Link
+                  href="/understand-your-motivations"
+                  className="transition hover:text-primary-600"
+                >
                   Understand Your Motivations
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-primary-600 transition">
+                <Link
+                  href="/contact"
+                  className="transition hover:text-primary-600"
+                >
                   Contact Us
                 </Link>
               </li>
@@ -51,45 +62,71 @@ export function Footer() {
 
           {/* Research Areas */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Research Areas</h3>
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">
+              Research Areas
+            </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/research" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research"
+                  className="transition hover:text-primary-600"
+                >
                   All Research
                 </Link>
               </li>
               <li>
-                <Link href="/research/economics" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/economics"
+                  className="transition hover:text-primary-600"
+                >
                   Economics
                 </Link>
               </li>
               <li>
-                <Link href="/research/psychology" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/psychology"
+                  className="transition hover:text-primary-600"
+                >
                   Psychology
                 </Link>
               </li>
               <li>
-                <Link href="/research/health-policy" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/health-policy"
+                  className="transition hover:text-primary-600"
+                >
                   Health & Policy
                 </Link>
               </li>
               <li>
-                <Link href="/research/law" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/law"
+                  className="transition hover:text-primary-600"
+                >
                   Law
                 </Link>
               </li>
               <li>
-                <Link href="/research/education" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/education"
+                  className="transition hover:text-primary-600"
+                >
                   Education
                 </Link>
               </li>
               <li>
-                <Link href="/research/organizations" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/organizations"
+                  className="transition hover:text-primary-600"
+                >
                   Organizations
                 </Link>
               </li>
               <li>
-                <Link href="/research/marketing" className="hover:text-primary-600 transition">
+                <Link
+                  href="/research/marketing"
+                  className="transition hover:text-primary-600"
+                >
                   Marketing
                 </Link>
               </li>
@@ -98,10 +135,15 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Quick Links</h3>
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">
+              Quick Links
+            </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/chat" className="hover:text-primary-600 transition">
+                <Link
+                  href="/chat"
+                  className="transition hover:text-primary-600"
+                >
                   Try AI Chat
                 </Link>
               </li>
@@ -110,31 +152,38 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Connect</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Join researchers, practitioners, and organizations exploring the AIM Framework.
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">
+              Connect
+            </h3>
+            <p className="mb-4 text-sm text-gray-600">
+              Join researchers, practitioners, and organizations exploring the
+              AIM Framework.
             </p>
           </div>
         </div>
 
         {/* Academic Disclaimer */}
-        <div className="border-t border-gray-300 mt-8 pt-8">
-          <div className="bg-amber-50 p-6 rounded-lg border border-amber-200">
-            <h4 className="font-semibold text-gray-900 mb-2">Academic Disclaimer</h4>
+        <div className="mt-8 border-t border-gray-300 pt-8">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+            <h4 className="mb-2 font-semibold text-gray-900">
+              Academic Disclaimer
+            </h4>
             <p className="text-sm text-gray-700">
-              The AIM Motivation Framework is a theoretical synthesis that has not been empirically validated 
-              through peer-reviewed research. All claims are hypotheses subject to testing and falsification. 
-              We welcome critical evaluation and testing.
+              The AIM Motivation Framework is a theoretical synthesis that has
+              not been empirically validated through peer-reviewed research. All
+              claims are hypotheses subject to testing and falsification. We
+              welcome critical evaluation and testing.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-8 border-t border-gray-200 pt-8">
+          <div className="flex flex-col items-center justify-between md:flex-row">
             <div className="text-sm text-gray-600">
-              © 2025 Yule Guttenbeil - All rights reserved. Material on this site may be used for validation research and personal use only.
+              © 2025 Yule Guttenbeil - All rights reserved. Material on this
+              site may be used for validation research and personal use only.
             </div>
-            <div className="text-sm text-gray-600 mt-4 md:mt-0">
+            <div className="mt-4 text-sm text-gray-600 md:mt-0">
               Built by Yule Guttenbeil
             </div>
           </div>

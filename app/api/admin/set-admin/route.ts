@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const secret = searchParams.get('secret')
-    
+
     // Check admin setup secret
     if (secret !== process.env.ADMIN_SETUP_SECRET) {
       return new Response('Invalid secret', { status: 403 })
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
         </body>
       </html>
     `
-    
+
     return new Response(html, {
       headers: { 'Content-Type': 'text/html' }
     })
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     const supabase = createRouteHandlerClient<Database>({
       cookies: () => cookieStore
     })
-    
+
     // Temporarily skip authentication check for local development
     // const session = await auth({ cookieStore })
     // if (!session?.user) {
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     const { searchParams } = new URL(req.url)
     const secret = searchParams.get('secret')
-    
+
     // Check admin setup secret
     if (secret !== process.env.ADMIN_SETUP_SECRET) {
       return NextResponse.json({ error: 'Invalid secret' }, { status: 403 })
@@ -103,12 +103,16 @@ export async function POST(req: NextRequest) {
 
     // For now, just return success since we can't access Supabase
     // In a real setup, you would update user metadata here
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Admin setup completed. Note: This is a temporary bypass for local development.' 
+    return NextResponse.json({
+      success: true,
+      message:
+        'Admin setup completed. Note: This is a temporary bypass for local development.'
     })
   } catch (error) {
     console.error('API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

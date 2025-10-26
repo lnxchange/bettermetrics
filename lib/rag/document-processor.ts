@@ -26,17 +26,17 @@ class SimpleTextSplitter {
   splitText(text: string): string[] {
     const chunks: string[] = []
     let start = 0
-    
+
     while (start < text.length) {
       const end = Math.min(start + this.chunkSize, text.length)
       let chunk = text.slice(start, end)
-      
+
       // Try to break at sentence boundaries
       if (end < text.length) {
         const lastSentence = chunk.lastIndexOf('. ')
         const lastNewline = chunk.lastIndexOf('\n')
         const breakPoint = Math.max(lastSentence, lastNewline)
-        
+
         if (breakPoint > start + this.chunkSize * 0.5) {
           chunk = chunk.slice(0, breakPoint + 1)
           start = start + breakPoint + 1 - this.chunkOverlap
@@ -46,10 +46,10 @@ class SimpleTextSplitter {
       } else {
         start = end
       }
-      
+
       chunks.push(chunk.trim())
     }
-    
+
     return chunks.filter(chunk => chunk.length > 0)
   }
 }
@@ -64,9 +64,9 @@ export class DocumentProcessor {
     this.supabase = createRouteHandlerClient<Database>({
       cookies: () => cookieStore
     })
-    
+
     this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY,
+      openAIApiKey: process.env.OPENAI_API_KEY
     })
 
     this.textSplitter = new SimpleTextSplitter(500, 50)
@@ -81,10 +81,10 @@ export class DocumentProcessor {
     try {
       // Split document into chunks
       const chunks = await this.textSplitter.splitText(content)
-      
+
       // Generate embeddings for each chunk
       const embeddings = await this.embeddings.embedDocuments(chunks)
-      
+
       // Store chunks and embeddings in database
       const insertData = chunks.map((chunk: string, index: number) => ({
         document_id: documentId,
@@ -108,7 +108,9 @@ export class DocumentProcessor {
         throw new Error('Failed to store document embeddings')
       }
 
-      console.log(`Successfully processed document ${documentId} with ${chunks.length} chunks`)
+      console.log(
+        `Successfully processed document ${documentId} with ${chunks.length} chunks`
+      )
     } catch (error) {
       console.error('Error processing document:', error)
       throw error
@@ -127,10 +129,17 @@ export class DocumentProcessor {
       // Extract text based on file type
       if (file.type === 'application/pdf') {
         // PDF processing temporarily disabled due to package compatibility issues
-        throw new Error('PDF processing is temporarily unavailable. Please use text files for now.')
-      } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        throw new Error(
+          'PDF processing is temporarily unavailable. Please use text files for now.'
+        )
+      } else if (
+        file.type ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ) {
         const buffer = await file.arrayBuffer()
-        const result = await mammoth.extractRawText({ buffer: Buffer.from(buffer) })
+        const result = await mammoth.extractRawText({
+          buffer: Buffer.from(buffer)
+        })
         content = result.value
       } else if (file.type === 'text/plain' || file.type === 'text/markdown') {
         content = await file.text()
@@ -163,7 +172,7 @@ export class DocumentProcessor {
     try {
       // Generate embedding for the query
       const queryEmbedding = await this.embeddings.embedQuery(query)
-      
+
       // Build the query
       let queryBuilder = this.supabase
         .from('document_embeddings')
@@ -198,7 +207,10 @@ export class DocumentProcessor {
     }
   }
 
-  async deleteDocumentEmbeddings(documentId: string, documentType: 'research' | 'rag'): Promise<void> {
+  async deleteDocumentEmbeddings(
+    documentId: string,
+    documentType: 'research' | 'rag'
+  ): Promise<void> {
     try {
       const { error } = await this.supabase
         .from('document_embeddings')

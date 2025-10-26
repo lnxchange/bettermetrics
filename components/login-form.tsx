@@ -47,7 +47,9 @@ export function LoginForm({
     const { error, data } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` }
+      options: {
+        emailRedirectTo: `${window.location.origin}/api/auth/callback`
+      }
     })
 
     if (!error && !data.session)
@@ -85,7 +87,7 @@ export function LoginForm({
           }))
         }
       />
-      
+
       <Label>Password</Label>
       <Input
         name="password"
@@ -103,7 +105,7 @@ export function LoginForm({
         {isLoading && <IconSpinner className="mr-2 animate-spin" />}
         {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
       </Button>
-      
+
       <p>
         {action === 'sign-in' ? (
           <>

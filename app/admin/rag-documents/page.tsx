@@ -3,13 +3,21 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
 export default function RAGDocumentsPage() {
-  const [uploadMode, setUploadMode] = useState<'quick-add' | 'batch'>('quick-add')
+  const [uploadMode, setUploadMode] = useState<'quick-add' | 'batch'>(
+    'quick-add'
+  )
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -17,7 +25,10 @@ export default function RAGDocumentsPage() {
   })
   const [batchFiles, setBatchFiles] = useState<FileList | null>(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState<{ completed: number; total: number }>({ completed: 0, total: 0 })
+  const [uploadProgress, setUploadProgress] = useState<{
+    completed: number
+    total: number
+  }>({ completed: 0, total: 0 })
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [hasMounted, setHasMounted] = useState(false)
@@ -30,7 +41,7 @@ export default function RAGDocumentsPage() {
   // Fetch documents on page load (only after mount)
   useEffect(() => {
     if (!hasMounted) return
-    
+
     const fetchDocuments = async () => {
       try {
         // Add a small delay to ensure server is ready
@@ -40,7 +51,11 @@ export default function RAGDocumentsPage() {
           const data = await response.json()
           setDocuments(data.documents || [])
         } else {
-          console.error('Response not ok:', response.status, response.statusText)
+          console.error(
+            'Response not ok:',
+            response.status,
+            response.statusText
+          )
         }
       } catch (error) {
         console.error('Error fetching documents:', error)
@@ -48,7 +63,7 @@ export default function RAGDocumentsPage() {
         setIsLoading(false)
       }
     }
-    
+
     fetchDocuments()
   }, [hasMounted])
 
@@ -91,9 +106,12 @@ export default function RAGDocumentsPage() {
     }
 
     try {
-      const response = await fetch(`/api/admin/documents?id=${documentId}&type=rag`, {
-        method: 'DELETE'
-      })
+      const response = await fetch(
+        `/api/admin/documents?id=${documentId}&type=rag`,
+        {
+          method: 'DELETE'
+        }
+      )
 
       if (response.ok) {
         toast.success('Document deleted successfully!')
@@ -116,7 +134,7 @@ export default function RAGDocumentsPage() {
     if (file) {
       try {
         const content = await file.text()
-        setFormData({...formData, content})
+        setFormData({ ...formData, content })
         toast.success('File content loaded successfully!')
       } catch (error) {
         toast.error('Error reading file')
@@ -135,7 +153,7 @@ export default function RAGDocumentsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsUploading(true)
-    
+
     try {
       if (uploadMode === 'quick-add') {
         // Quick Add mode - single text document
@@ -144,12 +162,12 @@ export default function RAGDocumentsPage() {
         formDataToSend.append('title', formData.title)
         formDataToSend.append('content', formData.content)
         formDataToSend.append('metadata', formData.metadata)
-        
+
         const response = await fetch('/api/admin/documents', {
           method: 'POST',
           body: formDataToSend
         })
-        
+
         if (response.ok) {
           toast.success('Document uploaded and processed successfully!')
           setFormData({ title: '', content: '', metadata: '{}' })
@@ -186,12 +204,12 @@ export default function RAGDocumentsPage() {
             formDataToSend.append('title', file.name.replace(/\.[^/.]+$/, '')) // Remove extension
             formDataToSend.append('content', content)
             formDataToSend.append('metadata', '{}')
-            
+
             const response = await fetch('/api/admin/documents', {
               method: 'POST',
               body: formDataToSend
             })
-            
+
             if (response.ok) {
               successCount++
             } else {
@@ -202,12 +220,14 @@ export default function RAGDocumentsPage() {
             errorCount++
             console.error(`Error processing ${file.name}:`, error)
           }
-          
+
           setUploadProgress({ completed: i + 1, total: batchFiles.length })
         }
 
         if (successCount > 0) {
-          toast.success(`Batch upload completed: ${successCount} files uploaded successfully`)
+          toast.success(
+            `Batch upload completed: ${successCount} files uploaded successfully`
+          )
           // Refresh the documents list
           const refreshResponse = await fetch('/api/admin/documents?type=rag')
           if (refreshResponse.ok) {
@@ -221,7 +241,9 @@ export default function RAGDocumentsPage() {
 
         // Reset batch files
         setBatchFiles(null)
-        const batchFileInput = document.getElementById('batch-files') as HTMLInputElement
+        const batchFileInput = document.getElementById(
+          'batch-files'
+        ) as HTMLInputElement
         if (batchFileInput) batchFileInput.value = ''
       }
     } catch (error) {
@@ -234,24 +256,24 @@ export default function RAGDocumentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">RAG Documents</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                RAG Documents
+              </h1>
               <p className="mt-2 text-gray-600">
                 Manage documents used by the AI chatbot&apos;s knowledge base
               </p>
             </div>
             <Button asChild>
-              <Link href="/admin">
-                ← Back to Dashboard
-              </Link>
+              <Link href="/admin">← Back to Dashboard</Link>
             </Button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Upload Form */}
           <div className="lg:col-span-1">
             <Card>
@@ -263,11 +285,11 @@ export default function RAGDocumentsPage() {
               </CardHeader>
               <CardContent>
                 {/* Upload Mode Tabs */}
-                <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+                <div className="mb-6 flex space-x-1 rounded-lg bg-gray-100 p-1">
                   <button
                     type="button"
                     onClick={() => setUploadMode('quick-add')}
-                    className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
+                    className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                       uploadMode === 'quick-add'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-500 hover:text-gray-700'
@@ -278,7 +300,7 @@ export default function RAGDocumentsPage() {
                   <button
                     type="button"
                     onClick={() => setUploadMode('batch')}
-                    className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
+                    className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                       uploadMode === 'batch'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-500 hover:text-gray-700'
@@ -297,12 +319,14 @@ export default function RAGDocumentsPage() {
                           id="title"
                           name="title"
                           value={formData.title}
-                          onChange={(e) => setFormData({...formData, title: e.target.value})}
+                          onChange={e =>
+                            setFormData({ ...formData, title: e.target.value })
+                          }
                           placeholder="Enter document title"
                           required
                         />
                       </div>
-                      
+
                       <div>
                         <Label htmlFor="file">Upload File (Optional)</Label>
                         <Input
@@ -311,31 +335,41 @@ export default function RAGDocumentsPage() {
                           accept=".txt,.md,.docx"
                           onChange={handleFileChange}
                         />
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="mt-1 text-sm text-gray-500">
                           Supported formats: TXT, MD, DOCX
                         </p>
                       </div>
-                      
+
                       <div>
                         <Label htmlFor="content">Content</Label>
                         <Textarea
                           id="content"
                           name="content"
                           value={formData.content}
-                          onChange={(e) => setFormData({...formData, content: e.target.value})}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              content: e.target.value
+                            })
+                          }
                           placeholder="Paste or type document content here..."
                           rows={8}
                           required
                         />
                       </div>
-                      
+
                       <div>
                         <Label htmlFor="metadata">Metadata (JSON)</Label>
                         <Textarea
                           id="metadata"
                           name="metadata"
                           value={formData.metadata}
-                          onChange={(e) => setFormData({...formData, metadata: e.target.value})}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              metadata: e.target.value
+                            })
+                          }
                           placeholder='{"tags": ["research"], "category": "framework"}'
                           rows={3}
                         />
@@ -353,15 +387,16 @@ export default function RAGDocumentsPage() {
                           onChange={handleBatchFileChange}
                           required
                         />
-                        <p className="text-sm text-gray-500 mt-1">
-                          Select multiple files. Supported formats: TXT, MD, DOCX
+                        <p className="mt-1 text-sm text-gray-500">
+                          Select multiple files. Supported formats: TXT, MD,
+                          DOCX
                         </p>
                         {batchFiles && (
                           <div className="mt-2">
                             <p className="text-sm font-medium text-gray-700">
                               Selected {batchFiles.length} files:
                             </p>
-                            <ul className="text-sm text-gray-600 mt-1 max-h-32 overflow-y-auto">
+                            <ul className="mt-1 max-h-32 overflow-y-auto text-sm text-gray-600">
                               {Array.from(batchFiles).map((file, index) => (
                                 <li key={index} className="truncate">
                                   {file.name}
@@ -373,34 +408,43 @@ export default function RAGDocumentsPage() {
                       </div>
                     </>
                   )}
-                  
+
                   {/* Upload Progress */}
                   {uploadProgress.total > 0 && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Upload Progress</span>
-                        <span>{uploadProgress.completed}/{uploadProgress.total}</span>
+                        <span>
+                          {uploadProgress.completed}/{uploadProgress.total}
+                        </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 w-full rounded-full bg-gray-200">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          className="h-2 rounded-full bg-blue-600 transition-all duration-300"
                           style={{
-                            width: `${(uploadProgress.completed / uploadProgress.total) * 100}%`
+                            width: `${
+                              (uploadProgress.completed /
+                                uploadProgress.total) *
+                              100
+                            }%`
                           }}
                         />
                       </div>
                     </div>
                   )}
-                  
-                  <Button type="submit" disabled={isUploading} className="w-full">
-                    {isUploading 
-                      ? uploadMode === 'batch' 
+
+                  <Button
+                    type="submit"
+                    disabled={isUploading}
+                    className="w-full"
+                  >
+                    {isUploading
+                      ? uploadMode === 'batch'
                         ? `Uploading... ${uploadProgress.completed}/${uploadProgress.total}`
                         : 'Uploading...'
                       : uploadMode === 'batch'
-                        ? 'Upload Files'
-                        : 'Upload Document'
-                    }
+                      ? 'Upload Files'
+                      : 'Upload Document'}
                   </Button>
                 </form>
               </CardContent>
@@ -419,33 +463,48 @@ export default function RAGDocumentsPage() {
               <CardContent>
                 <div className="space-y-4">
                   {!hasMounted || isLoading ? (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="py-8 text-center text-gray-500">
                       <p>Loading documents...</p>
                     </div>
                   ) : documents.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="py-8 text-center text-gray-500">
                       <p>No RAG documents uploaded yet.</p>
-                      <p className="text-sm">Upload your first document using the form on the left.</p>
+                      <p className="text-sm">
+                        Upload your first document using the form on the left.
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {documents.map((doc) => (
-                        <div key={doc.id} className="border rounded-lg p-4">
+                      {documents.map(doc => (
+                        <div key={doc.id} className="rounded-lg border p-4">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <h3 className="font-medium text-gray-900">{doc.title}</h3>
-                              <p className="text-sm text-gray-600 mt-1">
+                              <h3 className="font-medium text-gray-900">
+                                {doc.title}
+                              </h3>
+                              <p className="mt-1 text-sm text-gray-600">
                                 {doc.content?.substring(0, 150)}...
                               </p>
-                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                <span>Uploaded: {new Date(doc.created_at).toLocaleDateString()}</span>
-                                {doc.file_type && <span>Type: {doc.file_type}</span>}
-                                {doc.metadata && Object.keys(doc.metadata).length > 0 && (
-                                  <span>Tags: {Object.keys(doc.metadata).join(', ')}</span>
+                              <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                                <span>
+                                  Uploaded:{' '}
+                                  {new Date(
+                                    doc.created_at
+                                  ).toLocaleDateString()}
+                                </span>
+                                {doc.file_type && (
+                                  <span>Type: {doc.file_type}</span>
                                 )}
+                                {doc.metadata &&
+                                  Object.keys(doc.metadata).length > 0 && (
+                                    <span>
+                                      Tags:{' '}
+                                      {Object.keys(doc.metadata).join(', ')}
+                                    </span>
+                                  )}
                               </div>
                             </div>
-                            <div className="flex gap-2 ml-4">
+                            <div className="ml-4 flex gap-2">
                               <Button
                                 size="sm"
                                 variant="outline"

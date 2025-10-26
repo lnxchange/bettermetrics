@@ -20,9 +20,9 @@ export class VectorSearch {
     this.supabase = createRouteHandlerClient<Database>({
       cookies: () => cookieStore
     })
-    
+
     this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY,
+      openAIApiKey: process.env.OPENAI_API_KEY
     })
   }
 
@@ -35,7 +35,7 @@ export class VectorSearch {
     try {
       // Generate embedding for the query
       const queryEmbedding = await this.embeddings.embedQuery(query)
-      
+
       // Use pgvector cosine similarity search
       const { data, error } = await this.supabase.rpc('match_documents', {
         query_embedding: queryEmbedding,
@@ -62,16 +62,20 @@ export class VectorSearch {
     documentType?: 'research' | 'rag'
   ): Promise<string> {
     try {
-      const results = await this.searchSimilarDocuments(query, contextLimit, documentType)
-      
+      const results = await this.searchSimilarDocuments(
+        query,
+        contextLimit,
+        documentType
+      )
+
       if (results.length === 0) {
         return ''
       }
 
       // Format results as context
-      const context = results.map((result, index) => 
-        `[Context ${index + 1}]: ${result.chunk_text}`
-      ).join('\n\n')
+      const context = results
+        .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
+        .join('\n\n')
 
       return `Relevant context from research documents:\n\n${context}`
     } catch (error) {

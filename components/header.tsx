@@ -59,73 +59,121 @@ export async function Header() {
           )}
         </div>
       </div>
-      
+
       {/* AIM Framework Navigation */}
-      <div className="hidden md:flex items-center space-x-6">
-        <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+      <div className="hidden items-center space-x-6 md:flex">
+        <Link
+          href="/about"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
           About
         </Link>
-        
+
         {/* Research Dropdown */}
-        <div className="relative group">
-          <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition flex items-center">
+        <div className="group relative">
+          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
             For Researchers
-            <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            <svg
+              className="ml-1 h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
-          <div className="absolute hidden group-hover:block top-full left-0 w-64 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-50">
+          <div className="absolute left-0 top-full z-50 hidden w-64 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
             <div className="p-2">
-              <Link href="/research-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/research-resources"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Research Documents
               </Link>
-              <Link href="/research/definitions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/research/definitions"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Scientific Definitions
               </Link>
-              <Link href="/research-resources#predictions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/research-resources#predictions"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Testable Predictions
               </Link>
-              <Link href="/research" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/research"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Research Areas
               </Link>
-              <Link href="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/contact"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Collaborate
               </Link>
             </div>
           </div>
         </div>
-        
+
         {/* For Everyone Dropdown */}
-        <div className="relative group">
-          <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition flex items-center">
+        <div className="group relative">
+          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
             For Everyone
-            <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            <svg
+              className="ml-1 h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
-          <div className="absolute hidden group-hover:block top-full left-0 w-64 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-50">
+          <div className="absolute left-0 top-full z-50 hidden w-64 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
             <div className="p-2">
-              <Link href="/understand-yourself" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/understand-yourself"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Understand Your Motivations
               </Link>
-              <Link href="/understand-yourself#career" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/understand-yourself#career"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Career & Relationships
               </Link>
-              <Link href="/understand-yourself#red-flags" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+              <Link
+                href="/understand-yourself#red-flags"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
+              >
                 Red Flags & Patterns
               </Link>
             </div>
           </div>
         </div>
-        
-        <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+
+        <Link
+          href="/contact"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
           Contact
         </Link>
-        <Link href="/chat" className="text-sm font-medium text-muted-foreground hover:text-foreground transition">
+        <Link
+          href="/chat"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
           AI Chat
         </Link>
       </div>
-      
     </header>
   )
 }

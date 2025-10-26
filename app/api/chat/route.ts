@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
   // Get the latest user message for RAG context
   const userQuery = messages[messages.length - 1]?.content || ''
-  
+
   // Search for relevant context using RAG
   let ragContext = ''
   try {
