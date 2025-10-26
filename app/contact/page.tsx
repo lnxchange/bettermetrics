@@ -122,7 +122,7 @@ export default function ContactPage() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-6">Why Collaborate on AIM?</h2>
             <p className="text-xl max-w-4xl mx-auto">
-              This isn't an incremental improvement—it's a fundamental reorganization of how we understand human motivation, 
+              This isn&apos;t an incremental improvement—it&apos;s a fundamental reorganization of how we understand human motivation, 
               with implications for every field of human behavior.
             </p>
           </div>
@@ -142,14 +142,14 @@ export default function ContactPage() {
               <p className="text-gray-100">
                 AIM enables scientific definitions of freedom, respect, fairness, and privacy that 
                 apply uniformly across economics, law, psychology, and policy—resolving conflicts 
-                between different fields' approaches to human behavior.
+                between different fields&apos; approaches to human behavior.
               </p>
             </div>
             
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Testable Predictions Existing Frameworks Cannot Make</h3>
               <p className="text-gray-100">
-                AIM's tri-source model enables predictions about market failures, intervention backfires, 
+                AIM&apos;s tri-source model enables predictions about market failures, intervention backfires, 
                 and social dynamics escalation that no existing theory can make—providing a competitive 
                 advantage in research and practice.
               </p>
@@ -159,8 +159,8 @@ export default function ContactPage() {
           <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center">
             <h3 className="text-2xl font-bold mb-4">The Opportunity</h3>
             <p className="text-lg text-gray-100 max-w-3xl mx-auto">
-              If validated, AIM would represent the first time in history that concepts like "freedom," 
-              "respect," "fairness," and "privacy" could be defined scientifically rather than philosophically, 
+              If validated, AIM would represent the first time in history that concepts like &quot;freedom,&quot; 
+              &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; could be defined scientifically rather than philosophically, 
               with testable predictions about when they are violated and how to restore them.
             </p>
           </div>

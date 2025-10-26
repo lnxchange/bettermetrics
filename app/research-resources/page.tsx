@@ -139,16 +139,16 @@ export default function ResearchResourcesPage() {
               <li>• <strong>Behavioral Economics:</strong> Treats all &quot;social influence&quot; as one mechanism</li>
             </ul>
             <p className="text-gray-700 mb-4">
-              <strong>AIM's tri-source framework enables unique predictions</strong> because it:
+              <strong>AIM&apos;s tri-source framework enables unique predictions</strong> because it:
             </p>
             <ul className="space-y-2 text-gray-700 mb-4">
               <li>• Distinguishes between appetitive needs (A), intrinsic motivation (I), and mimetic desire (M)</li>
-              <li>• Predicts how these sources interact and compete in the brain's valuation system</li>
+              <li>• Predicts how these sources interact and compete in the brain&apos;s valuation system</li>
               <li>• Enables specific interventions targeting each source separately</li>
               <li>• Provides falsifiable criteria for when predictions fail</li>
             </ul>
             <p className="text-gray-700 font-semibold">
-              <strong>Result:</strong> No existing theory can predict when markets will fail, when interventions will backfire, or when social dynamics will escalate. AIM's tri-source model enables these predictions.
+              <strong>Result:</strong> No existing theory can predict when markets will fail, when interventions will backfire, or when social dynamics will escalate. AIM&apos;s tri-source model enables these predictions.
             </p>
           </div>
           

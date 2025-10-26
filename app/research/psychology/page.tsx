@@ -50,10 +50,10 @@ export default function PsychologyPage() {
             <p className="text-lg font-semibold text-gray-900 mb-4">
               Psychology has long recognized that human behavior is multiply motivated, but existing frameworks struggle to cleanly separate motivational sources. 
               Self-Determination Theory distinguishes "intrinsic" from "extrinsic" motivation but lumps appetitive needs and mimetic desires together as "extrinsic." 
-              Social psychology studies conformity and social influence but doesn't distinguish mimetic desire from other social processes.
+              Social psychology studies conformity and social influence but doesn&apos;t distinguish mimetic desire from other social processes.
             </p>
             <p className="text-gray-700">
-              <strong>AIM's contribution:</strong> Three functionally distinct neural sources that generate testable predictions about when motivation shifts, what interventions work, and how psychological phenomena emerge.
+              <strong>AIM&apos;s contribution:</strong> Three functionally distinct neural sources that generate testable predictions about when motivation shifts, what interventions work, and how psychological phenomena emerge.
             </p>
           </div>
 
@@ -70,7 +70,7 @@ export default function PsychologyPage() {
                   </div>
                   <div className="bg-purple-50 p-4 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-2">AIM view</h5>
-                    <p className="text-sm text-gray-700">Social anxiety emerges when wₘ (mimetic weight) becomes dysregulated—excessive attention to others' perceived judgments inflates mimetic signals while drowning out I (intrinsic preferences) and A (genuine needs)</p>
+                    <p className="text-sm text-gray-700">Social anxiety emerges when wₘ (mimetic weight) becomes dysregulated—excessive attention to others&apos; perceived judgments inflates mimetic signals while drowning out I (intrinsic preferences) and A (genuine needs)</p>
                   </div>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
@@ -99,7 +99,7 @@ export default function PsychologyPage() {
                   <p className="text-gray-700 mb-2">This explains why:</p>
                   <ul className="space-y-1 text-sm text-gray-700">
                     <li>• Flow breaks when external rewards introduced (wₘ increases)</li>
-                    <li>• Flow requires A-sufficiency first (can't enter flow when hungry/exhausted)</li>
+                    <li>• Flow requires A-sufficiency first (can&apos;t enter flow when hungry/exhausted)</li>
                     <li>• Flow is private (high observability increases wₘ, disrupting flow)</li>
                   </ul>
                 </div>
@@ -150,7 +150,7 @@ export default function PsychologyPage() {
                   </div>
                   <div className="bg-red-50 p-4 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-2">AIM view</h5>
-                    <p className="text-sm text-gray-700">A-deficit doesn't just reduce self-control—it actively reallocates weights. When wₐ is elevated (unmet needs), wᵢ deflates (reduced autonomy capacity) and wₘ can inflate (increased social susceptibility)</p>
+                    <p className="text-sm text-gray-700">A-deficit doesn&apos;t just reduce self-control—it actively reallocates weights. When wₐ is elevated (unmet needs), wᵢ deflates (reduced autonomy capacity) and wₘ can inflate (increased social susceptibility)</p>
                   </div>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
@@ -219,11 +219,11 @@ export default function PsychologyPage() {
                 <div className="space-y-3">
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-1">Depression with A-deficit</h5>
-                    <p className="text-sm text-gray-700">Therapy emphasizing meaning-finding (I) won't help if underlying problem is chronic sleep deprivation or nutritional deficit (A)</p>
+                    <p className="text-sm text-gray-700">Therapy emphasizing meaning-finding (I) won&apos;t help if underlying problem is chronic sleep deprivation or nutritional deficit (A)</p>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-1">Social anxiety as M-overweight</h5>
-                    <p className="text-sm text-gray-700">Exposure therapy may fail if it doesn't address the weight reallocate (reducing wₘ, strengthening wᵢ)</p>
+                    <p className="text-sm text-gray-700">Exposure therapy may fail if it doesn&apos;t address the weight reallocate (reducing wₘ, strengthening wᵢ)</p>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-1">Burnout as I-to-M drift</h5>
@@ -251,7 +251,7 @@ export default function PsychologyPage() {
                     <h4 className="font-bold text-red-800 mb-2">When autonomy is impaired</h4>
                     <ol className="space-y-1 text-sm text-gray-700">
                       <li><strong>A-deficit:</strong> Unmet needs create urgency that overrides I-preferences (not truly autonomous)</li>
-                      <li><strong>M-inflation:</strong> Excessive mimetic weight means choices track others' perceived opinions, not intrinsic values</li>
+                      <li><strong>M-inflation:</strong> Excessive mimetic weight means choices track others&apos; perceived opinions, not intrinsic values</li>
                     </ol>
                   </div>
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">

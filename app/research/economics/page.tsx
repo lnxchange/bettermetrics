@@ -75,7 +75,7 @@ export default function EconomicsPage() {
           
           <div className="bg-red-50 p-6 rounded-xl border-2 border-red-200 mb-8">
             <p className="font-semibold text-red-800">
-              <strong>Result:</strong> When markets cannot distinguish A from I, they use M as a proxy. This isn't efficient—it's structurally blind.
+              <strong>Result:</strong> When markets cannot distinguish A from I, they use M as a proxy. This isn&apos;t efficient—it&apos;s structurally blind.
             </p>
           </div>
 
@@ -154,7 +154,7 @@ export default function EconomicsPage() {
               <ul className="space-y-2 text-sm text-gray-700">
                 <li><strong>Markets structurally cannot see A vs I, so they price M by default</strong></li>
                 <li><strong>When pricing goes blind to A/I, ALL goods drift toward M-pricing</strong></li>
-                <li><strong>The signaling problem is deeper—it affects necessities when markets can't observe need</strong></li>
+                <li><strong>The signaling problem is deeper—it affects necessities when markets can&apos;t observe need</strong></li>
               </ul>
             </div>
           </div>
@@ -190,8 +190,8 @@ export default function EconomicsPage() {
               <li><strong>Inequality feels unfair when attributable to M</strong> rather than I (explains political economy tensions)</li>
             </ul>
             <p className="text-gray-700 mt-4">
-              This isn't market failure in the traditional sense—it's measurement failure. Markets efficiently price what they can observe. 
-              When they can't observe A vs I, they default to M. The solution isn't "more market" or "less market"—it's designing 
+              This isn&apos;t market failure in the traditional sense—it&apos;s measurement failure. Markets efficiently price what they can observe. 
+              When they can&apos;t observe A vs I, they default to M. The solution isn&apos;t &quot;more market&quot; or &quot;less market&quot;—it&apos;s designing 
               institutions that preserve A/I/M differentiation.
             </p>
           </div>
@@ -619,7 +619,7 @@ export default function EconomicsPage() {
               </p>
               <p>
                 <strong>AIM Says:</strong> Markets can only price observability. When A and I needs are 
-                private/invisible, markets price M-signals by default. This is not efficient—it's structurally blind.
+                private/invisible, markets price M-signals by default. This is not efficient—it&apos;s structurally blind.
               </p>
             </div>
           </div>

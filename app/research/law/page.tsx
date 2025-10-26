@@ -78,13 +78,13 @@ export default function LawPage() {
             <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Respect in Legal Context</h3>
               <p className="text-gray-700 mb-3">
-                <strong>AIM Definition:</strong> Recognition and protection of another person's intrinsic 
+                <strong>AIM Definition:</strong> Recognition and protection of another person&apos;s intrinsic 
                 motivations (I) and autonomy, distinct from mere appetitive provision (A) or 
                 mimetic status-granting (M).
               </p>
               <p className="text-gray-600">
                 <strong>Legal Applications:</strong> Discrimination law (disrespect = treating I-source 
-                preferences as illegitimate), family law (respecting children's autonomy), 
+                preferences as illegitimate), family law (respecting children&apos;s autonomy), 
                 employment law (respectful workplace practices).
               </p>
             </div>
@@ -98,14 +98,14 @@ export default function LawPage() {
               <p className="text-gray-600">
                 <strong>Legal Applications:</strong> Resolves tensions between "equality" and "equity" in 
                 constitutional law, explains why some inequalities feel fair (I-based achievement) 
-                while others don't (M-based status hoarding).
+                while others don&apos;t (M-based status hoarding).
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Privacy in Legal Context</h3>
               <p className="text-gray-700 mb-3">
-                <strong>AIM Definition:</strong> The right to control observability of one's activities, 
+                <strong>AIM Definition:</strong> The right to control observability of one&apos;s activities, 
                 particularly the ability to pursue intrinsic motivations (I) without triggering 
                 mimetic dynamics (M) or exposing appetitive vulnerabilities (A).
               </p>
@@ -176,7 +176,7 @@ export default function LawPage() {
                 <li>Inconsistent applications across different legal domains</li>
                 <li>Conflicts between constitutional, contract, and criminal law</li>
                 <li>Difficulty predicting when legal interventions will succeed or fail</li>
-                <li>Policy backfires when legal frameworks don't account for human motivation</li>
+                <li>Policy backfires when legal frameworks don&apos;t account for human motivation</li>
               </ul>
               <p>
                 <strong>With AIM (if validated):</strong> Legal concepts would have neuroscientifically grounded, 

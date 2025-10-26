@@ -42,8 +42,8 @@ export default function DefinitionsPage() {
               <strong>Current Problem:</strong> Each field has its own incompatible definition of these concepts:
             </p>
             <ul>
-              <li>Economists define freedom as "absence of constraint"</li>
-              <li>Psychologists define it as "autonomous motivation"</li>
+              <li>Economists define freedom as &quot;absence of constraint&quot;</li>
+              <li>Psychologists define it as &quot;autonomous motivation&quot;</li>
               <li>Legal scholars define it through constitutional tradition</li>
               <li><strong>These definitions often conflict</strong></li>
             </ul>
@@ -80,7 +80,7 @@ export default function DefinitionsPage() {
                   AIM provides a measurable, neuroscientifically grounded definition that can be operationalized in:
                 </p>
                 <ul className="mt-2 space-y-1">
-                  <li>• Contract law (when is consent truly "free"?)</li>
+                  <li>• Contract law (when is consent truly &quot;free&quot;?)</li>
                   <li>• Labor law (what constitutes workplace freedom?)</li>
                   <li>• Economic policy (when do markets enhance vs constrain freedom?)</li>
                 </ul>
@@ -103,14 +103,14 @@ export default function DefinitionsPage() {
             </div>
             <div className="prose max-w-none">
               <p className="text-lg font-semibold text-gray-800 mb-4">
-                <strong>AIM Definition:</strong> Recognition and protection of another person's intrinsic 
+                <strong>AIM Definition:</strong> Recognition and protection of another person&apos;s intrinsic 
                 motivations (I) and autonomy, distinct from mere appetitive provision (A) or 
                 mimetic status-granting (M).
               </p>
               <div className="bg-blue-50 p-4 rounded-lg mb-4">
                 <h4 className="font-bold text-gray-900 mb-2">Why This Matters:</h4>
                 <ul className="space-y-1 text-gray-700">
-                  <li>• Explains why "respectful" treatment feels different from "nice" treatment</li>
+                  <li>• Explains why &quot;respectful&quot; treatment feels different from &quot;nice&quot; treatment</li>
                   <li>• Provides a basis for discrimination law (disrespect = treating I-source preferences as illegitimate)</li>
                   <li>• Distinguishes genuine respect from performative status-granting</li>
                 </ul>
@@ -118,7 +118,7 @@ export default function DefinitionsPage() {
               <div className="bg-amber-50 p-4 rounded-lg">
                 <h4 className="font-bold text-gray-900 mb-2">Testable Prediction:</h4>
                 <p className="text-gray-700">
-                  Interventions perceived as "disrespectful" will correlate with I-override, 
+                  Interventions perceived as &quot;disrespectful&quot; will correlate with I-override, 
                   not just A-denial or M-status loss.
                 </p>
               </div>
@@ -143,8 +143,8 @@ export default function DefinitionsPage() {
               <div className="bg-purple-50 p-4 rounded-lg mb-4">
                 <h4 className="font-bold text-gray-900 mb-2">Why This Matters:</h4>
                 <ul className="space-y-1 text-gray-700">
-                  <li>• Resolves tensions between "equality" and "equity"</li>
-                  <li>• Explains why some inequalities feel fair (I-based achievement) while others don't (M-based status hoarding)</li>
+                  <li>• Resolves tensions between &quot;equality&quot; and &quot;equity&quot;</li>
+                  <li>• Explains why some inequalities feel fair (I-based achievement) while others don&apos;t (M-based status hoarding)</li>
                   <li>• Provides framework for designing fair institutions across domains</li>
                 </ul>
               </div>
@@ -165,14 +165,14 @@ export default function DefinitionsPage() {
             </div>
             <div className="prose max-w-none">
               <p className="text-lg font-semibold text-gray-800 mb-4">
-                <strong>AIM Definition:</strong> The right to control observability of one's activities, 
+                <strong>AIM Definition:</strong> The right to control observability of one&apos;s activities, 
                 particularly the ability to pursue intrinsic motivations (I) without triggering 
                 mimetic dynamics (M) or exposing appetitive vulnerabilities (A).
               </p>
               <div className="bg-indigo-50 p-4 rounded-lg mb-4">
                 <h4 className="font-bold text-gray-900 mb-2">Why This Matters:</h4>
                 <ul className="space-y-1 text-gray-700">
-                  <li>• Explains why privacy violations feel different depending on what's exposed (A, I, or M)</li>
+                  <li>• Explains why privacy violations feel different depending on what&apos;s exposed (A, I, or M)</li>
                   <li>• Predicts when surveillance harms autonomy vs when transparency helps (removes M-escalation)</li>
                   <li>• Provides basis for privacy law that distinguishes types of information</li>
                 </ul>
@@ -207,7 +207,7 @@ export default function DefinitionsPage() {
           <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4">In Law</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <li><strong>Respect:</strong> Legal standing requires treating parties' I-preferences as legitimate</li>
+              <li><strong>Respect:</strong> Legal standing requires treating parties&apos; I-preferences as legitimate</li>
               <li><strong>Privacy:</strong> Information protection varies by source—A-data most sensitive, M-data least</li>
             </ul>
           </div>
@@ -251,9 +251,9 @@ export default function DefinitionsPage() {
               <li>Mechanistic predictions about when each concept is violated</li>
             </ul>
             <p>
-              This would represent the first time in history that concepts like "freedom," "respect," 
-              "fairness," and "privacy" could be defined scientifically rather than philosophically, 
-              with testable predictions about when they are violated and how to restore them.
+                This would represent the first time in history that concepts like &quot;freedom,&quot; &quot;respect,&quot; 
+                &quot;fairness,&quot; and &quot;privacy&quot; could be defined scientifically rather than philosophically, 
+                with testable predictions about when they are violated and how to restore them.
             </p>
           </div>
         </div>
