@@ -505,9 +505,6 @@ export default function HomePage() {
       {/* Hidden Chat Component */}
       <HiddenChat />
 
-      <Providers>
-        <Toaster />
-      </Providers>
       <TailwindIndicator />
     </div>
   )
