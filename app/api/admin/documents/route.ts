@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     // Check authentication
     const session = await auth({ cookieStore })
-    if (!session?.user?.user_metadata?.is_admin) {
+    if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -192,13 +192,23 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const cookieStore = cookies()
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
+    
+    // Try to create Supabase client
+    let supabase
+    try {
+      supabase = createRouteHandlerClient<Database>({
+        cookies: () => cookieStore
+      })
+    } catch (supabaseError) {
+      console.warn('Supabase connection failed in DELETE:', supabaseError)
+      return NextResponse.json({ 
+        error: 'Supabase connection failed. Please check environment variables.' 
+      }, { status: 503 })
+    }
 
     // Check authentication
     const session = await auth({ cookieStore })
-    if (!session?.user?.user_metadata?.is_admin) {
+    if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
