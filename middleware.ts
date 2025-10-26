@@ -7,55 +7,73 @@ export async function middleware(req: NextRequest) {
   try {
     const res = NextResponse.next()
 
-    // Check for admin routes
-    const isAdminRoute = req.url.includes('/admin')
-    const isChatRoute = req.url.includes('/chat') || req.url.includes('/api/chat')
-    const isAuthRoute = req.url.includes('/sign-in') || req.url.includes('/sign-up')
-    
-    // Skip authentication for auth routes and static files
-    if (isAuthRoute || req.url.includes('/_next') || req.url.includes('/favicon')) {
+    // Routes that require Supabase authentication
+    const requiresAuth = 
+      req.url.includes('/admin') || 
+      req.url.includes('/chat') || 
+      req.url.includes('/api/chat') ||
+      req.url.includes('/api/admin') ||
+      req.url.includes('/api/documents/download') || // Research docs need auth
+      req.url.includes('/sign-in') ||
+      req.url.includes('/sign-up') ||
+      req.url.includes('/api/auth')
+
+    // Skip static files
+    if (req.url.includes('/_next') || req.url.includes('/favicon')) {
+      return res
+    }
+
+    // If route doesn't require auth, allow through
+    if (!requiresAuth) {
       return res
     }
 
     // Check if Supabase is configured
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.log('Supabase not configured - allowing all requests')
-      // If Supabase is not configured, allow all requests to pass through
-      // This makes the site work in production even without Supabase setup
-      return res
+      // For auth-required routes without Supabase, show service unavailable
+      if (req.url.includes('/admin') || req.url.includes('/chat')) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = '/service-unavailable'
+        return NextResponse.redirect(redirectUrl)
+      }
+      // For API routes, return 503
+      if (req.url.includes('/api/')) {
+        return NextResponse.json({ 
+          error: 'Service unavailable - authentication not configured' 
+        }, { status: 503 })
+      }
     }
 
-    // Get Supabase session with error handling
-    let session = null
-    try {
-      const supabase = createMiddlewareClient({ req, res })
-      const { data: { session: supabaseSession } } = await supabase.auth.getSession()
-      session = supabaseSession
-    } catch (error) {
-      console.error('Supabase connection error in middleware:', error)
-      // If Supabase fails, allow the request to continue
-      // This prevents the site from crashing if Supabase is misconfigured
-      return res
-    }
+    // Get Supabase session for auth-required routes
+    const supabase = createMiddlewareClient({ req, res })
+    const { data: { session } } = await supabase.auth.getSession()
 
-    // Require authentication for chat routes
-    if (isChatRoute && !session) {
+    // Handle download attempts - redirect to sign-in
+    if (req.url.includes('/api/documents/download') && !session) {
       const redirectUrl = req.nextUrl.clone()
       redirectUrl.pathname = '/sign-in'
-      redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
+      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
+      redirectUrl.searchParams.set('reason', 'download-requires-auth')
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Require admin access for admin routes
-    if (isAdminRoute) {
+    // Handle chat routes - redirect to sign-in
+    if (req.url.includes('/chat') && !session) {
+      const redirectUrl = req.nextUrl.clone()
+      redirectUrl.pathname = '/sign-in'
+      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    // Handle admin routes - require admin status
+    if (req.url.includes('/admin')) {
       if (!session) {
         const redirectUrl = req.nextUrl.clone()
         redirectUrl.pathname = '/sign-in'
-        redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
+        redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
         return NextResponse.redirect(redirectUrl)
       }
 
-      // Check if user is admin
       const isAdmin = session.user?.user_metadata?.is_admin === true
       if (!isAdmin) {
         const redirectUrl = req.nextUrl.clone()
@@ -67,8 +85,6 @@ export async function middleware(req: NextRequest) {
 
     return res
   } catch (error) {
-    // If middleware fails completely, allow the request to continue
-    // This prevents 500 errors from breaking the site
     console.error('Middleware error:', error)
     return NextResponse.next()
   }
