@@ -40,7 +40,7 @@ export function Header({ session }: HeaderProps) {
           {session?.user ? (
             <UserMenu user={session.user} />
           ) : (
-            <Button variant="link" asChild className="-ml-2">
+            <Button variant="outline" asChild className="-ml-2">
               <Link href="/sign-in">Login</Link>
             </Button>
           )}

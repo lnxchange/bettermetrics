@@ -85,7 +85,7 @@ export default function HomePage() {
       </nav>
 
       {/* Mobile In-Page Navigation */}
-      <nav className="sticky top-0 z-40 border-b border-gray-200 bg-gray-50 lg:hidden">
+      <nav className="sticky top-16 z-40 border-b border-gray-200 bg-gray-50 lg:hidden">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-center space-x-1 py-4 sm:space-x-6">
             <a
