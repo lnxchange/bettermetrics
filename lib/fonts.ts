@@ -1,11 +1,12 @@
-import { JetBrains_Mono as FontMono, Inter as FontSans } from 'next/font/google'
+import { Inter as FontSans } from 'next/font/google'
 
 export const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans'
 })
 
-export const fontMono = FontMono({
-  subsets: ['latin'],
-  variable: '--font-mono'
-})
+// Use system monospace fonts instead of JetBrains Mono to avoid Google Fonts timeout issues
+export const fontMono = {
+  variable: '--font-mono',
+  className: 'font-mono'
+}
