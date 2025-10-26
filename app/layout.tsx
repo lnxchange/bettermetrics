@@ -9,6 +9,8 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { auth } from '@/auth'
+import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
   title: {
@@ -49,7 +51,10 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const cookieStore = cookies()
+  const session = await auth({ cookieStore })
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -63,7 +68,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers attribute="class" defaultTheme="system" enableSystem>
           <ToasterWrapper />
           <div className="flex min-h-screen flex-col">
-            <Header />
+            <Header session={session} />
             <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
             <Footer />
           </div>

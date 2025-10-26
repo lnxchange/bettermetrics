@@ -1,52 +1,40 @@
+'use client'
+
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
-import { auth } from '@/auth'
-import { clearChats } from '@/app/actions'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Sidebar } from '@/components/sidebar'
-import { SidebarList } from '@/components/sidebar-list'
 import {
   IconGitHub,
   IconNextChat,
   IconSeparator,
   IconVercel
 } from '@/components/ui/icons'
-import { SidebarFooter } from '@/components/sidebar-footer'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'
-import { cookies } from 'next/headers'
 
-export async function Header() {
-  const cookieStore = cookies()
-  const session = await auth({ cookieStore })
+interface HeaderProps {
+  session?: any
+}
+
+export function Header({ session }: HeaderProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-gradient-to-b from-background/10 via-background/50 to-background/80 px-4 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 backdrop-blur-xl">
       <div className="flex items-center">
-        {session?.user ? (
-          <Sidebar>
-            <React.Suspense fallback={<div className="flex-1 overflow-auto" />}>
-              <SidebarList userId={session?.user?.id} />
-            </React.Suspense>
-            <SidebarFooter>
-              <ThemeToggle />
-              <ClearHistory clearChats={clearChats} />
-            </SidebarFooter>
-          </Sidebar>
-        ) : (
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/AIM Logo.png"
-              alt="AIM Framework"
-              width={24}
-              height={24}
-              className="mr-2"
-            />
-          </Link>
-        )}
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/AIM Logo.png"
+            alt="AIM Framework"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+        </Link>
         <div className="flex items-center">
           <IconSeparator className="h-6 w-6 text-muted-foreground/50" />
           {session?.user ? (
@@ -59,7 +47,7 @@ export async function Header() {
         </div>
       </div>
 
-      {/* AIM Framework Navigation */}
+      {/* Desktop Navigation */}
       <div className="hidden items-center space-x-6 md:flex">
         <Link
           href="/about"
@@ -173,6 +161,143 @@ export async function Header() {
           AI Chat
         </Link>
       </div>
+
+      {/* Mobile Menu Button */}
+      <div className="flex items-center space-x-2 md:hidden">
+        <ThemeToggle />
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 text-muted-foreground hover:text-foreground"
+          aria-label="Toggle mobile menu"
+        >
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            {isMobileMenuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div className="absolute top-16 left-0 right-0 z-40 bg-white border-b shadow-lg md:hidden">
+          <div className="px-4 py-4 space-y-4">
+            <Link
+              href="/about"
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+
+            {/* Mobile Research Section */}
+            <div>
+              <div className="text-sm font-medium text-muted-foreground mb-2">
+                For Researchers
+              </div>
+              <div className="ml-4 space-y-2">
+                <Link
+                  href="/research-resources"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Research Documents
+                </Link>
+                <Link
+                  href="/research/definitions"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Scientific Definitions
+                </Link>
+                <Link
+                  href="/research-resources#predictions"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Testable Predictions
+                </Link>
+                <Link
+                  href="/research"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Research Areas
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Collaborate
+                </Link>
+              </div>
+            </div>
+
+            {/* Mobile Everyone Section */}
+            <div>
+              <div className="text-sm font-medium text-muted-foreground mb-2">
+                For Everyone
+              </div>
+              <div className="ml-4 space-y-2">
+                <Link
+                  href="/understand-yourself"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Understand Your Motivations
+                </Link>
+                <Link
+                  href="/understand-yourself#career"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Career & Relationships
+                </Link>
+                <Link
+                  href="/understand-yourself#red-flags"
+                  className="block text-sm text-gray-600 hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Red Flags & Patterns
+                </Link>
+              </div>
+            </div>
+
+            <Link
+              href="/contact"
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+            <Link
+              href="/chat"
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              AI Chat
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
