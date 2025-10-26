@@ -8,9 +8,18 @@ import { auth } from '@/auth'
 export async function GET(req: NextRequest) {
   try {
     const cookieStore = cookies()
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
+    
+    // Try to create Supabase client
+    let supabase
+    try {
+      supabase = createRouteHandlerClient<Database>({
+        cookies: () => cookieStore
+      })
+    } catch (supabaseError) {
+      console.warn('Supabase connection failed in GET:', supabaseError)
+      // Return empty array if Supabase is not available
+      return NextResponse.json({ documents: [] })
+    }
 
     const { searchParams } = new URL(req.url)
     const type = searchParams.get('type') // 'research' or 'rag'
@@ -51,9 +60,19 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies()
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
+    
+    // Try to create Supabase client
+    let supabase
+    try {
+      supabase = createRouteHandlerClient<Database>({
+        cookies: () => cookieStore
+      })
+    } catch (supabaseError) {
+      console.warn('Supabase connection failed in POST:', supabaseError)
+      return NextResponse.json({ 
+        error: 'Supabase connection failed. Please check environment variables.' 
+      }, { status: 503 })
+    }
 
     // Check authentication
     const session = await auth({ cookieStore })

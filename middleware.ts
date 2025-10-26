@@ -7,21 +7,27 @@ export async function middleware(req: NextRequest) {
   try {
     const res = NextResponse.next()
 
-    // Create a Supabase client configured to use cookies
-    // Production deployment with full authentication
-    const supabase = createMiddlewareClient({ req, res })
-
-    // Refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
-    const {
-      data: { session }
-    } = await supabase.auth.getSession()
-
     // Check for admin routes
     const isAdminRoute = req.url.includes('/admin')
     const isChatRoute = req.url.includes('/chat') || req.url.includes('/api/chat')
     const isAuthRoute = req.url.includes('/sign-in') || req.url.includes('/sign-up')
     
+    // Skip authentication for auth routes and static files
+    if (isAuthRoute || req.url.includes('/_next') || req.url.includes('/favicon')) {
+      return res
+    }
+
+    // Try to create Supabase client and get session
+    let session = null
+    try {
+      const supabase = createMiddlewareClient({ req, res })
+      const { data: { session: userSession } } = await supabase.auth.getSession()
+      session = userSession
+    } catch (supabaseError) {
+      console.warn('Supabase connection failed in middleware:', supabaseError)
+      // Continue without authentication - site will still load
+    }
+
     // Require authentication for chat routes
     if (isChatRoute && !session) {
       const redirectUrl = req.nextUrl.clone()
@@ -51,7 +57,7 @@ export async function middleware(req: NextRequest) {
 
     return res
   } catch (error) {
-    // If middleware fails, allow the request to continue
+    // If middleware fails completely, allow the request to continue
     // This prevents 500 errors from breaking the site
     console.error('Middleware error:', error)
     return NextResponse.next()
