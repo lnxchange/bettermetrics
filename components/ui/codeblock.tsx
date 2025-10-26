@@ -44,15 +44,13 @@ export const programmingLanguages: languageMap = {
   // add more file extensions here, make sure the key is same as language prop in CodeBlock.tsx component
 }
 
-let fileCounter = 0
-
 export const generateRandomString = (length: number, lowercase = false) => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXY3456789' // excluding similar looking characters like Z, 2, I, 1, O, 0
   let result = ''
-  // Use a counter-based approach to avoid hydration mismatches
-  const seed = (++fileCounter) % chars.length
+  // Use a hash-based approach that's deterministic
+  const hash = btoa(`${length}-${lowercase}`).slice(0, length)
   for (let i = 0; i < length; i++) {
-    result += chars.charAt((seed + i) % chars.length)
+    result += chars.charAt(hash.charCodeAt(i) % chars.length)
   }
   return lowercase ? result.toLowerCase() : result
 }

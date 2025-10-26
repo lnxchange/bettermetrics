@@ -31,31 +31,15 @@ export default function RAGDocumentsPage() {
   }>({ completed: 0, total: 0 })
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [hasMounted, setHasMounted] = useState(false)
 
-  // Track when component has mounted (after hydration)
+  // Fetch documents on page load
   useEffect(() => {
-    setHasMounted(true)
-  }, [])
-
-  // Fetch documents on page load (only after mount)
-  useEffect(() => {
-    if (!hasMounted) return
-
     const fetchDocuments = async () => {
       try {
-        // Add a small delay to ensure server is ready
-        await new Promise(resolve => setTimeout(resolve, 100))
         const response = await fetch('/api/admin/documents?type=rag')
         if (response.ok) {
           const data = await response.json()
           setDocuments(data.documents || [])
-        } else {
-          console.error(
-            'Response not ok:',
-            response.status,
-            response.statusText
-          )
         }
       } catch (error) {
         console.error('Error fetching documents:', error)
@@ -65,7 +49,7 @@ export default function RAGDocumentsPage() {
     }
 
     fetchDocuments()
-  }, [hasMounted])
+  }, [])
 
   const handleDownload = async (document: any) => {
     try {
@@ -462,7 +446,7 @@ export default function RAGDocumentsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {!hasMounted || isLoading ? (
+                  {isLoading ? (
                     <div className="py-8 text-center text-gray-500">
                       <p>Loading documents...</p>
                     </div>

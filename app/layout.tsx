@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-import { Toaster } from 'react-hot-toast'
+import { ToasterWrapper } from '@/components/toaster-wrapper'
 
 import '@/app/globals.css'
 import { fontMono, fontSans } from '@/lib/fonts'
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <Providers attribute="class" defaultTheme="system" enableSystem>
-          <Toaster />
+          <ToasterWrapper />
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
