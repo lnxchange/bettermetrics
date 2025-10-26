@@ -69,7 +69,7 @@ export default function LawPage() {
                 without coercion by unmet appetites (A) or mimetic pressure (M).
               </p>
               <p className="text-gray-600">
-                <strong>Legal Applications:</strong> Contract law (when is consent truly "free"?), 
+                <strong>Legal Applications:</strong> Contract law (when is consent truly &quot;free&quot;?), 
                 labor law (what constitutes workplace freedom?), constitutional law (when do regulations 
                 enhance vs constrain freedom?).
               </p>
@@ -96,7 +96,7 @@ export default function LawPage() {
                 appetitive sufficiency (A), protects intrinsic autonomy (I), and minimizes mimetic rivalry (M).
               </p>
               <p className="text-gray-600">
-                <strong>Legal Applications:</strong> Resolves tensions between "equality" and "equity" in 
+                <strong>Legal Applications:</strong> Resolves tensions between &quot;equality&quot; and &quot;equity&quot; in 
                 constitutional law, explains why some inequalities feel fair (I-based achievement) 
                 while others don&apos;t (M-based status hoarding).
               </p>
@@ -169,7 +169,7 @@ export default function LawPage() {
           <div className="bg-blue-50 p-8 rounded-xl border-2 border-blue-200">
             <div className="prose prose-lg max-w-none">
               <p>
-                <strong>Current Problem:</strong> Legal concepts like "freedom," "respect," "fairness," and "privacy" 
+                <strong>Current Problem:</strong> Legal concepts like &quot;freedom,&quot; &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; 
                 are defined through philosophical tradition or legal precedent, leading to:
               </p>
               <ul>

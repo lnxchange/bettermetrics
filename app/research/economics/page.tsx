@@ -44,11 +44,11 @@ export default function EconomicsPage() {
         
         {/* Overview */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">When Markets Price Blindly: AIM's Revolutionary Economic Insight</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">When Markets Price Blindly: AIM&apos;s Revolutionary Economic Insight</h2>
           
           <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 mb-8">
             <p className="text-lg font-semibold text-gray-900 mb-4">
-              Standard economic theory assumes markets efficiently aggregate "preferences" into prices. But AIM reveals a critical blind spot: 
+              Standard economic theory assumes markets efficiently aggregate &quot;preferences&quot; into prices. But AIM reveals a critical blind spot: 
               <strong> markets cannot separately price appetitive needs (A), intrinsic values (I), and mimetic wants (M).</strong> 
               When this tri-source distinction disappears, pricing defaults to the only observable signal—mimetic visibility (M).
             </p>
@@ -150,7 +150,7 @@ export default function EconomicsPage() {
               </ul>
             </div>
             <div className="bg-green-50 p-6 rounded-xl">
-              <h4 className="font-bold text-gray-900 mb-3">AIM's Revolutionary View</h4>
+              <h4 className="font-bold text-gray-900 mb-3">AIM&apos;s Revolutionary View</h4>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li><strong>Markets structurally cannot see A vs I, so they price M by default</strong></li>
                 <li><strong>When pricing goes blind to A/I, ALL goods drift toward M-pricing</strong></li>
@@ -168,7 +168,7 @@ export default function EconomicsPage() {
             </div>
             <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
               <h4 className="font-bold text-gray-900 mb-2">2. Predict market failures in essentials</h4>
-              <p className="text-gray-700">Markets fail for A-goods when M-signaling is possible (cannot separate "housing as shelter" from "housing as status")</p>
+              <p className="text-gray-700">Markets fail for A-goods when M-signaling is possible (cannot separate &quot;housing as shelter&quot; from &quot;housing as status&quot;)</p>
             </div>
             <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
               <h4 className="font-bold text-gray-900 mb-2">3. Predict bubble formation</h4>
@@ -185,7 +185,7 @@ export default function EconomicsPage() {
             <p className="text-gray-700 mb-4">If markets are structurally blind to A vs I needs:</p>
             <ul className="space-y-2 text-gray-700">
               <li><strong>Cannot rely on market pricing alone for essentials</strong> (housing, healthcare, basic education)</li>
-              <li><strong>Must design "blind" purchasing systems for A-goods</strong> (anonymous, non-status-signaling)</li>
+              <li><strong>Must design &quot;blind&quot; purchasing systems for A-goods</strong> (anonymous, non-status-signaling)</li>
               <li><strong>Credential inflation is predictable and preventable</strong> (reduce M-visibility of credentials)</li>
               <li><strong>Inequality feels unfair when attributable to M</strong> rather than I (explains political economy tensions)</li>
             </ul>
@@ -341,7 +341,7 @@ export default function EconomicsPage() {
             <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Market Design to Reduce Mimetic Rivalry</h3>
               <p className="text-gray-700 mb-3">
-                <strong>Research Question:</strong> Can "blind" purchasing systems (hidden from social observation) reduce M-inflation for essential goods?
+                <strong>Research Question:</strong> Can &quot;blind&quot; purchasing systems (hidden from social observation) reduce M-inflation for essential goods?
               </p>
               <p className="text-gray-700 mb-3">
                 <strong>Testable prediction:</strong> Anonymous purchasing for healthcare/housing should reduce status premium, improve A-access
@@ -443,7 +443,7 @@ export default function EconomicsPage() {
                   <ul className="space-y-2 text-gray-700">
                     <li><strong>Create protected I-spaces:</strong> Research funding with minimal reporting/visibility requirements</li>
                     <li><strong>Delay M-evaluation:</strong> Allow private exploration before public assessment (sequence matters)</li>
-                    <li><strong>Diversify recognition dimensions:</strong> Prevent mimetic convergence on single "top researcher" metric</li>
+                    <li><strong>Diversify recognition dimensions:</strong> Prevent mimetic convergence on single &quot;top researcher&quot; metric</li>
                   </ul>
                 </div>
                 <p className="text-sm text-gray-600">
@@ -462,8 +462,8 @@ export default function EconomicsPage() {
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                   <h4 className="font-bold text-green-800 mb-2">AIM-Informed Approach</h4>
                   <ul className="space-y-2 text-gray-700">
-                    <li><strong>Identify "blind markets":</strong> Essential goods where A/I needs are private but M-signaling is possible (housing, healthcare, education)</li>
-                    <li><strong>Design "visibility-reducing" mechanisms:</strong> Anonymous purchasing, blind bidding, private access for A-essentials</li>
+                    <li><strong>Identify &quot;blind markets&quot;:</strong> Essential goods where A/I needs are private but M-signaling is possible (housing, healthcare, education)</li>
+                    <li><strong>Design &quot;visibility-reducing&quot; mechanisms:</strong> Anonymous purchasing, blind bidding, private access for A-essentials</li>
                     <li><strong>Separate M-markets from A-markets:</strong> Allow status goods to exist separately from essential goods markets</li>
                   </ul>
                 </div>
@@ -479,7 +479,7 @@ export default function EconomicsPage() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2">Current approach</h4>
-                    <p className="text-sm text-gray-700">Market pricing assumes "housing demand" is unitary</p>
+                    <p className="text-sm text-gray-700">Market pricing assumes &quot;housing demand&quot; is unitary</p>
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2">AIM diagnosis</h4>
@@ -522,7 +522,7 @@ export default function EconomicsPage() {
                   </ol>
                 </div>
                 <p className="text-sm text-gray-600">
-                  <strong>Expected outcome:</strong> A-needs met regardless of means, I-autonomy preserved in treatment, M-inflation doesn't block A-access
+                  <strong>Expected outcome:</strong> A-needs met regardless of means, I-autonomy preserved in treatment, M-inflation doesn&apos;t block A-access
                 </p>
               </div>
             </div>
@@ -531,13 +531,13 @@ export default function EconomicsPage() {
 
         {/* Markets Going Blind Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">When Markets Go Blind: AIM's Most Radical Economic Prediction</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">When Markets Go Blind: AIM&apos;s Most Radical Economic Prediction</h2>
           
           <div className="bg-red-50 p-8 rounded-xl border-2 border-red-200 mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">The Core Problem</h3>
             <div className="prose prose-lg max-w-none">
               <p>
-                Standard economic theory assumes prices reflect "preferences" without distinguishing 
+                Standard economic theory assumes prices reflect &quot;preferences&quot; without distinguishing 
                 between appetitive needs (A), intrinsic values (I), and mimetic wants (M).
               </p>
               <p>

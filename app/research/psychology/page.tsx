@@ -49,7 +49,7 @@ export default function PsychologyPage() {
           <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 mb-8">
             <p className="text-lg font-semibold text-gray-900 mb-4">
               Psychology has long recognized that human behavior is multiply motivated, but existing frameworks struggle to cleanly separate motivational sources. 
-              Self-Determination Theory distinguishes "intrinsic" from "extrinsic" motivation but lumps appetitive needs and mimetic desires together as "extrinsic." 
+              Self-Determination Theory distinguishes &quot;intrinsic&quot; from &quot;extrinsic&quot; motivation but lumps appetitive needs and mimetic desires together as &quot;extrinsic.&quot; 
               Social psychology studies conformity and social influence but doesn&apos;t distinguish mimetic desire from other social processes.
             </p>
             <p className="text-gray-700">
@@ -214,7 +214,7 @@ export default function PsychologyPage() {
               <div className="space-y-4">
                 <div className="bg-red-50 p-4 rounded-lg border border-red-200">
                   <h4 className="font-bold text-red-800 mb-2">Why therapy sometimes fails</h4>
-                  <p className="text-gray-700">The intervention targets one motivational source (usually I—"find your authentic self") while the problem is located in another (A-dysregulation, M-anxiety).</p>
+                  <p className="text-gray-700">The intervention targets one motivational source (usually I—&quot;find your authentic self&quot;) while the problem is located in another (A-dysregulation, M-anxiety).</p>
                 </div>
                 <div className="space-y-3">
                   <div className="bg-gray-50 p-3 rounded-lg">
@@ -227,7 +227,7 @@ export default function PsychologyPage() {
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-bold text-gray-900 mb-1">Burnout as I-to-M drift</h5>
-                    <p className="text-sm text-gray-700">Coaching focused on "finding passion" misses that the work WAS intrinsically motivating before visibility/ranking inflated wₘ</p>
+                    <p className="text-sm text-gray-700">Coaching focused on &quot;finding passion&quot; misses that the work WAS intrinsically motivating before visibility/ranking inflated wₘ</p>
                   </div>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
