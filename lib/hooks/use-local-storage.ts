@@ -7,18 +7,23 @@ export const useLocalStorage = <T>(
   const [storedValue, setStoredValue] = useState(initialValue)
 
   useEffect(() => {
-    // Retrieve from localStorage
-    const item = window.localStorage.getItem(key)
-    if (item) {
-      setStoredValue(JSON.parse(item))
+    // Only run on client-side
+    if (typeof window !== 'undefined') {
+      // Retrieve from localStorage
+      const item = window.localStorage.getItem(key)
+      if (item) {
+        setStoredValue(JSON.parse(item))
+      }
     }
   }, [key])
 
   const setValue = (value: T) => {
     // Save state
     setStoredValue(value)
-    // Save to localStorage
-    window.localStorage.setItem(key, JSON.stringify(value))
+    // Save to localStorage only on client-side
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(key, JSON.stringify(value))
+    }
   }
   return [storedValue, setValue]
 }
