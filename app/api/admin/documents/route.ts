@@ -75,7 +75,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Check authentication
-    const session = await auth({ cookieStore })
+    let session = null
+    try {
+      session = await auth({ cookieStore })
+    } catch (authError) {
+      console.warn('Auth function failed in POST:', authError)
+      return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
+    }
+    
     if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -207,7 +214,14 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Check authentication
-    const session = await auth({ cookieStore })
+    let session = null
+    try {
+      session = await auth({ cookieStore })
+    } catch (authError) {
+      console.warn('Auth function failed in DELETE:', authError)
+      return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
+    }
+    
     if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
