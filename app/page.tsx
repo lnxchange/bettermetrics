@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/toaster'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
-import { HiddenChat } from '@/components/hidden-chat'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -501,9 +500,6 @@ export default function HomePage() {
           </section>
         </article>
       </main>
-
-      {/* Hidden Chat Component */}
-      <HiddenChat />
 
       <TailwindIndicator />
     </div>
