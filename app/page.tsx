@@ -1,11 +1,10 @@
 import { Metadata } from 'next'
-import { Chat } from '@/components/chat'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/toaster'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { HiddenChat } from '@/components/hidden-chat'
 import Link from 'next/link'
 import Image from 'next/image'
-import { nanoid } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Welcome to Use Better Metrics | AIM Motivation Framework',
@@ -42,8 +41,6 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  const id = nanoid()
-
   return (
     <div className="bg-white">
       {/* Floating In-Page Navigation */}
@@ -506,9 +503,7 @@ export default function HomePage() {
       </main>
 
       {/* Hidden Chat Component */}
-      <div className="hidden">
-        <Chat id={id} />
-      </div>
+      <HiddenChat />
 
       <Providers>
         <Toaster />
