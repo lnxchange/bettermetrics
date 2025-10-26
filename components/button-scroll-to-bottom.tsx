@@ -10,6 +10,16 @@ import { IconArrowDown } from '@/components/ui/icons'
 export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
   const isAtBottom = useAtBottom()
 
+  const handleScrollToBottom = React.useCallback(() => {
+    // Only run on client-side
+    if (typeof window === 'undefined') return
+    
+    window.scrollTo({
+      top: document.body.offsetHeight,
+      behavior: 'smooth'
+    })
+  }, [])
+
   return (
     <Button
       variant="outline"
@@ -19,12 +29,7 @@ export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
         isAtBottom ? 'opacity-0' : 'opacity-100',
         className
       )}
-      onClick={() =>
-        window.scrollTo({
-          top: document.body.offsetHeight,
-          behavior: 'smooth'
-        })
-      }
+      onClick={handleScrollToBottom}
       {...props}
     >
       <IconArrowDown />

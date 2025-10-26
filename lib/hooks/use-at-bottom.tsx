@@ -4,6 +4,9 @@ export function useAtBottom(offset = 0) {
   const [isAtBottom, setIsAtBottom] = React.useState(false)
 
   React.useEffect(() => {
+    // Only run on client-side
+    if (typeof window === 'undefined') return
+
     const handleScroll = () => {
       setIsAtBottom(
         window.innerHeight + window.scrollY >=

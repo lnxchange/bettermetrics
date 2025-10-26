@@ -18,6 +18,9 @@ export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
   })
 
   React.useEffect(() => {
+    // Only run on client-side
+    if (typeof window === 'undefined') return
+    
     if (isAtBottom && trackVisibility && !inView) {
       entry?.target.scrollIntoView({
         block: 'start'
