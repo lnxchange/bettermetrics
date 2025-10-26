@@ -42,9 +42,11 @@ export async function middleware(req: NextRequest) {
           error: 'Service unavailable - authentication not configured' 
         }, { status: 503 })
       }
+      // For sign-in/sign-up routes, allow through to show "not available" message
+      return res
     }
 
-    // Get Supabase session for auth-required routes
+    // Only try to create Supabase client if environment variables are configured
     const supabase = createMiddlewareClient({ req, res })
     const { data: { session } } = await supabase.auth.getSession()
 
