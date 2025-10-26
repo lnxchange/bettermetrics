@@ -17,9 +17,34 @@ export async function middleware(req: NextRequest) {
       return res
     }
 
-    // Get Supabase session - REQUIRED for admin/chat routes
-    const supabase = createMiddlewareClient({ req, res })
-    const { data: { session } } = await supabase.auth.getSession()
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Supabase environment variables not configured')
+      if (isAdminRoute || isChatRoute) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = '/sign-in'
+        redirectUrl.searchParams.set('error', 'configuration-error')
+        return NextResponse.redirect(redirectUrl)
+      }
+      return res
+    }
+
+    // Get Supabase session with error handling
+    let session = null
+    try {
+      const supabase = createMiddlewareClient({ req, res })
+      const { data: { session: supabaseSession } } = await supabase.auth.getSession()
+      session = supabaseSession
+    } catch (error) {
+      console.error('Supabase connection error in middleware:', error)
+      // If Supabase fails, redirect to error page instead of crashing
+      if (isAdminRoute || isChatRoute) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = '/sign-in'
+        redirectUrl.searchParams.set('error', 'service-unavailable')
+        return NextResponse.redirect(redirectUrl)
+      }
+    }
 
     // Require authentication for chat routes
     if (isChatRoute && !session) {
