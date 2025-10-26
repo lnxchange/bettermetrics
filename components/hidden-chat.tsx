@@ -6,13 +6,17 @@ import { nanoid } from '@/lib/utils'
 
 export function HiddenChat() {
   const [id, setId] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Ensure we're on client-side
+    setMounted(true)
     // Generate ID on client-side only
     setId(nanoid())
   }, [])
 
-  if (!id) {
+  // Don't render anything until mounted (prevents hydration mismatch)
+  if (!mounted || !id) {
     return null
   }
 
