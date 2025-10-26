@@ -59,12 +59,145 @@ export interface Database {
           }
         ]
       }
+      document_embeddings: {
+        Row: {
+          id: string
+          document_id: string
+          document_type: string
+          chunk_text: string
+          embedding: number[] | null
+          chunk_index: number
+          metadata: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          document_id: string
+          document_type: string
+          chunk_text: string
+          embedding?: number[] | null
+          chunk_index: number
+          metadata?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          document_id?: string
+          document_type?: string
+          chunk_text?: string
+          embedding?: number[] | null
+          chunk_index?: number
+          metadata?: Json | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      rag_documents: {
+        Row: {
+          id: string
+          title: string
+          content: string | null
+          file_url: string | null
+          file_type: string | null
+          metadata: Json | null
+          uploaded_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          content?: string | null
+          file_url?: string | null
+          file_type?: string | null
+          metadata?: Json | null
+          uploaded_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          title?: string
+          content?: string | null
+          file_url?: string | null
+          file_type?: string | null
+          metadata?: Json | null
+          uploaded_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rag_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      research_documents: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          file_url: string
+          file_type: string
+          file_size: number | null
+          uploaded_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          file_url: string
+          file_type: string
+          file_size?: number | null
+          uploaded_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          file_url?: string
+          file_type?: string
+          file_size?: number | null
+          uploaded_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_documents: {
+        Args: {
+          query_embedding: number[]
+          match_threshold?: number
+          match_count?: number
+          document_type?: string | null
+        }
+        Returns: {
+          chunk_text: string
+          metadata: Json | null
+          document_id: string
+          chunk_index: number
+          similarity_score: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

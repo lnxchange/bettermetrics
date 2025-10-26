@@ -45,41 +45,99 @@ export default function LawPage() {
         {/* Overview */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Overview</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add comprehensive overview of how AIM transforms legal understanding, including key legal phenomena explained by the framework.
-            </p>
-          </div>
           <p>
             The AIM Framework provides a neuroscientifically grounded foundation for understanding legal behavior and justice. 
             By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, we can better 
             predict and explain legal outcomes, design fairer contracts, and create more just legal systems.
           </p>
+          <p>
+            <strong>If validated, AIM would enable the first scientific definitions of fundamental legal concepts</strong> 
+            like freedom, respect, fairness, and privacy—concepts that currently rely on philosophical tradition 
+            or legal precedent rather than neuroscientific understanding.
+          </p>
         </section>
 
-        {/* Key Legal Phenomena */}
+        {/* Scientific Legal Definitions */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Key Legal Phenomena</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add detailed explanations of how AIM explains specific legal phenomena like contract design, justice, etc.
-            </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Scientific Legal Definitions Enabled by AIM</h2>
+          
+          <div className="grid lg:grid-cols-2 gap-8 mb-8">
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Freedom in Legal Context</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>AIM Definition:</strong> The capacity to pursue intrinsically motivated (I) activities 
+                without coercion by unmet appetites (A) or mimetic pressure (M).
+              </p>
+              <p className="text-gray-600">
+                <strong>Legal Applications:</strong> Contract law (when is consent truly "free"?), 
+                labor law (what constitutes workplace freedom?), constitutional law (when do regulations 
+                enhance vs constrain freedom?).
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Respect in Legal Context</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>AIM Definition:</strong> Recognition and protection of another person's intrinsic 
+                motivations (I) and autonomy, distinct from mere appetitive provision (A) or 
+                mimetic status-granting (M).
+              </p>
+              <p className="text-gray-600">
+                <strong>Legal Applications:</strong> Discrimination law (disrespect = treating I-source 
+                preferences as illegitimate), family law (respecting children's autonomy), 
+                employment law (respectful workplace practices).
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Fairness in Legal Context</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>AIM Definition:</strong> Distribution of resources and opportunities that ensures 
+                appetitive sufficiency (A), protects intrinsic autonomy (I), and minimizes mimetic rivalry (M).
+              </p>
+              <p className="text-gray-600">
+                <strong>Legal Applications:</strong> Resolves tensions between "equality" and "equity" in 
+                constitutional law, explains why some inequalities feel fair (I-based achievement) 
+                while others don't (M-based status hoarding).
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Privacy in Legal Context</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>AIM Definition:</strong> The right to control observability of one's activities, 
+                particularly the ability to pursue intrinsic motivations (I) without triggering 
+                mimetic dynamics (M) or exposing appetitive vulnerabilities (A).
+              </p>
+              <p className="text-gray-600">
+                <strong>Legal Applications:</strong> Privacy law that distinguishes types of information 
+                (A-data most sensitive, M-data least), surveillance law (when surveillance harms 
+                autonomy vs when transparency helps).
+              </p>
+            </div>
           </div>
+        </section>
+
+        {/* Cross-Cutting Legal Applications */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Cross-Cutting Legal Applications</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-xl border-2 border-amber-200">
               <h3 className="text-xl font-bold text-gray-900 mb-3">Justice as Appetitive Sufficiency</h3>
               <p className="text-gray-600">
                 How legal justice fundamentally requires meeting basic appetitive needs (food, shelter, safety), 
-                and why this forms the foundation of fair legal systems.
+                and why this forms the foundation of fair legal systems. AIM predicts that legal systems 
+                that fail to ensure appetitive sufficiency will see higher crime rates and lower compliance.
               </p>
             </div>
             
             <div className="bg-gradient-to-br from-teal-50 to-white p-6 rounded-xl border-2 border-teal-200">
               <h3 className="text-xl font-bold text-gray-900 mb-3">Contract Design for Motivation Sources</h3>
               <p className="text-gray-600">
-                How contracts must account for different motivational sources, 
-                from basic appetitive needs to complex mimetic status considerations.
+                How contracts must account for different motivational sources, from basic appetitive needs 
+                to complex mimetic status considerations. AIM predicts that contracts preserving intrinsic 
+                autonomy will have higher compliance rates than purely punitive contracts.
               </p>
             </div>
             
@@ -87,7 +145,8 @@ export default function LawPage() {
               <h3 className="text-xl font-bold text-gray-900 mb-3">Legal Frameworks and Autonomy</h3>
               <p className="text-gray-600">
                 How legal systems can protect intrinsic autonomy while addressing mimetic rivalry 
-                and ensuring appetitive sufficiency for all citizens.
+                and ensuring appetitive sufficiency for all citizens. AIM provides a framework for 
+                designing legal institutions that work with human nature rather than against it.
               </p>
             </div>
             
@@ -95,7 +154,73 @@ export default function LawPage() {
               <h3 className="text-xl font-bold text-gray-900 mb-3">Criminal Behavior & Motivation</h3>
               <p className="text-gray-600">
                 How criminal behavior often stems from unmet appetitive needs or mimetic rivalry, 
-                and how legal responses should address underlying motivational sources.
+                and how legal responses should address underlying motivational sources. AIM predicts 
+                that rehabilitation programs addressing A/I/M sources will be more effective than 
+                purely punitive approaches.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Why This Matters for Jurisprudence */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Why This Matters for Jurisprudence</h2>
+          
+          <div className="bg-blue-50 p-8 rounded-xl border-2 border-blue-200">
+            <div className="prose prose-lg max-w-none">
+              <p>
+                <strong>Current Problem:</strong> Legal concepts like "freedom," "respect," "fairness," and "privacy" 
+                are defined through philosophical tradition or legal precedent, leading to:
+              </p>
+              <ul>
+                <li>Inconsistent applications across different legal domains</li>
+                <li>Conflicts between constitutional, contract, and criminal law</li>
+                <li>Difficulty predicting when legal interventions will succeed or fail</li>
+                <li>Policy backfires when legal frameworks don't account for human motivation</li>
+              </ul>
+              <p>
+                <strong>With AIM (if validated):</strong> Legal concepts would have neuroscientifically grounded, 
+                testable definitions that apply uniformly across all legal domains. This would enable:
+              </p>
+              <ul>
+                <li>Predictable legal outcomes based on motivational science</li>
+                <li>Design of legal institutions that work with human nature</li>
+                <li>Resolution of conflicts between different areas of law</li>
+                <li>Evidence-based legal policy rather than philosophical speculation</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Policy and Institutional Design */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Policy and Institutional Design</h2>
+          
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Constitutional Design</h3>
+              <p className="text-gray-700">
+                AIM predicts that constitutions protecting appetitive sufficiency (A), intrinsic autonomy (I), 
+                and managing mimetic rivalry (M) will produce more stable, just societies. This provides a 
+                scientific basis for constitutional design rather than relying solely on historical precedent.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Criminal Justice Reform</h3>
+              <p className="text-gray-700">
+                AIM predicts that criminal justice systems addressing underlying motivational sources (A/I/M) 
+                will be more effective than purely punitive approaches. This suggests reforms like restorative 
+                justice, rehabilitation programs, and addressing root causes of crime.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Contract Law Innovation</h3>
+              <p className="text-gray-700">
+                AIM predicts that contracts preserving intrinsic autonomy while ensuring appetitive sufficiency 
+                will have higher compliance rates. This suggests contract design that includes opt-out clauses, 
+                renegotiation triggers, and recovery periods during high-stress situations.
               </p>
             </div>
           </div>

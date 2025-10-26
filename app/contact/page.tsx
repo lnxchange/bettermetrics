@@ -116,6 +116,57 @@ export default function ContactPage() {
         </div>
       </section>
 
+      {/* Why Collaborate on AIM */}
+      <section className="bg-primary-600 text-white py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-6">Why Collaborate on AIM?</h2>
+            <p className="text-xl max-w-4xl mx-auto">
+              This isn't an incremental improvement—it's a fundamental reorganization of how we understand human motivation, 
+              with implications for every field of human behavior.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-3 gap-8 mb-12">
+            <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-4">Not Incremental—Revolutionary</h3>
+              <p className="text-gray-100">
+                Most theories propose new mechanisms. AIM proposes new <strong>categories</strong>. 
+                If validated, it would provide the first neuroscientific basis for cross-disciplinary 
+                definitions of fundamental human concepts.
+              </p>
+            </div>
+            
+            <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-4">Unique Cross-Disciplinary Applications</h3>
+              <p className="text-gray-100">
+                AIM enables scientific definitions of freedom, respect, fairness, and privacy that 
+                apply uniformly across economics, law, psychology, and policy—resolving conflicts 
+                between different fields' approaches to human behavior.
+              </p>
+            </div>
+            
+            <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-4">Testable Predictions Existing Frameworks Cannot Make</h3>
+              <p className="text-gray-100">
+                AIM's tri-source model enables predictions about market failures, intervention backfires, 
+                and social dynamics escalation that no existing theory can make—providing a competitive 
+                advantage in research and practice.
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center">
+            <h3 className="text-2xl font-bold mb-4">The Opportunity</h3>
+            <p className="text-lg text-gray-100 max-w-3xl mx-auto">
+              If validated, AIM would represent the first time in history that concepts like "freedom," 
+              "respect," "fairness," and "privacy" could be defined scientifically rather than philosophically, 
+              with testable predictions about when they are violated and how to restore them.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Collaboration Opportunities */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -52,6 +52,104 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Why AIM Represents a Paradigm Shift */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why AIM Represents a Paradigm Shift</h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              Not Just New Mechanisms—New Categories for Understanding Human Motivation
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-8 mb-12">
+            {/* Current Theories */}
+            <div className="bg-red-50 p-8 rounded-xl border-2 border-red-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Current Theoretical Limitations</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Self-Determination Theory</h4>
+                  <p className="text-gray-700 text-sm">
+                    Lumps appetitive needs and mimetic desires together as &quot;extrinsic motivation,&quot; 
+                    missing the crucial distinction between biological necessity and social signaling.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Behavioral Economics</h4>
+                  <p className="text-gray-700 text-sm">
+                    Treats all social influence as one mechanism, unable to distinguish between 
+                    helpful social learning and harmful status competition.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Mimetic Theory</h4>
+                  <p className="text-gray-700 text-sm">
+                    Underspecifies biological needs and intrinsic motivation, focusing primarily 
+                    on social dynamics without grounding in neuroscience.
+                  </p>
+                </div>
+                <div className="bg-red-100 p-4 rounded-lg">
+                  <p className="font-semibold text-red-800 text-sm">
+                    Result: Theories conflict, predictions fail, policy backfires
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* AIM's Solution */}
+            <div className="bg-green-50 p-8 rounded-xl border-2 border-green-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">AIM&apos;s Revolutionary Approach</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Three Functionally Distinct Sources</h4>
+                  <p className="text-gray-700 text-sm">
+                    Each with different neural circuits, behavioral signatures, and policy levers— 
+                    enabling precise interventions rather than one-size-fits-all approaches.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Neuroscientifically Grounded</h4>
+                  <p className="text-gray-700 text-sm">
+                    Based on established neuroscience rather than philosophical speculation, 
+                    enabling testable predictions and falsifiable hypotheses.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Cross-Disciplinary Integration</h4>
+                  <p className="text-gray-700 text-sm">
+                    Provides uniform framework for economics, law, psychology, and policy— 
+                    resolving conflicts between different fields&apos; approaches to human behavior.
+                  </p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-lg">
+                  <p className="font-semibold text-green-800 text-sm">
+                    Enables: Scientific definitions, market failure prediction, institutional design
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-primary-50 to-blue-50 p-8 rounded-xl border-2 border-primary-200">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+              The Core Innovation: Tri-Source Classification
+            </h3>
+            <div className="prose prose-lg max-w-none text-center">
+              <p>
+                Most theories propose new mechanisms. AIM proposes new <strong>categories</strong>. 
+                This isn&apos;t an incremental improvement—it&apos;s a fundamental reorganization of how we 
+                understand human motivation.
+              </p>
+              <p className="font-semibold text-primary-800">
+                If validated, AIM would provide the first neuroscientific basis for 
+                cross-disciplinary definitions of fundamental human concepts like freedom, 
+                respect, fairness, and privacy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
         <h2>A New Understanding of Human Choice</h2>

@@ -7,6 +7,7 @@ import { Database } from '@/lib/db_types'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
+import { VectorSearch } from '@/lib/rag/vector-search'
 
 export const runtime = 'edge'
 
@@ -62,8 +63,26 @@ export async function POST(req: Request) {
     configuration.apiKey = previewToken
   }
 
-  // Add AIM system prompt to messages
-  const systemMessage = { role: 'system', content: AIM_SYSTEM_PROMPT }
+  // Get the latest user message for RAG context
+  const userQuery = messages[messages.length - 1]?.content || ''
+  
+  // Search for relevant context using RAG
+  let ragContext = ''
+  try {
+    const vectorSearch = new VectorSearch()
+    ragContext = await vectorSearch.searchWithContext(userQuery, 3, 'rag')
+  } catch (error) {
+    console.error('RAG search error:', error)
+    // Continue without context if RAG fails
+  }
+
+  // Build system message with RAG context
+  let systemContent = AIM_SYSTEM_PROMPT
+  if (ragContext) {
+    systemContent += `\n\n${ragContext}`
+  }
+
+  const systemMessage = { role: 'system', content: systemContent }
   const allMessages = [systemMessage, ...messages]
 
   const res = await openai.createChatCompletion({

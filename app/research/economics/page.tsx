@@ -44,17 +44,157 @@ export default function EconomicsPage() {
         
         {/* Overview */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Overview</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add comprehensive overview of how AIM transforms economic understanding, including key economic phenomena explained by the framework.
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">When Markets Price Blindly: AIM's Revolutionary Economic Insight</h2>
+          
+          <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 mb-8">
+            <p className="text-lg font-semibold text-gray-900 mb-4">
+              Standard economic theory assumes markets efficiently aggregate "preferences" into prices. But AIM reveals a critical blind spot: 
+              <strong> markets cannot separately price appetitive needs (A), intrinsic values (I), and mimetic wants (M).</strong> 
+              When this tri-source distinction disappears, pricing defaults to the only observable signal—mimetic visibility (M).
+            </p>
+            <p className="text-gray-700">
+              This creates systematic market failures with profound implications for policy, inequality, and economic design.
             </p>
           </div>
-          <p>
-            The AIM Framework proposes a neuroscientifically grounded foundation for understanding economic behavior. 
-            By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, it could potentially 
-            predict and explain market dynamics, consumer behavior, and economic policy outcomes.
-          </p>
+
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">The Pricing Blind Spot Mechanism</h3>
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+              <h4 className="font-bold text-amber-800 mb-2">Appetitive needs (A)</h4>
+              <p className="text-sm text-gray-700">Private, variable, and non-observable at market scale</p>
+            </div>
+            <div className="bg-teal-50 p-4 rounded-lg border border-teal-200">
+              <h4 className="font-bold text-teal-800 mb-2">Intrinsic preferences (I)</h4>
+              <p className="text-sm text-gray-700">Internal, personal, and resist public display</p>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+              <h4 className="font-bold text-purple-800 mb-2">Mimetic signals (M)</h4>
+              <p className="text-sm text-gray-700">Public, observable, and easily transmitted</p>
+            </div>
+          </div>
+          
+          <div className="bg-red-50 p-6 rounded-xl border-2 border-red-200 mb-8">
+            <p className="font-semibold text-red-800">
+              <strong>Result:</strong> When markets cannot distinguish A from I, they use M as a proxy. This isn't efficient—it's structurally blind.
+            </p>
+          </div>
+
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Key Economic Phenomena Explained</h3>
+          
+          <div className="space-y-8">
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h4 className="text-xl font-bold text-gray-900 mb-4">Housing as Status vs. Shelter</h4>
+              <p className="text-gray-700 mb-4">Markets cannot separately price:</p>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <strong>A-component:</strong> Physical shelter from elements (elastic with income)
+                </div>
+                <div>
+                  <strong>I-component:</strong> Community connection, neighborhood preference
+                </div>
+                <div>
+                  <strong>M-component:</strong> Location prestige, size signaling, architectural status
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-red-100 rounded-lg">
+                <strong>Result:</strong> Essential shelter (A) becomes unaffordable as markets chase status signals (M).
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h4 className="text-xl font-bold text-gray-900 mb-4">Healthcare: Necessity vs. Prestige</h4>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <strong>A-component:</strong> Life-sustaining medical care (insulin, emergency treatment)
+                </div>
+                <div>
+                  <strong>I-component:</strong> Preferred treatment approaches, doctor relationships
+                </div>
+                <div>
+                  <strong>M-component:</strong> Elite hospitals, celebrity physicians, medical tourism
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-red-100 rounded-lg">
+                <strong>Result:</strong> Markets price the visible (M), making invisible necessities (A) inaccessible.
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h4 className="text-xl font-bold text-gray-900 mb-4">Education: Learning vs. Credentials</h4>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <strong>A-component:</strong> Basic human capital (literacy, numeracy)
+                </div>
+                <div>
+                  <strong>I-component:</strong> Intellectual curiosity, mastery, growth
+                </div>
+                <div>
+                  <strong>M-component:</strong> Elite credentials, status signaling, network access
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-red-100 rounded-lg">
+                <strong>Result:</strong> Credential inflation (M-driven) makes essential education (A) increasingly expensive while undermining genuine learning (I).
+              </div>
+            </div>
+          </div>
+
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 mt-12">Why This Is Different from Existing Economic Theory</h3>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <h4 className="font-bold text-gray-900 mb-3">Existing Theories</h4>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li><strong>Behavioral Economics:</strong> People have biases and social preferences</li>
+                <li><strong>Veblen/Luxury Goods Theory:</strong> Some goods are bought for status</li>
+                <li><strong>Status Goods Literature:</strong> Status signaling explains luxury consumption</li>
+              </ul>
+            </div>
+            <div className="bg-green-50 p-6 rounded-xl">
+              <h4 className="font-bold text-gray-900 mb-3">AIM's Revolutionary View</h4>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li><strong>Markets structurally cannot see A vs I, so they price M by default</strong></li>
+                <li><strong>When pricing goes blind to A/I, ALL goods drift toward M-pricing</strong></li>
+                <li><strong>The signaling problem is deeper—it affects necessities when markets can't observe need</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Novel Predictions That Differentiate AIM</h3>
+          
+          <div className="space-y-4">
+            <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
+              <h4 className="font-bold text-gray-900 mb-2">1. Predict when products become status goods</h4>
+              <p className="text-gray-700">When observability increases (social media, public display), demand shifts from stable/persistent (I) to volatile/trend-sensitive (M)</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
+              <h4 className="font-bold text-gray-900 mb-2">2. Predict market failures in essentials</h4>
+              <p className="text-gray-700">Markets fail for A-goods when M-signaling is possible (cannot separate "housing as shelter" from "housing as status")</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
+              <h4 className="font-bold text-gray-900 mb-2">3. Predict bubble formation</h4>
+              <p className="text-gray-700">Asset bubbles form when: high M-visibility + low I/A functional value + mimetic cascade triggers</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border-2 border-primary-200">
+              <h4 className="font-bold text-gray-900 mb-2">4. Predict pricing divergence</h4>
+              <p className="text-gray-700">Same functional good commands different prices based on observability context (private vs public purchase)</p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-primary-50 to-blue-50 p-8 rounded-xl border-2 border-primary-200 mt-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Policy Implications</h3>
+            <p className="text-gray-700 mb-4">If markets are structurally blind to A vs I needs:</p>
+            <ul className="space-y-2 text-gray-700">
+              <li><strong>Cannot rely on market pricing alone for essentials</strong> (housing, healthcare, basic education)</li>
+              <li><strong>Must design "blind" purchasing systems for A-goods</strong> (anonymous, non-status-signaling)</li>
+              <li><strong>Credential inflation is predictable and preventable</strong> (reduce M-visibility of credentials)</li>
+              <li><strong>Inequality feels unfair when attributable to M</strong> rather than I (explains political economy tensions)</li>
+            </ul>
+            <p className="text-gray-700 mt-4">
+              This isn't market failure in the traditional sense—it's measurement failure. Markets efficiently price what they can observe. 
+              When they can't observe A vs I, they default to M. The solution isn't "more market" or "less market"—it's designing 
+              institutions that preserve A/I/M differentiation.
+            </p>
+          </div>
         </section>
 
         {/* Novel Testable Predictions */}
@@ -169,51 +309,361 @@ export default function EconomicsPage() {
 
         {/* Research Questions */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Key Research Questions</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add specific research questions that AIM can help answer in economics, with testable predictions and hypotheses.
-            </p>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Specific Research Questions AIM Enables</h2>
           
-          <ul className="space-y-4 text-gray-600">
-            <li>• How do different motivational sources affect price elasticity?</li>
-            <li>• What role does intrinsic motivation play in productivity and innovation?</li>
-            <li>• How can we design markets that reduce mimetic rivalry?</li>
-            <li>• What are the economic implications of protecting intrinsic motivation?</li>
-            <li>• How does AIM explain the persistence of status hierarchies?</li>
-          </ul>
+          <div className="space-y-8">
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Price Elasticity by Motivation Source</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Does price elasticity differ systematically for A-driven vs I-driven vs M-driven demand?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> A-goods show inelastic demand curves; M-goods show elastic demand with visibility
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Manipulate observability of purchase and measure price sensitivity
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Innovation and Intrinsic Motivation</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Do firms with higher I-weight in workforce (measured via work preference surveys) show greater innovation output?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> I-driven work environments produce more novel solutions than M-driven (status tournament) environments
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Compare patent quality/novelty across firms with different motivational climates
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Market Design to Reduce Mimetic Rivalry</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Can "blind" purchasing systems (hidden from social observation) reduce M-inflation for essential goods?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> Anonymous purchasing for healthcare/housing should reduce status premium, improve A-access
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Compare pricing in observable vs blind market mechanisms for same goods
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Protecting Intrinsic Motivation in Economic Policy</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Do subsidy designs that emphasize autonomy (flexible use) vs control (specified use) produce different long-term behaviors?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> Autonomy-preserving subsidies maintain I-motivation; controlling subsidies shift to M-gaming
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Randomized policy experiment with flexible vs rigid subsidy structures
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Status Hierarchy Persistence</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Why do some status hierarchies persist despite economic changes? AIM predicts: When M-markers are visible and scarce, mimetic convergence creates self-reinforcing hierarchy
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> Introducing multiple status dimensions (diversified recognition) reduces hierarchy rigidity
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Organizational field studies with different status recognition systems
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Entrepreneurship Success Factors</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Do founders with high I-motivation (measured pre-founding) show better long-term venture performance than M-motivated founders?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> I-driven founders persist through setbacks; M-driven founders exit when social proof weakens
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Longitudinal study of entrepreneur motivation profiles and venture outcomes
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Basic Needs and Market Participation</h3>
+              <p className="text-gray-700 mb-3">
+                <strong>Research Question:</strong> Does ensuring A-sufficiency (housing, food security) increase market participation quality (better matching, more entrepreneurship)?
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Testable prediction:</strong> A-deficit creates short-term thinking and reduces I-capacity for long-term market engagement
+              </p>
+              <p className="text-gray-700 mb-3">
+                <strong>Test design:</strong> Universal basic services pilot with market participation tracking
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Policy Implications */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Policy Implications</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add content about how AIM can inform economic policy, including specific policy interventions that account for different motivational sources.
-            </p>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Economic Policy Implications</h2>
           
-          <div className="space-y-6">
-            <div className="border-l-4 border-primary-500 pl-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Welfare Policy</h3>
-              <p className="text-gray-600">
-                Designing nutrition interventions that address appetitive needs while reducing harmful mimetic eating.
+          <div className="space-y-8">
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Welfare Policy: Separating A from M</h3>
+              <div className="space-y-4">
+                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                  <h4 className="font-bold text-red-800 mb-2">The Problem</h4>
+                  <p className="text-gray-700">Current welfare systems conflate appetitive provision (A) with status concerns (M), creating stigma that prevents A-access.</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-bold text-green-800 mb-2">AIM-Informed Approach</h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li><strong>Universal basic services for A-goods:</strong> Housing, healthcare, nutrition provided universally (removes M-stigma)</li>
+                    <li><strong>Separate delivery from status signaling:</strong> Anonymous access to A-essentials (no visible markers of recipient status)</li>
+                    <li><strong>Preserve I-autonomy in delivery:</strong> Choice within A-provision (avoid paternalistic control that undermines I)</li>
+                  </ul>
+                </div>
+                <p className="text-sm text-gray-600">
+                  <strong>Test design:</strong> Compare welfare uptake and health outcomes between stigmatized means-tested programs vs universal anonymous provision
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Innovation Policy: Protecting I-Space</h3>
+              <div className="space-y-4">
+                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                  <h4 className="font-bold text-red-800 mb-2">The Problem</h4>
+                  <p className="text-gray-700">Innovation policy often emphasizes M-rewards (prizes, prestige, status) which can undermine I-motivation for long-term research.</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-bold text-green-800 mb-2">AIM-Informed Approach</h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li><strong>Create protected I-spaces:</strong> Research funding with minimal reporting/visibility requirements</li>
+                    <li><strong>Delay M-evaluation:</strong> Allow private exploration before public assessment (sequence matters)</li>
+                    <li><strong>Diversify recognition dimensions:</strong> Prevent mimetic convergence on single "top researcher" metric</li>
+                  </ul>
+                </div>
+                <p className="text-sm text-gray-600">
+                  <strong>Test design:</strong> Compare innovation output from protected I-funding vs high-visibility competitive grants
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Market Regulation: When Markets Go Blind</h3>
+              <div className="space-y-4">
+                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                  <h4 className="font-bold text-red-800 mb-2">The Problem</h4>
+                  <p className="text-gray-700">Markets cannot price what they cannot observe. For A/I needs that lack visible signals, M-pricing dominates.</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-bold text-green-800 mb-2">AIM-Informed Approach</h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li><strong>Identify "blind markets":</strong> Essential goods where A/I needs are private but M-signaling is possible (housing, healthcare, education)</li>
+                    <li><strong>Design "visibility-reducing" mechanisms:</strong> Anonymous purchasing, blind bidding, private access for A-essentials</li>
+                    <li><strong>Separate M-markets from A-markets:</strong> Allow status goods to exist separately from essential goods markets</li>
+                  </ul>
+                </div>
+                <p className="text-sm text-gray-600">
+                  <strong>Test design:</strong> Compare pricing and access in observable vs anonymous market structures for same essential goods
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border-2 border-blue-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Example: Housing Policy</h3>
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-2">Current approach</h4>
+                    <p className="text-sm text-gray-700">Market pricing assumes "housing demand" is unitary</p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-2">AIM diagnosis</h4>
+                    <p className="text-sm text-gray-700">Market cannot distinguish A (shelter need) from I (community preference) from M (location status)</p>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-900 mb-2">AIM-informed intervention</h4>
+                  <ol className="space-y-1 text-sm text-gray-700">
+                    <li><strong>Universal basic housing (A-provision):</strong> Sufficient shelter for all, non-means-tested, anonymous access</li>
+                    <li><strong>Neighborhood choice (I-protection):</strong> Options within sufficient housing to preserve autonomy</li>
+                    <li><strong>Separate luxury market (M-containment):</strong> Allow status housing to exist without inflating A-essentials</li>
+                  </ol>
+                </div>
+                <p className="text-sm text-gray-600">
+                  <strong>Expected outcome:</strong> A-access improves, I-autonomy preserved, M-inflation contained to luxury segment
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-xl border-2 border-green-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Example: Healthcare Policy</h3>
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-2">Current approach</h4>
+                    <p className="text-sm text-gray-700">Insurance-based system tries to price all healthcare uniformly</p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-2">AIM diagnosis</h4>
+                    <p className="text-sm text-gray-700">Cannot distinguish A (life-sustaining care) from I (treatment preferences) from M (prestige providers)</p>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-900 mb-2">AIM-informed intervention</h4>
+                  <ol className="space-y-1 text-sm text-gray-700">
+                    <li><strong>Universal A-care:</strong> Essential health services (insulin, emergency care) provided universally without status markers</li>
+                    <li><strong>I-preserved choice:</strong> Options for treatment approach and provider relationships within essential care</li>
+                    <li><strong>M-separated elective care:</strong> Concierge medicine, cosmetic procedures priced separately in transparent status market</li>
+                  </ol>
+                </div>
+                <p className="text-sm text-gray-600">
+                  <strong>Expected outcome:</strong> A-needs met regardless of means, I-autonomy preserved in treatment, M-inflation doesn't block A-access
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Markets Going Blind Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">When Markets Go Blind: AIM's Most Radical Economic Prediction</h2>
+          
+          <div className="bg-red-50 p-8 rounded-xl border-2 border-red-200 mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">The Core Problem</h3>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                Standard economic theory assumes prices reflect "preferences" without distinguishing 
+                between appetitive needs (A), intrinsic values (I), and mimetic wants (M).
+              </p>
+              <p>
+                <strong>AIM predicts this creates systematic market failures because:</strong>
+              </p>
+              <ol>
+                <li>Prices cannot separately signal A vs I vs M value</li>
+                <li>When blind to A/I distinction, markets use M (observability) as proxy</li>
+                <li>This creates perverse pricing dynamics</li>
+              </ol>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Observable Manifestations</h3>
+            
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Housing Markets</h4>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <strong>A-component:</strong> Need shelter from elements
+                  </div>
+                  <div>
+                    <strong>I-component:</strong> Desire for specific neighborhood/community
+                  </div>
+                  <div>
+                    <strong>M-component:</strong> Status signaling through location/size
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-red-100 rounded-lg">
+                  <strong>Market failure:</strong> Pricing driven by M, leaving A unmet for many
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Healthcare</h4>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <strong>A-component:</strong> Physiological needs (insulin, emergency care)
+                  </div>
+                  <div>
+                    <strong>I-component:</strong> Preference for specific treatments/providers
+                  </div>
+                  <div>
+                    <strong>M-component:</strong> Prestige hospitals, celebrity doctors
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-red-100 rounded-lg">
+                  <strong>Market failure:</strong> M-pricing makes A-essential care unaffordable
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Education</h4>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <strong>A-component:</strong> Basic literacy/numeracy (human capital need)
+                  </div>
+                  <div>
+                    <strong>I-component:</strong> Curiosity, mastery, intellectual growth
+                  </div>
+                  <div>
+                    <strong>M-component:</strong> Elite credentials, status signaling
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-red-100 rounded-lg">
+                  <strong>Market failure:</strong> M-inflation (credential arms race) crowds out I and makes A inaccessible
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-8 rounded-xl border-2 border-blue-200 mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Why This Is Revolutionary</h3>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                <strong>Existing Economic Theory Says:</strong> Markets efficiently aggregate preferences
+              </p>
+              <p>
+                <strong>AIM Says:</strong> Markets can only price observability. When A and I needs are 
+                private/invisible, markets price M-signals by default. This is not efficient—it's structurally blind.
               </p>
             </div>
+          </div>
+
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Testable Predictions</h3>
             
-            <div className="border-l-4 border-primary-500 pl-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Innovation Policy</h3>
-              <p className="text-gray-600">
-                Creating mental health systems that support intrinsic motivation and address mimetic social dynamics.
-              </p>
+            <div className="space-y-4">
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-lg font-bold text-gray-900 mb-2">1. Price-to-observability correlation</h4>
+                <p className="text-gray-700">
+                  Products that transition from private (I) to public (M) use should show price inflation 
+                  disconnected from functional value
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-lg font-bold text-gray-900 mb-2">2. Essential goods market failure</h4>
+                <p className="text-gray-700">
+                  Markets systematically fail for A-goods when M-signaling is possible (luxury vs necessity healthcare)
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-lg font-bold text-gray-900 mb-2">3. Bubble prediction</h4>
+                <p className="text-gray-700">
+                  Asset bubbles should correlate with high M-visibility + low I/A functional value 
+                  (tulips, crypto, meme stocks)
+                </p>
+              </div>
             </div>
-            
-            <div className="border-l-4 border-primary-500 pl-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Market Regulation</h3>
-              <p className="text-gray-600">
-                Designing healthcare delivery systems that account for different motivational sources in patient behavior.
+          </div>
+
+          <div className="bg-green-50 p-8 rounded-xl border-2 border-green-200">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Policy Implications</h3>
+            <div className="prose prose-lg max-w-none">
+              <p>
+                If validated, this means:
               </p>
+              <ul>
+                <li><strong>Cannot rely on market pricing for A-essential goods</strong> (need regulation/subsidy)</li>
+                <li><strong>Must separate M-signaling from A/I provision</strong> (anonymous markets for essentials)</li>
+                <li><strong>Credential inflation is predictable</strong> (whenever education becomes visible status signal)</li>
+              </ul>
             </div>
           </div>
         </section>

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
 import { auth } from '@/auth'
@@ -37,9 +38,14 @@ export async function Header() {
             </SidebarFooter>
           </Sidebar>
         ) : (
-          <Link href="/" target="_blank" rel="nofollow">
-            <IconNextChat className="mr-2 h-6 w-6 dark:hidden" inverted />
-            <IconNextChat className="mr-2 hidden h-6 w-6 dark:block" />
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/AIM Logo.png"
+              alt="AIM Framework"
+              width={24}
+              height={24}
+              className="mr-2"
+            />
           </Link>
         )}
         <div className="flex items-center">
@@ -72,6 +78,9 @@ export async function Header() {
             <div className="p-2">
               <Link href="/research-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
                 Research Documents
+              </Link>
+              <Link href="/research/definitions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
+                Scientific Definitions
               </Link>
               <Link href="/research-resources#predictions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 rounded">
                 Testable Predictions

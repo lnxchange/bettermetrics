@@ -16,15 +16,36 @@ export async function middleware(req: NextRequest) {
       data: { session }
     } = await supabase.auth.getSession()
 
-    // Only require authentication for chat-related routes
+    // Check for admin routes
+    const isAdminRoute = req.url.includes('/admin')
     const isChatRoute = req.url.includes('/chat') || req.url.includes('/api/chat')
     const isAuthRoute = req.url.includes('/sign-in') || req.url.includes('/sign-up')
     
+    // Require authentication for chat routes
     if (isChatRoute && !session) {
       const redirectUrl = req.nextUrl.clone()
       redirectUrl.pathname = '/sign-in'
       redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
       return NextResponse.redirect(redirectUrl)
+    }
+
+    // Require admin access for admin routes
+    if (isAdminRoute) {
+      if (!session) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = '/sign-in'
+        redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
+        return NextResponse.redirect(redirectUrl)
+      }
+
+      // Check if user is admin
+      const isAdmin = session.user?.user_metadata?.is_admin === true
+      if (!isAdmin) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        redirectUrl.searchParams.set('error', 'admin-access-required')
+        return NextResponse.redirect(redirectUrl)
+      }
     }
 
     return res

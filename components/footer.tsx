@@ -2,7 +2,6 @@ import React from 'react'
 import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
-import { ExternalLink } from '@/components/external-link'
 
 export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
   return (
@@ -13,9 +12,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      Open source AI chatbot built with{' '}
-      <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and{' '}
-      <ExternalLink href="https://supabase.com">Supabase</ExternalLink>.
+      AIM Framework website built with Next.js and Supabase.
     </p>
   )
 }
@@ -30,17 +27,22 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-900 mb-4">About AIM</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/about" >
+                <Link href="/" className="hover:text-primary-600 transition">
+                  Welcome to Use Better Metrics
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-primary-600 transition">
                   Framework Overview
                 </Link>
               </li>
               <li>
-                <Link href="/understand-your-motivations" >
+                <Link href="/understand-your-motivations" className="hover:text-primary-600 transition">
                   Understand Your Motivations
                 </Link>
               </li>
               <li>
-                <Link href="/contact" >
+                <Link href="/contact" className="hover:text-primary-600 transition">
                   Contact Us
                 </Link>
               </li>
@@ -52,42 +54,42 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-900 mb-4">Research Areas</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/research" >
+                <Link href="/research" className="hover:text-primary-600 transition">
                   All Research
                 </Link>
               </li>
               <li>
-                <Link href="/research/economics" >
+                <Link href="/research/economics" className="hover:text-primary-600 transition">
                   Economics
                 </Link>
               </li>
               <li>
-                <Link href="/research/psychology" >
+                <Link href="/research/psychology" className="hover:text-primary-600 transition">
                   Psychology
                 </Link>
               </li>
               <li>
-                <Link href="/research/health-policy" >
+                <Link href="/research/health-policy" className="hover:text-primary-600 transition">
                   Health & Policy
                 </Link>
               </li>
               <li>
-                <Link href="/research/law" >
+                <Link href="/research/law" className="hover:text-primary-600 transition">
                   Law
                 </Link>
               </li>
               <li>
-                <Link href="/research/education" >
+                <Link href="/research/education" className="hover:text-primary-600 transition">
                   Education
                 </Link>
               </li>
               <li>
-                <Link href="/research/organizations" >
+                <Link href="/research/organizations" className="hover:text-primary-600 transition">
                   Organizations
                 </Link>
               </li>
               <li>
-                <Link href="/research/marketing" >
+                <Link href="/research/marketing" className="hover:text-primary-600 transition">
                   Marketing
                 </Link>
               </li>
@@ -99,19 +101,9 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-900 mb-4">Quick Links</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/chat" >
+                <Link href="/chat" className="hover:text-primary-600 transition">
                   Try AI Chat
                 </Link>
-              </li>
-              <li>
-                <Link href="/contact" >
-                  Collaborate
-                </Link>
-              </li>
-              <li>
-                <ExternalLink href="https://github.com/lnxchange/bettermetrics" >
-                  GitHub
-                </ExternalLink>
               </li>
             </ul>
           </div>
@@ -122,24 +114,28 @@ export function Footer() {
             <p className="text-sm text-gray-600 mb-4">
               Join researchers, practitioners, and organizations exploring the AIM Framework.
             </p>
-            <div className="flex space-x-4">
-              <ExternalLink href="https://github.com/lnxchange/bettermetrics" >
-                <span className="sr-only">GitHub</span>
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
-                </svg>
-              </ExternalLink>
-            </div>
+          </div>
+        </div>
+
+        {/* Academic Disclaimer */}
+        <div className="border-t border-gray-300 mt-8 pt-8">
+          <div className="bg-amber-50 p-6 rounded-lg border border-amber-200">
+            <h4 className="font-semibold text-gray-900 mb-2">Academic Disclaimer</h4>
+            <p className="text-sm text-gray-700">
+              The AIM Motivation Framework is a theoretical synthesis that has not been empirically validated 
+              through peer-reviewed research. All claims are hypotheses subject to testing and falsification. 
+              We welcome critical evaluation and testing.
+            </p>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-600">
-              © 2024 Use Better Metrics. All rights reserved.
+              © 2025 Yule Guttenbeil - All rights reserved. Material on this site may be used for validation research and personal use only.
             </div>
             <div className="text-sm text-gray-600 mt-4 md:mt-0">
-              Built with the AIM Motivation Framework
+              Built by Yule Guttenbeil
             </div>
           </div>
         </div>
