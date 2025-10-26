@@ -59,7 +59,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
 
               return (
                 <CodeBlock
-                  key={Math.random()}
+                  key={`codeblock-${message.id}-${children.length}`}
                   language={(match && match[1]) || ''}
                   value={String(children).replace(/\n$/, '')}
                   {...props}

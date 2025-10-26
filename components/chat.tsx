@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
@@ -33,8 +33,13 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     'ai-token',
     null
   )
-  const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
+  const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
+  
+  // Set preview dialog state after hydration
+  useEffect(() => {
+    setPreviewTokenDialog(IS_PREVIEW)
+  }, [])
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
