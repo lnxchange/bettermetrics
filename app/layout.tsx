@@ -60,8 +60,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontMono.variable
         )}
       >
-        <Toaster />
         <Providers attribute="class" defaultTheme="system" enableSystem>
+          <Toaster />
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
