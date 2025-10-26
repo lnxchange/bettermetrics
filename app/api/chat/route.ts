@@ -48,6 +48,12 @@ export async function POST(req: Request) {
   try {
     const cookieStore = cookies()
     
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured - returning service unavailable')
+      return new Response('Service unavailable - Supabase not configured', { status: 503 })
+    }
+    
     // Create Supabase client with error handling
     let supabase: ReturnType<typeof createRouteHandlerClient<Database>>
     try {

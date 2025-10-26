@@ -9,6 +9,12 @@ export async function GET(req: NextRequest) {
   try {
     const cookieStore = cookies()
     
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured - returning empty documents list')
+      return NextResponse.json({ documents: [] })
+    }
+    
     // Create Supabase client
     const supabase = createRouteHandlerClient<Database>({
       cookies: () => cookieStore
@@ -59,6 +65,12 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies()
+    
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured - returning service unavailable')
+      return NextResponse.json({ error: 'Service unavailable - Supabase not configured' }, { status: 503 })
+    }
     
     // Create Supabase client
     const supabase = createRouteHandlerClient<Database>({
@@ -183,6 +195,12 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const cookieStore = cookies()
+    
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured - returning service unavailable')
+      return NextResponse.json({ error: 'Service unavailable - Supabase not configured' }, { status: 503 })
+    }
     
     // Create Supabase client
     const supabase = createRouteHandlerClient<Database>({
