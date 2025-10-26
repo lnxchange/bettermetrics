@@ -51,13 +51,13 @@ export async function POST(req: Request) {
   })
   const json = await req.json()
   const { messages, previewToken } = json
-  const userId = (await auth({ cookieStore }))?.user.id
 
-  if (!userId) {
-    return new Response('Unauthorized', {
-      status: 401
-    })
+  // Get user session - REQUIRED for chat
+  const session = await auth({ cookieStore })
+  if (!session?.user?.id) {
+    return new Response('Unauthorized', { status: 401 })
   }
+  const userId = session.user.id
 
   if (previewToken) {
     configuration.apiKey = previewToken

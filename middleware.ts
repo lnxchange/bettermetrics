@@ -17,16 +17,9 @@ export async function middleware(req: NextRequest) {
       return res
     }
 
-    // Try to create Supabase client and get session
-    let session = null
-    try {
-      const supabase = createMiddlewareClient({ req, res })
-      const { data: { session: userSession } } = await supabase.auth.getSession()
-      session = userSession
-    } catch (supabaseError) {
-      console.warn('Supabase connection failed in middleware:', supabaseError)
-      // Continue without authentication - site will still load
-    }
+    // Get Supabase session - REQUIRED for admin/chat routes
+    const supabase = createMiddlewareClient({ req, res })
+    const { data: { session } } = await supabase.auth.getSession()
 
     // Require authentication for chat routes
     if (isChatRoute && !session) {
