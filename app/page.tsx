@@ -456,7 +456,7 @@ export default function HomePage() {
               we see ourselves, others, groups, the economy and society as a
               whole – I know you are going to have lots of questions to ask me.
               I&apos;m only one man, with two very young children, and about 4
-              businesses to run – so I&apos;ve built an AI chatbot that
+              businesses to run – so I&apos;ve built an AIM chatbot that
               references my research materials, writings, transcripts of
               monologues and conversations so that you should be able to get an
               answer.
@@ -465,7 +465,7 @@ export default function HomePage() {
             <div className="mb-6 border-l-4 border-blue-400 bg-blue-50 p-6">
               <p className="mb-4 text-lg text-gray-700">
                 I don&apos;t know what your questions are going to be, I
-                don&apos;t know what the AI chatbot is going to tell you. So,
+                don&apos;t know what the AIM chatbot is going to tell you. So,
                 I&apos;ll tell you what I tell the lawyers I train on how to
                 ethically and effectively use AI tools:
               </p>

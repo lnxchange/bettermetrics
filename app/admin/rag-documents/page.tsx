@@ -406,7 +406,7 @@ export default function RAGDocumentsPage() {
                 RAG Documents
               </h1>
               <p className="mt-2 text-gray-600">
-                Manage documents used by the AI chatbot&apos;s knowledge base
+                Manage documents used by the AIM chatbot&apos;s knowledge base
               </p>
             </div>
             <Button asChild>
@@ -601,7 +601,7 @@ export default function RAGDocumentsPage() {
                   <div>
                     <CardTitle>RAG Documents</CardTitle>
                     <CardDescription>
-                      Documents processed for the AI chatbot
+                      Documents processed for the AIM chatbot
                     </CardDescription>
                   </div>
                   {documents.length > 0 && (

@@ -158,7 +158,7 @@ export function Header({ session }: HeaderProps) {
           href="/chat"
           className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
         >
-          AI Chat
+          AIM Chat
         </Link>
         {session?.user?.user_metadata?.is_admin && (
           <Link
@@ -301,7 +301,7 @@ export function Header({ session }: HeaderProps) {
               className="block text-sm font-medium text-muted-foreground hover:text-foreground"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              AI Chat
+              AIM Chat
             </Link>
             {session?.user?.user_metadata?.is_admin && (
               <Link

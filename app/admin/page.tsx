@@ -58,12 +58,12 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle>RAG Documents</CardTitle>
               <CardDescription>
-                Manage documents used by the AI chatbot&apos;s knowledge base
+                Manage documents used by the AIM chatbot&apos;s knowledge base
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-sm text-gray-600">
-                Upload and manage documents that power the AI chatbot&apos;s
+                Upload and manage documents that power the AIM chatbot&apos;s
                 responses. These documents are processed into embeddings for
                 semantic search.
               </p>
