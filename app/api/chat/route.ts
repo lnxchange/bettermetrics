@@ -14,7 +14,7 @@ export const runtime = 'edge'
 // Use Perplexity API with OpenAI-compatible interface
 const configuration = new Configuration({
   apiKey: process.env.PERPLEXITY_API_KEY || process.env.OPENAI_API_KEY,
-  basePath: process.env.PERPLEXITY_API_KEY ? 'https://api.perplexity.ai' : undefined
+  basePath: process.env.PERPLEXITY_API_KEY ? 'https://api.perplexity.ai/v1' : undefined
 })
 
 const openai = new OpenAIApi(configuration)
@@ -43,13 +43,13 @@ Key messaging guidelines:
 Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.`
 
 // TODO: Future Enhancement - Upgrade to GPT-4 or O1 Reasoning Model
-// The current implementation uses GPT-3.5-turbo which has limitations in:
+// The current implementation uses GPT-4o which provides enhanced reasoning capabilities:
 // 1. Complex logical reasoning about how AIM relates to external information
 // 2. Multi-step inference required to apply AIM framework to novel situations
 // 3. Synthesizing AIM concepts with broader research literature
 //
-// When available, upgrade to a reasoning-capable model (GPT-4, O1, etc.) by:
-// - Changing model parameter to 'gpt-4' or 'o1-preview'
+// When available, upgrade to a reasoning-capable model (O1, etc.) by:
+// - Changing model parameter to 'o1-preview' or similar
 // - Adjusting temperature and reasoning parameters
 // - Testing thoroughly with complex AIM application questions
 //
@@ -135,12 +135,36 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const systemMessage = { role: 'system', content: systemContent }
     const allMessages = [systemMessage, ...messages]
 
-    const res = await openai.createChatCompletion({
-      model: process.env.PERPLEXITY_API_KEY ? 'pplx-70b-online' : 'gpt-3.5-turbo',
-      messages: allMessages,
-      temperature: 0.8,
-      stream: true
-    })
+    // Try Perplexity first, fallback to OpenAI with GPT-4o
+    let res
+    try {
+      res = await openai.createChatCompletion({
+        model: process.env.PERPLEXITY_API_KEY ? 'pplx-70b-online' : 'gpt-4o',
+        messages: allMessages,
+        temperature: 0.8,
+        stream: true
+      })
+    } catch (error) {
+      console.error('Primary API call failed:', error)
+      
+      // Fallback to OpenAI GPT-4o if Perplexity fails
+      if (process.env.PERPLEXITY_API_KEY) {
+        console.log('Falling back to OpenAI GPT-4o')
+        const fallbackConfig = new Configuration({
+          apiKey: process.env.OPENAI_API_KEY
+        })
+        const fallbackOpenai = new OpenAIApi(fallbackConfig)
+        
+        res = await fallbackOpenai.createChatCompletion({
+          model: 'gpt-4o',
+          messages: allMessages,
+          temperature: 0.8,
+          stream: true
+        })
+      } else {
+        throw error // Re-throw if no fallback available
+      }
+    }
 
     const stream = OpenAIStream(res, {
       async onCompletion(completion) {
