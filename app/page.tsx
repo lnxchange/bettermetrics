@@ -136,6 +136,9 @@ export default function HomePage() {
             <h1 className="mb-8 text-4xl font-bold text-gray-900">
               Welcome to Use Better Metrics
             </h1>
+            <p className="mb-6 text-xl text-gray-600 italic">
+              Please read this page before exploring the site.
+            </p>
 
             <div className="mb-8 flex flex-col items-start gap-8 md:flex-row">
               <div className="flex-shrink-0">

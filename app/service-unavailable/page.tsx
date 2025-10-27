@@ -23,8 +23,9 @@ export default function ServiceUnavailablePage() {
               Service Temporarily Unavailable
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              The authentication and interactive features are currently being configured. 
-              All research content and framework documentation remains accessible.
+              The authentication service is currently being configured. This affects the chat feature, 
+              admin panel, and research document downloads. All research content and framework 
+              documentation remains accessible for reading.
             </p>
             <div className="mt-6">
               <Link

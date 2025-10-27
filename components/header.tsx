@@ -24,7 +24,7 @@ export function Header({ session }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 backdrop-blur-xl px-4 md:px-6 lg:px-8">
       <div className="flex items-center">
         <Link href="/" className="flex items-center">
           <Image
@@ -167,7 +167,7 @@ export function Header({ session }: HeaderProps) {
         <ThemeToggle />
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 text-muted-foreground hover:text-foreground"
+          className="p-2 text-gray-900 hover:text-gray-700"
           aria-label="Toggle mobile menu"
         >
           <svg
