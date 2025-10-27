@@ -31,6 +31,7 @@ export default function RAGDocumentsPage() {
   }>({ completed: 0, total: 0 })
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // Fetch documents on page load
   useEffect(() => {
@@ -110,6 +111,36 @@ export default function RAGDocumentsPage() {
       }
     } catch (error) {
       toast.error('Failed to delete document')
+    }
+  }
+
+  const handleProcessAllDocuments = async () => {
+    if (!confirm('This will process all RAG documents for embeddings. This may take a few minutes. Continue?')) {
+      return
+    }
+
+    setIsProcessing(true)
+    try {
+      const response = await fetch('/api/admin/process-all-rag-documents', {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success(`Successfully processed ${data.processed} out of ${data.total} documents!`)
+        
+        if (data.errors && data.errors.length > 0) {
+          console.error('Processing errors:', data.errors)
+          toast.error(`${data.errors.length} documents failed to process. Check console for details.`)
+        }
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to process documents')
+      }
+    } catch (error) {
+      toast.error('Failed to process documents')
+    } finally {
+      setIsProcessing(false)
     }
   }
 
@@ -493,10 +524,24 @@ export default function RAGDocumentsPage() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>RAG Documents</CardTitle>
-                <CardDescription>
-                  Documents processed for the AI chatbot
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>RAG Documents</CardTitle>
+                    <CardDescription>
+                      Documents processed for the AI chatbot
+                    </CardDescription>
+                  </div>
+                  {documents.length > 0 && (
+                    <Button
+                      onClick={handleProcessAllDocuments}
+                      disabled={isProcessing}
+                      variant="outline"
+                      size="sm"
+                    >
+                      {isProcessing ? 'Processing...' : 'Process All for RAG'}
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">

@@ -1,6 +1,5 @@
 import { OpenAIEmbeddings } from '@langchain/openai'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import mammoth from 'mammoth'
 
@@ -60,10 +59,11 @@ export class DocumentProcessor {
   private textSplitter: SimpleTextSplitter
 
   constructor() {
-    const cookieStore = cookies()
-    this.supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
+    // Use service role client for admin operations
+    this.supabase = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
     this.embeddings = new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY
