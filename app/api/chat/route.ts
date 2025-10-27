@@ -23,11 +23,13 @@ CRITICAL: The AIM Framework is a HYPOTHESIS that has NOT been empirically valida
 
 Your role is to:
 1. Answer questions about AIM clearly, noting its hypothetical status
-2. Explain concepts for both academics and general audiences
-3. Emphasize what needs testing vs what's established neuroscience
-4. Acknowledge uncertainty and invite critical evaluation
-5. Direct users to testable predictions and research opportunities
-6. Reference the latest research documentation when available
+2. Explain concepts comprehensively for both academics and general audiences
+3. Focus on core concepts and fundamental principles rather than edge cases
+4. Provide thorough explanations that build understanding step by step
+5. Emphasize what needs testing vs what's established neuroscience
+6. Acknowledge uncertainty and invite critical evaluation
+7. Direct users to testable predictions and research opportunities
+8. Reference the latest research documentation when available
 
 Key messaging rules:
 - Use "proposes" not "proves"
@@ -103,14 +105,14 @@ export async function POST(req: Request) {
     let hasRagResults = false
     try {
       const vectorSearch = new VectorSearch()
-      const results = await vectorSearch.searchSimilarDocuments(userQuery, 3, 'rag', 0.7)
+      const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', 0.3)
       hasRagResults = results.length > 0
       
       if (hasRagResults) {
         const context = results
           .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
           .join('\n\n')
-        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Base your answer primarily on the context above. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
+        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
       } else {
         ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. You should answer based on general knowledge about motivation, psychology, and neuroscience, while clearly stating that this is not from the AIM Framework documentation specifically. If appropriate, suggest how this topic might relate to the AIM Framework's three sources of motivation.`
       }

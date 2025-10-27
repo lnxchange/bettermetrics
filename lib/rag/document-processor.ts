@@ -17,7 +17,7 @@ class SimpleTextSplitter {
   private chunkSize: number
   private chunkOverlap: number
 
-  constructor(chunkSize = 500, chunkOverlap = 50) {
+  constructor(chunkSize = 1000, chunkOverlap = 100) {
     this.chunkSize = chunkSize
     this.chunkOverlap = chunkOverlap
   }
@@ -30,11 +30,12 @@ class SimpleTextSplitter {
       const end = Math.min(start + this.chunkSize, text.length)
       let chunk = text.slice(start, end)
 
-      // Try to break at sentence boundaries
+      // Try to break at paragraph boundaries first, then sentence boundaries
       if (end < text.length) {
+        const lastParagraph = chunk.lastIndexOf('\n\n')
         const lastSentence = chunk.lastIndexOf('. ')
         const lastNewline = chunk.lastIndexOf('\n')
-        const breakPoint = Math.max(lastSentence, lastNewline)
+        const breakPoint = Math.max(lastParagraph, lastSentence, lastNewline)
 
         if (breakPoint > start + this.chunkSize * 0.5) {
           chunk = chunk.slice(0, breakPoint + 1)

@@ -30,7 +30,7 @@ export class VectorSearch {
     query: string,
     limit: number = 5,
     documentType?: 'research' | 'rag',
-    threshold: number = 0.7
+    threshold: number = 0.3
   ): Promise<SearchResult[]> {
     try {
       // Generate embedding for the query
