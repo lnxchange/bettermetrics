@@ -36,24 +36,106 @@ export class VectorSearch {
       // Generate embedding for the query
       const queryEmbedding = await this.embeddings.embedQuery(query)
 
-      // Use pgvector cosine similarity search
-      const { data, error } = await this.supabase.rpc('match_documents', {
-        query_embedding: queryEmbedding,
-        match_threshold: threshold,
-        match_count: limit,
-        document_type: documentType || null
-      })
+      console.log('Query embedding generated:', queryEmbedding.length, 'dimensions')
 
-      if (error) {
-        console.error('Error in vector search:', error)
-        throw new Error('Failed to search documents')
+      // First try the match_documents function
+      try {
+        const { data, error } = await this.supabase.rpc('match_documents', {
+          query_embedding: queryEmbedding,
+          match_threshold: threshold,
+          match_count: limit,
+          document_type: documentType || null
+        })
+
+        if (error) {
+          console.error('match_documents function error:', error)
+          throw new Error(`match_documents function failed: ${error.message}`)
+        }
+
+        console.log('match_documents results:', data?.length || 0, 'results')
+        return data || []
+      } catch (rpcError) {
+        console.error('RPC function failed, trying direct query:', rpcError)
+        
+        // Fallback: Direct query to document_embeddings table
+        let queryBuilder = this.supabase
+          .from('document_embeddings')
+          .select('chunk_text, metadata, document_id, chunk_index, embedding')
+          .limit(limit)
+
+        // Add document type filter if specified
+        if (documentType) {
+          queryBuilder = queryBuilder.eq('document_type', documentType)
+        }
+
+        const { data: embeddings, error: directError } = await queryBuilder
+
+        if (directError) {
+          console.error('Direct query error:', directError)
+          throw new Error(`Direct query failed: ${directError.message}`)
+        }
+
+        if (!embeddings || embeddings.length === 0) {
+          console.log('No embeddings found in database')
+          return []
+        }
+
+        console.log('Found', embeddings.length, 'embeddings, calculating similarities...')
+
+        // Calculate cosine similarity manually
+        const results = embeddings
+          .map((row: any) => {
+            if (!row.embedding || !Array.isArray(row.embedding)) {
+              return null
+            }
+
+            // Calculate cosine similarity
+            const similarity = this.calculateCosineSimilarity(queryEmbedding, row.embedding)
+            
+            return {
+              chunk_text: row.chunk_text,
+              metadata: row.metadata,
+              document_id: row.document_id,
+              chunk_index: row.chunk_index,
+              similarity_score: similarity
+            }
+          })
+          .filter((result: any) => result && result.similarity_score >= threshold)
+          .sort((a: any, b: any) => b.similarity_score - a.similarity_score)
+          .slice(0, limit)
+
+        console.log('Manual similarity calculation results:', results.length, 'results above threshold')
+        return results
       }
-
-      return data || []
     } catch (error) {
       console.error('Error in similarity search:', error)
       throw error
     }
+  }
+
+  private calculateCosineSimilarity(a: number[], b: number[]): number {
+    if (a.length !== b.length) {
+      return 0
+    }
+
+    let dotProduct = 0
+    let normA = 0
+    let normB = 0
+
+    for (let i = 0; i < a.length; i++) {
+      dotProduct += a[i] * b[i]
+      normA += a[i] * a[i]
+      normB += b[i] * b[i]
+    }
+
+    normA = Math.sqrt(normA)
+    normB = Math.sqrt(normB)
+
+    if (normA === 0 || normB === 0) {
+      return 0
+    }
+
+    return dotProduct / (normA * normB)
   }
 
   async searchWithContext(
