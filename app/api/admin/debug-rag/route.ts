@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
+import { VectorSearch } from '@/lib/rag/vector-search'
 
 export async function GET(req: NextRequest) {
   try {
@@ -53,27 +54,69 @@ export async function GET(req: NextRequest) {
       return acc
     }, {} as Record<string, number>) || {}
 
-    // Test vector search function
+    // Test vector search with actual embeddings
     let searchTest = null
+    let lowThresholdTest = null
+    let sampleEmbeddings = null
+    
     try {
-      const { data: searchData, error: searchError } = await supabase.rpc('match_documents', {
-        query_embedding: new Array(1536).fill(0), // Dummy embedding
-        match_threshold: 0.7,
-        match_count: 3,
-        document_type: 'rag'
-      })
+      const vectorSearch = new VectorSearch()
       
+      // Test with normal threshold
+      const normalResults = await vectorSearch.searchSimilarDocuments('What is the AIM Framework?', 5, 'rag', 0.5)
       searchTest = {
-        success: !searchError,
-        error: searchError?.message || null,
-        resultCount: searchData?.length || 0
+        success: true,
+        resultCount: normalResults.length,
+        results: normalResults.map(r => ({
+          chunk_text: r.chunk_text.substring(0, 100) + '...',
+          similarity_score: r.similarity_score
+        }))
       }
+      
+      // Test with very low threshold to see if any embeddings exist
+      const lowResults = await vectorSearch.searchSimilarDocuments('What is the AIM Framework?', 5, 'rag', 0.1)
+      lowThresholdTest = {
+        success: true,
+        resultCount: lowResults.length,
+        results: lowResults.map(r => ({
+          chunk_text: r.chunk_text.substring(0, 100) + '...',
+          similarity_score: r.similarity_score
+        }))
+      }
+      
     } catch (error) {
       searchTest = {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
         resultCount: 0
       }
+      lowThresholdTest = {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        resultCount: 0
+      }
+    }
+
+    // Get sample embeddings to check their structure
+    try {
+      const { data: sampleData, error: sampleError } = await supabase
+        .from('document_embeddings')
+        .select('chunk_text, metadata, document_id, chunk_index, embedding')
+        .eq('document_type', 'rag')
+        .limit(3)
+
+      if (sampleData) {
+        sampleEmbeddings = sampleData.map(row => ({
+          chunk_text: row.chunk_text.substring(0, 100) + '...',
+          document_id: row.document_id,
+          chunk_index: row.chunk_index,
+          embedding_length: row.embedding ? row.embedding.length : 0,
+          embedding_type: Array.isArray(row.embedding) ? 'array' : typeof row.embedding,
+          has_valid_embedding: row.embedding && Array.isArray(row.embedding) && row.embedding.length > 0
+        }))
+      }
+    } catch (error) {
+      sampleEmbeddings = { error: error instanceof Error ? error.message : 'Unknown error' }
     }
 
     return NextResponse.json({
@@ -93,7 +136,11 @@ export async function GET(req: NextRequest) {
         total: embeddings?.length || 0,
         byDocument: embeddingsByDoc
       },
-      vectorSearch: searchTest,
+      vectorSearch: {
+        normalThreshold: searchTest,
+        lowThreshold: lowThresholdTest
+      },
+      sampleEmbeddings: sampleEmbeddings,
       summary: {
         documentsWithContent: documents?.filter(doc => doc.content && doc.content.trim().length > 0).length || 0,
         documentsWithEmbeddings: Object.keys(embeddingsByDoc).length,
