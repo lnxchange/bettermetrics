@@ -6,9 +6,10 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get('token')
   const email = searchParams.get('email')
 
-  // Verify the secret token
-  const expectedToken = process.env.ADMIN_SETUP_TOKEN
-  if (!expectedToken || token !== expectedToken) {
+  // Hardcoded secure token (not exposed to client-side)
+  const expectedToken = 'e5a154d6d83e69c5f09d22cede658f3bd5d969ca99e472b5e56345b07a9ba9ee'
+  
+  if (token !== expectedToken) {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
   }
 
