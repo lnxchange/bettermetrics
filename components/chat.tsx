@@ -33,12 +33,15 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     null
   )
   const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
-  const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
+  const [previewTokenInput, setPreviewTokenInput] = useState('')
+  const [hasMounted, setHasMounted] = useState(false)
   
   // Set preview dialog state after hydration
   useEffect(() => {
+    setHasMounted(true)
     setPreviewTokenDialog(IS_PREVIEW)
-  }, [])
+    setPreviewTokenInput(previewToken ?? '')
+  }, [previewToken])
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
@@ -76,7 +79,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         setInput={setInput}
       />
 
-      <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
+      {hasMounted && (
+        <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Enter your OpenAI Key</DialogTitle>
@@ -111,6 +115,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      )}
     </>
   )
 }

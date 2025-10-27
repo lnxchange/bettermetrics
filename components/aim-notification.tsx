@@ -5,8 +5,10 @@ import { IconClose } from '@/components/ui/icons'
 
 export function AimNotification() {
   const [isVisible, setIsVisible] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
   
   useEffect(() => {
+    setHasMounted(true)
     const dismissed = sessionStorage.getItem('aim-notification-dismissed')
     if (!dismissed) {
       setIsVisible(true)
@@ -18,6 +20,8 @@ export function AimNotification() {
     setIsVisible(false)
   }
   
+  // Don't render until mounted to prevent hydration mismatch
+  if (!hasMounted) return null
   if (!isVisible) return null
   
   return (
