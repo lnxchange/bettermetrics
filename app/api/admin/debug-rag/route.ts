@@ -122,8 +122,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      version: '1.0.2',
-      deployment: 'manual-trigger',
+      version: '1.0.3',
+      deployment: 'vercel-pro-unlimited',
       documents: {
         total: documents?.length || 0,
         list: documents?.map(doc => ({
