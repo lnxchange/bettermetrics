@@ -90,7 +90,7 @@ export class DocumentProcessor {
         document_id: documentId,
         document_type: documentType,
         chunk_text: chunk,
-        embedding: embeddings[index],
+        embedding: `[${embeddings[index].join(',')}]`, // Convert array to string format for pgvector
         chunk_index: index,
         metadata: {
           ...metadata,

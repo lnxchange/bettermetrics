@@ -85,12 +85,29 @@ export class VectorSearch {
         // Calculate cosine similarity manually
         const results = embeddings
           .map((row: any) => {
-            if (!row.embedding || !Array.isArray(row.embedding)) {
+            if (!row.embedding) {
+              return null
+            }
+
+            // Parse embedding from string format if needed
+            let embeddingArray: number[]
+            if (typeof row.embedding === 'string') {
+              try {
+                // Remove brackets and split by comma, then parse as numbers
+                const cleanString = row.embedding.replace(/[\[\]]/g, '')
+                embeddingArray = cleanString.split(',').map(Number)
+              } catch (e) {
+                console.error('Error parsing embedding string:', e)
+                return null
+              }
+            } else if (Array.isArray(row.embedding)) {
+              embeddingArray = row.embedding
+            } else {
               return null
             }
 
             // Calculate cosine similarity
-            const similarity = this.calculateCosineSimilarity(queryEmbedding, row.embedding)
+            const similarity = this.calculateCosineSimilarity(queryEmbedding, embeddingArray)
             
             return {
               chunk_text: row.chunk_text,
