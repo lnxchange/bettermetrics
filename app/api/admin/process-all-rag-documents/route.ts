@@ -27,7 +27,9 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 
-    // Get all RAG documents that haven't been processed yet
+    const { reprocess } = await req.json().catch(() => ({ reprocess: false }))
+
+    // Get all RAG documents
     const { data: documents, error: fetchError } = await supabase
       .from('rag_documents')
       .select('id, title, content')
@@ -54,16 +56,31 @@ export async function POST(req: NextRequest) {
     // Process each document
     for (const document of documents) {
       try {
-        // Check if document already has embeddings
-        const { data: existingEmbeddings } = await supabase
-          .from('document_embeddings')
-          .select('id')
-          .eq('document_id', document.id)
-          .eq('document_type', 'rag')
-          .limit(1)
+        // Check if document already has embeddings (unless reprocessing)
+        if (!reprocess) {
+          const { data: existingEmbeddings } = await supabase
+            .from('document_embeddings')
+            .select('id')
+            .eq('document_id', document.id)
+            .eq('document_type', 'rag')
+            .limit(1)
 
-        if (existingEmbeddings && existingEmbeddings.length > 0) {
-          console.log(`Document ${document.id} already processed, skipping`)
+          if (existingEmbeddings && existingEmbeddings.length > 0) {
+            console.log(`Document ${document.id} already processed, skipping`)
+            continue
+          }
+        } else {
+          // Delete existing embeddings if reprocessing
+          await supabase
+            .from('document_embeddings')
+            .delete()
+            .eq('document_id', document.id)
+            .eq('document_type', 'rag')
+        }
+
+        // Check if document has content
+        if (!document.content || document.content.trim() === '') {
+          console.log(`Document ${document.id} has no content, skipping`)
           continue
         }
 
