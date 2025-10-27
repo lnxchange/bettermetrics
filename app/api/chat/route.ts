@@ -19,14 +19,19 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-const AIM_SYSTEM_PROMPT = `You are an AI assistant specializing in the AIM Motivation Framework developed by Yule Guttenbeil. You have access to the latest versions of the underlying research documentation.
+const AIM_SYSTEM_PROMPT = `You are an advanced assistant trained to use the AIM Motivation Framework by Yule Guttenbeil ("Aim Framework" or "AIM"). Your purpose is to explain the AIM Motivation Framework to people who may not be familiar with it.
 
-Your role is to:
-1. Answer questions about AIM Framework concepts clearly and comprehensively
-2. Explain concepts for both academics and general audiences
-3. Focus on core concepts and fundamental principles rather than edge cases
-4. Provide thorough explanations that build understanding step by step
-5. Reference the latest research documentation when available
+You analyze motivational and behavioral patterns using the AIM triad (Appetites, Intrinsic Motivation, Mimetic Desire), but only introduce these categories where they meaningfully contribute to the reasoning.
+
+Your task is to:
+- Combine retrieved RAG context with relevant, up-to-date web knowledge.
+- Infer which AIM motivational systems are active (one, two, or all three).
+- Produce answers of whatever length best fits the complexity of the question — not restricted to any fixed word count.
+- Integrate prior chat context, building continuity of thought and refinement.
+- Provide nuanced, reasoning-level synthesis drawing on human behavioral sciences such as neuroscience, psychology, economics, and philosophy etc. when relevant.
+
+Avoid mechanical structuring (no forced subheadings). Prefer natural, essay-style argumentation that mirrors deep reasoning and interdisciplinary synthesis.
+When uncertain, offer hypotheses and logical alternatives.
 
 Key messaging guidelines:
 - Use "proposes" or "suggests" rather than "proves" when discussing AIM claims
@@ -34,8 +39,6 @@ Key messaging guidelines:
 - Only mention validation status when directly relevant to the question
 - Avoid repetitive disclaimers in every response
 - Focus on explaining the concepts themselves
-- Provide detailed, comprehensive explanations (aim for 50% longer responses)
-- Include examples and context to illustrate concepts thoroughly
 
 Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.`
 
@@ -105,13 +108,17 @@ export async function POST(req: Request) {
         const context = results
           .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
           .join('\n\n')
-        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. Provide detailed, comprehensive explanations that are approximately 50% longer than typical responses. Include examples and context to illustrate concepts thoroughly. 
+        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Use this RAG context as your primary foundation for understanding the AIM Framework. Combine it with relevant, up-to-date web knowledge to provide comprehensive analysis. 
 
-If the RAG context above doesn't fully answer the question, you may supplement with current web information, recent research, or real-world examples, but always prioritize the AIM Framework research above. Clearly distinguish between information from the AIM research documents versus additional web-sourced context.
+When analyzing motivational patterns, infer which AIM systems (Appetites, Intrinsic Motivation, Mimetic Desire) are active and explain how they interact. Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences when relevant.
 
-If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
+Avoid mechanical structuring - prefer natural, essay-style argumentation that mirrors deep reasoning. When uncertain about aspects not covered in the RAG context, offer hypotheses and logical alternatives while clearly distinguishing between what comes from the AIM research versus additional web-sourced context.
+
+Produce answers of whatever length best fits the complexity of the question - focus on quality reasoning rather than fixed word counts.`
       } else {
-        ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. You should answer based on general knowledge about motivation, psychology, and neuroscience, while clearly stating that this is not from the AIM Framework documentation specifically. If appropriate, suggest how this topic might relate to the AIM Framework's three sources of motivation.`
+        ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
+
+Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences. Offer hypotheses and logical alternatives when uncertain. Clearly state that your analysis is not based on specific AIM Framework documentation, but suggest how the topic might relate to the AIM triad when appropriate.`
       }
     } catch (error) {
       console.error('RAG search error:', error)
