@@ -255,7 +255,8 @@ export default function RAGDocumentsPage() {
           } catch (error) {
             errorCount++
             console.error(`Error processing ${file.name}:`, error)
-            toast.error(`Error processing ${file.name}: ${error.message}`)
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+            toast.error(`Error processing ${file.name}: ${errorMessage}`)
           }
 
           setUploadProgress({ completed: i + 1, total: batchFiles.length })
