@@ -2,6 +2,7 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Chat } from '@/components/chat'
+import { ChatHeader } from '@/components/chat-header'
 
 export default async function ChatPage() {
   const cookieStore = cookies()
@@ -11,6 +12,12 @@ export default async function ChatPage() {
     redirect('/sign-in?redirectedFrom=/chat')
   }
 
-  // Create a new chat directly on this page
-  return <Chat />
+  return (
+    <>
+      <ChatHeader userId={session.user.id} />
+      <div className="flex-1 overflow-auto">
+        <Chat />
+      </div>
+    </>
+  )
 }

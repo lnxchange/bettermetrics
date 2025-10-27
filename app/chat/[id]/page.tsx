@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
+import { ChatHeader } from '@/components/chat-header'
 import { cookies } from 'next/headers'
 
 export const runtime = 'edge'
@@ -49,5 +50,12 @@ export default async function ChatPage({ params }: ChatPageProps) {
     notFound()
   }
 
-  return <Chat id={chat.id} initialMessages={chat.messages} />
+  return (
+    <>
+      <ChatHeader userId={session.user.id} />
+      <div className="flex-1 overflow-auto">
+        <Chat id={chat.id} initialMessages={chat.messages} />
+      </div>
+    </>
+  )
 }

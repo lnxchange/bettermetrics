@@ -1,8 +1,4 @@
 import { Metadata } from 'next'
-import { ToasterWrapper } from '@/components/toaster-wrapper'
-import { fontMono, fontSans } from '@/lib/fonts'
-import { cn } from '@/lib/utils'
-import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
   title: 'AIM Framework Chat',
@@ -15,22 +11,9 @@ interface ChatLayoutProps {
 
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          'font-sans antialiased',
-          fontSans.variable,
-          fontMono.variable
-        )}
-      >
-        <Providers attribute="class" defaultTheme="system" enableSystem>
-          <ToasterWrapper />
-          <div className="flex h-screen flex-col">
-            {children}
-          </div>
-        </Providers>
-      </body>
-    </html>
+    <div className="flex h-screen flex-col pt-16">
+      {/* pt-16 accounts for fixed header height */}
+      {children}
+    </div>
   )
 }
