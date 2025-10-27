@@ -122,6 +122,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
+      version: '1.0.1',
       documents: {
         total: documents?.length || 0,
         list: documents?.map(doc => ({
