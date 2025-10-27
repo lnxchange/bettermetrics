@@ -4,12 +4,13 @@ export const useLocalStorage = <T>(
   key: string,
   initialValue: T
 ): [T, (value: T) => void] => {
-  const [storedValue, setStoredValue] = useState(initialValue)
+  const [storedValue, setStoredValue] = useState<T>(initialValue)
+  const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
-    // Only run on client-side
+    setHasMounted(true)
+    // Only run on client-side after mounting
     if (typeof window !== 'undefined') {
-      // Retrieve from localStorage
       const item = window.localStorage.getItem(key)
       if (item) {
         setStoredValue(JSON.parse(item))
@@ -18,12 +19,12 @@ export const useLocalStorage = <T>(
   }, [key])
 
   const setValue = (value: T) => {
-    // Save state
     setStoredValue(value)
-    // Save to localStorage only on client-side
     if (typeof window !== 'undefined') {
       window.localStorage.setItem(key, JSON.stringify(value))
     }
   }
-  return [storedValue, setValue]
+
+  // Return initial value during SSR, actual value after mounting
+  return [hasMounted ? storedValue : initialValue, setValue]
 }

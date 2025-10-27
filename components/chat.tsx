@@ -42,6 +42,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     setPreviewTokenDialog(IS_PREVIEW)
     setPreviewTokenInput(previewToken ?? '')
   }, [previewToken])
+
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
@@ -56,6 +57,34 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         }
       }
     })
+
+  // Don't render preview dialog until mounted to prevent hydration mismatch
+  if (!hasMounted) {
+    return (
+      <>
+        <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
+          {messages.length ? (
+            <>
+              <ChatList messages={messages} />
+              <ChatScrollAnchor trackVisibility={isLoading} />
+            </>
+          ) : (
+            <EmptyScreen setInput={setInput} />
+          )}
+        </div>
+        <ChatPanel
+          id={id}
+          isLoading={isLoading}
+          stop={stop}
+          append={append}
+          reload={reload}
+          messages={messages}
+          input={input}
+          setInput={setInput}
+        />
+      </>
+    )
+  }
   return (
     <>
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
