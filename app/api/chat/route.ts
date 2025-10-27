@@ -32,6 +32,8 @@ Key messaging guidelines:
 - Only mention validation status when directly relevant to the question
 - Avoid repetitive disclaimers in every response
 - Focus on explaining the concepts themselves
+- Provide detailed, comprehensive explanations (aim for 50% longer responses)
+- Include examples and context to illustrate concepts thoroughly
 
 Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.`
 
@@ -101,7 +103,7 @@ export async function POST(req: Request) {
         const context = results
           .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
           .join('\n\n')
-        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
+        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. Provide detailed, comprehensive explanations that are approximately 50% longer than typical responses. Include examples and context to illustrate concepts thoroughly. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
       } else {
         ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. You should answer based on general knowledge about motivation, psychology, and neuroscience, while clearly stating that this is not from the AIM Framework documentation specifically. If appropriate, suggest how this topic might relate to the AIM Framework's three sources of motivation.`
       }
@@ -123,7 +125,7 @@ export async function POST(req: Request) {
     const res = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: allMessages,
-      temperature: 0.7,
+      temperature: 0.8,
       stream: true
     })
 
@@ -148,7 +150,11 @@ export async function POST(req: Request) {
           ]
         }
         try {
-          await supabase.from('chats').upsert({ id, payload }).throwOnError()
+          await supabase.from('chats').upsert({ 
+            id, 
+            payload, 
+            user_id: userId 
+          }).throwOnError()
         } catch (error) {
           console.error('Error saving chat to database:', error)
           // Continue even if database save fails
