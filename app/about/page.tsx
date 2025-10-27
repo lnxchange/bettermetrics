@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { StatusBadge } from '@/components/ui/status-badge'
 
 export const metadata: Metadata = {
@@ -344,14 +345,58 @@ export default function AboutPage() {
           </p>
         </div>
 
+        <h2>After a Motivation Channel Wins</h2>
+        <p>
+          When one motivation channel — Appetite (A), Intrinsic Motivation (I), or 
+          Mimetic Desire (M) — becomes dominant, it doesn&apos;t instantly control 
+          behavior. Instead, it&apos;s given priority in the brain&apos;s decision queue. 
+          The &ldquo;winning&rdquo; channel influences the next stage by shaping attention 
+          and emotional energy. However, competing motivations don&apos;t disappear; 
+          they remain active as background signals, ready to challenge the leading 
+          drive if context changes.
+        </p>
+
+        <h3>The Buffer and Stickiness</h3>
+        <p>
+          The system includes a natural buffer — a short delay that prevents constant 
+          switching between motivations. This delay, or &ldquo;stickiness,&rdquo; ensures 
+          behavior feels stable and purposeful rather than erratic. For example, if an 
+          appetite-based urge temporarily wins, the buffer keeps attention and energy 
+          focused long enough to act meaningfully before letting other motivations 
+          re-enter competition. This stickiness enables us to stay focussed on the 
+          current task and allows habits, commitments, and goals to take root.
+        </p>
+
+        <h3>When Action is Taken</h3>
+        <p>
+          A decision becomes actionable when the leading motivation continues to 
+          dominate through the buffer period. Only then does cognitive control — what 
+          we experience as &ldquo;deciding&rdquo; — trigger a coordinated response between 
+          thought, emotion, and movement. In simple terms, a choice is converted into 
+          action when it remains the most compelling option over time, not just for a 
+          fleeting moment. This can occur at a natural decision point, such as when 
+          we complete a task, or when the priority signal of the motivation exceeds the 
+          buffer threshold (e.g. &ldquo;Excuse me, I just need to go to the toilet&rdquo;.)
+        </p>
+
+        <p>
+          This flow — competition, buffering, persistence, and action — is how the 
+          AIM Framework models motivated behavior. It explains why people sometimes 
+          hesitate, sometimes act with conviction, and how clarity emerges from 
+          complexity.
+        </p>
+
         <h2>About the Researcher</h2>
         <div className="not-prose my-8 rounded-xl bg-gray-50 p-6">
           <div className="flex flex-col items-start gap-6 md:flex-row">
             <div className="flex-shrink-0">
-              {/* Placeholder for profile image */}
-              <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gray-300 text-gray-500">
-                Photo
-              </div>
+              <Image
+                src="/Yule Guttenbeil Profile.jpg"
+                alt="Yule Guttenbeil"
+                width={128}
+                height={128}
+                className="h-32 w-32 rounded-full object-cover"
+              />
             </div>
             <div>
               <h3 className="mb-3 text-2xl font-bold text-gray-900">

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
+import { AimNotification } from '@/components/aim-notification'
 
 export default async function ChatPage() {
   const cookieStore = cookies()
@@ -14,6 +15,7 @@ export default async function ChatPage() {
 
   return (
     <>
+      <AimNotification />
       <ChatHeader userId={session.user.id} />
       <div className="flex-1 overflow-auto">
         <Chat />

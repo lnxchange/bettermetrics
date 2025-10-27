@@ -5,6 +5,7 @@ import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
+import { AimNotification } from '@/components/aim-notification'
 import { cookies } from 'next/headers'
 
 export const runtime = 'edge'
@@ -52,6 +53,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   return (
     <>
+      <AimNotification />
       <ChatHeader userId={session.user.id} />
       <div className="flex-1 overflow-auto">
         <Chat id={chat.id} initialMessages={chat.messages} />
