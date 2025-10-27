@@ -100,25 +100,31 @@ export async function POST(req: Request) {
     let ragContext = ''
     let hasRagResults = false
     try {
-      const vectorSearch = new VectorSearch()
-      const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', 0.3)
-      hasRagResults = results.length > 0
-      
-      if (hasRagResults) {
-        const context = results
-          .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
-          .join('\n\n')
-        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Use this RAG context as your primary foundation for understanding the AIM Framework. Combine it with relevant, up-to-date web knowledge to provide comprehensive analysis. 
+      // Check if required environment variables are available for RAG
+      if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.log('Missing environment variables for RAG - skipping vector search')
+        ragContext = '\n\nNOTE: RAG system not configured. Please answer based on general knowledge.'
+      } else {
+        const vectorSearch = new VectorSearch()
+        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', 0.3)
+        hasRagResults = results.length > 0
+        
+        if (hasRagResults) {
+          const context = results
+            .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
+            .join('\n\n')
+          ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Use this RAG context as your primary foundation for understanding the AIM Framework. Combine it with relevant, up-to-date web knowledge to provide comprehensive analysis. 
 
 When analyzing motivational patterns, infer which AIM systems (Appetites, Intrinsic Motivation, Mimetic Desire) are active and explain how they interact. Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences when relevant.
 
 Avoid mechanical structuring - prefer natural, essay-style argumentation that mirrors deep reasoning. When uncertain about aspects not covered in the RAG context, offer hypotheses and logical alternatives while clearly distinguishing between what comes from the AIM research versus additional web-sourced context.
 
 Produce answers of whatever length best fits the complexity of the question - focus on quality reasoning rather than fixed word counts.`
-      } else {
-        ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
+        } else {
+          ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
 
 Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences. Offer hypotheses and logical alternatives when uncertain. Clearly state that your analysis is not based on specific AIM Framework documentation, but suggest how the topic might relate to the AIM triad when appropriate.`
+        }
       }
     } catch (error) {
       console.error('RAG search error:', error)

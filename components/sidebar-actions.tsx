@@ -61,6 +61,11 @@ export function SidebarActions({
       return toast.error('Could not copy share link to clipboard')
     }
 
+    // Add client-side check for browser APIs
+    if (typeof window === 'undefined' || !navigator.clipboard) {
+      return toast.error('Clipboard not available')
+    }
+
     const url = new URL(window.location.href)
     url.pathname = chat.sharePath
     navigator.clipboard.writeText(url.toString())
