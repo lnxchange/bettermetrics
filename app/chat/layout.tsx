@@ -15,8 +15,22 @@ interface ChatLayoutProps {
 
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <div className="flex h-screen flex-col">
-      {children}
-    </div>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        className={cn(
+          'font-sans antialiased',
+          fontSans.variable,
+          fontMono.variable
+        )}
+      >
+        <Providers attribute="class" defaultTheme="system" enableSystem>
+          <ToasterWrapper />
+          <div className="flex h-screen flex-col">
+            {children}
+          </div>
+        </Providers>
+      </body>
+    </html>
   )
 }
