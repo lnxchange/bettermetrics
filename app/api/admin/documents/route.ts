@@ -102,6 +102,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
 
+    // For RAG documents, content is required
+    if (type === 'rag' && !content) {
+      return NextResponse.json({ error: 'Content is required for RAG documents' }, { status: 400 })
+    }
+
     let fileUrl = null
     let fileType = null
     let fileSize = null
@@ -151,9 +156,16 @@ export async function POST(req: NextRequest) {
 
     const tableName =
       type === 'research' ? 'research_documents' : 'rag_documents'
+    
+    // Ensure we have a valid user ID
+    const userId = session?.user?.id
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID not found in session' }, { status: 401 })
+    }
+    
     const insertData: any = {
       title,
-      uploaded_by: session?.user?.id || 'local-dev-user'
+      uploaded_by: userId
     }
 
     if (type === 'research') {
@@ -168,6 +180,15 @@ export async function POST(req: NextRequest) {
       insertData.metadata = parsedMetadata
     }
 
+    // Add comprehensive logging
+    console.log('Insert data:', {
+      ...insertData,
+      content: content ? `${content.substring(0, 100)}...` : 'No content'
+    })
+    console.log('Session user:', session?.user?.id)
+    console.log('User metadata:', session?.user?.user_metadata)
+    console.log('Table name:', tableName)
+
     const { data, error } = await supabase
       .from(tableName)
       .insert(insertData)
@@ -175,9 +196,16 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error inserting document:', error)
+      console.error('Database error details:', {
+        error,
+        insertData: {
+          ...insertData,
+          content: content ? `${content.substring(0, 100)}...` : 'No content'
+        },
+        tableName
+      })
       return NextResponse.json(
-        { error: 'Failed to insert document' },
+        { error: `Failed to insert document: ${error.message}` },
         { status: 500 }
       )
     }

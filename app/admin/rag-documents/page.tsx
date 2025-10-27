@@ -200,7 +200,24 @@ export default function RAGDocumentsPage() {
         for (let i = 0; i < batchFiles.length; i++) {
           const file = batchFiles[i]
           try {
+            // Check if file is text-based
+            if (!file.type.startsWith('text/') && !file.name.endsWith('.md') && !file.name.endsWith('.txt')) {
+              console.warn(`Skipping non-text file: ${file.name}`)
+              errorCount++
+              toast.error(`Skipped ${file.name}: Only text files are supported`)
+              continue
+            }
+
             const content = await file.text()
+            
+            // Check if content is empty
+            if (!content.trim()) {
+              console.warn(`Skipping empty file: ${file.name}`)
+              errorCount++
+              toast.error(`Skipped ${file.name}: File is empty`)
+              continue
+            }
+
             const formDataToSend = new FormData()
             formDataToSend.append('type', 'rag')
             formDataToSend.append('title', file.name.replace(/\.[^/.]+$/, '')) // Remove extension
@@ -231,11 +248,14 @@ export default function RAGDocumentsPage() {
               }
             } else {
               errorCount++
-              console.error(`Failed to upload ${file.name}`)
+              const errorData = await response.json()
+              console.error(`Failed to upload ${file.name}:`, errorData)
+              toast.error(`Failed to upload ${file.name}: ${errorData.error}`)
             }
           } catch (error) {
             errorCount++
             console.error(`Error processing ${file.name}:`, error)
+            toast.error(`Error processing ${file.name}: ${error.message}`)
           }
 
           setUploadProgress({ completed: i + 1, total: batchFiles.length })
