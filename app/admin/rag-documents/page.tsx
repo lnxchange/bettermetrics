@@ -32,6 +32,7 @@ export default function RAGDocumentsPage() {
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [debugInfo, setDebugInfo] = useState<any>(null)
 
   // Fetch documents on page load
   useEffect(() => {
@@ -144,37 +145,41 @@ export default function RAGDocumentsPage() {
     }
   }
 
-  const handleReprocessAllDocuments = async () => {
-    if (!confirm('This will reprocess ALL RAG documents for embeddings, including those already processed. This may take several minutes. Continue?')) {
-      return
-    }
-
-    setIsProcessing(true)
+  const handleDebugRAG = async () => {
     try {
-      const response = await fetch('/api/admin/process-all-rag-documents', {
+      const response = await fetch('/api/admin/debug-rag')
+      if (response.ok) {
+        const data = await response.json()
+        setDebugInfo(data)
+        console.log('RAG Debug Info:', data)
+        toast.success('Debug info loaded - check console for details')
+      } else {
+        toast.error('Failed to get debug info')
+      }
+    } catch (error) {
+      toast.error('Failed to get debug info')
+    }
+  }
+
+  const handleTestSearch = async () => {
+    try {
+      const response = await fetch('/api/admin/test-rag-search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ reprocess: true })
+        body: JSON.stringify({ query: 'What is the AIM Framework?' })
       })
 
       if (response.ok) {
         const data = await response.json()
-        toast.success(`Successfully reprocessed ${data.processed} out of ${data.total} documents!`)
-        
-        if (data.errors && data.errors.length > 0) {
-          console.error('Processing errors:', data.errors)
-          toast.error(`${data.errors.length} documents failed to process. Check console for details.`)
-        }
+        console.log('Search Test Results:', data)
+        toast.success(`Search test completed - found ${data.resultCount} results. Check console for details.`)
       } else {
-        const error = await response.json()
-        toast.error(error.error || 'Failed to reprocess documents')
+        toast.error('Search test failed')
       }
     } catch (error) {
-      toast.error('Failed to reprocess documents')
-    } finally {
-      setIsProcessing(false)
+      toast.error('Search test failed')
     }
   }
 
@@ -582,6 +587,20 @@ export default function RAGDocumentsPage() {
                         size="sm"
                       >
                         {isProcessing ? 'Processing...' : 'Reprocess All'}
+                      </Button>
+                      <Button
+                        onClick={handleDebugRAG}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        Debug RAG
+                      </Button>
+                      <Button
+                        onClick={handleTestSearch}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        Test Search
                       </Button>
                     </div>
                   )}
