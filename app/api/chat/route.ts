@@ -44,6 +44,22 @@ When discussing validation:
 
 Tone: Confident but humble. Promising hypothesis seeking validation, not revolutionary breakthrough.`
 
+// TODO: Future Enhancement - Upgrade to GPT-4 or O1 Reasoning Model
+// The current implementation uses GPT-3.5-turbo which has limitations in:
+// 1. Complex logical reasoning about how AIM relates to external information
+// 2. Multi-step inference required to apply AIM framework to novel situations
+// 3. Synthesizing AIM concepts with broader research literature
+//
+// When available, upgrade to a reasoning-capable model (GPT-4, O1, etc.) by:
+// - Changing model parameter to 'gpt-4' or 'o1-preview'
+// - Adjusting temperature and reasoning parameters
+// - Testing thoroughly with complex AIM application questions
+//
+// This will significantly improve the chatbot's ability to:
+// - Apply AIM framework principles to analyze complex scenarios
+// - Integrate AIM with other research domains logically
+// - Provide more nuanced interpretations of the framework
+
 export async function POST(req: Request) {
   try {
     const cookieStore = cookies()
@@ -84,13 +100,24 @@ export async function POST(req: Request) {
 
     // Search for relevant context using RAG
     let ragContext = ''
+    let hasRagResults = false
     try {
       const vectorSearch = new VectorSearch()
-      ragContext = await vectorSearch.searchWithContext(userQuery, 3, 'rag')
+      const results = await vectorSearch.searchSimilarDocuments(userQuery, 3, 'rag', 0.7)
+      hasRagResults = results.length > 0
+      
+      if (hasRagResults) {
+        const context = results
+          .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
+          .join('\n\n')
+        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Base your answer primarily on the context above. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
+      } else {
+        ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. You should answer based on general knowledge about motivation, psychology, and neuroscience, while clearly stating that this is not from the AIM Framework documentation specifically. If appropriate, suggest how this topic might relate to the AIM Framework's three sources of motivation.`
+      }
     } catch (error) {
       console.error('RAG search error:', error)
       // Continue without context if RAG fails
-      ragContext = ''
+      ragContext = '\n\nNOTE: Unable to search AIM Framework documents. Please answer based on general knowledge.'
     }
 
     // Build system message with RAG context

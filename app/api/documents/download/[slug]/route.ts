@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile } from 'fs/promises'
-import path from 'path'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 
 export async function GET(
@@ -19,6 +18,11 @@ export async function GET(
       }, { status: 503 })
     }
 
+    // Create Supabase client
+    const supabase = createRouteHandlerClient<Database>({
+      cookies: () => cookieStore
+    })
+
     // Require authentication for research document downloads
     const session = await auth({ cookieStore })
     if (!session?.user?.email) {
@@ -27,23 +31,57 @@ export async function GET(
       }, { status: 401 })
     }
 
-    // Get filename from slug
-    const filename = `${params.slug}.pdf`
-    const filepath = path.join(process.cwd(), 'public', 'docs', filename)
+    // Find document by slug (title converted to slug)
+    const { data: document, error: docError } = await supabase
+      .from('research_documents')
+      .select('*')
+      .ilike('title', `%${params.slug.replace(/-/g, ' ')}%`)
+      .single()
 
-    const buffer = await readFile(filepath)
+    if (docError || !document) {
+      return NextResponse.json({ error: 'Document not found' }, { status: 404 })
+    }
 
-    // Optional: Track download in database
-    // await trackDownload(params.slug, session.user.email)
+    // Track the download
+    const { error: trackError } = await supabase
+      .from('download_tracking')
+      .insert({
+        user_id: session.user.id,
+        document_id: document.id,
+        user_email: session.user.email,
+        user_metadata: {
+          downloaded_document: document.title,
+          user_agent: req.headers.get('user-agent') || 'unknown'
+        }
+      })
 
+    if (trackError) {
+      console.error('Error tracking download:', trackError)
+      // Continue with download even if tracking fails
+    }
+
+    // Get file from Supabase storage
+    const { data: fileData, error: downloadError } = await supabase.storage
+      .from('research-documents')
+      .download(document.file_url.split('/').pop() || '')
+
+    if (downloadError || !fileData) {
+      console.error('Error downloading file:', downloadError)
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
+    }
+
+    // Convert blob to buffer
+    const buffer = Buffer.from(await fileData.arrayBuffer())
+
+    // Return file with appropriate headers
     return new NextResponse(buffer, {
       headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${filename}"`
+        'Content-Type': document.file_type || 'application/pdf',
+        'Content-Disposition': `attachment; filename="${document.title}.pdf"`
       }
     })
   } catch (error) {
     console.error('Download error:', error)
-    return NextResponse.json({ error: 'File not found' }, { status: 404 })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -178,6 +178,46 @@ export interface Database {
           }
         ]
       }
+      download_tracking: {
+        Row: {
+          id: string
+          user_id: string
+          document_id: string
+          downloaded_at: string
+          user_email: string
+          user_metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          document_id: string
+          downloaded_at?: string
+          user_email: string
+          user_metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          document_id?: string
+          downloaded_at?: string
+          user_email?: string
+          user_metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'download_tracking_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'download_tracking_document_id_fkey'
+            columns: ['document_id']
+            referencedRelation: 'research_documents'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

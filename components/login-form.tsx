@@ -100,6 +100,13 @@ export function LoginForm({
           }))
         }
       />
+      {action === 'sign-in' && (
+        <div className="text-right mb-2">
+          <Link href="/reset-password" className="text-sm text-blue-600 hover:underline">
+            Forgot password?
+          </Link>
+        </div>
+      )}
 
       <Button disabled={isLoading}>
         {isLoading && <IconSpinner className="mr-2 animate-spin" />}

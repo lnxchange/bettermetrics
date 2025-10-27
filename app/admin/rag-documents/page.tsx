@@ -153,7 +153,25 @@ export default function RAGDocumentsPage() {
         })
 
         if (response.ok) {
-          toast.success('Document uploaded and processed successfully!')
+          const { document } = await response.json()
+          toast.success('Document uploaded successfully!')
+          
+          // Automatically process document for embeddings
+          try {
+            await fetch('/api/admin/process-document', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                documentId: document.id,
+                documentType: 'rag'
+              })
+            })
+            toast.success('Document uploaded and processed successfully!')
+          } catch (processError) {
+            console.error('Error processing document:', processError)
+            toast.error('Document uploaded but processing failed. Please try processing manually.')
+          }
+          
           setFormData({ title: '', content: '', metadata: '{}' })
           // Reset file input
           const fileInput = document.getElementById('file') as HTMLInputElement
@@ -195,7 +213,22 @@ export default function RAGDocumentsPage() {
             })
 
             if (response.ok) {
+              const { document } = await response.json()
               successCount++
+              
+              // Automatically process document for embeddings
+              try {
+                await fetch('/api/admin/process-document', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    documentId: document.id,
+                    documentType: 'rag'
+                  })
+                })
+              } catch (processError) {
+                console.error(`Error processing ${file.name}:`, processError)
+              }
             } else {
               errorCount++
               console.error(`Failed to upload ${file.name}`)
