@@ -145,6 +145,40 @@ export default function RAGDocumentsPage() {
     }
   }
 
+  const handleReprocessAllDocuments = async () => {
+    if (!confirm('This will reprocess ALL RAG documents for embeddings, including those already processed. This may take several minutes. Continue?')) {
+      return
+    }
+
+    setIsProcessing(true)
+    try {
+      const response = await fetch('/api/admin/process-all-rag-documents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reprocess: true })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success(`Successfully reprocessed ${data.processed} out of ${data.total} documents!`)
+        
+        if (data.errors && data.errors.length > 0) {
+          console.error('Processing errors:', data.errors)
+          toast.error(`${data.errors.length} documents failed to process. Check console for details.`)
+        }
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to reprocess documents')
+      }
+    } catch (error) {
+      toast.error('Failed to reprocess documents')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
   const handleDebugRAG = async () => {
     try {
       const response = await fetch('/api/admin/debug-rag')
