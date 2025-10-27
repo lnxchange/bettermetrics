@@ -1,6 +1,6 @@
 import 'server-only'
 import { NextRequest, NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createRouteHandlerClient, createClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
@@ -10,21 +10,22 @@ export async function GET(req: NextRequest) {
     const cookieStore = cookies()
     
     // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.log('Supabase not configured - returning empty documents list')
       return NextResponse.json({ documents: [] })
     }
     
-    // Create Supabase client
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
-
     // Check authentication - REQUIRED for admin routes
     const session = await auth({ cookieStore })
     if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Create Supabase client with service role for admin operations
+    const supabase = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     const { searchParams } = new URL(req.url)
     const type = searchParams.get('type') // 'research' or 'rag'
@@ -67,21 +68,22 @@ export async function POST(req: NextRequest) {
     const cookieStore = cookies()
     
     // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.log('Supabase not configured - returning service unavailable')
       return NextResponse.json({ error: 'Service unavailable - Supabase not configured' }, { status: 503 })
     }
     
-    // Create Supabase client
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
-
     // Check authentication - REQUIRED for admin routes
     const session = await auth({ cookieStore })
     if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Create Supabase client with service role for admin operations
+    const supabase = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     const formData = await req.formData()
     const type = formData.get('type') as string
@@ -225,21 +227,22 @@ export async function DELETE(req: NextRequest) {
     const cookieStore = cookies()
     
     // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.log('Supabase not configured - returning service unavailable')
       return NextResponse.json({ error: 'Service unavailable - Supabase not configured' }, { status: 503 })
     }
     
-    // Create Supabase client
-    const supabase = createRouteHandlerClient<Database>({
-      cookies: () => cookieStore
-    })
-
     // Check authentication - REQUIRED for admin routes
     const session = await auth({ cookieStore })
     if (!session || !session.user || !session.user.user_metadata?.is_admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Create Supabase client with service role for admin operations
+    const supabase = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
