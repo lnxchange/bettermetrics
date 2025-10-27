@@ -11,8 +11,10 @@ import { VectorSearch } from '@/lib/rag/vector-search'
 
 export const runtime = 'edge'
 
+// Use Perplexity API with OpenAI-compatible interface
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.PERPLEXITY_API_KEY || process.env.OPENAI_API_KEY,
+  basePath: process.env.PERPLEXITY_API_KEY ? 'https://api.perplexity.ai' : undefined
 })
 
 const openai = new OpenAIApi(configuration)
@@ -103,7 +105,11 @@ export async function POST(req: Request) {
         const context = results
           .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
           .join('\n\n')
-        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. Provide detailed, comprehensive explanations that are approximately 50% longer than typical responses. Include examples and context to illustrate concepts thoroughly. If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
+        ragContext = `Relevant context from AIM Framework research documents:\n\n${context}\n\nIMPORTANT: Provide comprehensive explanations of core concepts rather than focusing on edge cases. Base your answer primarily on the context above, but ensure you explain fundamental principles thoroughly. Provide detailed, comprehensive explanations that are approximately 50% longer than typical responses. Include examples and context to illustrate concepts thoroughly. 
+
+If the RAG context above doesn't fully answer the question, you may supplement with current web information, recent research, or real-world examples, but always prioritize the AIM Framework research above. Clearly distinguish between information from the AIM research documents versus additional web-sourced context.
+
+If the context doesn't contain enough information to fully answer the question, acknowledge this and supplement with general knowledge while clearly distinguishing between what comes from the AIM research vs general understanding.`
       } else {
         ragContext = `\n\nNOTE: No specific AIM Framework research context was found for this query. You should answer based on general knowledge about motivation, psychology, and neuroscience, while clearly stating that this is not from the AIM Framework documentation specifically. If appropriate, suggest how this topic might relate to the AIM Framework's three sources of motivation.`
       }
@@ -123,7 +129,7 @@ export async function POST(req: Request) {
     const allMessages = [systemMessage, ...messages]
 
     const res = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: process.env.PERPLEXITY_API_KEY ? 'pplx-70b-online' : 'gpt-3.5-turbo',
       messages: allMessages,
       temperature: 0.8,
       stream: true
