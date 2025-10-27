@@ -160,6 +160,14 @@ export function Header({ session }: HeaderProps) {
         >
           AI Chat
         </Link>
+        {session?.user?.user_metadata?.is_admin && (
+          <Link
+            href="/admin"
+            className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+          >
+            Admin
+          </Link>
+        )}
       </div>
 
       {/* Mobile Menu Button */}
@@ -295,6 +303,15 @@ export function Header({ session }: HeaderProps) {
             >
               AI Chat
             </Link>
+            {session?.user?.user_metadata?.is_admin && (
+              <Link
+                href="/admin"
+                className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Admin
+              </Link>
+            )}
           </div>
         </div>
       )}
