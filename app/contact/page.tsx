@@ -1,12 +1,59 @@
+'use client'
+
 import { Metadata } from 'next'
 import Link from 'next/link'
-
-export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Get in touch to discuss research collaboration, consulting, or media inquiries about the AIM Framework.',
-}
+import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 export default function ContactPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    affiliation: '',
+    interest: '',
+    message: ''
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        toast.success('Message sent successfully! We\'ll get back to you within 48 hours.')
+        setFormData({
+          name: '',
+          email: '',
+          affiliation: '',
+          interest: '',
+          message: ''
+        })
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to send message')
+      }
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    })
+  }
   return (
     <div className="bg-white">
       {/* Hero */}
@@ -40,7 +87,7 @@ export default function ContactPage() {
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white p-8 rounded-xl border border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h2>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
                 Name *
@@ -49,6 +96,8 @@ export default function ContactPage() {
                 type="text"
                 id="name"
                 required
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -61,6 +110,8 @@ export default function ContactPage() {
                 type="email"
                 id="email"
                 required
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -72,6 +123,8 @@ export default function ContactPage() {
               <input
                 type="text"
                 id="affiliation"
+                value={formData.affiliation}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -82,6 +135,8 @@ export default function ContactPage() {
               </label>
               <select
                 id="interest"
+                value={formData.interest}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Select an option</option>
@@ -102,15 +157,18 @@ export default function ContactPage() {
                 id="message"
                 required
                 rows={6}
+                value={formData.message}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
+              disabled={isSubmitting}
+              className="w-full px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
           </form>
         </div>
@@ -222,7 +280,7 @@ export default function ContactPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Connect</h2>
         <p className="text-gray-600 mb-6">
-          Email: contact@usebettermetrics.com
+          Email: yule@attune.legal
         </p>
         <p className="text-gray-600 mb-8">
           We aim to respond to all inquiries within 48 hours.
