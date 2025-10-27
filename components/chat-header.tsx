@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 
 export async function ChatHeader({ userId }: { userId?: string }) {
   return (
-    <div className="sticky top-16 z-40 flex h-14 items-center justify-between border-b bg-background px-4">
+    <div className="flex h-14 shrink-0 items-center justify-between border-b bg-background px-4">
       <div className="flex items-center gap-2">
         <Sidebar>
           <React.Suspense fallback={<div>Loading...</div>}>

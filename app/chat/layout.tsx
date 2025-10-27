@@ -11,8 +11,7 @@ interface ChatLayoutProps {
 
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <div className="flex h-screen flex-col pt-16">
-      {/* pt-16 accounts for fixed header height */}
+    <div className="fixed inset-x-0 top-16 bottom-0 z-10 flex flex-col bg-background">
       {children}
     </div>
   )
