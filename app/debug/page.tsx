@@ -229,7 +229,7 @@ export default function DiagnosticPage() {
       <div className="mt-8 p-4 bg-blue-50 rounded-lg">
         <h3 className="font-semibold mb-2">How to Use This Diagnostic:</h3>
         <ol className="list-decimal list-inside space-y-1 text-sm">
-          <li>Click "Run Full Diagnostic" to test all components</li>
+          <li>Click &quot;Run Full Diagnostic&quot; to test all components</li>
           <li>Check the results for any errors or warnings</li>
           <li>Look at the details section for specific error information</li>
           <li>Use the environment variables endpoint at <code>/api/debug/env</code> to check configuration</li>
