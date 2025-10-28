@@ -11,14 +11,6 @@ import { VectorSearch } from '@/lib/rag/vector-search'
 
 export const runtime = 'edge'
 
-// Use Perplexity API with OpenAI-compatible interface
-const configuration = new Configuration({
-  apiKey: process.env.PERPLEXITY_API_KEY || process.env.OPENAI_API_KEY,
-  basePath: process.env.PERPLEXITY_API_KEY ? 'https://api.perplexity.ai/v1' : undefined
-})
-
-const openai = new OpenAIApi(configuration)
-
 const AIM_SYSTEM_PROMPT = `You are an advanced assistant trained to use the AIM Motivation Framework by Yule Guttenbeil ("Aim Framework" or "AIM"). Your purpose is to explain the AIM Motivation Framework to people who may not be familiar with it.
 
 You analyze motivational and behavioral patterns using the AIM triad (Appetites, Intrinsic Motivation, Mimetic Desire), but only introduce these categories where they meaningfully contribute to the reasoning.
@@ -59,6 +51,10 @@ Tone: Knowledgeable and helpful. Present the framework as a well-developed hypot
 // - Provide more nuanced interpretations of the framework
 
 export async function POST(req: Request) {
+  // Create configuration per-request (avoid global mutation)
+  const apiKey = process.env.PERPLEXITY_API_KEY || process.env.OPENAI_API_KEY
+  const usePerplexity = !!process.env.PERPLEXITY_API_KEY
+  
   try {
     const cookieStore = cookies()
     
@@ -89,9 +85,16 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id
 
-    if (previewToken) {
-      configuration.apiKey = previewToken
-    }
+    // Determine API configuration based on preview token
+    const finalApiKey = previewToken || apiKey
+    const finalUsePerplexity = !previewToken && usePerplexity
+    
+    const config = new Configuration({
+      apiKey: finalApiKey,
+      basePath: finalUsePerplexity ? 'https://api.perplexity.ai' : undefined
+    })
+    
+    const client = new OpenAIApi(config)
 
     // Get the latest user message for RAG context
     const userQuery = messages[messages.length - 1]?.content || ''
@@ -141,34 +144,37 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const systemMessage = { role: 'system', content: systemContent }
     const allMessages = [systemMessage, ...messages]
 
-    // Try Perplexity first, fallback to OpenAI with GPT-4o
+    // Determine model based on API being used
+    const model = finalUsePerplexity ? 'pplx-70b-online' : 'gpt-4o'
+
+    // Try primary API
     let res
     try {
-      res = await openai.createChatCompletion({
-        model: process.env.PERPLEXITY_API_KEY ? 'pplx-70b-online' : 'gpt-4o',
+      res = await client.createChatCompletion({
+        model,
         messages: allMessages,
         temperature: 0.8,
         stream: true
       })
     } catch (error) {
-      console.error('Primary API call failed:', error)
+      console.error(`${finalUsePerplexity ? 'Perplexity' : 'OpenAI'} API error:`, error)
       
-      // Fallback to OpenAI GPT-4o if Perplexity fails
-      if (process.env.PERPLEXITY_API_KEY) {
+      // Only fallback if we were using Perplexity
+      if (finalUsePerplexity && process.env.OPENAI_API_KEY) {
         console.log('Falling back to OpenAI GPT-4o')
         const fallbackConfig = new Configuration({
           apiKey: process.env.OPENAI_API_KEY
         })
-        const fallbackOpenai = new OpenAIApi(fallbackConfig)
+        const fallbackClient = new OpenAIApi(fallbackConfig)
         
-        res = await fallbackOpenai.createChatCompletion({
+        res = await fallbackClient.createChatCompletion({
           model: 'gpt-4o',
           messages: allMessages,
           temperature: 0.8,
           stream: true
         })
       } else {
-        throw error // Re-throw if no fallback available
+        throw error
       }
     }
 
@@ -208,6 +214,20 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     return new StreamingTextResponse(stream)
   } catch (error) {
     console.error('Chat API error:', error)
-    return new Response('Internal server error', { status: 500 })
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      apiUsed: usePerplexity ? 'Perplexity' : 'OpenAI',
+      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY
+    })
+    
+    return new Response(JSON.stringify({
+      error: 'Chat request failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 }
