@@ -331,23 +331,34 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     if (!perplexityResponse.ok) {
       const errorText = await perplexityResponse.text()
-      console.error('Perplexity API error:', {
-        status: perplexityResponse.status,
-        statusText: perplexityResponse.statusText,
-        body: errorText,
-        hasApiKey: !!process.env.PERPLEXITY_API_KEY
+
+      // Comprehensive error logging for debugging
+      console.error('=== PERPLEXITY API ERROR ===')
+      console.error('Status:', perplexityResponse.status, perplexityResponse.statusText)
+      console.error('Response body:', errorText)
+      console.error('Request details:', {
+        userId,
+        chatId: json.id,
+        messageCount: messages.length,
+        hasApiKey: !!process.env.PERPLEXITY_API_KEY,
+        apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
+        model: 'sonar-reasoning',
+        timestamp: new Date().toISOString()
       })
-      
+      console.error('===========================')
+
       // Return the upstream HTTP status directly instead of masking as 502
       return new Response(
-        JSON.stringify({ 
-          error: 'Upstream error', 
-          status: perplexityResponse.status, 
-          body: errorText 
-        }), 
-        { 
-          status: perplexityResponse.status, 
-          headers: { 'Content-Type': 'application/json' } 
+        JSON.stringify({
+          error: 'Perplexity API error',
+          status: perplexityResponse.status,
+          statusText: perplexityResponse.statusText,
+          details: errorText,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: perplexityResponse.status,
+          headers: { 'Content-Type': 'application/json' }
         }
       )
     }
@@ -466,23 +477,34 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       }
     })
   } catch (error) {
-    console.error('Chat API error:', error)
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-      apiUsed: 'Perplexity',
+    // Comprehensive error logging for debugging
+    console.error('=== CHAT API GENERAL ERROR ===')
+    console.error('Error type:', error instanceof Error ? error.name : typeof error)
+    console.error('Error message:', error instanceof Error ? error.message : String(error))
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('Context:', {
+      userId: session?.user?.id || 'unknown',
+      chatId: json?.id || 'unknown',
+      messageCount: messages?.length || 0,
+      apiUsed: 'Perplexity sonar-reasoning',
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+      apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
       timestamp: new Date().toISOString(),
       userAgent: req.headers.get('user-agent'),
-      url: req.url
+      url: req.url,
+      method: req.method,
+      contentType: req.headers.get('content-type')
     })
-    
+    console.error('==============================')
+
     return new Response(JSON.stringify({
       error: 'Chat request failed',
-      details: error instanceof Error ? error.message : 'Unknown error',
+      message: error instanceof Error ? error.message : 'Unknown error occurred',
+      details: 'Please check server logs for more information',
       timestamp: new Date().toISOString()
-    }), { 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })

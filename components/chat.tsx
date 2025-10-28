@@ -38,6 +38,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState('')
   const [hasMounted, setHasMounted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null)
 
   // Generate a stable chat ID if one isn't provided
   const chatId = useMemo(() => id || nanoid(), [id])
@@ -60,23 +62,45 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         previewToken
       },
       onResponse(response) {
+        // Clear error state on successful response
+        setErrorMessage(null)
+        setLastFailedMessage(null)
+
         if (response.status === 401) {
-          toast.error('Authentication failed. Please sign in again.')
+          const error = 'Authentication failed. Please sign in again.'
+          setErrorMessage(error)
+          toast.error(error)
           // Redirect to sign-in after a short delay
           setTimeout(() => {
             window.location.href = '/sign-in'
           }, 2000)
         } else if (response.status >= 500) {
-          toast.error('Server error. Please try again.')
+          const error = `Server error (${response.status}). The server encountered an issue.`
+          setErrorMessage(error)
+          toast.error(error)
         } else if (!response.ok) {
-          toast.error(`Request failed: ${response.status} ${response.statusText}`)
+          const error = `Request failed: ${response.status} ${response.statusText}`
+          setErrorMessage(error)
+          toast.error(error)
         }
       },
       onError(error) {
         console.error('Chat error:', error)
-        toast.error('Chat request failed. Please try again.')
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred'
+        const displayError = `Chat request failed: ${errorMsg}`
+
+        // Store the failed message for retry
+        if (input) {
+          setLastFailedMessage(input)
+        }
+        setErrorMessage(displayError)
+        toast.error(`${displayError}. Your message has been preserved - click Retry to resend.`)
       },
       onFinish() {
+        // Clear error state on successful completion
+        setErrorMessage(null)
+        setLastFailedMessage(null)
+
         // After first message, redirect to /chat/[id] to enable history
         if (!id && messages.length === 0) {
           router.push(`/chat/${chatId}`)
@@ -84,6 +108,19 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         }
       }
     })
+
+  // Retry handler
+  const handleRetry = () => {
+    if (lastFailedMessage) {
+      setErrorMessage(null)
+      const messageToRetry = lastFailedMessage
+      setLastFailedMessage(null)
+      append({
+        content: messageToRetry,
+        role: 'user'
+      })
+    }
+  }
 
   // Don't render preview dialog until mounted to prevent hydration mismatch
   if (!hasMounted) {
@@ -108,6 +145,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
           messages={messages}
           input={input}
           setInput={setInput}
+          errorMessage={errorMessage}
+          lastFailedMessage={lastFailedMessage}
+          onRetry={handleRetry}
         />
       </>
     )
@@ -133,6 +173,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         messages={messages}
         input={input}
         setInput={setInput}
+        errorMessage={errorMessage}
+        lastFailedMessage={lastFailedMessage}
+        onRetry={handleRetry}
       />
 
       {hasMounted && (
