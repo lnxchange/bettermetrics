@@ -172,7 +172,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     // Use Perplexity API directly with fetch
     console.log('Making Perplexity API request:', {
-      model: 'pplx-70b-online',
+      model: 'sonar-pro',
       messageCount: allMessages.length,
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       timestamp: new Date().toISOString()
@@ -186,10 +186,10 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        model: 'pplx-70b-online',
+        model: 'sonar-pro',
         messages: allMessages,
         max_tokens: 1200,
-        temperature: 0.8,
+        temperature: 0.5,
         stream: true
       })
     })
@@ -203,14 +203,15 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         hasApiKey: !!process.env.PERPLEXITY_API_KEY
       })
       
+      // Return the upstream HTTP status directly instead of masking as 502
       return new Response(
         JSON.stringify({ 
-          error: 'Perplexity API error', 
+          error: 'Upstream error', 
           status: perplexityResponse.status, 
-          details: errorText 
+          body: errorText 
         }), 
         { 
-          status: 502, 
+          status: perplexityResponse.status, 
           headers: { 'Content-Type': 'application/json' } 
         }
       )
@@ -218,7 +219,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     console.log('Perplexity API response received successfully')
 
-    // Return the streaming response directly
+    // Only return stream when upstream.ok is true
     return new Response(perplexityResponse.body, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
