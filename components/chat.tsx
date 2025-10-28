@@ -54,14 +54,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         previewToken
       },
       onResponse(response) {
-        console.log('Chat response received:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-          url: response.url,
-          timestamp: new Date().toISOString()
-        })
-        
         if (response.status === 401) {
           toast.error('Authentication failed. Please sign in again.')
           // Redirect to sign-in after a short delay
