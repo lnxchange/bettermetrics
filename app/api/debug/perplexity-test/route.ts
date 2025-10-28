@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     console.log('Testing Perplexity API with message:', testMessage)
     
     // Test with a simple request
-    const response = await client.createChatCompletion({
+    const apiResponse = await client.createChatCompletion({
       model: 'pplx-70b-online',
       messages: [
         { role: 'system', content: 'You are a helpful assistant. Respond briefly.' },
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       stream: false
     })
     
-    const completion = response.data.choices[0]?.message?.content || 'No response'
+    const completion = apiResponse.data.choices[0]?.message?.content || 'No response'
     
     return NextResponse.json({
       success: true,
