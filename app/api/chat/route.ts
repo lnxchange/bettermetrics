@@ -483,9 +483,9 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     console.error('Error message:', error instanceof Error ? error.message : String(error))
     console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
     console.error('Context:', {
-      userId: session?.user?.id || 'unknown',
-      chatId: json?.id || 'unknown',
-      messageCount: messages?.length || 0,
+      userId: 'unknown', // session not available in catch block
+      chatId: 'unknown', // json not available in catch block
+      messageCount: 0, // messages not available in catch block
       apiUsed: 'Perplexity sonar-reasoning',
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
