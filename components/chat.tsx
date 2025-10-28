@@ -1,8 +1,10 @@
 'use client'
 
 import { useChat, type Message } from 'ai/react'
+import { useRouter } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
+import { nanoid } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
 import { EmptyScreen } from '@/components/empty-screen'
@@ -16,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
@@ -28,6 +30,7 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
+  const router = useRouter()
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -35,7 +38,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState('')
   const [hasMounted, setHasMounted] = useState(false)
-  
+
+  // Generate a stable chat ID if one isn't provided
+  const chatId = useMemo(() => id || nanoid(), [id])
+
   // Set preview dialog state after hydration
   useEffect(() => {
     setHasMounted(true)
@@ -48,9 +54,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
-      id,
+      id: chatId,
       body: {
-        id,
+        id: chatId,
         previewToken
       },
       onResponse(response) {
@@ -69,6 +75,13 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       onError(error) {
         console.error('Chat error:', error)
         toast.error('Chat request failed. Please try again.')
+      },
+      onFinish() {
+        // After first message, redirect to /chat/[id] to enable history
+        if (!id && messages.length === 0) {
+          router.push(`/chat/${chatId}`)
+          router.refresh()
+        }
       }
     })
 

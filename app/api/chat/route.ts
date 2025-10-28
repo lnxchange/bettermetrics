@@ -411,7 +411,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     try {
       const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
       const id = json.id ?? nanoid()
-      const createdAt = Date.now()
+      const createdAt = new Date()
       const path = `/chat/${id}`
       const payload = {
         id,
