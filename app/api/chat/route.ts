@@ -87,7 +87,17 @@ export async function POST(req: Request) {
       userId: session?.user?.id,
       sessionExpiry: session?.expires_at,
       currentTime: Date.now(),
-      sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false
+      sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false,
+      cookies: cookieStore.getAll().map(c => ({ name: c.name, hasValue: !!c.value })),
+      supabaseConfig: {
+        hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      },
+      perplexityConfig: {
+        hasKey: !!process.env.PERPLEXITY_API_KEY,
+        keyPreview: process.env.PERPLEXITY_API_KEY ? 
+          `${process.env.PERPLEXITY_API_KEY.substring(0, 10)}...` : 'Missing'
+      }
     })
     
     if (!session?.user?.id) {
@@ -158,14 +168,32 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     // Try Perplexity API
     let res
     try {
+      console.log('Perplexity API request:', {
+        model,
+        messageCount: allMessages.length,
+        hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+        usingPreviewToken: !!previewToken,
+        timestamp: new Date().toISOString()
+      })
+      
       res = await client.createChatCompletion({
         model,
         messages: allMessages,
         temperature: 0.8,
         stream: true
       })
+      
+      console.log('Perplexity API response received successfully')
     } catch (error) {
-      console.error('Perplexity API error:', error)
+      console.error('Perplexity API error:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        model,
+        messageCount: allMessages.length,
+        hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+        usingPreviewToken: !!previewToken,
+        timestamp: new Date().toISOString()
+      })
       throw error
     }
 

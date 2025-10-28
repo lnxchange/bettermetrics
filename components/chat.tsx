@@ -54,9 +54,29 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         previewToken
       },
       onResponse(response) {
+        console.log('Chat response received:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok,
+          url: response.url,
+          timestamp: new Date().toISOString()
+        })
+        
         if (response.status === 401) {
-          toast.error(response.statusText)
+          toast.error('Authentication failed. Please sign in again.')
+          // Redirect to sign-in after a short delay
+          setTimeout(() => {
+            window.location.href = '/sign-in'
+          }, 2000)
+        } else if (response.status >= 500) {
+          toast.error('Server error. Please try again.')
+        } else if (!response.ok) {
+          toast.error(`Request failed: ${response.status} ${response.statusText}`)
         }
+      },
+      onError(error) {
+        console.error('Chat error:', error)
+        toast.error('Chat request failed. Please try again.')
       }
     })
 
