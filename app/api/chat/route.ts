@@ -51,10 +51,6 @@ Tone: Knowledgeable and helpful. Present the framework as a well-developed hypot
 // - Provide more nuanced interpretations of the framework
 
 export async function POST(req: Request) {
-  // Create configuration per-request (avoid global mutation)
-  const apiKey = process.env.PERPLEXITY_API_KEY || process.env.OPENAI_API_KEY
-  const usePerplexity = !!process.env.PERPLEXITY_API_KEY
-  
   try {
     const cookieStore = cookies()
     
@@ -64,7 +60,13 @@ export async function POST(req: Request) {
       return new Response('Service unavailable - Supabase not configured', { status: 503 })
     }
     
-    // Create Supabase client with error handling
+    // Check if Perplexity API key is configured
+    if (!process.env.PERPLEXITY_API_KEY) {
+      console.log('Perplexity API key not configured')
+      return new Response('Service unavailable - Perplexity API not configured', { status: 503 })
+    }
+    
+    // Create Supabase client
     let supabase: ReturnType<typeof createRouteHandlerClient<Database>>
     try {
       supabase = createRouteHandlerClient<Database>({
@@ -85,13 +87,10 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id
 
-    // Determine API configuration based on preview token
-    const finalApiKey = previewToken || apiKey
-    const finalUsePerplexity = !previewToken && usePerplexity
-    
+    // Use Perplexity API exclusively
     const config = new Configuration({
-      apiKey: finalApiKey,
-      basePath: finalUsePerplexity ? 'https://api.perplexity.ai' : undefined
+      apiKey: previewToken || process.env.PERPLEXITY_API_KEY,
+      basePath: 'https://api.perplexity.ai'
     })
     
     const client = new OpenAIApi(config)
@@ -145,9 +144,9 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const allMessages = [systemMessage, ...messages]
 
     // Determine model based on API being used
-    const model = finalUsePerplexity ? 'pplx-70b-online' : 'gpt-4o'
+    const model = 'pplx-70b-online'
 
-    // Try primary API
+    // Try Perplexity API
     let res
     try {
       res = await client.createChatCompletion({
@@ -157,25 +156,8 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         stream: true
       })
     } catch (error) {
-      console.error(`${finalUsePerplexity ? 'Perplexity' : 'OpenAI'} API error:`, error)
-      
-      // Only fallback if we were using Perplexity
-      if (finalUsePerplexity && process.env.OPENAI_API_KEY) {
-        console.log('Falling back to OpenAI GPT-4o')
-        const fallbackConfig = new Configuration({
-          apiKey: process.env.OPENAI_API_KEY
-        })
-        const fallbackClient = new OpenAIApi(fallbackConfig)
-        
-        res = await fallbackClient.createChatCompletion({
-          model: 'gpt-4o',
-          messages: allMessages,
-          temperature: 0.8,
-          stream: true
-        })
-      } else {
-        throw error
-      }
+      console.error('Perplexity API error:', error)
+      throw error
     }
 
     const stream = OpenAIStream(res, {
@@ -217,9 +199,8 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
-      apiUsed: usePerplexity ? 'Perplexity' : 'OpenAI',
-      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
-      hasOpenAIKey: !!process.env.OPENAI_API_KEY
+      apiUsed: 'Perplexity',
+      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY
     })
     
     return new Response(JSON.stringify({

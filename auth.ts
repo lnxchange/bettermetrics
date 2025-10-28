@@ -1,5 +1,5 @@
 import 'server-only'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
 export const auth = async ({
@@ -13,8 +13,8 @@ export const auth = async ({
   }
 
   try {
-    // Create a Supabase client configured to use cookies
-    const supabase = createServerComponentClient({
+    // Use createRouteHandlerClient for API routes
+    const supabase = createRouteHandlerClient({
       cookies: () => cookieStore
     })
     const { data, error } = await supabase.auth.getSession()
