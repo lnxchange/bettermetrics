@@ -323,7 +323,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       body: JSON.stringify({
         model: 'sonar-reasoning',
         messages: allMessages,
-        max_tokens: 2000,  // Increased for longer responses
+        max_tokens: 8000,  // High limit for reasoning model (includes <think> tags + visible response)
         temperature: 0.7,   // Increased for more detailed responses
         stream: true  // Re-enable streaming for proper client parsing
       })
@@ -366,20 +366,20 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     for (const line of lines) {
       if (line.startsWith('data: ')) {
         const data = line.slice(6)
-        
+
         if (data === '[DONE]') {
           break
         }
-        
+
         try {
           const parsed = JSON.parse(data)
-          
+
           // Extract citations
           if (parsed.citations) {
             citations = parsed.citations
             console.log(`Found ${citations.length} citations:`, citations.slice(0, 3))
           }
-          
+
           // Extract content
           if (parsed.choices?.[0]?.delta?.content) {
             fullContent += parsed.choices[0].delta.content
@@ -390,8 +390,13 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       }
     }
 
+    // Filter out reasoning model's internal thinking tags
+    // The sonar-reasoning model outputs <think>...</think> tags that should be hidden
+    let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/g, '')
+
+    console.log(`Content length before filtering: ${fullContent.length}, after: ${processedContent.length}`)
+
     // Process citations to make them clickable
-    let processedContent = fullContent
     if (citations.length > 0) {
       citations.forEach((url, index) => {
         const referenceNumber = index + 1
