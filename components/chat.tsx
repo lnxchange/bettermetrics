@@ -53,17 +53,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         id,
         previewToken
       },
-      // Custom fetch with no timeout for reasoning model
-      fetch: async (input, init) => {
-        // Remove any default timeout by using AbortController without timeout
-        const controller = new AbortController()
-        return fetch(input, {
-          ...init,
-          signal: controller.signal,
-          // Remove keepalive to avoid timeout constraints
-          keepalive: false
-        })
-      },
       onResponse(response) {
         if (response.status === 401) {
           toast.error('Authentication failed. Please sign in again.')
