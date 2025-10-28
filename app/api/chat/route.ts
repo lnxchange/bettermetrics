@@ -323,6 +323,39 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       console.log(`Processed ${citations.length} citations into clickable links`)
     }
 
+    // Save chat to database
+    try {
+      const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
+      const id = json.id ?? nanoid()
+      const createdAt = Date.now()
+      const path = `/chat/${id}`
+      const payload = {
+        id,
+        title,
+        userId,
+        createdAt,
+        path,
+        messages: [
+          ...messages,
+          {
+            content: processedContent,
+            role: 'assistant'
+          }
+        ]
+      }
+
+      await supabase.from('chats').upsert({
+        id,
+        payload,
+        user_id: userId
+      }).throwOnError()
+
+      console.log(`Chat saved to database: ${id}`)
+    } catch (error) {
+      console.error('Error saving chat to database:', error)
+      // Continue to return response even if save fails
+    }
+
     // Return the processed content as a streaming response
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
