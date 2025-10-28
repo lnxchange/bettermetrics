@@ -102,12 +102,23 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         setLastFailedMessage(null)
 
         // After first message, redirect to /chat/[id] to enable history
-        if (!id && messages.length === 0) {
+        if (!id) {
           router.push(`/chat/${chatId}`)
-          router.refresh()
         }
       }
     })
+
+  // Scroll to top of new assistant messages
+  useEffect(() => {
+    if (messages.length > 0 && messages[messages.length - 1].role === 'assistant') {
+      // Scroll to top of the last message
+      const messageElements = document.querySelectorAll('.chat-message')
+      const lastMessage = messageElements[messageElements.length - 1]
+      if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }, [messages])
 
   // Retry handler
   const handleRetry = () => {
