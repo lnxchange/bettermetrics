@@ -428,22 +428,17 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       start(controller) {
-        // Send the processed content in chunks to maintain streaming feel
-        const chunks = processedContent.split(' ')
-        let index = 0
-        
-        const sendChunk = () => {
-          if (index < chunks.length) {
-            const chunk = chunks[index] + (index < chunks.length - 1 ? ' ' : '')
-            controller.enqueue(encoder.encode(chunk))
-            index++
-            setTimeout(sendChunk, 10) // Small delay to simulate streaming
-          } else {
-            controller.close()
-          }
+        // Send the processed content in small chunks for streaming effect
+        const chunkSize = 5 // Send a few words at a time
+        const words = processedContent.split(' ')
+
+        for (let i = 0; i < words.length; i += chunkSize) {
+          const chunk = words.slice(i, i + chunkSize).join(' ')
+          const separator = (i + chunkSize < words.length) ? ' ' : ''
+          controller.enqueue(encoder.encode(chunk + separator))
         }
-        
-        sendChunk()
+
+        controller.close()
       }
     })
 
