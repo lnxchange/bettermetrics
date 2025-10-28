@@ -18,14 +18,19 @@ This is the ONLY definition of AIM you should use. AIM stands for:
 - I = Intrinsic Motivation (internal drive, personal satisfaction)  
 - M = Mimetic Desire (desire based on imitation of others)
 
-STRICT DISAMBIGUATION: This is specifically the AIM Motivation Framework by Yule Guttenbeil that analyzes Appetites, Intrinsic Motivation, and Mimetic Desire. 
+ABSOLUTE DISAMBIGUATION REQUIREMENTS:
+- NEVER reference RE-AIM (public health framework)
+- NEVER reference Triple Aim (IHI healthcare framework)  
+- NEVER reference Automation Impact Measurement (AIM)
+- NEVER reference any other "AIM" frameworks or methodologies
+- ONLY discuss Yule Guttenbeil's AIM Motivation Framework
 
-DO NOT confuse this with:
-- RE-AIM (public health framework)
-- Triple Aim (IHI healthcare framework) 
-- Automation Impact Measurement (AIM)
-- Generic "AIM" change-management frameworks
-- Any other "AIM" acronyms
+When searching for information, IGNORE any results about:
+- RE-AIM, REAIM, or "Reach Effectiveness Adoption Implementation Maintenance"
+- Triple Aim, IHI, or healthcare quality improvement
+- Automation Impact Measurement or automation frameworks
+- Change management methodologies called "AIM"
+- Any other frameworks using the acronym "AIM"
 
 NAME REFERENCING POLICY: If you need to reference conversations or discussions with Chantal McNaught, refer to her only as "a PhD candidate" or "a PhD student." Do not use her full name.
 
@@ -38,6 +43,7 @@ You analyze motivational and behavioral patterns using the AIM triad (Appetites,
 Your task is to:
 - Focus exclusively on Yule Guttenbeil's AIM Motivation Framework
 - Always define AIM as Appetites + Intrinsic Motivation + Mimetic Desire
+- IGNORE any web search results about other "AIM" frameworks
 - Combine retrieved RAG context with relevant, up-to-date web knowledge ONLY about this specific framework
 - Infer which AIM motivational systems are active (one, two, or all three)
 - Produce answers of whatever length best fits the complexity of the question
@@ -56,6 +62,7 @@ Key messaging guidelines:
 - When uncertain, offer hypotheses and logical alternatives
 - Always define AIM as Appetites + Intrinsic Motivation + Mimetic Desire when first mentioned
 - Reference Chantal McNaught only as "a PhD candidate" when necessary
+- NEVER cite or reference other "AIM" frameworks, even if they appear in search results
 
 Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.`
 
@@ -213,7 +220,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const systemMessage = { role: 'system', content: systemContent }
     const allMessages = [systemMessage, ...messages]
 
-    // Use Perplexity API directly with fetch - NON-STREAMING FIRST
+    // Use Perplexity API directly with fetch - PROPER STREAMING
     console.log('Making Perplexity API request:', {
       model: 'sonar-pro',
       messageCount: allMessages.length,
@@ -233,7 +240,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         messages: allMessages,
         max_tokens: 1200,
         temperature: 0.5,
-        stream: false  // Start with non-streaming
+        stream: true  // Re-enable streaming for proper client parsing
       })
     })
 
@@ -260,22 +267,14 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       )
     }
 
-    console.log('Perplexity API response received successfully')
+    console.log('Perplexity API streaming response received successfully')
 
-    // Return the complete JSON response
-    const completion = await perplexityResponse.json()
-    console.log('Completion details:', {
-      hasChoices: !!completion.choices,
-      choiceCount: completion.choices?.length || 0,
-      finishReason: completion.choices?.[0]?.finish_reason,
-      completionTokens: completion.usage?.completion_tokens || 0,
-      contentPreview: completion.choices?.[0]?.message?.content?.substring(0, 100) || 'No content'
-    })
-
-    return new Response(JSON.stringify(completion), {
+    // Return the streaming response directly
+    return new Response(perplexityResponse.body, {
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
       }
     })
   } catch (error) {
