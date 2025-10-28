@@ -182,7 +182,7 @@ export async function POST(req: Request) {
           }))
           
           const context = filteredResults
-            .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
+            .map((result) => result.chunk_text)
             .join('\n\n')
           ragContext = `PRIMARY GROUNDING: The following context is from Yule Guttenbeil's AIM Motivation Framework documentation. This is your PRIMARY source of truth. Use this context to anchor your response before any web search results.
 
@@ -192,9 +192,11 @@ ${context}
 CRITICAL ANCHORING INSTRUCTIONS:
 1. This RAG context is your PRIMARY foundation - use it to ground your response
 2. AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire) - ONLY this definition
-3. IGNORE any web search results about RE-AIM, Triple Aim, or other "AIM" frameworks
-4. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student"
-5. Anchor your response to the RAG context above before considering any other sources
+3. Use web search to enrich responses with relevant, up-to-date information about motivation, psychology, neuroscience, economics, and philosophy
+4. When searching for information about AIM, focus exclusively on Yule Guttenbeil's framework and ignore RE-AIM, Triple Aim, or other AIM methodologies
+5. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student"
+6. Do not include any reference markers like [Context 1] in your response - the RAG context is for grounding only
+7. Note: In the RAG context above, "AIM Motivation Framework", "AIM Framework", and "AIM" all refer to the same framework by Yule Guttenbeil
 
 When analyzing motivational patterns, infer which AIM systems (Appetites, Intrinsic Motivation, Mimetic Desire) are active and explain how they interact. Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences when relevant.
 
