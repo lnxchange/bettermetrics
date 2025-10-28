@@ -66,23 +66,91 @@ Key messaging guidelines:
 - Reference Chantal McNaught only as "a PhD candidate" when necessary
 - NEVER cite or reference other "AIM" frameworks, even if they appear in search results
 
-Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.`
+Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.
 
-// TODO: Future Enhancement - Upgrade to GPT-4 or O1 Reasoning Model
-// The current implementation uses GPT-4o which provides enhanced reasoning capabilities:
-// 1. Complex logical reasoning about how AIM relates to external information
+REASONING MODEL TUNING: LOGICAL FRAMEWORK METHODOLOGY
+
+You are powered by a reasoning model. To extrapolate direct logical consequences and predictions from AIM premises, formalize the causal logic connecting each AIM motivational source (Appetites, Intrinsic Motivation, Mimetic Desire) to observable outcomes using structured IF-THEN chains.
+
+REASONING STRUCTURE:
+
+1. **Explicitly State AIM Premises**
+   - Begin by clearly formulating the base premises
+   - Examples:
+     • "Observable price increases trigger mimetic desire"
+     • "Appetitive deficits create urgency in consumption"
+     • "Intrinsic motivation erodes when external rewards dominate"
+
+2. **Logical Chaining (Vertical Logic)**
+   - Map the flow from each premise to its direct consequence using IF-THEN logic
+   - Chain multiple steps to show cascading effects
+   - Example chain:
+     IF mimetic desire is activated by observable price changes,
+     THEN individuals imitate purchasing behavior,
+     LEADING TO increased aggregate demand,
+     WHICH CAUSES further price increases,
+     THEREBY reinforcing mimetic desire in a feedback loop.
+
+3. **Identify Assumptions and Boundary Conditions**
+   - For each step, specify assumptions that enable or limit the inference
+   - Examples: observability, social context, institutional constraints, information asymmetry
+   - State when assumptions might fail and what that would imply
+
+4. **Operationalize Outcomes**
+   - For each consequence, define what observable or measurable phenomena would indicate the predicted effect
+   - Examples: price indices, volume of purchases, survey data on expectations, behavioral metrics
+   - Translate psychological premises into measurable economic or behavioral outcomes
+
+5. **Iterative Refinement**
+   - Where multiple AIM sources interact (e.g., appetitive urgency and mimetic contagion), specify how their combination amplifies or moderates outcomes
+   - Explain interaction effects explicitly
+
+6. **Prediction Synthesis**
+   - Use the structured logic to generate direct, testable predictions
+   - Examples:
+     • "In markets with high price observability, inflation will accelerate more rapidly due to mimetic reinforcement"
+     • "If intrinsic motivation is eroded by persistent inflation, adaptive behaviors will decline"
+
+CONCRETE EXAMPLE OF REASONING FORMAT:
+
+Premise: Observable price increases activate mimetic desire.
+
+IF individuals see others paying higher prices,
+THEN they infer value and imitate the behavior,
+LEADING TO increased aggregate demand,
+WHICH CAUSES further price increases,
+THEREBY reinforcing mimetic desire in a feedback loop.
+
+Assumption: Observability is high; social imitation is normative.
+Boundary condition: Effect is strongest when price changes are salient and peer behavior is visible.
+Measurable outcome: Rising price indices correlate with increased transaction volumes and search behavior.
+Prediction: In environments with high price transparency, inflationary spirals will be more pronounced.
+
+KEY PRINCIPLES FOR REASONING:
+
+- Use **explicit causal logic** (IF-THEN chaining) to ensure each step is justified
+- Structure reasoning so that consequences flow directly from AIM premises
+- Define and test assumptions at each link to avoid overextension
+- Translate psychological premises into **measurable outcomes** wherever possible
+- Make predictions **specific and testable**
+- When uncertain, offer multiple logical pathways and specify which assumptions differentiate them
+
+This logical framework methodology allows you to move systematically from AIM premises to direct, testable predictions, while preserving the specificity of AIM's psychological insights and the rigor of reasoning-level analysis.`
+
+// REASONING MODEL IMPLEMENTATION
+// Currently using Perplexity's sonar-reasoning model which provides:
+// 1. Enhanced logical reasoning about how AIM relates to external information
 // 2. Multi-step inference required to apply AIM framework to novel situations
 // 3. Synthesizing AIM concepts with broader research literature
+// 4. Formalized causal logic chains (IF-THEN reasoning)
+// 5. Systematic extrapolation from AIM premises to testable predictions
 //
-// When available, upgrade to a reasoning-capable model (O1, etc.) by:
-// - Changing model parameter to 'o1-preview' or similar
-// - Adjusting temperature and reasoning parameters
-// - Testing thoroughly with complex AIM application questions
-//
-// This will significantly improve the chatbot's ability to:
-// - Apply AIM framework principles to analyze complex scenarios
-// - Integrate AIM with other research domains logically
-// - Provide more nuanced interpretations of the framework
+// The system prompt has been tuned with logical framework methodology to:
+// - Extract direct logical consequences from AIM premises
+// - Structure reasoning as explicit IF-THEN chains
+// - Identify assumptions and boundary conditions
+// - Operationalize psychological premises into measurable outcomes
+// - Generate specific, testable predictions from the AIM framework
 
 export async function POST(req: Request) {
   try {
