@@ -45,7 +45,7 @@ export function ChatPanel({
               <div className="flex-1">
                 <strong>Message Failed:</strong>
                 <p className="mt-1 text-xs opacity-90">{errorMessage}</p>
-                <p className="mt-2 text-xs font-medium">Your message: "{lastFailedMessage.substring(0, 100)}{lastFailedMessage.length > 100 ? '...' : ''}"</p>
+                <p className="mt-2 text-xs font-medium">Your message: &quot;{lastFailedMessage.substring(0, 100)}{lastFailedMessage.length > 100 ? '...' : ''}&quot;</p>
               </div>
               <Button
                 variant="outline"
