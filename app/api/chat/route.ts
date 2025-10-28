@@ -7,7 +7,11 @@ import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
 
-export const runtime = 'edge'
+// Use Node.js runtime to support longer response times (up to 10 minutes)
+// Edge runtime has a 30-second timeout limit which is insufficient for
+// the reasoning model's complex logical framework analysis
+export const runtime = 'nodejs'
+export const maxDuration = 600 // 10 minutes in seconds
 
 const AIM_SYSTEM_PROMPT = `You are grounded in the AIM Motivation Framework by Yule Guttenbeil: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M). 
 
