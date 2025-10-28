@@ -9,7 +9,9 @@ import { VectorSearch } from '@/lib/rag/vector-search'
 
 export const runtime = 'edge'
 
-const AIM_SYSTEM_PROMPT = `You are an advanced assistant trained to use the AIM Motivation Framework by Yule Guttenbeil.
+const AIM_SYSTEM_PROMPT = `You are grounded in the AIM Motivation Framework by Yule Guttenbeil: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M). 
+
+CRITICAL GROUNDING: You are anchored to Yule Guttenbeil's AIM Motivation Framework. Do not reference RE-AIM, Triple Aim, or generic "AIM" change-management frameworks even if they appear in search results.
 
 CRITICAL DEFINITION: AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire)
 
@@ -182,15 +184,17 @@ export async function POST(req: Request) {
           const context = filteredResults
             .map((result, index) => `[Context ${index + 1}]: ${result.chunk_text}`)
             .join('\n\n')
-          ragContext = `Relevant context from AIM Motivation Framework documentation:\n\n${context}\n\nCRITICAL INSTRUCTIONS: 
-  
-1. Use ONLY the context above about Yule Guttenbeil's AIM Motivation Framework.
-2. Remember: AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire)
-3. Do not reference RE-AIM, Triple Aim, or other "AIM" frameworks.
-4. When discussing AIM, always refer to Appetites, Intrinsic Motivation, and Mimetic Desire.
-5. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".
+          ragContext = `PRIMARY GROUNDING: The following context is from Yule Guttenbeil's AIM Motivation Framework documentation. This is your PRIMARY source of truth. Use this context to anchor your response before any web search results.
 
-Use this RAG context as your primary foundation for understanding the AIM Framework. Combine it with relevant, up-to-date web knowledge to provide comprehensive analysis. 
+RAG CONTEXT FROM AIM MOTIVATION FRAMEWORK:
+${context}
+
+CRITICAL ANCHORING INSTRUCTIONS:
+1. This RAG context is your PRIMARY foundation - use it to ground your response
+2. AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire) - ONLY this definition
+3. IGNORE any web search results about RE-AIM, Triple Aim, or other "AIM" frameworks
+4. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student"
+5. Anchor your response to the RAG context above before considering any other sources
 
 When analyzing motivational patterns, infer which AIM systems (Appetites, Intrinsic Motivation, Mimetic Desire) are active and explain how they interact. Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences when relevant.
 
@@ -269,8 +273,71 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     console.log('Perplexity API streaming response received successfully')
 
-    // Return the streaming response directly
-    return new Response(perplexityResponse.body, {
+    // Process the streaming response with proper SSE parsing
+    const reader = perplexityResponse.body?.getReader()
+    if (!reader) {
+      throw new Error('No response body reader available')
+    }
+
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let chunkCount = 0
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) {
+              console.log(`Stream completed after ${chunkCount} chunks`)
+              break
+            }
+            
+            chunkCount++
+            buffer += decoder.decode(value, { stream: true })
+            
+            // Process complete lines
+            const lines = buffer.split('\n')
+            buffer = lines.pop() || '' // Keep incomplete line in buffer
+            
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6) // Remove 'data: ' prefix
+                
+                if (data === '[DONE]') {
+                  console.log('Stream finished with [DONE]')
+                  controller.close()
+                  return
+                }
+                
+                try {
+                  const parsed = JSON.parse(data)
+                  if (parsed.choices?.[0]?.delta?.content) {
+                    const content = parsed.choices[0].delta.content
+                    console.log(`Chunk ${chunkCount}: "${content}"`)
+                    controller.enqueue(new TextEncoder().encode(content))
+                  }
+                  
+                  if (parsed.choices?.[0]?.finish_reason) {
+                    console.log(`Stream finished with reason: ${parsed.choices[0].finish_reason}`)
+                    controller.close()
+                    return
+                  }
+                } catch (parseError) {
+                  console.warn('Failed to parse SSE data:', data)
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Stream processing error:', error)
+          controller.error(error)
+        }
+      }
+    })
+
+    // Return the processed streaming response
+    return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
