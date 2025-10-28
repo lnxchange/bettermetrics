@@ -1,6 +1,4 @@
 import 'server-only'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { Configuration, OpenAIApi } from 'openai-edge'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
@@ -116,13 +114,13 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id
 
-    // Use Perplexity API exclusively
-    const config = new Configuration({
-      apiKey: previewToken || process.env.PERPLEXITY_API_KEY,
-      basePath: 'https://api.perplexity.ai'
+    // Debug Perplexity API key
+    console.log('Perplexity API Key Debug:', {
+      hasKey: !!process.env.PERPLEXITY_API_KEY,
+      keyLength: process.env.PERPLEXITY_API_KEY?.length || 0,
+      keyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10) || 'Missing',
+      timestamp: new Date().toISOString()
     })
-    
-    const client = new OpenAIApi(config)
 
     // Get the latest user message for RAG context
     const userQuery = messages[messages.length - 1]?.content || ''
@@ -172,75 +170,62 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const systemMessage = { role: 'system', content: systemContent }
     const allMessages = [systemMessage, ...messages]
 
-    // Determine model based on API being used
-    const model = 'pplx-70b-online'
+    // Use Perplexity API directly with fetch
+    console.log('Making Perplexity API request:', {
+      model: 'pplx-70b-online',
+      messageCount: allMessages.length,
+      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+      timestamp: new Date().toISOString()
+    })
 
-    // Try Perplexity API
-    let res
-    try {
-      console.log('Perplexity API request:', {
-        model,
-        messageCount: allMessages.length,
-        hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
-        usingPreviewToken: !!previewToken,
-        timestamp: new Date().toISOString()
-      })
-      
-      res = await client.createChatCompletion({
-        model,
+    const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'pplx-70b-online',
         messages: allMessages,
+        max_tokens: 1200,
         temperature: 0.8,
         stream: true
       })
-      
-      console.log('Perplexity API response received successfully')
-    } catch (error) {
-      console.error('Perplexity API error:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        model,
-        messageCount: allMessages.length,
-        hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
-        usingPreviewToken: !!previewToken,
-        timestamp: new Date().toISOString()
-      })
-      throw error
-    }
-
-    const stream = OpenAIStream(res, {
-      async onCompletion(completion) {
-        const title = json.messages[0].content.substring(0, 100)
-        const id = json.id ?? nanoid()
-        const createdAt = Date.now()
-        const path = `/chat/${id}`
-        const payload = {
-          id,
-          title,
-          userId,
-          createdAt,
-          path,
-          messages: [
-            ...messages,
-            {
-              content: completion,
-              role: 'assistant'
-            }
-          ]
-        }
-        try {
-          await supabase.from('chats').upsert({ 
-            id, 
-            payload, 
-            user_id: userId 
-          }).throwOnError()
-        } catch (error) {
-          console.error('Error saving chat to database:', error)
-          // Continue even if database save fails
-        }
-      }
     })
 
-    return new StreamingTextResponse(stream)
+    if (!perplexityResponse.ok) {
+      const errorText = await perplexityResponse.text()
+      console.error('Perplexity API error:', {
+        status: perplexityResponse.status,
+        statusText: perplexityResponse.statusText,
+        body: errorText,
+        hasApiKey: !!process.env.PERPLEXITY_API_KEY
+      })
+      
+      return new Response(
+        JSON.stringify({ 
+          error: 'Perplexity API error', 
+          status: perplexityResponse.status, 
+          details: errorText 
+        }), 
+        { 
+          status: 502, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    console.log('Perplexity API response received successfully')
+
+    // Return the streaming response directly
+    return new Response(perplexityResponse.body, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      }
+    })
   } catch (error) {
     console.error('Chat API error:', error)
     console.error('Error details:', {
