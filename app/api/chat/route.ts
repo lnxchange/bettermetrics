@@ -275,70 +275,77 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     console.log('Perplexity API streaming response received successfully')
 
-    // Process the streaming response with proper SSE parsing
-    const reader = perplexityResponse.body?.getReader()
-    if (!reader) {
-      throw new Error('No response body reader available')
+    // Collect the full response to process citations
+    const responseText = await perplexityResponse.text()
+    console.log('Full response received, processing citations...')
+
+    // Parse the response to extract content and citations
+    const lines = responseText.split('\n')
+    let fullContent = ''
+    let citations: string[] = []
+
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        const data = line.slice(6)
+        
+        if (data === '[DONE]') {
+          break
+        }
+        
+        try {
+          const parsed = JSON.parse(data)
+          
+          // Extract citations
+          if (parsed.citations) {
+            citations = parsed.citations
+            console.log(`Found ${citations.length} citations:`, citations.slice(0, 3))
+          }
+          
+          // Extract content
+          if (parsed.choices?.[0]?.delta?.content) {
+            fullContent += parsed.choices[0].delta.content
+          }
+        } catch (parseError) {
+          console.warn('Failed to parse SSE data:', data)
+        }
+      }
     }
 
-    const decoder = new TextDecoder()
-    let buffer = ''
-    let chunkCount = 0
+    // Process citations to make them clickable
+    let processedContent = fullContent
+    if (citations.length > 0) {
+      citations.forEach((url, index) => {
+        const referenceNumber = index + 1
+        const markdownLink = `[${referenceNumber}](${url})`
+        const regex = new RegExp(`\\[${referenceNumber}\\]`, 'g')
+        processedContent = processedContent.replace(regex, markdownLink)
+      })
+      console.log(`Processed ${citations.length} citations into clickable links`)
+    }
 
+    // Return the processed content as a streaming response
+    const encoder = new TextEncoder()
     const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) {
-              console.log(`Stream completed after ${chunkCount} chunks`)
-              break
-            }
-            
-            chunkCount++
-            buffer += decoder.decode(value, { stream: true })
-            
-            // Process complete lines
-            const lines = buffer.split('\n')
-            buffer = lines.pop() || '' // Keep incomplete line in buffer
-            
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6) // Remove 'data: ' prefix
-                
-                if (data === '[DONE]') {
-                  console.log('Stream finished with [DONE]')
-                  controller.close()
-                  return
-                }
-                
-                try {
-                  const parsed = JSON.parse(data)
-                  if (parsed.choices?.[0]?.delta?.content) {
-                    const content = parsed.choices[0].delta.content
-                    console.log(`Chunk ${chunkCount}: "${content}"`)
-                    controller.enqueue(new TextEncoder().encode(content))
-                  }
-                  
-                  if (parsed.choices?.[0]?.finish_reason) {
-                    console.log(`Stream finished with reason: ${parsed.choices[0].finish_reason}`)
-                    controller.close()
-                    return
-                  }
-                } catch (parseError) {
-                  console.warn('Failed to parse SSE data:', data)
-                }
-              }
-            }
+      start(controller) {
+        // Send the processed content in chunks to maintain streaming feel
+        const chunks = processedContent.split(' ')
+        let index = 0
+        
+        const sendChunk = () => {
+          if (index < chunks.length) {
+            const chunk = chunks[index] + (index < chunks.length - 1 ? ' ' : '')
+            controller.enqueue(encoder.encode(chunk))
+            index++
+            setTimeout(sendChunk, 10) // Small delay to simulate streaming
+          } else {
+            controller.close()
           }
-        } catch (error) {
-          console.error('Stream processing error:', error)
-          controller.error(error)
         }
+        
+        sendChunk()
       }
     })
 
-    // Return the processed streaming response
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
