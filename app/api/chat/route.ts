@@ -82,7 +82,16 @@ export async function POST(req: Request) {
 
     // Get user session - REQUIRED for chat
     const session = await auth({ cookieStore })
+    console.log('Session debug:', {
+      hasSession: !!session,
+      userId: session?.user?.id,
+      sessionExpiry: session?.expires_at,
+      currentTime: Date.now(),
+      sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false
+    })
+    
     if (!session?.user?.id) {
+      console.log('No valid session found - returning 401')
       return new Response('Unauthorized', { status: 401 })
     }
     const userId = session.user.id
@@ -200,12 +209,17 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       apiUsed: 'Perplexity',
-      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY
+      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+      hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+      timestamp: new Date().toISOString(),
+      userAgent: req.headers.get('user-agent'),
+      url: req.url
     })
     
     return new Response(JSON.stringify({
       error: 'Chat request failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

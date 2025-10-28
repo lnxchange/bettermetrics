@@ -47,7 +47,9 @@ export async function middleware(req: NextRequest) {
     }
 
     // Only try to create Supabase client if environment variables are configured
-    const supabase = createMiddlewareClient({ req, res })
+    const supabase = createRouteHandlerClient({
+      cookies: () => req.cookies
+    })
     const { data: { session } } = await supabase.auth.getSession()
 
     // Handle download attempts - redirect to sign-in

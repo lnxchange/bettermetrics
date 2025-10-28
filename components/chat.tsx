@@ -39,8 +39,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   // Set preview dialog state after hydration
   useEffect(() => {
     setHasMounted(true)
-    setPreviewTokenDialog(IS_PREVIEW)
-    setPreviewTokenInput(previewToken ?? '')
+    if (IS_PREVIEW) {
+      setPreviewTokenDialog(true)
+      setPreviewTokenInput(previewToken ?? '')
+    }
   }, [previewToken])
 
   const { messages, append, reload, stop, isLoading, input, setInput } =
