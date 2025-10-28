@@ -228,7 +228,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     // Use Perplexity API directly with fetch - PROPER STREAMING
     console.log('Making Perplexity API request:', {
-      model: 'sonar-pro',
+      model: 'sonar-reasoning',
       messageCount: allMessages.length,
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       timestamp: new Date().toISOString()
@@ -242,7 +242,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        model: 'sonar-pro',
+        model: 'sonar-reasoning',
         messages: allMessages,
         max_tokens: 2000,  // Increased for longer responses
         temperature: 0.7,   // Increased for more detailed responses

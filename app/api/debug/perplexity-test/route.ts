@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     
     // Test with a simple request using streaming (like main chat API)
     const apiResponse = await client.createChatCompletion({
-      model: 'sonar-pro',
+      model: 'sonar-reasoning',
       messages: [
         { role: 'system', content: 'You are a helpful assistant. Respond briefly.' },
         { role: 'user', content: testMessage }
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       success: true,
       testMessage,
       response: completion,
-      model: 'sonar-pro',
+      model: 'sonar-reasoning',
       timestamp: new Date().toISOString(),
       hasPerplexityKey: true
     })
