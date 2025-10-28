@@ -102,7 +102,17 @@ export async function POST(req: Request) {
     
     if (!session?.user?.id) {
       console.log('No valid session found - returning 401')
-      return new Response('Unauthorized', { status: 401 })
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unauthorized', 
+          message: 'Please sign in to use chat',
+          status: 401 
+        }), 
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
     }
     const userId = session.user.id
 
