@@ -244,8 +244,8 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       body: JSON.stringify({
         model: 'sonar-pro',
         messages: allMessages,
-        max_tokens: 1200,
-        temperature: 0.5,
+        max_tokens: 2000,  // Increased for longer responses
+        temperature: 0.7,   // Increased for more detailed responses
         stream: true  // Re-enable streaming for proper client parsing
       })
     })

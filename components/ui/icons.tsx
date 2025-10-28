@@ -104,6 +104,22 @@ function IconOpenAI({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
+function IconPerplexity({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('h-4 w-4', className)}
+      {...props}
+    >
+      <title>Perplexity icon</title>
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-17v6h2V5h-2zm0 8v6h2v-6h-2z" />
+    </svg>
+  )
+}
+
 function IconVercel({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg
@@ -480,6 +496,7 @@ export {
   IconEdit,
   IconNextChat,
   IconOpenAI,
+  IconPerplexity,
   IconVercel,
   IconGitHub,
   IconSeparator,
