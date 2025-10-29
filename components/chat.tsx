@@ -38,6 +38,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState('')
   const [hasMounted, setHasMounted] = useState(false)
+  const [hasNavigated, setHasNavigated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null)
 
@@ -52,6 +53,14 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       setPreviewTokenInput(previewToken ?? '')
     }
   }, [previewToken])
+
+  // Navigate to unique URL immediately if on root chat
+  useEffect(() => {
+    if (!id && !hasNavigated && hasMounted) {
+      setHasNavigated(true)
+      router.replace(`/chat/${chatId}`) // Use replace to avoid history entry
+    }
+  }, [id, chatId, hasNavigated, hasMounted, router])
 
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
@@ -100,26 +109,26 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         // Clear error state on successful completion
         setErrorMessage(null)
         setLastFailedMessage(null)
-
-        // After first message, redirect to /chat/[id] to enable history
-        // Add a small delay to ensure the chat is saved to database first
-        if (!id) {
-          setTimeout(() => {
-            router.push(`/chat/${chatId}`)
-          }, 1000) // 1 second delay to allow database save
-        }
+        
+        // No navigation needed - we're already on the unique URL
       }
     })
 
   // Scroll to top of new assistant messages
   useEffect(() => {
     if (messages.length > 0 && messages[messages.length - 1].role === 'assistant') {
-      // Scroll to top of the last message
-      const messageElements = document.querySelectorAll('.chat-message')
-      const lastMessage = messageElements[messageElements.length - 1]
-      if (lastMessage) {
-        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
+      // Small delay to ensure DOM is updated and streaming is complete
+      setTimeout(() => {
+        const messageElements = document.querySelectorAll('.chat-message')
+        const lastMessage = messageElements[messageElements.length - 1]
+        if (lastMessage) {
+          lastMessage.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          })
+        }
+      }, 200) // Slightly longer delay for streaming completion
     }
   }, [messages])
 
