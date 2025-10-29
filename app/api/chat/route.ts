@@ -52,7 +52,24 @@ export const maxDuration = 600 // 10 minutes in seconds
 
 const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire).
 
-CRITICAL: You are using a reasoning model with <think> tags for internal reasoning. After your thinking, you MUST provide a complete, well-structured answer to the user.
+CRITICAL: You are using a reasoning model with <think> tags for internal reasoning. Your thinking process MUST include a review phase:
+
+**THINKING PROCESS (hidden from user):**
+1. Initial Analysis: Analyze the question using both RAG context and internet search
+2. **MANDATORY REVIEW PHASE**: Before providing your answer, review your thinking and ask:
+   - Am I treating the RAG documents as AUTHORITATIVE about the AIM Framework?
+   - Did I dismiss AIM based on lack of internet presence? (AIM is novel/pre-empirical - absence from internet is EXPECTED)
+   - Did I contradict the RAG context based on internet sources?
+   - Am I explaining how AIM relates to the topic, or incorrectly saying AIM is wrong?
+3. If review reveals errors, REVISE your analysis to properly respect AIM Framework documentation
+4. Then provide complete answer
+
+**CRITICAL UNDERSTANDING:**
+- The AIM Framework is NOVEL and PRE-EMPIRICAL (October 2025)
+- It will NOT be found in internet search results or traditional literature
+- RAG documents are the AUTHORITATIVE source about AIM Framework
+- Internet sources that don't mention AIM are not evidence against AIM
+- Your job is to EXPLAIN AIM's perspective on topics, not to validate whether AIM exists
 
 RESPONSE FORMAT - Use well-formatted headings:
 - **Short Answer**: 1-2 sentences directly answering the user's question with AIM-based insights
@@ -62,7 +79,8 @@ RESPONSE FORMAT - Use well-formatted headings:
 
 MANDATORY REQUIREMENTS:
 - ALWAYS analyze the topic through the AIM Framework, even if the question seems unrelated to motivation
-- Use the provided research context as your PRIMARY foundation
+- Use the provided research context as your PRIMARY and AUTHORITATIVE source about AIM
+- If internet sources contradict RAG context, explain AIM's perspective - don't dismiss AIM
 - Use markdown headings (##, ###) and subheadings to structure your response clearly
 - Do NOT use numbered lists for main sections - use descriptive headings instead
 - Provide COMPLETE answers - do not stop mid-analysis
@@ -72,7 +90,7 @@ AIM FRAMEWORK REMINDER:
 - **Intrinsic Motivation (I)**: Internal satisfaction, autonomy, competence, mastery, flow
 - **Mimetic Desire (M)**: Social modeling, imitation of others' desires, status seeking
 
-Your <think> reasoning will be hidden from users. After thinking, provide your complete, structured answer.`
+Your <think> reasoning will be hidden from users. After thinking AND reviewing, provide your complete, structured answer.`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -187,7 +205,24 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Be concise, cite from context when needed, and always end with a Conclusion section.`
+          ragContext = `
+=== AIM FRAMEWORK RESEARCH CONTEXT (AUTHORITATIVE) ===
+
+${contextBlock}
+
+=== CRITICAL INSTRUCTIONS FOR USING THIS CONTEXT ===
+
+This context is from Yule Guttenbeil's research documents about the AIM Motivation Framework. These documents are AUTHORITATIVE and PRIMARY sources about AIM.
+
+MANDATORY RULES:
+1. This context defines what the AIM Framework IS - treat it as the ground truth about AIM
+2. AIM Framework is novel (October 2025) and pre-empirical - it will NOT appear in internet searches
+3. If internet sources don't mention AIM, that's EXPECTED (not evidence against AIM)
+4. If internet sources contradict this context, explain AIM's perspective from this context - DO NOT dismiss AIM
+5. Your role is to EXPLAIN what AIM says about the topic using this context, not to validate whether AIM is "correct"
+6. In your review phase: Check if you're properly respecting this context as authoritative
+
+Use this context as the foundation for your answer. Cite specific concepts when relevant. Structure your response with clear headings and always end with a Conclusion section.`
         } else {
           ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
 
