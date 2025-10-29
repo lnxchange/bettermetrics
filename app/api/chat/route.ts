@@ -50,14 +50,29 @@ function prepareRagContext(results: SearchResult[]) {
 export const runtime = 'nodejs'
 export const maxDuration = 600 // 10 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You must answer strictly within Yule Guttenbeil's AIM Motivation Framework: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M). Disallow any other "AIM" frameworks (e.g., RE-AIM, Triple Aim, Automation Impact Measurement). Definition: A = basic drives; I = internal satisfaction; M = mimetic/imitative desire.
+const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire).
 
-Use only provided context and prior chat. If context is thin, state limits briefly and proceed best‑effort.
+CRITICAL: You are using a reasoning model with <think> tags for internal reasoning. After your thinking, you MUST provide a complete, well-structured answer to the user.
 
-Answer format:
-1) Direct answer (2–4 sentences).
-2) Key points (3–5 bullets).
-3) Conclusion (1–2 sentences summarizing implications).`
+RESPONSE FORMAT - Use well-formatted headings:
+- **Short Answer**: 1-2 sentences directly answering the user's question with AIM-based insights
+- **Analysis**: Detailed explanation with subheadings as needed, focusing on how the topic relates to relevant AIM components
+- **AIM Framework Application**: Explicitly identify which AIM motivational systems are active or relevant
+- **Conclusion**: Brief synthesis connecting back to the AIM Framework
+
+MANDATORY REQUIREMENTS:
+- ALWAYS analyze the topic through the AIM Framework, even if the question seems unrelated to motivation
+- Use the provided research context as your PRIMARY foundation
+- Use markdown headings (##, ###) and subheadings to structure your response clearly
+- Do NOT use numbered lists for main sections - use descriptive headings instead
+- Provide COMPLETE answers - do not stop mid-analysis
+
+AIM FRAMEWORK REMINDER:
+- **Appetites (A)**: Basic drives, biological needs, survival motivations, reward systems
+- **Intrinsic Motivation (I)**: Internal satisfaction, autonomy, competence, mastery, flow
+- **Mimetic Desire (M)**: Social modeling, imitation of others' desires, status seeking
+
+Your <think> reasoning will be hidden from users. After thinking, provide your complete, structured answer.`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -214,8 +229,8 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       body: JSON.stringify({
         model: 'sonar-reasoning',
         messages: allMessages,
-        max_tokens: 800,   // Conservative limit to ensure room for conclusion
-        temperature: 0.7,   // Increased for more detailed responses
+        max_tokens: 6000,  // Increased to allow reasoning model sufficient tokens for both <think> tags and complete answer
+        temperature: 0.3,  // Lower for more focused, consistent responses
         stream: true  // Re-enable streaming for proper client parsing
       })
     })
@@ -294,9 +309,16 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     // Filter out reasoning model's internal thinking tags
     // The sonar-reasoning model outputs <think>...</think> tags that should be hidden
-    let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/g, '')
+    // Use case-insensitive regex to catch any variations like <Think> or <THINK>
+    let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/gi, '').trim()
 
-    console.log(`Content length before filtering: ${fullContent.length}, after: ${processedContent.length}`)
+    console.log(`Content filtering: original=${fullContent.length} chars, after removing <think> tags=${processedContent.length} chars`)
+
+    // Check if we got a reasonable answer length
+    if (processedContent.length < 50) {
+      console.warn('WARNING: Processed content is very short (<50 chars). Full content may have been mostly thinking.')
+      console.warn('Full content preview:', fullContent.substring(0, 200))
+    }
 
     // Process citations to make them clickable
     if (citations.length > 0) {
