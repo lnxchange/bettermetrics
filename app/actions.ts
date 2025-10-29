@@ -9,13 +9,26 @@ import { redirect } from 'next/navigation'
 import { type Chat } from '@/lib/types'
 
 export async function getChats(userId?: string | null) {
+  console.log('getChats called with userId:', userId)
+
   if (!userId) {
+    console.log('getChats: No userId provided, returning empty array')
     return []
   }
+
   try {
     const cookieStore = cookies()
     const supabase = createServerActionClient<Database>({
       cookies: () => cookieStore
+    })
+
+    // Debug: Check current auth session
+    const { data: sessionData } = await supabase.auth.getSession()
+    console.log('getChats: Auth session check:', {
+      hasSession: !!sessionData.session,
+      sessionUserId: sessionData.session?.user?.id,
+      requestedUserId: userId,
+      userIdMatch: sessionData.session?.user?.id === userId
     })
 
     // Fetch all chats for user without database-level ordering
@@ -28,6 +41,9 @@ export async function getChats(userId?: string | null) {
     if (error) {
       console.error('getChats database error:', {
         error,
+        errorMessage: error.message,
+        errorDetails: error.details,
+        errorHint: error.hint,
         userId,
         timestamp: new Date().toISOString()
       })
@@ -36,6 +52,10 @@ export async function getChats(userId?: string | null) {
 
     if (!data || data.length === 0) {
       console.log('getChats: No chats found for user', userId)
+      console.log('getChats: This could mean:')
+      console.log('  1. User has no chats yet')
+      console.log('  2. RLS policy is blocking the query')
+      console.log('  3. Chats table is empty')
       return []
     }
 
@@ -50,13 +70,15 @@ export async function getChats(userId?: string | null) {
         return bTime - aTime // Most recent first
       })
 
-    console.log(`getChats: Retrieved ${chats.length} chats for user ${userId}`)
+    console.log(`getChats: Successfully retrieved ${chats.length} chats for user ${userId}`)
+    console.log('getChats: First chat:', chats[0] ? { id: chats[0].id, title: chats[0].title, createdAt: chats[0].createdAt } : 'none')
     return chats
   } catch (error) {
     console.error('getChats unexpected error:', {
       error,
       userId,
       message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString()
     })
     return []
