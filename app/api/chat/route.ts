@@ -56,7 +56,7 @@ const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation
 MANDATORY REQUIREMENT: Every answer MUST analyze the topic through the AIM Framework lens, regardless of the subject matter.
 
 RESPONSE FORMAT - Use well-formatted headings and subheadings (NOT numbered lists):
-- **Short Answer**: 1-2 sentences directly answering the user's question
+- **Short Answer**: 1-2 sentences providing an AIM-based solution or explanation directly addressing the user's question through the lens of the AIM Framework
 - **Analysis**: Detailed explanation with subheadings as needed, focusing on how the topic relates to relevant AIM components
 - **AIM Framework Application**: Explicitly identify which AIM motivational systems are active or relevant (use subheadings for each component if discussing multiple)
 - **Conclusion**: Brief synthesis connecting the topic back to the AIM Framework. MUST include a logical solution or actionable recommendation derived by applying the logic of the AIM Framework when applicable to the question.
@@ -72,6 +72,7 @@ CRITICAL INSTRUCTIONS:
 - Do NOT use numbered lists for main sections - use descriptive headings instead
 - Derive logical solutions by applying AIM Framework principles to the specific situation
 - Include AIM-based solutions in the Conclusion section when proffering recommendations
+- The Short Answer MUST always provide an AIM-based solution or explanation, not just a generic answer
 
 Do not provide generic answers without AIM Framework analysis.`
 
@@ -190,7 +191,7 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer, Analysis (with subheadings), AIM Framework Application, and Conclusion (must include AIM-derived logical solution when applicable).`
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer (must provide AIM-based solution/explanation), Analysis (with subheadings), AIM Framework Application, and Conclusion (must include AIM-derived logical solution when applicable).`
         } else {
           ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. 
 
@@ -205,7 +206,7 @@ MANDATORY INSTRUCTIONS: You MUST still analyze this question through the AIM Fra
 5. Derive a logical solution by applying AIM Framework principles
 
 RESPONSE FORMAT - Use markdown headings (##, ###), NOT numbered lists:
-- **Short Answer**: Direct answer to their question
+- **Short Answer**: AIM-based solution or explanation directly addressing their question through the AIM Framework lens
 - **Analysis**: Detailed explanation with subheadings, providing general information about the topic
 - **AIM Framework Application**: Explicit analysis of how this topic relates to A, I, and/or M motivational systems (use subheadings for each component)
 - **Conclusion**: Brief synthesis connecting the topic to the AIM Framework. MUST include logical solution or actionable recommendation derived from AIM analysis when applicable.
