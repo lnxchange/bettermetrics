@@ -33,14 +33,15 @@ function trim(text: string, maxChars: number) {
   return text.slice(0, maxChars - 1) + '…'
 }
 
-function prepareRagContext(results: SearchResult[]) {
-  // keep strongest 3, dedupe by doc+chunk, trim each to ~1500 chars
+function prepareRagContext(results: SearchResult[], userQueryLength: number = 0) {
+  // Expand to 4-5 chunks for longer questions, trim each to ~1200 chars
+  const topK = userQueryLength > 100 ? 5 : 4
   const top = results
     .sort((a, b) => (b.similarity_score ?? 0) - (a.similarity_score ?? 0))
-    .slice(0, 6)
+    .slice(0, topK * 2) // Get more candidates for deduplication
 
-  const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, 3)
-  const trimmed = unique.map(r => trim(r.chunk_text, 1500))
+  const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
+  const trimmed = unique.map(r => trim(r.chunk_text, 1200))
   return trimmed.join('\n\n---\n\n')
 }
 
@@ -50,14 +51,7 @@ function prepareRagContext(results: SearchResult[]) {
 export const runtime = 'nodejs'
 export const maxDuration = 600 // 10 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You must answer strictly within Yule Guttenbeil's AIM Motivation Framework: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M). Disallow any other "AIM" frameworks (e.g., RE-AIM, Triple Aim, Automation Impact Measurement). Definition: A = basic drives; I = internal satisfaction; M = mimetic/imitative desire.
-
-Use only provided context and prior chat. If context is thin, state limits briefly and proceed best‑effort.
-
-Answer format:
-1) Direct answer (2–4 sentences).
-2) Key points (3–5 bullets).
-3) Conclusion (1–2 sentences summarizing implications).`
+const AIM_SYSTEM_PROMPT = `You must answer strictly within Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire). Do not use other 'AIM' frameworks. Provide a complete, self-contained answer with short section headers and a clear Conclusion. If nearing token limits, summarize earlier sections but always preserve a full Conclusion.`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -161,7 +155,9 @@ export async function POST(req: Request) {
         ragContext = '\n\nNOTE: RAG system not configured. Please answer based on general knowledge.'
       } else {
         const vectorSearch = new VectorSearch()
-        const results = await vectorSearch.searchSimilarDocuments(userQuery, 3, 'rag', 0.4)
+        // Dynamic threshold based on query length - more permissive for complex questions
+        const threshold = userQuery.length > 150 ? 0.35 : 0.4
+        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
         hasRagResults = results.length > 0
         
         if (hasRagResults) {
@@ -171,8 +167,8 @@ export async function POST(req: Request) {
             chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
           }))
           
-          const contextBlock = prepareRagContext(filteredResults)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Be concise, cite from context when needed, and always end with a Conclusion section.`
+          const contextBlock = prepareRagContext(filteredResults, userQuery.length)
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Answer fully; cite context minimally; do not truncate; preserve Conclusion.`
         } else {
           ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
 
@@ -204,7 +200,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       timestamp: new Date().toISOString()
     })
 
-    const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+    let perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
@@ -214,8 +210,8 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       body: JSON.stringify({
         model: 'sonar-reasoning',
         messages: allMessages,
-        max_tokens: 800,   // Conservative limit to ensure room for conclusion
-        temperature: 0.7,   // Increased for more detailed responses
+        max_tokens: 1400,  // Expanded budget for complete answers
+        temperature: 0.3,   // Lower for fidelity while allowing completeness
         stream: true  // Re-enable streaming for proper client parsing
       })
     })
@@ -256,47 +252,110 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
 
     console.log('Perplexity API streaming response received successfully')
 
-    // Collect the full response to process citations
-    const responseText = await perplexityResponse.text()
-    console.log('Full response received, processing citations...')
-
-    // Parse the response to extract content and citations
-    const lines = responseText.split('\n')
+    // Auto-continue loop to ensure complete answers with conclusions
     let fullContent = ''
     let citations: string[] = []
+    let iterationCount = 0
+    const maxIterations = 3
+    let currentMessages = [...allMessages]
 
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const data = line.slice(6)
+    while (iterationCount < maxIterations) {
+      iterationCount++
+      console.log(`Auto-continue iteration ${iterationCount}/${maxIterations}`)
 
-        if (data === '[DONE]') {
+      // Collect the response to process citations
+      const responseText = await perplexityResponse.text()
+      console.log(`Response received (iteration ${iterationCount}), processing citations...`)
+
+      // Parse the response to extract content and citations
+      const lines = responseText.split('\n')
+      let iterationContent = ''
+      let iterationCitations: string[] = []
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6)
+
+          if (data === '[DONE]') {
+            break
+          }
+
+          try {
+            const parsed = JSON.parse(data)
+
+            // Extract citations
+            if (parsed.citations) {
+              iterationCitations = parsed.citations
+              console.log(`Found ${iterationCitations.length} citations in iteration ${iterationCount}`)
+            }
+
+            // Extract content
+            if (parsed.choices?.[0]?.delta?.content) {
+              iterationContent += parsed.choices[0].delta.content
+            }
+          } catch (parseError) {
+            console.warn('Failed to parse SSE data:', data)
+          }
+        }
+      }
+
+      // Accumulate content and citations
+      fullContent += iterationContent
+      citations = [...citations, ...iterationCitations]
+
+      // Filter out reasoning model's internal thinking tags
+      let processedIterationContent = iterationContent.replace(/<think>[\s\S]*?<\/think>/g, '')
+      
+      console.log(`Iteration ${iterationCount} content length: ${iterationContent.length}, processed: ${processedIterationContent.length}`)
+
+      // Check if we have a conclusion or if this is the first iteration
+      const hasConclusion = processedIterationContent.toLowerCase().includes('conclusion')
+      const isFirstIteration = iterationCount === 1
+      
+      if (hasConclusion || isFirstIteration) {
+        console.log(`Stopping auto-continue: hasConclusion=${hasConclusion}, isFirstIteration=${isFirstIteration}`)
+        break
+      }
+
+      // If no conclusion and we have more iterations, continue
+      if (iterationCount < maxIterations) {
+        console.log('No conclusion found, continuing with follow-up request...')
+        
+        // Add continuation message
+        currentMessages.push({
+          role: 'user',
+          content: 'Continue until you finish the Conclusion section.'
+        })
+
+        // Make another API call
+        const continueResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'sonar-reasoning',
+            messages: currentMessages,
+            max_tokens: 800,  // Smaller budget for continuation
+            temperature: 0.3,
+        stream: true
+          })
+        })
+
+        if (!continueResponse.ok) {
+          console.error('Continue request failed:', continueResponse.status)
           break
         }
 
-        try {
-          const parsed = JSON.parse(data)
-
-          // Extract citations
-          if (parsed.citations) {
-            citations = parsed.citations
-            console.log(`Found ${citations.length} citations:`, citations.slice(0, 3))
-          }
-
-          // Extract content
-          if (parsed.choices?.[0]?.delta?.content) {
-            fullContent += parsed.choices[0].delta.content
-          }
-        } catch (parseError) {
-          console.warn('Failed to parse SSE data:', data)
-        }
+        perplexityResponse = continueResponse
       }
     }
 
-    // Filter out reasoning model's internal thinking tags
-    // The sonar-reasoning model outputs <think>...</think> tags that should be hidden
+    // Final processing
     let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/g, '')
-
-    console.log(`Content length before filtering: ${fullContent.length}, after: ${processedContent.length}`)
+    console.log(`Final content length: ${fullContent.length}, processed: ${processedContent.length}`)
 
     // Process citations to make them clickable
     if (citations.length > 0) {
@@ -312,33 +371,33 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     // Save chat to database
     try {
       const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
-      const id = json.id ?? nanoid()
-      const createdAt = Date.now()
-      const path = `/chat/${id}`
-      const payload = {
-        id,
-        title,
-        userId,
-        createdAt,
-        path,
-        messages: [
-          ...messages,
-          {
+        const id = json.id ?? nanoid()
+        const createdAt = Date.now()
+        const path = `/chat/${id}`
+        const payload = {
+          id,
+          title,
+          userId,
+          createdAt,
+          path,
+          messages: [
+            ...messages,
+            {
             content: processedContent,
-            role: 'assistant'
-          }
-        ]
-      }
+              role: 'assistant'
+            }
+          ]
+        }
 
-      await supabase.from('chats').upsert({
-        id,
-        payload,
-        user_id: userId
-      }).throwOnError()
+          await supabase.from('chats').upsert({ 
+            id, 
+            payload, 
+            user_id: userId 
+          }).throwOnError()
 
       console.log(`Chat saved to database: ${id}`)
-    } catch (error) {
-      console.error('Error saving chat to database:', error)
+        } catch (error) {
+          console.error('Error saving chat to database:', error)
       // Continue to return response even if save fails
     }
 
@@ -389,13 +448,13 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       contentType: req.headers.get('content-type')
     })
     console.error('==============================')
-
+    
     return new Response(JSON.stringify({
       error: 'Chat request failed',
       message: error instanceof Error ? error.message : 'Unknown error occurred',
       details: 'Please check server logs for more information',
       timestamp: new Date().toISOString()
-    }), {
+    }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     })

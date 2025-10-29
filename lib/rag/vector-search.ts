@@ -28,9 +28,9 @@ export class VectorSearch {
 
   async searchSimilarDocuments(
     query: string,
-    limit: number = 3,
+    limit: number = 4, // Expanded from 3 to 4-5 chunks
     documentType?: 'research' | 'rag',
-    threshold: number = 0.4
+    threshold: number = 0.35 // More permissive threshold
   ): Promise<SearchResult[]> {
     try {
       // Generate embedding for the query
@@ -109,11 +109,27 @@ export class VectorSearch {
             // Calculate cosine similarity
             const similarity = this.calculateCosineSimilarity(queryEmbedding, embeddingArray)
             
-            // Trim chunk text to enforce character budget
-            const MAX_CHARS = 2000
-            const trimmedChunkText = row.chunk_text.length > MAX_CHARS 
-              ? row.chunk_text.slice(0, MAX_CHARS - 1) + '…' 
-              : row.chunk_text
+            // Intelligent chunk trimming - preserve sentence boundaries
+            const MAX_CHARS = 1200 // Reduced for better context balance
+            let trimmedChunkText = row.chunk_text
+            
+            if (row.chunk_text.length > MAX_CHARS) {
+              // Try to break at sentence boundary
+              const truncated = row.chunk_text.slice(0, MAX_CHARS - 1)
+              const lastSentenceEnd = Math.max(
+                truncated.lastIndexOf('.'),
+                truncated.lastIndexOf('!'),
+                truncated.lastIndexOf('?')
+              )
+              
+              if (lastSentenceEnd > MAX_CHARS * 0.8) {
+                // If we can find a sentence end within 80% of max, use it
+                trimmedChunkText = truncated.slice(0, lastSentenceEnd + 1)
+              } else {
+                // Otherwise, just truncate with ellipsis
+                trimmedChunkText = truncated + '…'
+              }
+            }
 
             return {
               chunk_text: trimmedChunkText,
