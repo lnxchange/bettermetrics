@@ -51,7 +51,22 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
 export const runtime = 'nodejs'
 export const maxDuration = 600 // 10 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You must answer strictly within Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire). Do not use other 'AIM' frameworks. Provide a complete, self-contained answer with short section headers and a clear Conclusion. If nearing token limits, summarize earlier sections but always preserve a full Conclusion.`
+const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire). 
+
+RESPONSE FORMAT - ALWAYS FOLLOW THIS STRUCTURE:
+1. **Short Answer** (TL;DR): 1-2 sentences directly answering the user's question
+2. **Analysis**: Detailed explanation focusing only on relevant AIM components
+3. **Conclusion**: Brief synthesis addressing the user's specific question
+
+CRITICAL INSTRUCTIONS:
+- Read the user's question carefully and answer what they're actually asking
+- Only discuss AIM components that are directly relevant to their question
+- If they ask about a specific scenario, analyze which AIM systems are active and why
+- If they ask for clarification on one component, focus on that component
+- Use the provided research context to support your analysis
+- Give specific, actionable insights rather than generic definitions
+
+Do not repeat the full AIM definition unless specifically asked "What is the AIM Framework?"`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -168,13 +183,18 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Answer fully; cite context minimally; do not truncate; preserve Conclusion.`
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context to answer the user's specific question. Focus only on relevant AIM components. Start with a Short Answer (TL;DR), then provide detailed analysis, ending with a Conclusion.`
         } else {
-          ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
+          ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. 
 
-IMPORTANT: When discussing AIM Framework, always define AIM as Appetites (A) + Intrinsic Motivation (I) + Mimetic Desire (M). This is Yule Guttenbeil's specific framework and should not be confused with other "AIM" acronyms. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".
+INSTRUCTIONS: Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, identify which specific AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) are most relevant to the user's question - do not discuss all three unless specifically relevant. 
 
-Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences. Offer hypotheses and logical alternatives when uncertain. Clearly state that your analysis is not based on specific AIM Framework documentation, but suggest how the topic might relate to the AIM triad when appropriate.`
+RESPONSE FORMAT:
+1. **Short Answer** (TL;DR): Direct answer to their question
+2. **Analysis**: Focus on the most relevant AIM component(s) for their specific question
+3. **Conclusion**: Brief synthesis addressing their question
+
+Clearly state that your analysis is not based on specific AIM Framework documentation, but explain how the topic relates to the relevant AIM component(s) when appropriate. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".`
         }
       }
     } catch (error) {
