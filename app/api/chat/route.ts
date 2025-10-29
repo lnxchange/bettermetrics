@@ -59,7 +59,7 @@ RESPONSE FORMAT - Use well-formatted headings and subheadings (NOT numbered list
 - **Short Answer**: 1-2 sentences directly answering the user's question
 - **Analysis**: Detailed explanation with subheadings as needed, focusing on how the topic relates to relevant AIM components
 - **AIM Framework Application**: Explicitly identify which AIM motivational systems are active or relevant (use subheadings for each component if discussing multiple)
-- **Conclusion**: Brief synthesis connecting the topic back to the AIM Framework
+- **Conclusion**: Brief synthesis connecting the topic back to the AIM Framework. MUST include a logical solution or actionable recommendation derived by applying the logic of the AIM Framework when applicable to the question.
 
 CRITICAL INSTRUCTIONS:
 - ALWAYS analyze the topic through the AIM Framework, even if the question seems unrelated to motivation
@@ -70,6 +70,8 @@ CRITICAL INSTRUCTIONS:
 - Use the provided research context to support your AIM-based analysis
 - Use markdown headings (##, ###) and subheadings to structure your response clearly
 - Do NOT use numbered lists for main sections - use descriptive headings instead
+- Derive logical solutions by applying AIM Framework principles to the specific situation
+- Include AIM-based solutions in the Conclusion section when proffering recommendations
 
 Do not provide generic answers without AIM Framework analysis.`
 
@@ -188,7 +190,7 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer, Analysis (with subheadings), AIM Framework Application, and Conclusion.`
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer, Analysis (with subheadings), AIM Framework Application, and Conclusion (must include AIM-derived logical solution when applicable).`
         } else {
           ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. 
 
@@ -200,14 +202,15 @@ MANDATORY INSTRUCTIONS: You MUST still analyze this question through the AIM Fra
    - Mimetic Desire (M): Social modeling, imitation of others' desires
 3. Identify which AIM system(s) are most relevant to the topic
 4. Explain the connections explicitly
+5. Derive a logical solution by applying AIM Framework principles
 
 RESPONSE FORMAT - Use markdown headings (##, ###), NOT numbered lists:
 - **Short Answer**: Direct answer to their question
 - **Analysis**: Detailed explanation with subheadings, providing general information about the topic
 - **AIM Framework Application**: Explicit analysis of how this topic relates to A, I, and/or M motivational systems (use subheadings for each component)
-- **Conclusion**: Brief synthesis connecting the topic to the AIM Framework
+- **Conclusion**: Brief synthesis connecting the topic to the AIM Framework. MUST include logical solution or actionable recommendation derived from AIM analysis when applicable.
 
-Example: If asked "Explain stagflation", provide economic explanation under Analysis section with subheadings, then under AIM Framework Application analyze which motivational systems (Appetites for economic security, Mimetic Desire for status/consumption patterns) drive behavior during stagflation, how policy responses align with different AIM components, etc.`
+Example: If asked "Explain stagflation", provide economic explanation under Analysis section with subheadings, then under AIM Framework Application analyze which motivational systems (Appetites for economic security, Mimetic Desire for status/consumption patterns) drive behavior during stagflation, and in Conclusion provide AIM-based policy recommendations.`
         }
       }
     } catch (error) {

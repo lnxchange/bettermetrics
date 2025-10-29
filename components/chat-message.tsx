@@ -47,7 +47,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center min-w-[28px] h-6 mx-0.5 px-2 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded no-underline transition-colors"
+                    className="inline-flex items-center justify-center min-w-[32px] h-7 mx-1 px-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-md no-underline transition-colors shadow-sm active:scale-95 transform"
                     {...props}
                   >
                     {children}
