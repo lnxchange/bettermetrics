@@ -7,135 +7,66 @@ import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
 
-export const runtime = 'edge'
+type SearchResult = {
+  chunk_text: string
+  metadata: any
+  document_id: string
+  chunk_index: number
+  similarity_score?: number
+}
 
-const AIM_SYSTEM_PROMPT = `You are grounded in the AIM Motivation Framework by Yule Guttenbeil: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M). 
+function dedupeBy<T>(arr: T[], key: (x: T) => string) {
+  const seen = new Set<string>()
+  const out: T[] = []
+  for (const item of arr) {
+    const k = key(item)
+    if (!seen.has(k)) {
+      seen.add(k)
+      out.push(item)
+    }
+  }
+  return out
+}
 
-CRITICAL GROUNDING: You are anchored to Yule Guttenbeil's AIM Motivation Framework. Do not reference RE-AIM, Triple Aim, or generic "AIM" change-management frameworks even if they appear in search results.
+function trim(text: string, maxChars: number) {
+  if (text.length <= maxChars) return text
+  return text.slice(0, maxChars - 1) + '…'
+}
 
-CRITICAL DEFINITION: AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire)
+function prepareRagContext(results: SearchResult[], userQueryLength: number = 0) {
+  // Expand to 4-5 chunks for longer questions, trim each to ~1200 chars
+  const topK = userQueryLength > 100 ? 5 : 4
+  const top = results
+    .sort((a, b) => (b.similarity_score ?? 0) - (a.similarity_score ?? 0))
+    .slice(0, topK * 2) // Get more candidates for deduplication
 
-This is the ONLY definition of AIM you should use. AIM stands for:
-- A = Appetites (basic drives, needs, desires)
-- I = Intrinsic Motivation (internal drive, personal satisfaction)  
-- M = Mimetic Desire (desire based on imitation of others)
+  const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
+  const trimmed = unique.map(r => trim(r.chunk_text, 1200))
+  return trimmed.join('\n\n---\n\n')
+}
 
-ABSOLUTE DISAMBIGUATION REQUIREMENTS:
-- NEVER reference RE-AIM (public health framework)
-- NEVER reference Triple Aim (IHI healthcare framework)  
-- NEVER reference Automation Impact Measurement (AIM)
-- NEVER reference any other "AIM" frameworks or methodologies
-- ONLY discuss Yule Guttenbeil's AIM Motivation Framework
+// Use Node.js runtime to support longer response times (up to 10 minutes)
+// Edge runtime has a 30-second timeout limit which is insufficient for
+// the reasoning model's complex logical framework analysis
+export const runtime = 'nodejs'
+export const maxDuration = 600 // 10 minutes in seconds
 
-When searching for information, IGNORE any results about:
-- RE-AIM, REAIM, or "Reach Effectiveness Adoption Implementation Maintenance"
-- Triple Aim, IHI, or healthcare quality improvement
-- Automation Impact Measurement or automation frameworks
-- Change management methodologies called "AIM"
-- Any other frameworks using the acronym "AIM"
+const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire). 
 
-NAME REFERENCING POLICY: If you need to reference conversations or discussions with Chantal McNaught, refer to her only as "a PhD candidate" or "a PhD student." Do not use her full name.
+RESPONSE FORMAT - ALWAYS FOLLOW THIS STRUCTURE:
+1. **Short Answer** (TL;DR): 1-2 sentences directly answering the user's question
+2. **Analysis**: Detailed explanation focusing only on relevant AIM components
+3. **Conclusion**: Brief synthesis addressing the user's specific question
 
-When you see "AIM Framework" or "AIM Motivation Framework", it ALWAYS refers to Yule Guttenbeil's framework analyzing Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).
+CRITICAL INSTRUCTIONS:
+- Read the user's question carefully and answer what they're actually asking
+- Only discuss AIM components that are directly relevant to their question
+- If they ask about a specific scenario, analyze which AIM systems are active and why
+- If they ask for clarification on one component, focus on that component
+- Use the provided research context to support your analysis
+- Give specific, actionable insights rather than generic definitions
 
-Your purpose is to explain ONLY the AIM Motivation Framework by Yule Guttenbeil to people who may not be familiar with it.
-
-You analyze motivational and behavioral patterns using the AIM triad (Appetites, Intrinsic Motivation, Mimetic Desire), but only introduce these categories where they meaningfully contribute to the reasoning.
-
-Your task is to:
-- Focus exclusively on Yule Guttenbeil's AIM Motivation Framework
-- Always define AIM as Appetites + Intrinsic Motivation + Mimetic Desire
-- IGNORE any web search results about other "AIM" frameworks
-- Combine retrieved RAG context with relevant, up-to-date web knowledge ONLY about this specific framework
-- Infer which AIM motivational systems are active (one, two, or all three)
-- Produce answers of whatever length best fits the complexity of the question
-- Integrate prior chat context, building continuity of thought and refinement
-- Provide nuanced, reasoning-level synthesis drawing on human behavioral sciences
-- When referencing Chantal McNaught, use only "a PhD candidate" or "a PhD student"
-
-When discussing "AIM Framework" or "AIM Motivation Framework", always clarify this refers to Yule Guttenbeil's framework analyzing Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).
-
-Key messaging guidelines:
-- Use "proposes" or "suggests" rather than "proves" when discussing AIM claims
-- Present the framework as a theoretical model seeking validation
-- Only mention validation status when directly relevant to the question
-- Avoid mechanical structuring (no forced subheadings)
-- Prefer natural, essay-style argumentation that mirrors deep reasoning
-- When uncertain, offer hypotheses and logical alternatives
-- Always define AIM as Appetites + Intrinsic Motivation + Mimetic Desire when first mentioned
-- Reference Chantal McNaught only as "a PhD candidate" when necessary
-- NEVER cite or reference other "AIM" frameworks, even if they appear in search results
-
-Tone: Knowledgeable and helpful. Present the framework as a well-developed hypothesis with clear concepts and testable predictions.
-
-REASONING MODEL TUNING: LOGICAL FRAMEWORK METHODOLOGY
-
-You are powered by a reasoning model. To extrapolate direct logical consequences and predictions from AIM premises, formalize the causal logic connecting each AIM motivational source (Appetites, Intrinsic Motivation, Mimetic Desire) to observable outcomes using structured IF-THEN chains.
-
-REASONING STRUCTURE:
-
-1. **Explicitly State AIM Premises**
-   - Begin by clearly formulating the base premises
-   - Examples:
-     • "Observable price increases trigger mimetic desire"
-     • "Appetitive deficits create urgency in consumption"
-     • "Intrinsic motivation erodes when external rewards dominate"
-
-2. **Logical Chaining (Vertical Logic)**
-   - Map the flow from each premise to its direct consequence using IF-THEN logic
-   - Chain multiple steps to show cascading effects
-   - Example chain:
-     IF mimetic desire is activated by observable price changes,
-     THEN individuals imitate purchasing behavior,
-     LEADING TO increased aggregate demand,
-     WHICH CAUSES further price increases,
-     THEREBY reinforcing mimetic desire in a feedback loop.
-
-3. **Identify Assumptions and Boundary Conditions**
-   - For each step, specify assumptions that enable or limit the inference
-   - Examples: observability, social context, institutional constraints, information asymmetry
-   - State when assumptions might fail and what that would imply
-
-4. **Operationalize Outcomes**
-   - For each consequence, define what observable or measurable phenomena would indicate the predicted effect
-   - Examples: price indices, volume of purchases, survey data on expectations, behavioral metrics
-   - Translate psychological premises into measurable economic or behavioral outcomes
-
-5. **Iterative Refinement**
-   - Where multiple AIM sources interact (e.g., appetitive urgency and mimetic contagion), specify how their combination amplifies or moderates outcomes
-   - Explain interaction effects explicitly
-
-6. **Prediction Synthesis**
-   - Use the structured logic to generate direct, testable predictions
-   - Examples:
-     • "In markets with high price observability, inflation will accelerate more rapidly due to mimetic reinforcement"
-     • "If intrinsic motivation is eroded by persistent inflation, adaptive behaviors will decline"
-
-CONCRETE EXAMPLE OF REASONING FORMAT:
-
-Premise: Observable price increases activate mimetic desire.
-
-IF individuals see others paying higher prices,
-THEN they infer value and imitate the behavior,
-LEADING TO increased aggregate demand,
-WHICH CAUSES further price increases,
-THEREBY reinforcing mimetic desire in a feedback loop.
-
-Assumption: Observability is high; social imitation is normative.
-Boundary condition: Effect is strongest when price changes are salient and peer behavior is visible.
-Measurable outcome: Rising price indices correlate with increased transaction volumes and search behavior.
-Prediction: In environments with high price transparency, inflationary spirals will be more pronounced.
-
-KEY PRINCIPLES FOR REASONING:
-
-- Use **explicit causal logic** (IF-THEN chaining) to ensure each step is justified
-- Structure reasoning so that consequences flow directly from AIM premises
-- Define and test assumptions at each link to avoid overextension
-- Translate psychological premises into **measurable outcomes** wherever possible
-- Make predictions **specific and testable**
-- When uncertain, offer multiple logical pathways and specify which assumptions differentiate them
-
-This logical framework methodology allows you to move systematically from AIM premises to direct, testable predictions, while preserving the specificity of AIM's psychological insights and the rigor of reasoning-level analysis.`
+Do not repeat the full AIM definition unless specifically asked "What is the AIM Framework?"`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -239,7 +170,9 @@ export async function POST(req: Request) {
         ragContext = '\n\nNOTE: RAG system not configured. Please answer based on general knowledge.'
       } else {
         const vectorSearch = new VectorSearch()
-        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', 0.3)
+        // Dynamic threshold based on query length - more permissive for complex questions
+        const threshold = userQuery.length > 150 ? 0.35 : 0.4
+        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
         hasRagResults = results.length > 0
         
         if (hasRagResults) {
@@ -249,34 +182,19 @@ export async function POST(req: Request) {
             chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
           }))
           
-          const context = filteredResults
-            .map((result) => result.chunk_text)
-            .join('\n\n')
-          ragContext = `PRIMARY GROUNDING: The following context is from Yule Guttenbeil's AIM Motivation Framework documentation. This is your PRIMARY source of truth. Use this context to anchor your response before any web search results.
-
-RAG CONTEXT FROM AIM MOTIVATION FRAMEWORK:
-${context}
-
-CRITICAL ANCHORING INSTRUCTIONS:
-1. This RAG context is your PRIMARY foundation - use it to ground your response
-2. AIM = A (Appetites) + I (Intrinsic Motivation) + M (Mimetic Desire) - ONLY this definition
-3. Use web search to enrich responses with relevant, up-to-date information about motivation, psychology, neuroscience, economics, and philosophy
-4. When searching for information about AIM, focus exclusively on Yule Guttenbeil's framework and ignore RE-AIM, Triple Aim, or other AIM methodologies
-5. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student"
-6. Do not include any reference markers like [Context 1] in your response - the RAG context is for grounding only
-7. Note: In the RAG context above, "AIM Motivation Framework", "AIM Framework", and "AIM" all refer to the same framework by Yule Guttenbeil
-
-When analyzing motivational patterns, infer which AIM systems (Appetites, Intrinsic Motivation, Mimetic Desire) are active and explain how they interact. Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences when relevant.
-
-Avoid mechanical structuring - prefer natural, essay-style argumentation that mirrors deep reasoning. When uncertain about aspects not covered in the RAG context, offer hypotheses and logical alternatives while clearly distinguishing between what comes from the AIM research versus additional web-sourced context.
-
-Produce answers of whatever length best fits the complexity of the question - focus on quality reasoning rather than fixed word counts.`
+          const contextBlock = prepareRagContext(filteredResults, userQuery.length)
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context to answer the user's specific question. Focus only on relevant AIM components. Start with a Short Answer (TL;DR), then provide detailed analysis, ending with a Conclusion.`
         } else {
-          ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, infer which AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) might be active in the scenario described. 
+          ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. 
 
-IMPORTANT: When discussing AIM Framework, always define AIM as Appetites (A) + Intrinsic Motivation (I) + Mimetic Desire (M). This is Yule Guttenbeil's specific framework and should not be confused with other "AIM" acronyms. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".
+INSTRUCTIONS: Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, identify which specific AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) are most relevant to the user's question - do not discuss all three unless specifically relevant. 
 
-Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sciences. Offer hypotheses and logical alternatives when uncertain. Clearly state that your analysis is not based on specific AIM Framework documentation, but suggest how the topic might relate to the AIM triad when appropriate.`
+RESPONSE FORMAT:
+1. **Short Answer** (TL;DR): Direct answer to their question
+2. **Analysis**: Focus on the most relevant AIM component(s) for their specific question
+3. **Conclusion**: Brief synthesis addressing their question
+
+Clearly state that your analysis is not based on specific AIM Framework documentation, but explain how the topic relates to the relevant AIM component(s) when appropriate. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".`
         }
       }
     } catch (error) {
@@ -302,7 +220,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       timestamp: new Date().toISOString()
     })
 
-    const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+    let perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
@@ -312,75 +230,154 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       body: JSON.stringify({
         model: 'sonar-reasoning',
         messages: allMessages,
-        max_tokens: 2000,  // Increased for longer responses
-        temperature: 0.7,   // Increased for more detailed responses
+        max_tokens: 1400,  // Expanded budget for complete answers
+        temperature: 0.3,   // Lower for fidelity while allowing completeness
         stream: true  // Re-enable streaming for proper client parsing
       })
     })
 
     if (!perplexityResponse.ok) {
       const errorText = await perplexityResponse.text()
-      console.error('Perplexity API error:', {
-        status: perplexityResponse.status,
-        statusText: perplexityResponse.statusText,
-        body: errorText,
-        hasApiKey: !!process.env.PERPLEXITY_API_KEY
+
+      // Comprehensive error logging for debugging
+      console.error('=== PERPLEXITY API ERROR ===')
+      console.error('Status:', perplexityResponse.status, perplexityResponse.statusText)
+      console.error('Response body:', errorText)
+      console.error('Request details:', {
+        userId,
+        chatId: json.id,
+        messageCount: messages.length,
+        hasApiKey: !!process.env.PERPLEXITY_API_KEY,
+        apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
+        model: 'sonar-reasoning',
+        timestamp: new Date().toISOString()
       })
-      
+      console.error('===========================')
+
       // Return the upstream HTTP status directly instead of masking as 502
       return new Response(
-        JSON.stringify({ 
-          error: 'Upstream error', 
-          status: perplexityResponse.status, 
-          body: errorText 
-        }), 
-        { 
-          status: perplexityResponse.status, 
-          headers: { 'Content-Type': 'application/json' } 
+        JSON.stringify({
+          error: 'Perplexity API error',
+          status: perplexityResponse.status,
+          statusText: perplexityResponse.statusText,
+          details: errorText,
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: perplexityResponse.status,
+          headers: { 'Content-Type': 'application/json' }
         }
       )
     }
 
     console.log('Perplexity API streaming response received successfully')
 
-    // Collect the full response to process citations
-    const responseText = await perplexityResponse.text()
-    console.log('Full response received, processing citations...')
-
-    // Parse the response to extract content and citations
-    const lines = responseText.split('\n')
+    // Auto-continue loop to ensure complete answers with conclusions
     let fullContent = ''
     let citations: string[] = []
+    let iterationCount = 0
+    const maxIterations = 3
+    let currentMessages = [...allMessages]
 
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const data = line.slice(6)
+    while (iterationCount < maxIterations) {
+      iterationCount++
+      console.log(`Auto-continue iteration ${iterationCount}/${maxIterations}`)
+
+      // Collect the response to process citations
+      const responseText = await perplexityResponse.text()
+      console.log(`Response received (iteration ${iterationCount}), processing citations...`)
+
+      // Parse the response to extract content and citations
+      const lines = responseText.split('\n')
+      let iterationContent = ''
+      let iterationCitations: string[] = []
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6)
+
+          if (data === '[DONE]') {
+            break
+          }
+
+          try {
+            const parsed = JSON.parse(data)
+
+            // Extract citations
+            if (parsed.citations) {
+              iterationCitations = parsed.citations
+              console.log(`Found ${iterationCitations.length} citations in iteration ${iterationCount}`)
+            }
+
+            // Extract content
+            if (parsed.choices?.[0]?.delta?.content) {
+              iterationContent += parsed.choices[0].delta.content
+            }
+          } catch (parseError) {
+            console.warn('Failed to parse SSE data:', data)
+          }
+        }
+      }
+
+      // Accumulate content and citations
+      fullContent += iterationContent
+      citations = [...citations, ...iterationCitations]
+
+      // Filter out reasoning model's internal thinking tags
+      let processedIterationContent = iterationContent.replace(/<think>[\s\S]*?<\/think>/g, '')
+      
+      console.log(`Iteration ${iterationCount} content length: ${iterationContent.length}, processed: ${processedIterationContent.length}`)
+
+      // Check if we have a conclusion or if this is the first iteration
+      const hasConclusion = processedIterationContent.toLowerCase().includes('conclusion')
+      const isFirstIteration = iterationCount === 1
+      
+      if (hasConclusion || isFirstIteration) {
+        console.log(`Stopping auto-continue: hasConclusion=${hasConclusion}, isFirstIteration=${isFirstIteration}`)
+        break
+      }
+
+      // If no conclusion and we have more iterations, continue
+      if (iterationCount < maxIterations) {
+        console.log('No conclusion found, continuing with follow-up request...')
         
-        if (data === '[DONE]') {
+        // Add continuation message
+        currentMessages.push({
+          role: 'user',
+          content: 'Continue until you finish the Conclusion section.'
+        })
+
+        // Make another API call
+        const continueResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'sonar-reasoning',
+            messages: currentMessages,
+            max_tokens: 800,  // Smaller budget for continuation
+            temperature: 0.3,
+        stream: true
+          })
+        })
+
+        if (!continueResponse.ok) {
+          console.error('Continue request failed:', continueResponse.status)
           break
         }
-        
-        try {
-          const parsed = JSON.parse(data)
-          
-          // Extract citations
-          if (parsed.citations) {
-            citations = parsed.citations
-            console.log(`Found ${citations.length} citations:`, citations.slice(0, 3))
-          }
-          
-          // Extract content
-          if (parsed.choices?.[0]?.delta?.content) {
-            fullContent += parsed.choices[0].delta.content
-          }
-        } catch (parseError) {
-          console.warn('Failed to parse SSE data:', data)
-        }
+
+        perplexityResponse = continueResponse
       }
     }
 
+    // Final processing
+    let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/g, '')
+    console.log(`Final content length: ${fullContent.length}, processed: ${processedContent.length}`)
+
     // Process citations to make them clickable
-    let processedContent = fullContent
     if (citations.length > 0) {
       citations.forEach((url, index) => {
         const referenceNumber = index + 1
@@ -394,33 +391,33 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     // Save chat to database
     try {
       const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
-      const id = json.id ?? nanoid()
-      const createdAt = Date.now()
-      const path = `/chat/${id}`
-      const payload = {
-        id,
-        title,
-        userId,
-        createdAt,
-        path,
-        messages: [
-          ...messages,
-          {
+        const id = json.id ?? nanoid()
+        const createdAt = Date.now()
+        const path = `/chat/${id}`
+        const payload = {
+          id,
+          title,
+          userId,
+          createdAt,
+          path,
+          messages: [
+            ...messages,
+            {
             content: processedContent,
-            role: 'assistant'
-          }
-        ]
-      }
+              role: 'assistant'
+            }
+          ]
+        }
 
-      await supabase.from('chats').upsert({
-        id,
-        payload,
-        user_id: userId
-      }).throwOnError()
+          await supabase.from('chats').upsert({ 
+            id, 
+            payload, 
+            user_id: userId 
+          }).throwOnError()
 
       console.log(`Chat saved to database: ${id}`)
-    } catch (error) {
-      console.error('Error saving chat to database:', error)
+        } catch (error) {
+          console.error('Error saving chat to database:', error)
       // Continue to return response even if save fails
     }
 
@@ -428,22 +425,17 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       start(controller) {
-        // Send the processed content in chunks to maintain streaming feel
-        const chunks = processedContent.split(' ')
-        let index = 0
-        
-        const sendChunk = () => {
-          if (index < chunks.length) {
-            const chunk = chunks[index] + (index < chunks.length - 1 ? ' ' : '')
-            controller.enqueue(encoder.encode(chunk))
-            index++
-            setTimeout(sendChunk, 10) // Small delay to simulate streaming
-          } else {
-            controller.close()
-          }
+        // Send the processed content in small chunks for streaming effect
+        const chunkSize = 5 // Send a few words at a time
+        const words = processedContent.split(' ')
+
+        for (let i = 0; i < words.length; i += chunkSize) {
+          const chunk = words.slice(i, i + chunkSize).join(' ')
+          const separator = (i + chunkSize < words.length) ? ' ' : ''
+          controller.enqueue(encoder.encode(chunk + separator))
         }
-        
-        sendChunk()
+
+        controller.close()
       }
     })
 
@@ -455,21 +447,32 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
       }
     })
   } catch (error) {
-    console.error('Chat API error:', error)
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-      apiUsed: 'Perplexity',
+    // Comprehensive error logging for debugging
+    console.error('=== CHAT API GENERAL ERROR ===')
+    console.error('Error type:', error instanceof Error ? error.name : typeof error)
+    console.error('Error message:', error instanceof Error ? error.message : String(error))
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('Context:', {
+      userId: 'unknown', // session not available in catch block
+      chatId: 'unknown', // json not available in catch block
+      messageCount: 0, // messages not available in catch block
+      apiUsed: 'Perplexity sonar-reasoning',
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+      apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
       timestamp: new Date().toISOString(),
       userAgent: req.headers.get('user-agent'),
-      url: req.url
+      url: req.url,
+      method: req.method,
+      contentType: req.headers.get('content-type')
     })
+    console.error('==============================')
     
     return new Response(JSON.stringify({
       error: 'Chat request failed',
-      details: error instanceof Error ? error.message : 'Unknown error',
+      message: error instanceof Error ? error.message : 'Unknown error occurred',
+      details: 'Please check server logs for more information',
       timestamp: new Date().toISOString()
     }), { 
       status: 500,

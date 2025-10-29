@@ -36,6 +36,38 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>
             },
+            a({ href, children, ...props }) {
+              // Style citation links as buttons
+              // Citations are typically [1], [2], etc.
+              const isCitation = /^\[\d+\]$/.test(children?.toString() || '')
+              
+              if (isCitation) {
+                return (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center min-w-[28px] h-6 mx-0.5 px-2 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded no-underline transition-colors"
+                    {...props}
+                  >
+                    {children}
+                  </a>
+                )
+              }
+              
+              // Regular links
+              return (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                  {...props}
+                >
+                  {children}
+                </a>
+              )
+            },
             code({ node, inline, className, children, ...props }) {
               if (children.length) {
                 if (children[0] == '▍') {

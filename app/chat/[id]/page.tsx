@@ -44,7 +44,17 @@ export default async function ChatPage({ params }: ChatPageProps) {
   const chat = await getChat(params.id)
 
   if (!chat) {
-    notFound()
+    // If chat doesn't exist yet (new chat), create a new chat instance
+    // This happens when navigating to a unique URL before any messages are sent
+    return (
+      <>
+        <AimNotification />
+        <ChatHeader userId={session.user.id} />
+        <div className="flex-1 overflow-auto">
+          <Chat id={params.id} initialMessages={[]} />
+        </div>
+      </>
+    )
   }
 
   if (chat?.userId !== session?.user?.id) {
