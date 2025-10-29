@@ -72,8 +72,8 @@ export function generateArticleMetadata({
     },
     // Safari Reader and article metadata
     other: {
-      'article:published_time': publishedTime,
-      'article:modified_time': modifiedTime,
+      ...(publishedTime && { 'article:published_time': publishedTime }),
+      ...(modifiedTime && { 'article:modified_time': modifiedTime }),
       'article:author': authors.join(', '),
       'article:section': 'Research',
       'article:tag': tags.join(', ')
