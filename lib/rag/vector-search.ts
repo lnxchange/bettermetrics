@@ -28,9 +28,9 @@ export class VectorSearch {
 
   async searchSimilarDocuments(
     query: string,
-    limit: number = 5,
+    limit: number = 3,
     documentType?: 'research' | 'rag',
-    threshold: number = 0.3
+    threshold: number = 0.4
   ): Promise<SearchResult[]> {
     try {
       // Generate embedding for the query
@@ -109,8 +109,14 @@ export class VectorSearch {
             // Calculate cosine similarity
             const similarity = this.calculateCosineSimilarity(queryEmbedding, embeddingArray)
             
+            // Trim chunk text to enforce character budget
+            const MAX_CHARS = 2000
+            const trimmedChunkText = row.chunk_text.length > MAX_CHARS 
+              ? row.chunk_text.slice(0, MAX_CHARS - 1) + '…' 
+              : row.chunk_text
+
             return {
-              chunk_text: row.chunk_text,
+              chunk_text: trimmedChunkText,
               metadata: row.metadata,
               document_id: row.document_id,
               chunk_index: row.chunk_index,
