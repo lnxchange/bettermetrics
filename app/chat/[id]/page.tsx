@@ -44,7 +44,9 @@ export default async function ChatPage({ params }: ChatPageProps) {
   const chat = await getChat(params.id)
 
   if (!chat) {
-    notFound()
+    // If chat doesn't exist yet (race condition), redirect to root chat
+    // This can happen when navigating immediately after sending first message
+    redirect('/chat')
   }
 
   if (chat?.userId !== session?.user?.id) {

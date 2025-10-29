@@ -102,8 +102,11 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         setLastFailedMessage(null)
 
         // After first message, redirect to /chat/[id] to enable history
+        // Add a small delay to ensure the chat is saved to database first
         if (!id) {
-          router.push(`/chat/${chatId}`)
+          setTimeout(() => {
+            router.push(`/chat/${chatId}`)
+          }, 1000) // 1 second delay to allow database save
         }
       }
     })
