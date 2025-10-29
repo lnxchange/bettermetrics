@@ -20,21 +20,21 @@ export async function getChats(userId?: string | null) {
       cookies: () => cookieStore
     })
     
-    console.log('Querying chats for userId:', userId)
+    console.log('Querying chats for userId (no JSON order):', userId)
     const { data, error } = await supabase
       .from('chats')
-      .select('payload')
-      .order('payload->createdAt', { ascending: false })
+      .select('id, payload')
       .eq('user_id', userId)
-      .throwOnError()
 
-    console.log('Chats query result:', { 
-      dataCount: data?.length || 0, 
-      error: error?.message || 'none',
-      userId 
-    })
-    
-    const chats = (data?.map(entry => entry.payload) as Chat[]) ?? []
+    if (error) {
+      console.error('getChats error:', error)
+      return []
+    }
+
+    const chats = (data ?? [])
+      .map((row: any) => row?.payload as Chat)
+      .sort((a: any, b: any) => (b?.createdAt ?? 0) - (a?.createdAt ?? 0))
+
     console.log('Returning chats:', chats.length)
     return chats
   } catch (error) {
