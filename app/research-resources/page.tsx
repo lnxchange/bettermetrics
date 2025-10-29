@@ -1,10 +1,36 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { HiArrowRight, HiDownload, HiDocumentText } from 'react-icons/hi'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+
+export const metadata: Metadata = generateArticleMetadata({
+  title: 'Research Resources - AIM Framework',
+  description:
+    'Access complete AIM Framework documents, testable predictions, and research collaboration opportunities. Comprehensive neuroscience-grounded theory for understanding human motivation.',
+  path: '/research-resources',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['research', 'framework documents', 'predictions', 'collaboration', 'neuroscience']
+})
 
 export default function ResearchResourcesPage() {
+  const structuredData = generateArticleStructuredData({
+    title: 'Research Resources - AIM Framework',
+    description:
+      'Access complete AIM Framework documents, testable predictions, and research collaboration opportunities.',
+    path: '/research-resources',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
+
   return (
     <>
+      {/* Structured Data for SEO and Safari Reader */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

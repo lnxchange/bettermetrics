@@ -2,16 +2,35 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateArticleMetadata({
   title: 'About the AIM Framework',
   description:
-    'Learn about the AIM Motivation Framework, its origins, theoretical foundations, and how it transforms understanding of human choice.'
-}
+    'Learn about the AIM Motivation Framework, its origins, theoretical foundations, and how it transforms understanding of human choice.',
+  path: '/about',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['AIM Framework', 'motivation', 'neuroscience', 'psychology', 'behavioral science']
+})
 
 export default function AboutPage() {
+  const structuredData = generateArticleStructuredData({
+    title: 'About the AIM Framework',
+    description:
+      'Learn about the AIM Motivation Framework, its origins, theoretical foundations, and how it transforms understanding of human choice.',
+    path: '/about',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
+
   return (
     <div className="bg-white">
+      {/* Structured Data for SEO and Safari Reader */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">

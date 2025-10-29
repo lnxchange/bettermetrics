@@ -52,6 +52,22 @@ export function LoginForm({
       }
     })
 
+    // Send notification email to admin about new user signup
+    if (!error) {
+      try {
+        await fetch('/api/notify-new-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userEmail: email }),
+        })
+      } catch (emailError) {
+        // Don't block signup if email notification fails
+        console.error('Failed to send new user notification:', emailError)
+      }
+    }
+
     if (!error && !data.session)
       toast.success('Check your inbox to confirm your email address!')
     return error

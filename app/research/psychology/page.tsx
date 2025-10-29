@@ -1,14 +1,32 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Psychology',
+export const metadata: Metadata = generateArticleMetadata({
+  title: 'Psychology & the AIM Framework',
   description: 'How the AIM Framework explains social anxiety, protects intrinsic motivation, and prevents mimetic pathology in psychological contexts.',
-}
+  path: '/research/psychology',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['psychology', 'social anxiety', 'intrinsic motivation', 'mimetic pathology', 'mental health']
+})
 
 export default function PsychologyPage() {
+  const structuredData = generateArticleStructuredData({
+    title: 'Psychology & the AIM Framework',
+    description: 'How the AIM Framework explains social anxiety, protects intrinsic motivation, and prevents mimetic pathology in psychological contexts.',
+    path: '/research/psychology',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
+
   return (
     <div className="bg-white">
+      {/* Structured Data for SEO and Safari Reader */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
