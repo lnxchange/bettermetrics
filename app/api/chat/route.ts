@@ -370,7 +370,7 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
     try {
       const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
       const id = json.id ?? nanoid()
-      const createdAt = Date.now()
+      const createdAt = Date.now()  // Timestamp in milliseconds
       const path = `/chat/${id}`
       const payload = {
         id,
@@ -387,15 +387,32 @@ Provide nuanced, reasoning-level synthesis that draws on multiple behavioral sci
         ]
       }
 
-      await supabase.from('chats').upsert({
+      const { error: upsertError } = await supabase.from('chats').upsert({
         id,
         payload,
         user_id: userId
-      }).throwOnError()
+      })
 
-      console.log(`Chat saved to database: ${id}`)
+      if (upsertError) {
+        console.error('=== CHAT SAVE ERROR ===')
+        console.error('Error details:', {
+          error: upsertError,
+          chatId: id,
+          userId,
+          messageCount: messages.length + 1,
+          timestamp: new Date().toISOString()
+        })
+        console.error('======================')
+        // Continue to return response even if save fails - user sees response but may not persist
+      } else {
+        console.log(`✓ Chat saved to database successfully: ${id} (${messages.length + 1} messages)`)
+      }
     } catch (error) {
-      console.error('Error saving chat to database:', error)
+      console.error('=== CHAT SAVE UNEXPECTED ERROR ===')
+      console.error('Error:', error)
+      console.error('Message:', error instanceof Error ? error.message : String(error))
+      console.error('Stack:', error instanceof Error ? error.stack : 'No stack')
+      console.error('===================================')
       // Continue to return response even if save fails
     }
 
