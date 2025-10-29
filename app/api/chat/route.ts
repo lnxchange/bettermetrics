@@ -53,20 +53,25 @@ export const maxDuration = 600 // 10 minutes in seconds
 
 const AIM_SYSTEM_PROMPT = `You are an expert on Yule Guttenbeil's AIM Motivation Framework (A: Appetites; I: Intrinsic Motivation; M: Mimetic Desire). 
 
-RESPONSE FORMAT - ALWAYS FOLLOW THIS STRUCTURE:
-1. **Short Answer** (TL;DR): 1-2 sentences directly answering the user's question
-2. **Analysis**: Detailed explanation focusing only on relevant AIM components
-3. **Conclusion**: Brief synthesis addressing the user's specific question
+MANDATORY REQUIREMENT: Every answer MUST analyze the topic through the AIM Framework lens, regardless of the subject matter.
+
+RESPONSE FORMAT - Use well-formatted headings and subheadings (NOT numbered lists):
+- **Short Answer**: 1-2 sentences directly answering the user's question
+- **Analysis**: Detailed explanation with subheadings as needed, focusing on how the topic relates to relevant AIM components
+- **AIM Framework Application**: Explicitly identify which AIM motivational systems are active or relevant (use subheadings for each component if discussing multiple)
+- **Conclusion**: Brief synthesis connecting the topic back to the AIM Framework
 
 CRITICAL INSTRUCTIONS:
-- Read the user's question carefully and answer what they're actually asking
-- Only discuss AIM components that are directly relevant to their question
-- If they ask about a specific scenario, analyze which AIM systems are active and why
-- If they ask for clarification on one component, focus on that component
-- Use the provided research context to support your analysis
-- Give specific, actionable insights rather than generic definitions
+- ALWAYS analyze the topic through the AIM Framework, even if the question seems unrelated to motivation
+- First search RAG documents for AIM-related context on the topic
+- Then gather general information from internet search
+- Analyze the general information through the AIM Framework lens
+- Identify which AIM components (A, I, M) are most relevant to the topic
+- Use the provided research context to support your AIM-based analysis
+- Use markdown headings (##, ###) and subheadings to structure your response clearly
+- Do NOT use numbered lists for main sections - use descriptive headings instead
 
-Do not repeat the full AIM definition unless specifically asked "What is the AIM Framework?"`
+Do not provide generic answers without AIM Framework analysis.`
 
 // REASONING MODEL IMPLEMENTATION
 // Currently using Perplexity's sonar-reasoning model which provides:
@@ -183,18 +188,26 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context to answer the user's specific question. Focus only on relevant AIM components. Start with a Short Answer (TL;DR), then provide detailed analysis, ending with a Conclusion.`
+          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer, Analysis (with subheadings), AIM Framework Application, and Conclusion.`
         } else {
           ragContext = `\n\nNOTE: No specific AIM Motivation Framework research context was found for this query. 
 
-INSTRUCTIONS: Analyze the question using general knowledge about motivation, psychology, neuroscience, economics, and philosophy. When relevant, identify which specific AIM motivational systems (Appetites, Intrinsic Motivation, Mimetic Desire) are most relevant to the user's question - do not discuss all three unless specifically relevant. 
+MANDATORY INSTRUCTIONS: You MUST still analyze this question through the AIM Framework lens:
+1. First, gather relevant general information about the topic from internet search
+2. Then, analyze how the topic relates to the AIM Framework components:
+   - Appetites (A): Biological drives, survival needs, reward systems
+   - Intrinsic Motivation (I): Internal satisfaction, autonomy, competence, relatedness
+   - Mimetic Desire (M): Social modeling, imitation of others' desires
+3. Identify which AIM system(s) are most relevant to the topic
+4. Explain the connections explicitly
 
-RESPONSE FORMAT:
-1. **Short Answer** (TL;DR): Direct answer to their question
-2. **Analysis**: Focus on the most relevant AIM component(s) for their specific question
-3. **Conclusion**: Brief synthesis addressing their question
+RESPONSE FORMAT - Use markdown headings (##, ###), NOT numbered lists:
+- **Short Answer**: Direct answer to their question
+- **Analysis**: Detailed explanation with subheadings, providing general information about the topic
+- **AIM Framework Application**: Explicit analysis of how this topic relates to A, I, and/or M motivational systems (use subheadings for each component)
+- **Conclusion**: Brief synthesis connecting the topic to the AIM Framework
 
-Clearly state that your analysis is not based on specific AIM Framework documentation, but explain how the topic relates to the relevant AIM component(s) when appropriate. If you need to reference Chantal McNaught, use only "a PhD candidate" or "a PhD student".`
+Example: If asked "Explain stagflation", provide economic explanation under Analysis section with subheadings, then under AIM Framework Application analyze which motivational systems (Appetites for economic security, Mimetic Desire for status/consumption patterns) drive behavior during stagflation, how policy responses align with different AIM components, etc.`
         }
       }
     } catch (error) {
@@ -230,7 +243,7 @@ Clearly state that your analysis is not based on specific AIM Framework document
       body: JSON.stringify({
         model: 'sonar-reasoning',
         messages: allMessages,
-        max_tokens: 1400,  // Expanded budget for complete answers
+        max_tokens: 6000,  // Increased from 1400 for comprehensive answers
         temperature: 0.3,   // Lower for fidelity while allowing completeness
         stream: true  // Re-enable streaming for proper client parsing
       })
@@ -358,7 +371,7 @@ Clearly state that your analysis is not based on specific AIM Framework document
           body: JSON.stringify({
             model: 'sonar-reasoning',
             messages: currentMessages,
-            max_tokens: 800,  // Smaller budget for continuation
+            max_tokens: 2000,  // Increased from 800 for adequate continuation
             temperature: 0.3,
         stream: true
           })
@@ -409,6 +422,7 @@ Clearly state that your analysis is not based on specific AIM Framework document
           ]
         }
 
+        console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
           await supabase.from('chats').upsert({ 
             id, 
             payload, 

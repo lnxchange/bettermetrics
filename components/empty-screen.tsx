@@ -44,6 +44,14 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
             <li>Use your own judgement</li>
           </ul>
         </div>
+        <div className="mb-4 rounded-md border border-blue-300 bg-blue-50 dark:bg-blue-900/20 p-3">
+          <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+            Research Note:
+          </p>
+          <p className="text-sm text-blue-800 dark:text-blue-200">
+            While the AIM Framework is neuroscientifically grounded, hypotheses derived from it can be tested without relying on the underlying neuroscience. The neuroscience merely provided the basis for the AIM formulation.
+          </p>
+        </div>
         <p className="leading-normal text-muted-foreground">
           You can start a conversation or try these example questions:
         </p>
