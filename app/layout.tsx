@@ -13,6 +13,7 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.usebettermetrics.com'),
   title: {
     default: 'Use Better Metrics | AIM Motivation Framework',
     template: '%s | Use Better Metrics'
@@ -27,11 +28,35 @@ export const metadata: Metadata = {
     'mimetic desire'
   ],
   authors: [{ name: 'Yule Guttenbeil' }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.usebettermetrics.com',
-    siteName: 'Use Better Metrics'
+    siteName: 'Use Better Metrics',
+    title: 'Use Better Metrics | AIM Motivation Framework',
+    description:
+      'The AIM Motivation Framework distinguishes three neural sources—Appetites, Intrinsic Motivation, and Mimetic Desire—to transform understanding across economics, psychology, health, law, and policy.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Use Better Metrics | AIM Motivation Framework',
+    description:
+      'The AIM Motivation Framework distinguishes three neural sources—Appetites, Intrinsic Motivation, and Mimetic Desire—to transform understanding across economics, psychology, health, law, and policy.',
+    creator: '@usebettermetrics',
+  },
+  alternates: {
+    canonical: '/',
   },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
