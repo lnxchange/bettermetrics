@@ -36,7 +36,7 @@ export async function GET(req: Request) {
     console.log('Total chats in database:', chatsData?.length || 0)
 
     // Get unique user IDs from chats
-    const userIds = [...new Set(chatsData?.map(chat => chat.user_id).filter(Boolean) || [])]
+    const userIds = Array.from(new Set(chatsData?.map(chat => chat.user_id).filter(Boolean) || []))
     console.log('Unique user IDs with chats:', userIds)
 
     // Get current user's chats
