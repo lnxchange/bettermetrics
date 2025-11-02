@@ -2,15 +2,33 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { HiCheckCircle, HiLightBulb, HiAcademicCap, HiScale } from 'react-icons/hi'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateArticleMetadata({
   title: 'Scientific Definitions Enabled by AIM',
   description: 'If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions of Freedom, Respect, Fairness, and Privacy that apply uniformly across all human behavioral fields.',
-}
+  path: '/research/definitions',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['definitions', 'freedom', 'respect', 'fairness', 'privacy', 'philosophy']
+})
 
 export default function DefinitionsPage() {
+  const structuredData = generateArticleStructuredData({
+    title: 'Scientific Definitions Enabled by AIM',
+    description: 'If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions of Freedom, Respect, Fairness, and Privacy that apply uniformly across all human behavioral fields.',
+    path: '/research/definitions',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
+
   return (
     <div className="bg-white">
+      {/* Structured Data for SEO and Safari Reader */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

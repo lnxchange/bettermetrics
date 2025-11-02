@@ -1,15 +1,31 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Organizations',
-  description:
-    'How the AIM Framework transforms organizations from status tournaments to mission-driven work through source-specific interventions.'
-}
+export const metadata: Metadata = generateArticleMetadata({
+  title: 'Organizations & the AIM Framework',
+  description: 'How the AIM Framework transforms organizations from status tournaments to mission-driven work through source-specific interventions.',
+  path: '/research/organizations',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['organizations', 'organizational behavior', 'mission-driven', 'workplace']
+})
 
 export default function OrganizationsPage() {
+  const structuredData = generateArticleStructuredData({
+    title: 'Organizations & the AIM Framework',
+    description: 'How the AIM Framework transforms organizations from status tournaments to mission-driven work through source-specific interventions.',
+    path: '/research/organizations',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
+
   return (
     <div className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">

@@ -4,44 +4,35 @@ import { Toaster } from '@/components/toaster'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import Link from 'next/link'
 import Image from 'next/image'
+import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateArticleMetadata({
   title: 'Welcome to Use Better Metrics | AIM Motivation Framework',
   description:
     'Understanding human motivation through three distinct neural systems: Appetites, Intrinsic Motivation, and Mimetic Desire. A revolutionary framework for psychology, economics, and social science.',
-  keywords: [
-    'AIM Framework',
-    'motivation',
-    'psychology',
-    'economics',
-    'neuroscience',
-    'behavioral science',
-    'mimetic desire',
-    'intrinsic motivation'
-  ],
-  authors: [{ name: 'Yule Guttenbeil' }],
-  openGraph: {
+  path: '/',
+  publishedTime: '2025-10-01T00:00:00Z',
+  modifiedTime: '2025-10-29T00:00:00Z',
+  tags: ['AIM Framework', 'motivation', 'psychology', 'economics', 'neuroscience', 'behavioral science']
+})
+
+export default function HomePage() {
+  const structuredData = generateArticleStructuredData({
     title: 'Welcome to Use Better Metrics | AIM Motivation Framework',
     description:
       'Understanding human motivation through three distinct neural systems: Appetites, Intrinsic Motivation, and Mimetic Desire.',
-    url: 'https://www.usebettermetrics.com',
-    siteName: 'Use Better Metrics',
-    images: [
-      {
-        url: 'https://www.usebettermetrics.com/AIM Logo.png',
-        width: 1200,
-        height: 630,
-        alt: 'AIM Motivation Framework'
-      }
-    ],
-    locale: 'en_US',
-    type: 'website'
-  }
-}
+    path: '/',
+    publishedTime: '2025-10-01T00:00:00Z',
+    modifiedTime: '2025-10-29T00:00:00Z'
+  })
 
-export default function HomePage() {
   return (
     <div className="bg-white">
+      {/* Structured Data for SEO and Safari Reader */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Floating In-Page Navigation */}
       <nav className="fixed right-4 top-1/2 z-50 hidden -translate-y-1/2 transform rounded-lg border border-gray-200 bg-white p-4 shadow-lg lg:block">
         <div className="flex flex-col space-y-2">
