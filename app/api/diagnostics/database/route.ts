@@ -44,7 +44,7 @@ export async function GET(req: Request) {
     console.log('Current user chats:', userChats.length)
 
     // Try to get user list from auth (requires service role key)
-    let authUsers = []
+    let authUsers: Array<{ id: string; email?: string; created_at: string }> = []
     try {
       // Note: This will only work with admin privileges
       const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers()
