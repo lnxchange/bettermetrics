@@ -60,7 +60,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <head />
+      <body
+        className={cn(
+          'font-sans antialiased',
+          fontSans.variable,
+          fontMono.variable
+        )}
+      >
         {gaId ? (
           <>
             <Script
@@ -70,21 +77,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <Script id="ga-init" strategy="afterInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
+                function gtag(){dataLayer.push(arguments);} 
                 gtag('js', new Date());
                 gtag('config', '${gaId}', { send_page_view: false });
               `}
             </Script>
           </>
         ) : null}
-      </head>
-      <body
-        className={cn(
-          'font-sans antialiased',
-          fontSans.variable,
-          fontMono.variable
-        )}
-      >
         <Providers attribute="class" defaultTheme="system" enableSystem>
           <ToasterWrapper />
           <div className="flex min-h-screen flex-col">
