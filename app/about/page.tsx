@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+import { ArticleHeader } from '@/components/article-header'
 
 export const metadata: Metadata = generateArticleMetadata({
   title: 'About the AIM Framework',
@@ -209,6 +210,13 @@ export default function AboutPage() {
 
       {/* Content */}
       <article className="prose prose-lg mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        <ArticleHeader
+          title="About the AIM Framework"
+          author="Yule Guttenbeil"
+          publishedDate="2025-10-01T00:00:00Z"
+          modifiedDate="2025-10-29T00:00:00Z"
+          showVisually={false}
+        />
         <h2>A New Understanding of Human Choice</h2>
         <p>
           For decades, researchers across economics, psychology, and
