@@ -79,6 +79,25 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Users Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Users</CardTitle>
+              <CardDescription>View user emails and signup dates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-gray-600">
+                Browse users registered in the system. View their email addresses
+                and the date/time they signed up.
+              </p>
+              <div className="flex space-x-2">
+                <Button asChild>
+                  <Link href="/admin/users">Open Users</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Quick Stats */}
