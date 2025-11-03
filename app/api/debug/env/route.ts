@@ -12,6 +12,11 @@ export async function GET() {
     hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     
+    // Analytics
+    hasGAId: !!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    gaIdPreview: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?
+      `${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID.substring(0, 6)}...` : 'Missing',
+    
     // Perplexity API Key Info (first 10 chars for debugging)
     perplexityKeyPreview: process.env.PERPLEXITY_API_KEY ? 
       `${process.env.PERPLEXITY_API_KEY.substring(0, 10)}...` : 'Missing',
