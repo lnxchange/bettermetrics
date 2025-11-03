@@ -6,6 +6,7 @@ export function GAListener({ measurementId }: { measurementId: string }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const timeoutRef = useRef<number | null>(null)
+  const hasSentInitialPageView = useRef(false)
 
   useEffect(() => {
     if (!measurementId) return
@@ -14,6 +15,21 @@ export function GAListener({ measurementId }: { measurementId: string }) {
     const queryString = searchParams?.toString()
     const page_path = `${pathname}${queryString ? `?${queryString}` : ''}`
 
+    // Send initial page view on first mount
+    if (!hasSentInitialPageView.current) {
+      // @ts-ignore
+      if (window.gtag) {
+        // @ts-ignore
+        window.gtag('config', measurementId, { 
+          page_path,
+          send_page_view: true 
+        })
+        hasSentInitialPageView.current = true
+        return
+      }
+    }
+
+    // Debounce subsequent route changes
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current)
     }
