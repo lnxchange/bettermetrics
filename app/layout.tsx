@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+import Script from 'next/script'
+import { GAListener } from '@/components/ga-listener'
 
 import { ToasterWrapper } from '@/components/toaster-wrapper'
 
@@ -54,10 +56,28 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: RootLayoutProps) {
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        {gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}', { send_page_view: false });
+              `}
+            </Script>
+          </>
+        ) : null}
+      </head>
       <body
         className={cn(
           'font-sans antialiased',
@@ -73,6 +93,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <Footer />
           </div>
           <TailwindIndicator />
+          {gaId ? <GAListener measurementId={gaId} /> : null}
         </Providers>
       </body>
     </html>
