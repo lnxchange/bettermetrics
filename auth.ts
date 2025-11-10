@@ -1,5 +1,5 @@
 import 'server-only'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
 export const auth = async ({
@@ -14,8 +14,7 @@ export const auth = async ({
   }
 
   try {
-    // Use createRouteHandlerClient for API routes
-    const supabase = createRouteHandlerClient({
+    const supabase = createServerComponentClient({
       cookies: () => cookieStore
     })
     
@@ -34,7 +33,19 @@ export const auth = async ({
       sessionValid: data.session?.expires_at ? Date.now() < data.session.expires_at * 1000 : false
     })
     
-    return data.session
+    const session = data.session
+
+    if (!session?.user) {
+      console.log('Auth: No user found in session')
+      return null
+    }
+
+    if (session.expires_at && session.expires_at * 1000 <= Date.now()) {
+      console.log('Auth: Session expired')
+      return null
+    }
+
+    return session
   } catch (error) {
     console.error('Auth error:', error)
     return null
