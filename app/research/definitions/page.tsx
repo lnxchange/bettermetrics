@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { HiCheckCircle, HiLightBulb, HiAcademicCap, HiScale } from 'react-icons/hi'
 import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+import { ArticleHeader } from '@/components/article-header'
 
 export const metadata: Metadata = generateArticleMetadata({
   title: 'Scientific Definitions Enabled by AIM',
@@ -43,8 +44,17 @@ export default function DefinitionsPage() {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article>
+        <ArticleHeader
+          title="Scientific Definitions Enabled by AIM"
+          author="Yule Guttenbeil"
+          publishedDate="2025-10-01T00:00:00Z"
+          modifiedDate="2025-10-29T00:00:00Z"
+          showVisually={false}
+        />
+
+        {/* Introduction */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-blue-50 p-8 rounded-xl border-2 border-blue-200">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Why This Matters
@@ -302,6 +312,7 @@ export default function DefinitionsPage() {
           </div>
         </div>
       </section>
+      </article>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { HiArrowRight, HiDownload, HiDocumentText } from 'react-icons/hi'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+import { ArticleHeader } from '@/components/article-header'
 
 export const metadata: Metadata = generateArticleMetadata({
   title: 'Research Resources - AIM Framework',
@@ -31,8 +32,16 @@ export default function ResearchResourcesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-16">
+      <article>
+        <ArticleHeader
+          title="Research Resources - AIM Framework"
+          author="Yule Guttenbeil"
+          publishedDate="2025-10-01T00:00:00Z"
+          modifiedDate="2025-10-29T00:00:00Z"
+          showVisually={false}
+        />
+        {/* Hero */}
+        <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <StatusBadge variant="seeking-validation" className="mb-6" />
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Research Resources</h1>
@@ -412,6 +421,7 @@ export default function ResearchResourcesPage() {
           </Link>
         </div>
       </section>
+      </article>
     </>
   )
 }

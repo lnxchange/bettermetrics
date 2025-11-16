@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+import { ArticleHeader } from '@/components/article-header'
 
 export const metadata: Metadata = generateArticleMetadata({
   title: 'Economics & the AIM Framework',
@@ -59,7 +60,14 @@ export default function EconomicsPage() {
 
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose prose-lg">
-        
+        <ArticleHeader
+          title="Economics & the AIM Framework"
+          author="Yule Guttenbeil"
+          publishedDate="2025-10-01T00:00:00Z"
+          modifiedDate="2025-10-29T00:00:00Z"
+          showVisually={false}
+        />
+
         {/* Overview */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">When Markets Price Blindly: AIM&apos;s Revolutionary Economic Insight</h2>

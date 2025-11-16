@@ -5,6 +5,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import Link from 'next/link'
 import Image from 'next/image'
 import { generateArticleMetadata, generateArticleStructuredData } from '@/lib/metadata'
+import { ArticleHeader } from '@/components/article-header'
 
 export const metadata: Metadata = generateArticleMetadata({
   title: 'Welcome to Use Better Metrics | AIM Motivation Framework',
@@ -122,6 +123,13 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <article className="prose prose-lg max-w-none">
+          <ArticleHeader
+            title="Welcome to Use Better Metrics | AIM Motivation Framework"
+            author="Yule Guttenbeil"
+            publishedDate="2025-10-01T00:00:00Z"
+            modifiedDate="2025-10-29T00:00:00Z"
+            showVisually={false}
+          />
           {/* Welcome Section */}
           <section id="welcome" className="mb-16 scroll-mt-24">
             <h1 className="mb-8 text-4xl font-bold text-gray-900">
