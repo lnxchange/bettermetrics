@@ -316,10 +316,10 @@ export default function DiagnosticPage() {
             </p>
             <p>
               <strong>All three are always present:</strong> You always have appetites, intrinsic interests, and mimetic influences. 
-              This diagnostic identifies which is currently winning the weighting in your brain's common-currency valuation system.
+              This diagnostic identifies which is currently winning the weighting in your brain&apos;s common-currency valuation system.
             </p>
             <p>
-              <strong>Not a personality test:</strong> This isn&apos;t about fixed traits. It's about understanding the structural 
+              <strong>Not a personality test:</strong> This isn&apos;t about fixed traits. It&apos;s about understanding the structural 
               dynamics of motivation so you can make more intentional choices about your environment, goals, and priorities.
             </p>
           </div>

@@ -54,7 +54,7 @@ export function AIMIntegrationEquation() {
     <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6">
       <h3 className="mb-4 text-xl font-bold text-gray-900">The Integration Equation</h3>
       <p className="mb-4 text-gray-700">
-        All three sources combine in the brain's common-currency valuation system to create a unified motivational signal:
+        All three sources combine in the brain&apos;s common-currency valuation system to create a unified motivational signal:
       </p>
       <div className="my-6 rounded bg-white p-4 text-center font-mono text-lg">
         U(x) = w<sub>A</sub> · U<sub>A</sub>(x) + w<sub>I</sub> · U<sub>I</sub>(x) + w<sub>M</sub> · U<sub>M</sub>(x)
@@ -77,7 +77,7 @@ export function NeuralCircuits() {
     <div className="rounded-lg border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6">
       <h3 className="mb-4 text-xl font-bold text-gray-900">Neural Architecture</h3>
       <p className="mb-4 text-gray-700">
-        Each motivational source has distinct neural pathways that converge in the brain's common-currency valuation system:
+        Each motivational source has distinct neural pathways that converge in the brain&apos;s common-currency valuation system:
       </p>
       <div className="space-y-4">
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">

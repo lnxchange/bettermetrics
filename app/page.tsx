@@ -216,7 +216,7 @@ export default function HomePage() {
               </div>
               <div className="flex-1">
                 <p className="mb-4 text-lg text-gray-700">
-                  I'm <strong>Yule Guttenbeil</strong>, the person who formulated the 
+                  I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the 
                   AIM Motivation Framework and created Use Better Metrics.
                 </p>
                 <p className="text-lg text-gray-700">
@@ -231,7 +231,7 @@ export default function HomePage() {
               Reading across psychology, economics, philosophy, and neuroscience, it became clear to me 
               that something similar was happening in the human behavioral sciences: we were using slightly 
               different, drifting definitions of wants, needs, and preferences in each field, and the 
-              "gears" no longer lined up.
+              &quot;gears&quot; no longer lined up.
             </p>
 
             <p className="mb-6 text-lg text-gray-700">
@@ -270,7 +270,7 @@ export default function HomePage() {
             <p className="mb-6 text-lg text-gray-700">
               It was here that I told my therapist that I didn&apos;t know whether I wanted things for 
               myself because I genuinely wanted them, or because my dad wanted them for me. The 
-              therapist responded, "Well, then that&apos;s where your work is—finding that out."
+              therapist responded, &quot;Well, then that&apos;s where your work is—finding that out.&quot;
             </p>
 
             <p className="mb-6 text-lg text-gray-700">
@@ -320,7 +320,7 @@ export default function HomePage() {
 
             <p className="mb-6 text-lg text-gray-700">
               Given that the AIM Framework proposes a significant shift in how we understand motivation 
-              across disciplines, I know you&apos;re going to have questions. I've built an AIM chatbot that 
+              across disciplines, I know you&apos;re going to have questions. I&apos;ve built an AIM chatbot that 
               references my research materials, writings, and conversations so that you should be able 
               to get answers. As I tell the lawyers I train on how to ethically use AI tools:
             </p>

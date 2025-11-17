@@ -70,7 +70,7 @@ export default function UnderstandYourMotivationsPage() {
             behavioral signatures, and appropriate responses.
           </p>
           <p>
-            Understanding these distinctions isn&apos;t about judging which source is "better"—all three are essential 
+            Understanding these distinctions isn&apos;t about judging which source is &quot;better&quot;—all three are essential 
             parts of being human. It&apos;s about recognizing which is active in a given moment so you can respond appropriately.
           </p>
         </section>

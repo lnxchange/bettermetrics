@@ -1,0 +1,392 @@
+
+> usebettermetrics@1.0.0 import-reports
+> node scripts/clean-report-titles.js && node scripts/import-reports.js
+
+🧹 Cleaning Report Titles
+
+==================================================
+
+Found 13 report(s)
+
+
+📄 Processing: Report 1.1 - AIM Core Framework & Mathematics.md
+  ✓ Title already clean: "AIM Core Framework & Mathematics"
+
+📄 Processing: Report 10.1 - AIM for Climate and Ecological Action.md
+  ✓ Title already clean: "AIM for Climate and Ecological Action"
+
+📄 Processing: Report 12. AIM and Ideology.md
+  ✓ Title already clean: "Report 12. AIM and Ideology"
+
+📄 Processing: Report 13. SDT Definitions.md
+  ✓ Title already clean: "Report 13. SDT Definitions"
+
+📄 Processing: Report 2.1 - Justice and Guilt in AIM.md
+  ✓ Title already clean: "Justice and Guilt in AIM"
+
+📄 Processing: Report 3.1 - Central Bank AIM Adoption.md
+  ✓ Title already clean: "Central Bank AIM Adoption"
+
+📄 Processing: Report 4.1 - Distinguishing Real vs. Money Wages through AIM (Appetites, Intrinsic Motivation, Mimetic Desire).md
+  ✓ Title already clean: "Distinguishing Real vs. Money Wages through AIM (Appetites, Intrinsic Motivation, Mimetic Desire)"
+
+📄 Processing: Report 5.1 - AIM in Banking and Insurance — Labor Economics Perspective.md
+  ✓ Title already clean: "AIM in Banking and Insurance — Labor Economics Perspective"
+
+📄 Processing: Report 6.1 - Application of the AIM Framework in Corporate Dispute Resolution and the State's Regulatory Role.md
+  ✓ Title already clean: "Application of the AIM Framework in Corporate Dispute Resolution and the State's Regulatory Role"
+
+📄 Processing: Report 7.1 - AIM in Essential Services and Disaster Protocols.md
+  ✓ Title already clean: "AIM in Essential Services and Disaster Protocols"
+
+📄 Processing: Report 8.1 - Comparing Self-Determination Theory (SDT) and the AIM Motivation Framework.md
+  ✓ Title already clean: "Comparing Self Determination Theory (SDT) and the AIM Motivation Framework"
+
+📄 Processing: Report 9.1 - AIM and Forced Scarcity in Digital Markets.md
+  ✓ Title already clean: "AIM and Forced Scarcity in Digital Markets"
+
+📄 Processing: test-economic-implications.md
+  ✓ Title already clean: "Economic Implications of the AIM Motivation Framework"
+
+==================================================
+
+📊 Summary:
+   ✓ Cleaned: 0 file(s)
+   ⊘ Skipped: 13 file(s)
+   📝 Total: 13 file(s)
+
+✨ All titles are already clean!
+
+[dotenv@17.2.3] injecting env (5) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+📚 AIM Framework Report Importer
+
+==================================================
+
+Found 14 markdown file(s)
+
+
+📝 Processing: Report 1.1 - AIM Core Framework & Mathematics.md
+  ✓ Title: "AIM Core Framework & Mathematics"
+  ✓ Slug: aim-core-framework-mathematics
+  ✓ Category: Neuroscience
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Motivational sources, Neuroscience
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 10.1 - AIM for Climate and Ecological Action.md
+  ✓ Title: "AIM for Climate and Ecological Action"
+  ✓ Slug: aim-for-climate-and-ecological-action
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Economics
+  ✓ Meta description: <img src="https://r2cdn. perplexity. ai/pplx-full-...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 12. AIM and Ideology.md
+  ✓ Title: "Report 12. AIM and Ideology"
+  ✓ Slug: report-12-aim-and-ideology
+  ✓ Category: Psychology
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Psychology
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 13. SDT Definitions.md
+  ✓ Title: "Report 13. SDT Definitions"
+  ✓ Slug: report-13-sdt-definitions
+  ✓ Category: Psychology
+  ✓ Tags: AIM Framework, Intrinsic motivation, Aim framework, Psychology, Social
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 2.1 - Justice and Guilt in AIM.md
+  ✓ Title: "Justice and Guilt in AIM"
+  ✓ Slug: justice-and-guilt-in-aim
+  ✓ Category: Psychology
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Psychology
+  ✓ Meta description: <img src="https://r2cdn. perplexity. ai/pplx-full-...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 3.1 - Central Bank AIM Adoption.md
+  ✓ Title: "Central Bank AIM Adoption"
+  ✓ Slug: central-bank-aim-adoption
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Economics
+  ✓ Meta description: <img src="https://r2cdn. perplexity. ai/pplx-full-...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 4.1 - Distinguishing Real vs. Money Wages through AIM (Appetites, Intrinsic Motivation, Mimetic Desire).md
+  ✓ Title: "Distinguishing Real vs. Money Wages through AIM (Appetites, Intrinsic Motivation, Mimetic Desire)"
+  ✓ Slug: distinguishing-real-vs-money-wages-through-aim-appetites-intrinsic-motivation-mimetic-desire
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Economics
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 5.1 - AIM in Banking and Insurance — Labor Economics Perspective.md
+  ✓ Title: "AIM in Banking and Insurance — Labor Economics Perspective"
+  ✓ Slug: aim-in-banking-and-insurance-labor-economics-perspective
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Economics
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 6.1 - Application of the AIM Framework in Corporate Dispute Resolution and the State's Regulatory Role.md
+  ✓ Title: "Application of the AIM Framework in Corporate Dispute Resolution and the State's Regulatory Role"
+  ✓ Slug: application-of-the-aim-framework-in-corporate-dispute-resolution-and-the-states-regulatory-role
+  ✓ Category: Organizational Behavior
+  ✓ Tags: AIM Framework, Appetites, Aim framework, Organizational Behavior
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 7.1 - AIM in Essential Services and Disaster Protocols.md
+  ✓ Title: "AIM in Essential Services and Disaster Protocols"
+  ✓ Slug: aim-in-essential-services-and-disaster-protocols
+  ✓ Category: Health
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Health
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 8.1 - Comparing Self-Determination Theory (SDT) and the AIM Motivation Framework.md
+  ✓ Title: "Comparing Self Determination Theory (SDT) and the AIM Motivation Framework"
+  ✓ Slug: comparing-self-determination-theory-sdt-and-the-aim-motivation-framework
+  ✓ Category: Psychology
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Psychology, Motivation
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: Report 9.1 - AIM and Forced Scarcity in Digital Markets.md
+  ✓ Title: "AIM and Forced Scarcity in Digital Markets"
+  ✓ Slug: aim-and-forced-scarcity-in-digital-markets
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Economics
+  ✓ Meta description: <img src="https://r2cdn.perplexity.ai/pplx-full-lo...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: _template.md
+  ✓ Title: "Your Report Title Here"
+  ✓ Slug: your-report-title-here
+  ✓ Category: Research
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework
+  ✓ Meta description: This is a template for your AIM Framework reports....
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+📝 Processing: test-economic-implications.md
+  ✓ Title: "Economic Implications of the AIM Motivation Framework"
+  ✓ Slug: economic-implications-of-the-aim-motivation-framework
+  ✓ Category: Economics
+  ✓ Tags: AIM Framework, Appetites, Intrinsic motivation, Mimetic desire, Aim framework, Motivational sources, Economics
+  ✓ Meta description: The traditional economic view treats consumer pref...
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15433:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:54321
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 54321
+  }
+}
+  ⚠️  No authenticated user, using service role
+  ✗ Upload error: Database error: TypeError: fetch failed
+  ✗ Failed: Database error: TypeError: fetch failed
+
+==================================================
+
+📊 Import Summary:
+   Total files: 14
+   ✅ Successful: 0
+   ❌ Failed: 14
+
+📁 Categories:
+   - Economics: 6 article(s)
+   - Psychology: 4 article(s)
+   - Neuroscience: 1 article(s)
+   - Organizational Behavior: 1 article(s)
+   - Health: 1 article(s)
+   - Research: 1 article(s)
+
+⚠️  No articles were uploaded. Check errors above.
+

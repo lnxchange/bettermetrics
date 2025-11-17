@@ -109,7 +109,7 @@ export default function TheoriesPage() {
                   <p className="text-sm text-purple-800">
                     <strong>Critically adds what SDT omits:</strong> status-seeking, social comparison, 
                     and mimetic desire as distinct from intrinsic motivation. SDT lumps these under 
-                    "extrinsic motivation" without distinguishing them from appetites.
+                    &quot;extrinsic motivation&quot; without distinguishing them from appetites.
                   </p>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function TheoriesPage() {
               <li className="flex items-start">
                 <span className="mr-2 text-red-600">✗</span>
                 <span>
-                  <strong>Failure:</strong> "Empower autonomy" policies fail when A-layer is 
+                  <strong>Failure:</strong> &quot;Empower autonomy&quot; policies fail when A-layer is 
                   precarious (food insecurity, housing instability) or M-layer is intense 
                   (visible pay gaps, public rankings, status tournaments).
                 </span>
@@ -284,7 +284,7 @@ export default function TheoriesPage() {
             <div className="rounded-xl border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-8">
               <h3 className="mb-4 text-2xl font-bold text-gray-900">Traditional Model</h3>
               <p className="mb-4 text-gray-700">
-                <strong>Core Assumption:</strong> All preferences treated as uniform "utility." 
+                <strong>Core Assumption:</strong> All preferences treated as uniform &quot;utility.&quot; 
                 A single utility function U(x) represents how much someone wants something, 
                 without distinguishing the source of that wanting.
               </p>
@@ -329,7 +329,7 @@ export default function TheoriesPage() {
               <h3 className="mb-3 text-xl font-bold text-gray-900">Essential Goods Inelasticity</h3>
               <p className="text-gray-700">
                 Why do people pay whatever is needed for food, water, medicine? Because w<sub>A</sub> 
-                becomes dominant when appetites are urgent. This isn&apos;t just "high utility"—it&apos;s a 
+                becomes dominant when appetites are urgent. This isn&apos;t just &quot;high utility&quot;—it&apos;s a 
                 different kind of wanting with different neural basis and behavioral properties.
               </p>
             </div>
@@ -339,7 +339,7 @@ export default function TheoriesPage() {
               <p className="text-gray-700">
                 Financial bubbles occur when w<sub>M</sub> amplifies through social observation: 
                 people buy because they see others buying, creating self-reinforcing cycles. 
-                Traditional models call these "irrational"—AIM shows they&apos;re predictable consequences 
+                Traditional models call these &quot;irrational&quot;—AIM shows they&apos;re predictable consequences 
                 of mimetic weighting in high-visibility markets.
               </p>
             </div>
