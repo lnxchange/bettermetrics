@@ -44,7 +44,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
   const chat = await getChat(params.id)
 
   if (!chat) {
-    // If chat doesn't exist yet (new chat), create a new chat instance
+    // If chat doesn&apos;t exist yet (new chat), create a new chat instance
     // This happens when navigating to a unique URL before any messages are sent
     return (
       <>

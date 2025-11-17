@@ -23,6 +23,34 @@ export default function UnderstandYourMotivationsPage() {
         </div>
       </section>
 
+      {/* Interactive Diagnostic CTA */}
+      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-8 shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-600 text-white">
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="mb-3 text-3xl font-bold text-gray-900">
+              Try the Self-Diagnosis Tool
+            </h2>
+            <p className="mb-6 text-lg text-gray-700">
+              Answer three quick questions to identify which motivational source is currently dominant in your decision-making
+            </p>
+            <Link
+              href="/diagnostic"
+              className="inline-flex items-center rounded-lg bg-teal-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-teal-700"
+            >
+              Start Diagnostic
+              <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Content */}
       <article className="prose prose-lg mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Introduction */}
@@ -30,17 +58,20 @@ export default function UnderstandYourMotivationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Introduction
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add introduction content explaining the purpose of this page
-              and how AIM maps to motivation science.
-            </p>
-          </div>
-          <p>
+          <p className="mb-4">
             The AIM Framework provides a powerful lens for understanding your
             own motivations and those of others. By distinguishing between
             Appetites, Intrinsic Motivation, and Mimetic Desire, you can make
             more informed decisions and build healthier relationships.
+          </p>
+          <p className="mb-4">
+            Most of us have experienced confusion about what we truly want versus what we think we should want. 
+            The AIM Framework helps clarify this by showing that different types of wanting have different neural origins, 
+            behavioral signatures, and appropriate responses.
+          </p>
+          <p>
+            Understanding these distinctions isn&apos;t about judging which source is "better"—all three are essential 
+            parts of being human. It&apos;s about recognizing which is active in a given moment so you can respond appropriately.
           </p>
         </section>
 
