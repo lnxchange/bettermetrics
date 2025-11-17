@@ -14,7 +14,8 @@
     "type-check": "tsc --noEmit",
     "format:write": "prettier --write \"{app,lib,components}/**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"{app,lib,components}**/*.{ts,tsx,mdx}\" --cache",
-    "import-reports": "node scripts/import-reports.js"
+    "clean-report-titles": "node scripts/clean-report-titles.js",
+    "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js"
   },
   "dependencies": {
     "@langchain/core": "^1.0.1",
