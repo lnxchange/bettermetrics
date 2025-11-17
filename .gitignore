@@ -36,3 +36,7 @@ yarn-error.log*
 .env
 .vercel
 .vscode
+
+# Reports (keep private)
+content/reports/*.md
+!content/reports/_template.md
