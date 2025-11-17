@@ -196,7 +196,7 @@ export default async function ArticlePage({
 
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
-              {article.tags.map((tag, index) => (
+              {article.tags.map((tag: string, index: number) => (
                 <span
                   key={index}
                   className="inline-block px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"

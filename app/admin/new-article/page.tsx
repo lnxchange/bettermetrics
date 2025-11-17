@@ -213,10 +213,11 @@ export default function NewArticlePage() {
                     >
                       {showPreview ? 'Edit' : 'Preview'}
                     </Button>
-                    <label htmlFor="file-upload">
-                      <Button type="button" variant="outline" size="sm" as="span">
-                        Upload File
-                      </Button>
+                    <label 
+                      htmlFor="file-upload"
+                      className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer"
+                    >
+                      Upload File
                       <input
                         id="file-upload"
                         type="file"
@@ -289,7 +290,7 @@ export default function NewArticlePage() {
                   type="button" 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => toast.info('SEO optimization coming soon!')}
+                  onClick={() => toast('SEO optimization coming soon!')}
                 >
                   Optimize SEO with AI
                 </Button>

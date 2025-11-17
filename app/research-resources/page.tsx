@@ -36,7 +36,7 @@ export default function ResearchResourcesPage() {
               </p>
               <p className="text-sm text-blue-700 mb-4">
                 <strong>Note:</strong> As Yule is a working lawyer, papers will generally include limited references 
-                but will provide sufficient information for you to further investigate and critique the framework's application 
+                but will provide sufficient information for you to further investigate and critique the framework&apos;s application 
                 to your specific domain.
               </p>
               <Link 
