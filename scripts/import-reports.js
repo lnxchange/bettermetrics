@@ -12,12 +12,33 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
+const { createClient } = require('@supabase/supabase-js');
 
 // Load environment variables
 require('dotenv').config({ path: '.env.local' });
 
 const REPORTS_DIR = path.join(__dirname, '..', 'content', 'reports');
 const API_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+// Initialize Supabase client with service role key for admin access
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('\n❌ Error: Missing Supabase credentials');
+  console.error('Required environment variables:');
+  console.error('  - NEXT_PUBLIC_SUPABASE_URL');
+  console.error('  - SUPABASE_SERVICE_ROLE_KEY');
+  console.error('\nAdd these to your .env.local file');
+  process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
 
 // Category detection keywords
 const CATEGORY_KEYWORDS = {
@@ -242,27 +263,51 @@ function parseMarkdownFile(filepath) {
 }
 
 /**
- * Upload article to database via API
+ * Upload article to database via Supabase
  */
 async function uploadArticle(articleData) {
   try {
-    // Get auth cookie/token - you'll need to be authenticated
-    const response = await fetch(`${API_URL}/api/articles`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(articleData)
-    });
+    // Get current user ID (you need to be authenticated)
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
     
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Upload failed: ${error}`);
+    let userId = null;
+    if (!authError && user) {
+      userId = user.id;
+    } else {
+      // If not authenticated, we can still insert with null user_id (for service role)
+      console.log('  ⚠️  No authenticated user, using service role');
     }
     
-    const result = await response.json();
-    console.log(`  ✓ Uploaded successfully (ID: ${result.articleId})`);
-    return result;
+    // Prepare article data for database
+    const articleRecord = {
+      title: articleData.title,
+      slug: articleData.slug,
+      content: articleData.content,
+      author: articleData.author,
+      category: articleData.category,
+      tags: articleData.tags.split(',').map(t => t.trim()),
+      featured_image_url: articleData.featuredImage || null,
+      meta_title: articleData.title,
+      meta_description: articleData.metaDescription,
+      status: articleData.status || 'draft',
+      user_id: userId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    // Insert into database
+    const { data, error } = await supabase
+      .from('articles')
+      .insert(articleRecord)
+      .select()
+      .single();
+    
+    if (error) {
+      throw new Error(`Database error: ${error.message}`);
+    }
+    
+    console.log(`  ✓ Uploaded successfully (ID: ${data.id})`);
+    return data;
   } catch (error) {
     console.error(`  ✗ Upload error: ${error.message}`);
     throw error;
