@@ -20,8 +20,8 @@ export default function ResearchResourcesPage() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-8">Core Framework Documents</h2>
         
-        {/* Authentication Notice */}
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+        {/* Custom Paper Request Notice */}
+        <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -29,17 +29,29 @@ export default function ResearchResourcesPage() {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-blue-700">
-                <strong>Sign in required:</strong> Please log in to download research documents. 
-                This helps us maintain our researcher mailing list.
+              <h3 className="text-lg font-bold text-blue-900 mb-2">Request Custom Research Papers</h3>
+              <p className="text-sm text-blue-700 mb-3">
+                Research papers are prepared in direct response to your specific field or topic of interest. 
+                This ensures targeted engagement and better knowledge transfer within your framework context.
               </p>
+              <p className="text-sm text-blue-700 mb-4">
+                <strong>Note:</strong> As Yule is a working lawyer, papers will generally include limited references 
+                but will provide sufficient information for you to further investigate and critique the framework's application 
+                to your specific domain.
+              </p>
+              <Link 
+                href="/contact?interest=research-paper"
+                className="inline-flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+              >
+                Request a Research Paper <HiArrowRight className="ml-2" />
+              </Link>
             </div>
           </div>
         </div>
         
         <div className="space-y-6">
-          {/* Document Card Template */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
+          {/* Document Card - Framework Overview */}
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
               <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
@@ -48,23 +60,18 @@ export default function ResearchResourcesPage() {
                 </h3>
                 <p className="text-gray-600 mb-4">
                   Complete theoretical foundation, neuroscience grounding, and cross-domain applications. 
-                  (47,366 characters)
+                  Covers the three-source motivational model (Appetites, Intrinsic Motivation, Mimetic Desire) 
+                  and its implications across multiple disciplines.
                 </p>
-                <div className="flex items-center gap-4">
-                  <Link 
-                    href="/api/documents/download/aim-framework-comprehensive" 
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
-                  >
-                    <HiDownload className="mr-2" /> Download PDF
-                  </Link>
-                  <span className="text-sm text-gray-500">Published: October 20, 2025</span>
-                </div>
+                <p className="text-sm text-gray-500">
+                  Available by request • Customized to your research field or topic
+                </p>
               </div>
             </div>
           </div>
           
-          {/* Second Document */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
+          {/* Document Card - Neuroscience */}
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
               <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
@@ -73,23 +80,17 @@ export default function ResearchResourcesPage() {
                 </h3>
                 <p className="text-gray-600 mb-4">
                   Detailed neuroscience literature review supporting the three-source model. 
-                  (23,891 characters)
+                  Explores the neural substrates underlying Appetites, Intrinsic Motivation, and Mimetic Desire.
                 </p>
-                <div className="flex items-center gap-4">
-                  <Link 
-                    href="/api/documents/download/aim-neuroscience-grounding" 
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
-                  >
-                    <HiDownload className="mr-2" /> Download PDF
-                  </Link>
-                  <span className="text-sm text-gray-500">Published: October 20, 2025</span>
-                </div>
+                <p className="text-sm text-gray-500">
+                  Available by request • Customized to your research field or topic
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Third Document */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
+          {/* Document Card - Applications */}
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
               <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
@@ -98,23 +99,17 @@ export default function ResearchResourcesPage() {
                 </h3>
                 <p className="text-gray-600 mb-4">
                   Applications across economics, psychology, health, law, education, organizations, and marketing. 
-                  (31,247 characters)
+                  Shows how the AIM Framework provides novel insights and predictions in each field.
                 </p>
-                <div className="flex items-center gap-4">
-                  <Link 
-                    href="/api/documents/download/aim-cross-domain-applications" 
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
-                  >
-                    <HiDownload className="mr-2" /> Download PDF
-                  </Link>
-                  <span className="text-sm text-gray-500">Published: October 20, 2025</span>
-                </div>
+                <p className="text-sm text-gray-500">
+                  Available by request • Customized to your research field or topic
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Fourth Document */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
+          {/* Document Card - Predictions */}
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
               <HiDocumentText className="text-4xl text-primary-600 shrink-0" />
               <div className="flex-1">
@@ -123,20 +118,24 @@ export default function ResearchResourcesPage() {
                 </h3>
                 <p className="text-gray-600 mb-4">
                   Specific, falsifiable hypotheses ready for empirical testing across all domains. 
-                  (18,934 characters)
+                  Includes experimental designs and expected outcomes based on the tri-source motivational model.
                 </p>
-                <div className="flex items-center gap-4">
-                  <Link 
-                    href="/api/documents/download/aim-testable-predictions" 
-                    className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
-                  >
-                    <HiDownload className="mr-2" /> Download PDF
-                  </Link>
-                  <span className="text-sm text-gray-500">Published: October 20, 2025</span>
-                </div>
+                <p className="text-sm text-gray-500">
+                  Available by request • Customized to your research field or topic
+                </p>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Call to Action */}
+        <div className="mt-10 text-center">
+          <Link 
+            href="/contact?interest=research-paper"
+            className="inline-flex items-center px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
+          >
+            Request a Custom Research Paper <HiArrowRight className="ml-2" />
+          </Link>
         </div>
       </section>
 

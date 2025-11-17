@@ -12,7 +12,9 @@ export default function ContactPage() {
     email: '',
     affiliation: '',
     interest: '',
-    message: ''
+    message: '',
+    paperScope: '',
+    paperQuestions: ''
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +37,9 @@ export default function ContactPage() {
           email: '',
           affiliation: '',
           interest: '',
-          message: ''
+          message: '',
+          paperScope: '',
+          paperQuestions: ''
         })
       } else {
         const error = await response.json()
@@ -131,15 +135,17 @@ export default function ContactPage() {
 
             <div>
               <label htmlFor="interest" className="block text-sm font-semibold text-gray-700 mb-2">
-                I&apos;m interested in:
+                I&apos;m interested in: *
               </label>
               <select
                 id="interest"
+                required
                 value={formData.interest}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Select an option</option>
+                <option value="research-paper">Request Research Paper</option>
                 <option value="research">Research Collaboration</option>
                 <option value="testing">Testing & Validation</option>
                 <option value="consulting">Organizational Consulting</option>
@@ -149,19 +155,65 @@ export default function ContactPage() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                Message *
-              </label>
-              <textarea
-                id="message"
-                required
-                rows={6}
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              />
-            </div>
+            {/* Conditional Research Paper Fields */}
+            {formData.interest === 'research-paper' && (
+              <>
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> As Yule is a working lawyer, papers will generally include limited references 
+                    but will provide sufficient information for you to further investigate and critique the framework&apos;s 
+                    application to your specific domain.
+                  </p>
+                </div>
+
+                <div>
+                  <label htmlFor="paperScope" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Research Paper Scope * <span className="text-gray-500 font-normal">(Your field, topic, or domain of interest)</span>
+                  </label>
+                  <textarea
+                    id="paperScope"
+                    required={formData.interest === 'research-paper'}
+                    rows={4}
+                    value={formData.paperScope}
+                    onChange={handleChange}
+                    placeholder="e.g., Application of AIM Framework to consumer behavior in sustainable fashion markets, or neuroscience grounding for mimetic desire in adolescents..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="paperQuestions" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Specific Questions * <span className="text-gray-500 font-normal">(What you want the paper to address)</span>
+                  </label>
+                  <textarea
+                    id="paperQuestions"
+                    required={formData.interest === 'research-paper'}
+                    rows={6}
+                    value={formData.paperQuestions}
+                    onChange={handleChange}
+                    placeholder="e.g., How does the AIM Framework explain the rise of sustainable fashion preferences? What testable predictions can it make about consumer behavior changes? How would you measure intrinsic vs. mimetic motivations in this context?"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Regular message field for non-research-paper requests */}
+            {formData.interest !== 'research-paper' && (
+              <div>
+                <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  required={formData.interest !== 'research-paper'}
+                  rows={6}
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+            )}
 
             <button
               type="submit"

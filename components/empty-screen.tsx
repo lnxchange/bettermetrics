@@ -49,7 +49,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
             Research Note:
           </p>
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            While the AIM Framework is neuroscientifically grounded, hypotheses derived from it can be tested without relying on the underlying neuroscience. The neuroscience merely provided the basis for the AIM formulation.
+            The AIM Framework is neuroscientifically grounded, providing a workable, observable taxonomy of three distinct motivational sources. This grounding makes neuroscience applicable to human behaviour observation. While hypotheses derived from the framework can be tested through behavioural observations, the neuroscience provides the foundational basis that enables the framework&apos;s unique predictive power.
           </p>
         </div>
         <p className="leading-normal text-muted-foreground">
