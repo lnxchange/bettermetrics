@@ -315,10 +315,9 @@ async function importReports() {
       results.categories[articleData.category] = 
         (results.categories[articleData.category] || 0) + 1;
       
-      // NOTE: Upload is commented out for now - uncomment when ready to upload
-      // await uploadArticle(articleData);
+      // Upload article to database
+      await uploadArticle(articleData);
       
-      console.log(`  ✓ Processed successfully`);
       results.successful++;
       
       // Small delay between uploads to avoid rate limiting
@@ -346,9 +345,13 @@ async function importReports() {
       });
   }
   
-  console.log('\n💡 Note: Articles are ready to import!');
-  console.log('   To upload to database, uncomment the uploadArticle() call');
-  console.log('   in scripts/import-reports.js and ensure you are authenticated.\n');
+  if (results.successful > 0) {
+    console.log('\n✅ Articles uploaded to database!');
+    console.log(`   View your articles at: ${API_URL}/admin/articles`);
+    console.log(`   Published articles will appear at: ${API_URL}/articles/[slug]\n`);
+  } else {
+    console.log('\n⚠️  No articles were uploaded. Check errors above.\n');
+  }
 }
 
 // Run the importer
