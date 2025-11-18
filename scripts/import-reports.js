@@ -433,16 +433,21 @@ async function importReports() {
       results.categories[articleData.category] = 
         (results.categories[articleData.category] || 0) + 1;
       
-      // Upload article to database
-      await uploadArticle(articleData);
-      results.successful++;
+      // Try to upload article to database (may fail if duplicate)
+      try {
+        await uploadArticle(articleData);
+        results.successful++;
+      } catch (articleError) {
+        console.error(`  ✗ Article upload failed: ${articleError.message}`);
+        results.failed++;
+      }
       
-      // Also upload to RAG system
+      // Always try to upload to RAG system (independent of article upload)
       try {
         await uploadToRAG(articleData);
         results.ragSuccessful++;
       } catch (ragError) {
-        console.error(`  ⚠️  RAG upload failed (article still saved): ${ragError.message}`);
+        console.error(`  ⚠️  RAG upload failed: ${ragError.message}`);
         results.ragFailed++;
       }
       
@@ -450,7 +455,7 @@ async function importReports() {
       await new Promise(resolve => setTimeout(resolve, 500));
       
     } catch (error) {
-      console.error(`  ✗ Failed: ${error.message}`);
+      console.error(`  ✗ Failed to process file: ${error.message}`);
       results.failed++;
     }
   }

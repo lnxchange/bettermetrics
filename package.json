@@ -15,7 +15,8 @@
     "format:write": "prettier --write \"{app,lib,components}/**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"{app,lib,components}**/*.{ts,tsx,mdx}\" --cache",
     "clean-report-titles": "node scripts/clean-report-titles.js",
-    "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js"
+    "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js",
+    "process-rag-embeddings": "node scripts/process-rag-embeddings.js"
   },
   "dependencies": {
     "@langchain/core": "^1.0.1",
