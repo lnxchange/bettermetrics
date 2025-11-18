@@ -181,10 +181,16 @@ export default function ArticlesPage() {
                     </div>
 
                     <div className="flex flex-col gap-2 ml-4">
+                      <Link href={`/admin/articles/${article.id}/edit`}>
+                        <Button variant="default" size="sm" className="w-full">
+                          Edit
+                        </Button>
+                      </Link>
+
                       {article.status === 'published' && (
                         <Link href={`/articles/${article.slug}`} target="_blank">
-                          <Button variant="outline" size="sm">
-                            View
+                          <Button variant="outline" size="sm" className="w-full">
+                            View Live
                           </Button>
                         </Link>
                       )}

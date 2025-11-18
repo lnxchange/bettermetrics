@@ -57,6 +57,17 @@
       ]
     },
     {
+      "title": "Edit Article",
+      "url": "/admin/articles/[id]/edit",
+      "sections": [
+        {
+          "heading": "Edit Article",
+          "anchor": "",
+          "content": "Status: URL: /articles/ Comma-separated"
+        }
+      ]
+    },
+    {
       "title": "Article Management",
       "url": "/admin/articles",
       "sections": [
@@ -415,6 +426,26 @@
           "heading": "Re-Specifying the Utility Function: Resolving \"Code Drift\" in Behavioral Models via the AIM Framework",
           "anchor": "#re-specifying-the-utility-function-resolving-code-drift-in-behavioral-models-via-the-aim-framework",
           "content": "A formal proposal for behavioral economists, game theorists, and neuroscientists to test the AIM Framework's core predictions Current economic and behavioral models largely rely on a singular metric o"
+        },
+        {
+          "heading": "1. The Problem: \"Code Drift\" in Utility Aggregation",
+          "anchor": "#1-the-problem-code-drift-in-utility-aggregation",
+          "content": "However, this singular definition aggregates three neurobiologically distinct drivers that obey contradictory mathematical laws: The Hypothesis: Treating these three distinct vectors as a single varia"
+        },
+        {
+          "heading": "2. The Proposed Solution: The AIM Vector",
+          "anchor": "#2-the-proposed-solution-the-aim-vector",
+          "content": "We propose abandoning the singular \"Preference\" metric in favor of a tri-partite vector based on the AIM Motivation Framework. We posit that an agent's decision (D) is not a function of maximized Util"
+        },
+        {
+          "heading": "3. Theoretical Application (The \"Contract\")",
+          "anchor": "#3-theoretical-application-the-contract",
+          "content": "Where: A (Appetites): A variable governed by Negative Feedback Loops. It seeks 0 (homeostasis). It is biologically bounded and cyclical."
+        },
+        {
+          "heading": "4. Call to Collaboration",
+          "anchor": "#4-call-to-collaboration",
+          "content": "I (Intrinsic): A variable governed by Internal Reward Loops. It is independent of external observation. It is the source of \"noise\" in standard models but represents \"signal\" in the AIM framework. M ("
         }
       ]
     },
