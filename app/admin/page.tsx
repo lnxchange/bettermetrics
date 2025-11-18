@@ -21,11 +21,40 @@ export default function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           <p className="mt-2 text-gray-600">
-            Manage research documents and RAG system for the AIM Framework
+            Manage articles, research documents, and RAG system for the AIM Framework
           </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Articles Card */}
+          <Card className="border-2 border-primary-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                📝 Articles
+                <span className="text-xs font-normal text-green-600 bg-green-50 px-2 py-1 rounded">New</span>
+              </CardTitle>
+              <CardDescription>
+                Manage published articles and draft reports
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-gray-600">
+                Edit articles, upload featured images, write social media posts, and publish content.
+                Import reports from markdown files and manage your content pipeline.
+              </p>
+              <div className="flex space-x-2">
+                <Button asChild>
+                  <Link href="/admin/articles">Manage Articles</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/admin/new-article">
+                    Create New
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Research Documents Card */}
           <Card>
             <CardHeader>
