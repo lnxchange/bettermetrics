@@ -80,11 +80,28 @@ export default function UnderstandYourMotivationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             The AIM Framework Overview
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add concise definitions and theory for Appetites (A),
-              Intrinsic Motivation (I), and Mimetic Desire (M).
+          <div className="mb-6">
+            <p className="mb-4">
+              The AIM Framework distinguishes three distinct sources of motivation,
+              each operating through different neural pathways and requiring different responses:
             </p>
+            <ul className="space-y-3 text-gray-700">
+              <li>
+                <strong className="text-amber-600">Appetites (A):</strong> Homeostatic
+                motivation arising from physiological deficits (hunger, thirst, temperature
+                dysregulation) with consummatory relief.
+              </li>
+              <li>
+                <strong className="text-teal-600">Intrinsic Motivation (I):</strong> Process-rewarding
+                engagement where the activity itself generates dopaminergic reward, independent
+                of external outcomes.
+              </li>
+              <li>
+                <strong className="text-purple-600">Mimetic Desire (M):</strong> Socially transmitted
+                wanting: observing another person&apos;s pursuit of X increases one&apos;s own
+                valuation of X.
+              </li>
+            </ul>
           </div>
 
           <div className="mb-8 grid gap-6 md:grid-cols-3">
@@ -125,12 +142,35 @@ export default function UnderstandYourMotivationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Personal AIM: Self-Understanding
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about recognizing appetites, cultivating
-              intrinsic motivation, identifying/mitigating mimetic pulls.
-              Include self-assessment exercises and reflection prompts.
-            </p>
+          <div className="mb-6 space-y-4">
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Recognizing Appetites</h4>
+              <p className="text-gray-700">
+                Physical signals like fatigue, hunger, or discomfort indicate appetitive
+                needs. Address these directly through rest, nutrition, or environmental
+                changes. When basic needs are unmet, it&apos;s difficult to engage
+                intrinsically or think clearly about desires.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Cultivating Intrinsic Motivation</h4>
+              <p className="text-gray-700">
+                Identify activities where you lose track of time—these reveal intrinsic
+                engagement. Protect your autonomy and create opportunities for mastery.
+                Be aware that external rewards can undermine intrinsic motivation, so
+                maintain activities you do purely for their own sake.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Identifying Mimetic Pulls</h4>
+              <p className="text-gray-700">
+                Notice desires that arise after seeing others&apos; choices or achievements.
+                Ask yourself: &quot;Would I want this if no one knew?&quot; Mimetic desires
+                aren&apos;t inherently bad—they connect us to others—but recognizing them
+                helps you respond appropriately rather than confusing them with intrinsic
+                interests or genuine needs.
+              </p>
+            </div>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
@@ -165,12 +205,36 @@ export default function UnderstandYourMotivationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Interpersonal AIM: Relationships & Groups
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about how AIM shapes social dynamics,
-              leadership, persuasion, and conflict. Include communication guides
-              and applied examples.
-            </p>
+          <div className="mb-6 space-y-4">
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Social Dynamics</h4>
+              <p className="text-gray-700">
+                Mimetic desire creates both connection (shared interests) and rivalry
+                (competition for scarce status markers). You can reduce rivalry by
+                diversifying what you value—when you recognize excellence across
+                multiple dimensions, people aren&apos;t forced to compete on a single axis.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Leadership</h4>
+              <p className="text-gray-700">
+                Support others&apos; intrinsic motivations rather than relying solely on
+                rewards and punishments. Ensure basic needs are met so people can engage
+                intrinsically with their work. Recognize that different motivational sources
+                require different responses—what works for appetitive compliance won&apos;t
+                foster intrinsic engagement.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-2 font-bold text-gray-900">Conflict Resolution</h4>
+              <p className="text-gray-700">
+                Identify the motivational source: Are you competing for a scarce resource (A),
+                protecting autonomy (I), or caught in mimetic rivalry (M)? Different sources
+                need different solutions. Appetitive conflicts need resource allocation,
+                intrinsic conflicts need autonomy protection, and mimetic conflicts often
+                dissolve when you remove the audience or reframe the competition.
+              </p>
+            </div>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">

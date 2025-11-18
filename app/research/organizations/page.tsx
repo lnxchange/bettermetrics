@@ -49,19 +49,21 @@ export default function OrganizationsPage() {
         {/* Overview */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Overview</h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add comprehensive overview of how AIM transforms
-              organizational understanding, including key organizational
-              phenomena explained by the framework.
-            </p>
-          </div>
-          <p>
+          <p className="mb-4">
             The AIM Framework provides a neuroscientifically grounded foundation
             for understanding organizational behavior. By distinguishing between
             appetitive needs, intrinsic motivations, and mimetic desires, we can
             better predict and explain workplace dynamics, design effective
             organizational structures, and create sustainable work environments.
+          </p>
+          <p>
+            AIM reveals how organizations can shift from status tournaments (mimetic
+            competition for scarce markers) to mission-driven work (intrinsic engagement).
+            Many organizational dysfunctions arise from single-metric recognition systems
+            that create mimetic convergence—everyone competing for the same scarce status
+            markers. By diversifying recognition, ensuring basic needs are met, and
+            protecting intrinsic motivation, organizations can reduce rivalry and increase
+            innovation.
           </p>
         </section>
 
@@ -70,12 +72,18 @@ export default function OrganizationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Organizational Phenomena
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add detailed explanations of how AIM explains specific
-              organizational phenomena like culture, leadership, etc.
-            </p>
-          </div>
+          <p className="mb-6">
+            Traditional performance management often conflates motivational sources: using
+            the same metrics for appetitive compensation (fair pay), intrinsic engagement
+            (meaningful work), and mimetic status (recognition). AIM predicts this creates
+            dysfunction. For example, ranking employees by single metrics intensifies
+            mimetic rivalry while undermining intrinsic motivation. Organizations with
+            diversified recognition across multiple dimensions reduce rivalry because
+            employees can&apos;t converge on a single scarce marker. Leadership that
+            supports autonomy and mastery fosters intrinsic motivation, while
+            command-and-control approaches trigger either mimetic competition or appetitive
+            compliance.
+          </p>
 
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
@@ -181,33 +189,25 @@ export default function OrganizationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Research Questions
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add specific research questions that AIM can help answer in
-              organizational studies, with testable predictions and hypotheses.
-            </p>
-          </div>
-
           <ul className="space-y-4 text-gray-600">
             <li>
-              • How do different motivational sources affect organizational
-              performance?
+              • Does diversified recognition across multiple dimensions reduce mimetic
+              rivalry and increase employee retention?
             </li>
             <li>
-              • What role does intrinsic motivation play in employee retention
-              and satisfaction?
+              • How do different organizational structures affect the balance between
+              intrinsic motivation and status competition?
             </li>
             <li>
-              • How can we design organizations that reduce harmful mimetic
-              competition?
+              • Can organizations measure and track shifts between motivational sources
+              in workplace behavior?
             </li>
             <li>
-              • What are the organizational implications of protecting intrinsic
-              motivation?
+              • What leadership practices protect intrinsic motivation while ensuring
+              basic organizational needs are met?
             </li>
             <li>
-              • How does AIM explain patterns of organizational culture and
-              change?
+              • How does AIM explain patterns of organizational culture and change?
             </li>
           </ul>
         </section>
@@ -217,13 +217,15 @@ export default function OrganizationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Organizational Implications
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about how AIM can inform organizational
-              practice, including specific organizational interventions that
-              account for different motivational sources.
-            </p>
-          </div>
+          <p className="mb-6">
+            Organizational practice informed by AIM would: (1) Diversify recognition across
+            multiple dimensions to prevent mimetic convergence on single status markers,
+            (2) Ensure fair compensation and work conditions (appetitive sufficiency) as
+            foundation for intrinsic engagement, (3) Design roles that support autonomy and
+            mastery rather than pure compliance, (4) Identify when organizational conflict
+            stems from mimetic rivalry versus resource scarcity or autonomy constraints, and
+            (5) Create cultures that value mission-driven work over status competition.
+          </p>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

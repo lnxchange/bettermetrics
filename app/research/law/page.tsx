@@ -282,17 +282,11 @@ export default function LawPage() {
         {/* Research Questions */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Key Research Questions</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add specific research questions that AIM can help answer in law, with testable predictions and hypotheses.
-            </p>
-          </div>
-          
           <ul className="space-y-4 text-gray-600">
-            <li>• How do different motivational sources affect legal compliance?</li>
-            <li>• What role does intrinsic motivation play in just legal systems?</li>
-            <li>• How can we design contracts that reduce mimetic rivalry?</li>
-            <li>• What are the legal implications of protecting intrinsic autonomy?</li>
+            <li>• Can neuroscientific definitions of freedom, respect, and fairness provide consistent application across legal domains?</li>
+            <li>• Do legal interventions that preserve intrinsic autonomy show better compliance than purely punitive approaches?</li>
+            <li>• How does visibility of legal proceedings affect settlement rates through mimetic rivalry mechanisms?</li>
+            <li>• What role does appetitive sufficiency play in legal compliance and crime rates?</li>
             <li>• How does AIM explain patterns of criminal behavior?</li>
           </ul>
         </section>
@@ -300,12 +294,10 @@ export default function LawPage() {
         {/* Policy Implications */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Legal Implications</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <p className="text-yellow-800 font-semibold">
-              TODO: Add content about how AIM can inform legal practice, including specific legal interventions that account for different motivational sources.
-            </p>
-          </div>
-          
+          <p className="mb-6">
+            Legal practice informed by AIM would: (1) Design contracts that preserve intrinsic autonomy through opt-out clauses and renegotiation triggers, (2) Recognize when legal disputes are driven by mimetic rivalry (status, pride) versus genuine resource conflict, (3) Create sealed proceedings or confidential mediation to reduce mimetic escalation, (4) Ensure legal systems address appetitive sufficiency (basic needs) as foundation for justice, and (5) Apply neuroscientifically grounded definitions of freedom, respect, and fairness consistently across legal domains.
+          </p>
+
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">
               <h3 className="text-lg font-bold text-gray-900 mb-2">Contract Law</h3>
