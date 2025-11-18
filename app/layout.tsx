@@ -11,6 +11,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { AIMJsonLd } from '@/components/aim-jsonld'
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
@@ -20,13 +21,18 @@ export const metadata: Metadata = {
     template: '%s | Use Better Metrics'
   },
   description:
-    'The AIM Motivation Framework distinguishes three neural sources—Appetites, Intrinsic Motivation, and Mimetic Desire—to transform understanding across economics, psychology, health, law, and policy.',
+    'Taxonomic framework synthesizing neuroscience, behavioral economics, and systems analysis to resolve definitional inconsistencies in motivation science. Distinguishes three neurologically distinct sources with domain-level predictive applications.',
   keywords: [
     'AIM Framework',
-    'motivation science',
+    'motivational taxonomy',
+    'theoretical synthesis',
     'behavioral economics',
+    'definitional framework',
+    'systems architecture',
+    'neuroscience integration',
     'intrinsic motivation',
-    'mimetic desire'
+    'mimetic desire',
+    'heuristic utility model'
   ],
   authors: [{ name: 'Yule Guttenbeil' }],
   openGraph: {
@@ -68,6 +74,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontMono.variable
         )}
       >
+        <AIMJsonLd />
         {gaId ? (
           <>
             <Script

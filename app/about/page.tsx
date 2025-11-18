@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   title: 'About the AIM Framework',
   description:
-    'Learn about the AIM Motivation Framework: a neuroscience-grounded taxonomy that reclassifies human motivation into three distinct sources.'
+    'The AIM Motivation Framework: a theoretical synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology through a three-source taxonomic model.'
 }
 
 export default function AboutPage() {
@@ -41,14 +41,21 @@ export default function AboutPage() {
           <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">
             A Young but Rapidly Developing Research Programme
           </h2>
-          <div className="prose prose-lg max-w-none">
-            <p>
-              The AIM Motivation Framework is a <strong>proposed theoretical synthesis</strong> that 
-              distinguishes three neural sources of human motivation. It is a young but rapidly developing 
-              research programme with a working mathematical model and domain-level predictions. While it 
-              synthesizes established findings from neuroscience, behavioral economics, and psychology, 
-              it has <strong>not yet been empirically validated</strong> through peer-reviewed research.
-            </p>
+                  <div className="prose prose-lg max-w-none">
+                    <p>
+                      The AIM Motivation Framework is a <strong>theoretical synthesis</strong> integrating established findings from 
+                      neuroscience (mirror neurons, homeostatic regulation, dopaminergic systems), Self-Determination 
+                      Theory, and Girardian mimetic theory into a unified taxonomic model. It is a young but rapidly 
+                      developing research programme with a working mathematical integration equation and falsifiable 
+                      domain-level predictions.
+                    </p>
+                    <p>
+                      This framework serves as a <strong>heuristic utility model</strong>: its theoretical validity is demonstrated 
+                      through its capacity to resolve longstanding anomalies (Easterlin Paradox, Veblen goods, 
+                      mimetic market cascades) that resist explanation under single-variable preference models. 
+                      While the synthesis builds on peer-reviewed research, the integrated framework itself has 
+                      <strong>not yet been independently validated</strong> through controlled empirical studies.
+                    </p>
             <div className="my-6 grid gap-4 text-sm md:grid-cols-2">
               <div>
                 <strong>Status:</strong> Pre-empirical validation

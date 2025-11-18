@@ -7,9 +7,12 @@ import { AIMDefinitionsShort } from '@/components/aim-definitions'
 export const metadata: Metadata = {
   title: 'AIM Motivation Framework | Use Better Metrics',
   description:
-    'A neuroscience-grounded lens for re-reading existing observations about human behavior through three distinct motivational sources: Appetites, Intrinsic Motivation, and Mimetic Desire.',
+    'A taxonomic framework synthesizing neuroscience, behavioral economics, and legal systems analysis to resolve definitional inconsistencies in motivation science. Classifies behavior through three neurologically distinct sources.',
   keywords: [
     'AIM Framework',
+    'motivational taxonomy',
+    'behavioral economics synthesis',
+    'definitional framework',
     'motivation',
     'psychology',
     'economics',
@@ -17,7 +20,8 @@ export const metadata: Metadata = {
     'behavioral science',
     'mimetic desire',
     'intrinsic motivation',
-    'descriptive framework'
+    'systems architecture',
+    'theoretical synthesis'
   ],
   authors: [{ name: 'Yule Guttenbeil' }],
   openGraph: {
@@ -50,14 +54,14 @@ export default function HomePage() {
               A Descriptive Lens for What We Already Know
             </h1>
             <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 sm:text-2xl">
-              Use Better Metrics is the home of the <strong>AIM Motivation Framework</strong>: 
-              a neuroscience-grounded way of re-reading what researchers have already observed about human behavior.
+              Use Better Metrics presents the <strong>AIM Motivation Framework</strong>: a taxonomic synthesis 
+              built on established neuroscience, Girardian theory, and behavioral economics research.
             </p>
             <p className="mx-auto mb-12 max-w-4xl text-lg text-gray-700">
-              Instead of treating &quot;preferences&quot; or &quot;needs&quot; as a single black-box variable, 
-              AIM reclassifies them into <strong>three neural sources of motivation</strong>—
-              Appetites, Intrinsic Motivation, and Mimetic Desire—and shows how they combine 
-              in the brain&apos;s common-currency valuation system.
+              Synthesizing findings from mirror neuron systems (Rizzolatti), Self-Determination Theory (Deci &amp; Ryan), 
+              and homeostatic regulation research, the framework reclassifies &quot;preferences&quot; into <strong>three 
+              neurologically distinct motivational sources</strong>—Appetites, Intrinsic Motivation, and Mimetic Desire—
+              demonstrating how they integrate through the brain&apos;s common-currency valuation system (vmPFC/VS).
             </p>
             
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -216,13 +220,14 @@ export default function HomePage() {
               </div>
               <div className="flex-1">
                 <p className="mb-4 text-lg text-gray-700">
-                  I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the 
-                  AIM Motivation Framework and created Use Better Metrics.
+                  I&apos;m <strong>Yule Guttenbeil</strong>, Principal Commercial Lawyer &amp; Behavioral Systems Architect, 
+                  creator of the AIM Motivation Framework.
                 </p>
                 <p className="text-lg text-gray-700">
-                  My background is in commercial law and management, where I have spent years 
-                  drafting and analyzing contracts—systems where every definition has to fit with 
-                  every other or the whole arrangement starts to grind.
+                  My professional training in commercial law and contract systems—where definitional precision 
+                  is non-negotiable—provides the specific methodology required for this project. The behavioral 
+                  sciences suffer from &quot;Code Drift&quot;: drifting definitions of wants, needs, and preferences 
+                  across disciplines. AIM applies legal-grade definitional rigor to resolve these inconsistencies.
                 </p>
               </div>
             </div>
@@ -298,12 +303,17 @@ export default function HomePage() {
                 testable hypotheses and tightly bounded experiments to validate its premises.
               </p>
               <p className="text-lg text-gray-700">
-                I am not a professional psychologist, economist, philosopher, or neuroscientist. Though I have 
-                read broadly across those fields, my knowledge within each is nowhere near as deep as those 
-                who practice in them. Therefore, I am seeking assistance from experts in each field to help 
-                validate the framework—because if what AIM suggests is correct, it may provide a scientific 
-                basis for understanding previously contested concepts in ways that enable more careful policy, 
-                institutional design, and interpersonal respect.
+                While not a clinical neuroscientist or experimental psychologist, my background as a commercial 
+                law practitioner equips me with the precise skill set this synthesis requires: resolving 
+                definitional inconsistencies across complex systems. The AIM Framework addresses &quot;Code Drift&quot;—
+                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible 
+                definitions of motivation, causing theoretical gridlock.
+              </p>
+              <p className="text-lg text-gray-700">
+                This framework functions as a heuristic utility model. Its validity is demonstrated through 
+                its capacity to predict and resolve system failures (such as the Easterlin Paradox, inelastic 
+                demand for essentials, and mimetic market cascades) where standard single-variable models fail. 
+                I am seeking research collaborators to empirically test these predictions across domains.
               </p>
             </div>
 
