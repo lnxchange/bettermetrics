@@ -6,11 +6,10 @@
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
-  -- Check if user has admin role in auth.users metadata
-  -- Or check profiles table if you have a role column there
+  -- Check if user has is_admin = true in auth.users metadata
   RETURN (
     SELECT COALESCE(
-      (auth.jwt() -> 'user_metadata' ->> 'role')::text = 'admin',
+      (auth.jwt() -> 'user_metadata' ->> 'is_admin')::boolean,
       false
     )
   );

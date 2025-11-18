@@ -36,7 +36,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
   RETURN (
     SELECT COALESCE(
-      (auth.jwt() -> 'user_metadata' ->> 'role')::text = 'admin',
+      (auth.jwt() -> 'user_metadata' ->> 'is_admin')::boolean,
       false
     )
   );
@@ -171,11 +171,11 @@ END $$;
 2. Find your user account
 3. Click on your user to edit
 4. Scroll to **User Metadata** section
-5. Add this JSON:
+5. Add or update this in the JSON:
 
 ```json
 {
-  "role": "admin"
+  "is_admin": true
 }
 ```
 
@@ -189,7 +189,7 @@ Run this in **Supabase SQL Editor**:
 ```sql
 -- Replace 'your-email@example.com' with your actual email
 UPDATE auth.users
-SET raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
+SET raw_user_meta_data = raw_user_meta_data || '{"is_admin": true}'::jsonb
 WHERE email = 'your-email@example.com';
 ```
 
@@ -215,12 +215,12 @@ To give admin access to another user:
 1. Go to **Supabase → Authentication → Users**
 2. Find the user
 3. Edit their **User Metadata**
-4. Add: `{"role": "admin"}`
+4. Add: `{"is_admin": true}`
 
 ### Via SQL:
 ```sql
 UPDATE auth.users
-SET raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
+SET raw_user_meta_data = raw_user_meta_data || '{"is_admin": true}'::jsonb
 WHERE email = 'new-admin@example.com';
 ```
 
@@ -230,13 +230,19 @@ WHERE email = 'new-admin@example.com';
 
 ### Via Dashboard:
 1. Edit user metadata
-2. Remove the `"role": "admin"` field
-3. Or change to: `{"role": "user"}`
+2. Change `"is_admin": true` to `"is_admin": false`
+3. Or remove the `"is_admin"` field entirely
 
 ### Via SQL:
 ```sql
+-- Option 1: Set to false
 UPDATE auth.users
-SET raw_user_meta_data = raw_user_meta_data - 'role'
+SET raw_user_meta_data = raw_user_meta_data || '{"is_admin": false}'::jsonb
+WHERE email = 'user@example.com';
+
+-- Option 2: Remove the field
+UPDATE auth.users
+SET raw_user_meta_data = raw_user_meta_data - 'is_admin'
 WHERE email = 'user@example.com';
 ```
 
@@ -248,12 +254,12 @@ WHERE email = 'user@example.com';
 
 **Solution:** Make sure you:
 1. Ran both migrations
-2. Set your user metadata to `{"role": "admin"}`
+2. Set your user metadata to `{"is_admin": true}`
 3. **Logged out and back in** (crucial!)
-4. Check in Supabase if your user has the admin role:
+4. Check in Supabase if your user has admin status:
 
 ```sql
-SELECT email, raw_user_meta_data->>'role' as role
+SELECT email, raw_user_meta_data->>'is_admin' as is_admin
 FROM auth.users
 WHERE email = 'your-email@example.com';
 ```
@@ -262,8 +268,8 @@ WHERE email = 'your-email@example.com';
 
 **Check:**
 1. You're logged in
-2. Your user has `"role": "admin"` in metadata
-3. You refreshed your browser after setting admin role
+2. Your user has `"is_admin": true` in metadata
+3. You refreshed your browser after setting admin status
 4. RLS policies are correctly applied:
 
 ```sql
@@ -312,7 +318,7 @@ For production, consider:
 **To get admin access:**
 1. ✅ Run migration 1 (articles RLS)
 2. ✅ Run migration 2 (other tables RLS)
-3. ✅ Set your user metadata: `{"role": "admin"}`
+3. ✅ Set your user metadata: `{"is_admin": true}`
 4. ✅ Log out and log back in
 5. ✅ Access https://usebettermetrics.com/admin/articles
 
