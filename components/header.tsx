@@ -226,6 +226,13 @@ export function Header({ session }: HeaderProps) {
                 <div className="font-semibold">Scientific Definitions</div>
                 <div className="text-xs text-gray-500">Precise terminology and measurements</div>
               </Link>
+              <Link
+                href="/research/hypothesis"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
+              >
+                <div className="font-semibold">Research Hypothesis</div>
+                <div className="text-xs text-gray-500">Formal proposal for empirical testing</div>
+              </Link>
               <div className="my-2 border-t border-gray-200"></div>
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
                 Research Programme
@@ -419,6 +426,13 @@ export function Header({ session }: HeaderProps) {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Scientific Definitions
+              </Link>
+              <Link
+                href="/research/hypothesis"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Research Hypothesis
               </Link>
               <Link
                 href="/research-resources"
