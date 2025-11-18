@@ -306,10 +306,81 @@ async function uploadArticle(articleData) {
       throw new Error(`Database error: ${error.message}`);
     }
     
-    console.log(`  ✓ Uploaded successfully (ID: ${data.id})`);
+    console.log(`  ✓ Uploaded to articles (ID: ${data.id})`);
     return data;
   } catch (error) {
     console.error(`  ✗ Upload error: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Upload document to RAG system
+ */
+async function uploadToRAG(articleData) {
+  try {
+    // Get current user ID
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    let userId = null;
+    if (!authError && user) {
+      userId = user.id;
+    }
+    
+    // Prepare RAG document record
+    const ragRecord = {
+      title: articleData.title,
+      content: articleData.content,
+      uploaded_by: userId,
+      file_type: 'text/markdown',
+      metadata: {
+        category: articleData.category,
+        tags: articleData.tags.split(',').map(t => t.trim()),
+        author: articleData.author,
+        slug: articleData.slug,
+        source: 'report_import'
+      },
+      created_at: new Date().toISOString()
+    };
+    
+    // Insert into rag_documents table
+    const { data: ragDoc, error: ragError } = await supabase
+      .from('rag_documents')
+      .insert(ragRecord)
+      .select()
+      .single();
+    
+    if (ragError) {
+      throw new Error(`RAG database error: ${ragError.message}`);
+    }
+    
+    console.log(`  ✓ Uploaded to RAG (ID: ${ragDoc.id})`);
+    
+    // Now process the document to generate embeddings
+    // We'll call the process-document API endpoint
+    const processUrl = `${API_URL}/api/admin/process-document`;
+    
+    const response = await fetch(processUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: ragDoc.id,
+        documentType: 'rag'
+      })
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to process embeddings: ${response.status} - ${errorText}`);
+    }
+    
+    console.log(`  ✓ Embeddings generated successfully`);
+    
+    return ragDoc;
+  } catch (error) {
+    console.error(`  ✗ RAG upload error: ${error.message}`);
     throw error;
   }
 }
@@ -346,6 +417,8 @@ async function importReports() {
     total: files.length,
     successful: 0,
     failed: 0,
+    ragSuccessful: 0,
+    ragFailed: 0,
     categories: {}
   };
   
@@ -362,11 +435,19 @@ async function importReports() {
       
       // Upload article to database
       await uploadArticle(articleData);
-      
       results.successful++;
       
+      // Also upload to RAG system
+      try {
+        await uploadToRAG(articleData);
+        results.ragSuccessful++;
+      } catch (ragError) {
+        console.error(`  ⚠️  RAG upload failed (article still saved): ${ragError.message}`);
+        results.ragFailed++;
+      }
+      
       // Small delay between uploads to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
     } catch (error) {
       console.error(`  ✗ Failed: ${error.message}`);
@@ -378,8 +459,12 @@ async function importReports() {
   console.log('\n' + '='.repeat(50));
   console.log('\n📊 Import Summary:');
   console.log(`   Total files: ${results.total}`);
+  console.log(`\n   Articles:`);
   console.log(`   ✅ Successful: ${results.successful}`);
   console.log(`   ❌ Failed: ${results.failed}`);
+  console.log(`\n   RAG Documents (Chatbot):`);
+  console.log(`   ✅ Successful: ${results.ragSuccessful}`);
+  console.log(`   ❌ Failed: ${results.ragFailed}`);
   
   if (Object.keys(results.categories).length > 0) {
     console.log('\n📁 Categories:');
@@ -393,9 +478,15 @@ async function importReports() {
   if (results.successful > 0) {
     console.log('\n✅ Articles uploaded to database!');
     console.log(`   View your articles at: ${API_URL}/admin/articles`);
-    console.log(`   Published articles will appear at: ${API_URL}/articles/[slug]\n`);
-  } else {
-    console.log('\n⚠️  No articles were uploaded. Check errors above.\n');
+    console.log(`   Published articles will appear at: ${API_URL}/articles/[slug]`);
+  }
+  
+  if (results.ragSuccessful > 0) {
+    console.log('\n🤖 RAG Documents uploaded successfully!');
+    console.log(`   Your chatbot can now reference these ${results.ragSuccessful} reports`);
+    console.log(`   Test it at: ${API_URL}/chat\n`);
+  } else if (results.ragFailed > 0) {
+    console.log('\n⚠️  Some RAG uploads failed. Reports are saved as articles but not available to chatbot.\n');
   }
 }
 
