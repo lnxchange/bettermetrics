@@ -548,47 +548,52 @@
         {
           "heading": "Research Methodology",
           "anchor": "",
-          "content": "How to test, validate, and apply the AIM Framework with scientific rigor All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access research materials → The AIM Framework provides a neuroscientifically grounded theory of human motivatio"
+          "content": "Testing the AIM Framework through observability manipulation and source isolation All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access research materials → The defining characteristic of intrinsic motivation is that it persists in"
         },
         {
-          "heading": "Methodological Approach",
-          "anchor": "#methodological-approach",
-          "content": "How to test, validate, and apply the AIM Framework with scientific rigor All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access rese"
+          "heading": "The Central Test: Persistence in Private",
+          "anchor": "#the-central-test-persistence-in-private",
+          "content": "Testing the AIM Framework through observability manipulation and source isolation All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Ac"
         },
         {
-          "heading": "Measuring Motivational Sources",
-          "anchor": "#measuring-motivational-sources",
-          "content": "The AIM Framework provides a neuroscientifically grounded theory of human motivation that generates testable predictions across multiple domains. Our methodology emphasizes: Distinguishing between App"
+          "heading": "Distinguishing A, I, and M: Three Methods",
+          "anchor": "#distinguishing-a-i-and-m-three-methods",
+          "content": "The defining characteristic of intrinsic motivation is that it persists in private—when there's no audience, no social signaling, no status competition. Measuring output of unobserved activities is ho"
         },
         {
-          "heading": "Experimental Design Principles",
-          "anchor": "#experimental-design-principles",
+          "heading": "Validated Measurement Scales",
+          "anchor": "#validated-measurement-scales",
+          "content": "Traditional motivation research struggles to distinguish intrinsic engagement from status-seeking because both can look identical under observation. AIM solves this by manipulating observability: If b"
+        },
+        {
+          "heading": "Five Core Experimental Designs",
+          "anchor": "#five-core-experimental-designs",
           "content": "Physiological Markers: Behavioral Signatures:"
         },
         {
-          "heading": "Statistical Approaches",
-          "anchor": "#statistical-approaches",
-          "content": "Validated Scales: Behavioral Signatures:"
+          "heading": "Statistical Analysis Methods",
+          "anchor": "#statistical-analysis-methods",
+          "content": "This is the critical test. Compare behavior under public versus private conditions to isolate intrinsic from mimetic motivation. Experimental Design:"
+        },
+        {
+          "heading": "Framework-Level Falsification Criteria",
+          "anchor": "#framework-level-falsification-criteria",
+          "content": "Predicted Outcomes: Intrinsic motivation shows stable persistence over time (6-12+ months), while mimetic motivation tracks social context and shows volatility."
         },
         {
           "heading": "Cross-Domain Validation Strategy",
           "anchor": "#cross-domain-validation-strategy",
-          "content": "Experimental Manipulations: Behavioral Signatures:"
+          "content": "Track Over Time: Combine observability manipulation with validated psychological scales for robust measurement:"
         },
         {
-          "heading": "Falsification Criteria",
-          "anchor": "#falsification-criteria",
-          "content": "AIM predictions can be tested through carefully designed experiments that isolate motivational sources: Compare behavior under public versus private conditions to isolate mimetic effects. If a behavio"
-        },
-        {
-          "heading": "Collaboration & Data Sharing",
-          "anchor": "#collaboration-data-sharing",
-          "content": "Example: Test whether legal settlement rates increase when proceedings are sealed versus public (Prediction 8). Ensure participants' appetitive needs are met to isolate intrinsic and mimetic motivatio"
+          "heading": "Open Science Commitments",
+          "anchor": "#open-science-commitments",
+          "content": "Behavioral indicators: Time distortion during activity, persistence without rewards, resistance to overjustification effect Experimental manipulations: Model status variations, audience presence/absen"
         },
         {
           "heading": "Ready to Test AIM in Your Research?",
           "anchor": "#ready-to-test-aim-in-your-research",
-          "content": "Example: Standardize meal timing and sleep before testing intrinsic motivation interventions in educational settings. Manipulate when different types of feedback are provided to test whether timing af"
+          "content": "Test whether the SEQUENCE of feedback affects motivational source. AIM predicts that establishing private competence before introducing social comparison preserves intrinsic motivation. Design:"
         }
       ]
     },

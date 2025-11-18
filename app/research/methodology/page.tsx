@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Research Methodology',
   description:
-    'How the AIM Framework can be tested, validated, and applied across research domains with rigorous scientific methodology.'
+    'How to test, validate, and apply the AIM Framework with scientific rigor through observability manipulation and motivational source isolation.'
 }
 
 export default function MethodologyPage() {
@@ -17,7 +17,7 @@ export default function MethodologyPage() {
             Research Methodology
           </h1>
           <p className="text-xl text-gray-600">
-            How to test, validate, and apply the AIM Framework with scientific rigor
+            Testing the AIM Framework through observability manipulation and source isolation
           </p>
         </div>
       </section>
@@ -46,267 +46,455 @@ export default function MethodologyPage() {
 
       {/* Content */}
       <article className="prose prose-lg mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        {/* Overview */}
+        {/* Core Methodological Insight */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Methodological Approach
+            The Central Test: Persistence in Private
           </h2>
-          <p className="mb-4">
-            The AIM Framework provides a neuroscientifically grounded theory of
-            human motivation that generates testable predictions across multiple
-            domains. Our methodology emphasizes:
-          </p>
-          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
-            <li>
-              <strong>Falsifiability:</strong> Every prediction includes explicit
-              criteria for what would disprove it
-            </li>
-            <li>
-              <strong>Cross-domain validation:</strong> Testing predictions across
-              psychology, economics, education, health, law, marketing, and
-              organizational behavior
-            </li>
-            <li>
-              <strong>Neural grounding:</strong> Connecting behavioral predictions
-              to specific neural mechanisms
-            </li>
-            <li>
-              <strong>Quantitative measurement:</strong> Using validated scales and
-              physiological markers to assess motivational sources
-            </li>
-            <li>
-              <strong>Replication:</strong> Encouraging independent validation of
-              all findings
-            </li>
-          </ol>
+
+          <div className="mb-6 rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
+            <h3 className="mb-4 text-2xl font-bold text-teal-900">
+              Intrinsic Motivation Persists When Unobserved
+            </h3>
+            <p className="mb-4 text-gray-700">
+              The defining characteristic of intrinsic motivation is that it
+              <strong> persists in private</strong>—when there&apos;s no audience, no
+              social signaling, no status competition. Measuring output of unobserved
+              activities is how we test for true intrinsic engagement.
+            </p>
+            <div className="space-y-3 rounded-lg border border-teal-300 bg-white p-4">
+              <p className="font-semibold text-gray-900">The Three Signatures:</p>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>
+                  <strong>Appetites (A):</strong> Cyclical, satiable, state-dependent
+                  — behavior stops when physiological need is met
+                </li>
+                <li>
+                  <strong>Intrinsic Motivation (I):</strong> Persists in private,
+                  autonomy-aligned, context-independent — behavior continues without
+                  observation
+                </li>
+                <li>
+                  <strong>Mimetic Desire (M):</strong> Observability-sensitive,
+                  rivalry-prone — behavior decreases or stops when audience is removed
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mb-6 rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6">
+            <h3 className="mb-3 text-xl font-bold text-purple-900">
+              Why This Matters
+            </h3>
+            <p className="text-gray-700">
+              Traditional motivation research struggles to distinguish intrinsic
+              engagement from status-seeking because both can look identical under
+              observation. AIM solves this by manipulating observability: If behavior
+              persists when made private, it was intrinsic. If it drops, it was mimetic.
+            </p>
+          </div>
         </section>
 
-        {/* Measuring Motivational Sources */}
+        {/* Distinguishing the Three Sources */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Measuring Motivational Sources
+            Distinguishing A, I, and M: Three Methods
           </h2>
-          <p className="mb-6">
-            Distinguishing between Appetites (A), Intrinsic Motivation (I), and
-            Mimetic Desire (M) requires multiple measurement approaches:
-          </p>
 
-          <div className="mb-8 grid gap-8 md:grid-cols-3">
+          <div className="mb-8 space-y-6">
             <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Appetites <span className="text-amber-600">(A)</span>
+                Method 1: Measure Physiological State <span className="text-amber-600">(for A)</span>
               </h3>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Physiological Markers:
+              <p className="mb-4 text-gray-700">
+                Appetitive motivation is state-dependent and physiologically measurable.
+                Control for basic needs to isolate I and M.
               </p>
-              <ul className="mb-3 space-y-1 text-sm text-gray-600">
-                <li>• Glucose levels</li>
-                <li>• Hydration status</li>
-                <li>• Sleep duration</li>
-                <li>• Core temperature</li>
-              </ul>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Behavioral Signatures:
-              </p>
-              <ul className="space-y-1 text-sm text-gray-600">
-                <li>• Satisfaction upon consumption</li>
-                <li>• Predictable circadian patterns</li>
-                <li>• Reduced wanting after consumption</li>
-              </ul>
+              <div className="space-y-2 text-sm">
+                <p className="font-semibold text-gray-900">Physiological Markers:</p>
+                <ul className="ml-6 list-disc space-y-1 text-gray-600">
+                  <li>Glucose levels, hydration status</li>
+                  <li>Sleep duration and quality</li>
+                  <li>Core temperature regulation</li>
+                  <li>Circadian rhythm patterns</li>
+                </ul>
+                <p className="font-semibold text-gray-900 mt-3">Behavioral Signatures:</p>
+                <ul className="ml-6 list-disc space-y-1 text-gray-600">
+                  <li>Satisfaction upon consumption (behavior stops when sated)</li>
+                  <li>Predictable cyclical patterns</li>
+                  <li>Reduced wanting after physiological need is met</li>
+                </ul>
+              </div>
             </div>
 
             <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Intrinsic Motivation <span className="text-teal-600">(I)</span>
+                Method 2: Manipulate Observability <span className="text-teal-600">(for I vs M)</span>
               </h3>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Validated Scales:
+              <p className="mb-4 text-gray-700">
+                This is the critical test. Compare behavior under public versus private
+                conditions to isolate intrinsic from mimetic motivation.
               </p>
-              <ul className="mb-3 space-y-1 text-sm text-gray-600">
-                <li>• Intrinsic Motivation Inventory (IMI)</li>
-                <li>• Flow State Scale</li>
-                <li>• Basic Psychological Needs Scale</li>
-              </ul>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Behavioral Signatures:
-              </p>
-              <ul className="space-y-1 text-sm text-gray-600">
-                <li>• Time distortion during activity</li>
-                <li>• Persistence without external rewards</li>
-                <li>• Resistance to overjustification</li>
-              </ul>
+              <div className="space-y-3">
+                <div className="rounded-lg border border-teal-300 bg-white p-4">
+                  <p className="mb-2 font-semibold text-gray-900">Experimental Design:</p>
+                  <ol className="space-y-2 text-sm text-gray-700">
+                    <li>
+                      <strong>Condition A (Public):</strong> Activity is observable,
+                      visible to others, status-relevant
+                    </li>
+                    <li>
+                      <strong>Condition B (Private):</strong> Same activity,
+                      completely unobserved, no social signaling possible
+                    </li>
+                    <li>
+                      <strong>Measure:</strong> Time spent, effort exerted, output
+                      produced, persistence over time
+                    </li>
+                  </ol>
+                </div>
+                <div className="rounded-lg bg-teal-100 p-4">
+                  <p className="font-semibold text-teal-900">Predicted Outcomes:</p>
+                  <ul className="mt-2 space-y-1 text-sm text-gray-700">
+                    <li>
+                      • <strong>If I-dominated:</strong> No decrease (or slight
+                      increase) in private condition
+                    </li>
+                    <li>
+                      • <strong>If M-dominated:</strong> Significant decrease in
+                      private condition
+                    </li>
+                    <li>
+                      • <strong>If mixed:</strong> Partial decrease reveals relative
+                      weights w<sub>I</sub> and w<sub>M</sub>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div className="rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Mimetic Desire <span className="text-purple-600">(M)</span>
+                Method 3: Longitudinal Tracking <span className="text-purple-600">(for stability)</span>
               </h3>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Experimental Manipulations:
+              <p className="mb-4 text-gray-700">
+                Intrinsic motivation shows stable persistence over time (6-12+ months),
+                while mimetic motivation tracks social context and shows volatility.
               </p>
-              <ul className="mb-3 space-y-1 text-sm text-gray-600">
-                <li>• Social observability conditions</li>
-                <li>• Model status variations</li>
-                <li>• Audience presence/absence</li>
-              </ul>
-              <p className="mb-3 text-sm font-semibold text-gray-900">
-                Behavioral Signatures:
-              </p>
-              <ul className="space-y-1 text-sm text-gray-600">
-                <li>• Increased wanting after observation</li>
-                <li>• Status-dependent valuation</li>
-                <li>• Reduction when audience removed</li>
-              </ul>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p className="font-semibold text-gray-900">Track Over Time:</p>
+                <ul className="ml-6 list-disc space-y-1">
+                  <li>Engagement levels without external rewards</li>
+                  <li>Response to social context changes</li>
+                  <li>Stability across different environments</li>
+                  <li>Resistance to mimetic triggers</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Experimental Design Principles */}
+        {/* Validated Measurement Tools */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Experimental Design Principles
+            Validated Measurement Scales
           </h2>
-          <p className="mb-6">
-            AIM predictions can be tested through carefully designed experiments
-            that isolate motivational sources:
+          <p className="mb-6 text-gray-700">
+            Combine observability manipulation with validated psychological scales
+            for robust measurement:
           </p>
+
+          <div className="space-y-4">
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                For Intrinsic Motivation (I)
+              </h3>
+              <ul className="space-y-2 text-gray-700">
+                <li>• Intrinsic Motivation Inventory (IMI)</li>
+                <li>• Flow State Scale</li>
+                <li>• Basic Psychological Needs Scale (autonomy subscale)</li>
+                <li>• Self-Determination Index</li>
+              </ul>
+              <p className="mt-3 text-sm text-gray-600">
+                <strong>Behavioral indicators:</strong> Time distortion during activity,
+                persistence without rewards, resistance to overjustification effect
+              </p>
+            </div>
+
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                For Mimetic Desire (M)
+              </h3>
+              <ul className="space-y-2 text-gray-700">
+                <li>• Social Comparison Orientation Scale</li>
+                <li>• Status-Seeking Scale</li>
+                <li>• Observability sensitivity measures (custom)</li>
+              </ul>
+              <p className="mt-3 text-sm text-gray-600">
+                <strong>Experimental manipulations:</strong> Model status variations,
+                audience presence/absence, visibility conditions
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Core Experimental Designs */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">
+            Five Core Experimental Designs
+          </h2>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-600 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
-                1. Manipulate Observability
+                1. Private-Then-Public Sequence
               </h3>
               <p className="mb-3 text-gray-700">
-                Compare behavior under public versus private conditions to isolate
-                mimetic effects. If a behavior is mimetically driven, it should
-                significantly change when social observation is removed.
+                Test whether the SEQUENCE of feedback affects motivational source.
+                AIM predicts that establishing private competence before introducing
+                social comparison preserves intrinsic motivation.
               </p>
-              <p className="text-sm text-gray-600">
-                <strong>Example:</strong> Test whether legal settlement rates
-                increase when proceedings are sealed versus public (Prediction 8).
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Design:</p>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li>
+                    <strong>Condition A:</strong> Private competence feedback → 1
+                    week later → public ranking
+                  </li>
+                  <li>
+                    <strong>Condition B:</strong> Public ranking → private feedback
+                  </li>
+                  <li>
+                    <strong>Condition C:</strong> Private feedback only (control)
+                  </li>
+                  <li>
+                    <strong>Measure:</strong> Subsequent engagement when made fully
+                    private (6 weeks later)
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>Falsification:</strong> If Condition A performs like Condition
+                B, sequence timing doesn&apos;t matter (w<sub>I</sub> protection fails)
               </p>
             </div>
 
             <div className="border-l-4 border-primary-600 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
-                2. Control for Physiological State
+                2. Audience Removal Test
               </h3>
               <p className="mb-3 text-gray-700">
-                Ensure participants&apos; appetitive needs are met to isolate
-                intrinsic and mimetic motivations. Hungry, tired, or uncomfortable
-                participants cannot reliably demonstrate intrinsic engagement.
+                Compare performance/engagement before and after removing social
+                observation. The drop in output reveals mimetic weight.
               </p>
-              <p className="text-sm text-gray-600">
-                <strong>Example:</strong> Standardize meal timing and sleep before
-                testing intrinsic motivation interventions in educational settings.
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Design:</p>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li>
+                    <strong>Phase 1:</strong> Public activity with audience/ranking
+                    (baseline)
+                  </li>
+                  <li>
+                    <strong>Phase 2:</strong> Same activity, completely private
+                    (no visibility)
+                  </li>
+                  <li>
+                    <strong>Measure:</strong> % change in time, effort, output
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>Example applications:</strong> Legal settlements (sealed vs
+                public), exercise programs (solo vs group), work output (remote vs office)
               </p>
             </div>
 
             <div className="border-l-4 border-primary-600 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
-                3. Sequence Feedback Timing
+                3. Model Status Manipulation
               </h3>
               <p className="mb-3 text-gray-700">
-                Manipulate when different types of feedback are provided to test
-                whether timing affects motivational source. AIM predicts that
-                private competence feedback before public comparison preserves
-                intrinsic motivation.
+                Vary the status of social models to test whether behavior change
+                tracks model characteristics rather than object attributes (mimetic
+                mechanism).
               </p>
-              <p className="text-sm text-gray-600">
-                <strong>Example:</strong> Compare student engagement when grades are
-                provided privately first versus publicly ranked immediately
-                (Prediction 10).
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Design:</p>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li>
+                    <strong>Condition A:</strong> High-status model demonstrates choice
+                  </li>
+                  <li>
+                    <strong>Condition B:</strong> Low-status model demonstrates same
+                    choice
+                  </li>
+                  <li>
+                    <strong>Condition C:</strong> No model (control)
+                  </li>
+                  <li>
+                    <strong>Measure:</strong> Adoption rate and persistence
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>Falsification:</strong> If status makes no difference, mimetic
+                transmission claim fails
               </p>
             </div>
 
             <div className="border-l-4 border-primary-600 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
-                4. Vary Model Status
+                4. Appetitive Control Protocol
               </h3>
               <p className="mb-3 text-gray-700">
-                Systematically manipulate the status or attractiveness of social
-                models to test whether behavior changes track model characteristics
-                rather than objective features of the target.
+                Ensure physiological needs are met before testing I vs M to prevent
+                appetitive deficits from confounding results.
               </p>
-              <p className="text-sm text-gray-600">
-                <strong>Example:</strong> Test whether food consumption increases
-                more when a high-status versus low-status dining companion eats more
-                (Prediction 6).
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">
+                  Standardize Before Testing:
+                </p>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li>• Meal timing (test 2-3 hours after eating)</li>
+                  <li>• Sleep duration (minimum 7 hours)</li>
+                  <li>• Hydration status</li>
+                  <li>• Environmental comfort (temperature, noise)</li>
+                </ul>
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>Why critical:</strong> Hungry, tired, or uncomfortable
+                participants cannot reliably demonstrate intrinsic engagement
               </p>
             </div>
 
             <div className="border-l-4 border-primary-600 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
-                5. Longitudinal Tracking
+                5. Longitudinal Stability Test
               </h3>
               <p className="mb-3 text-gray-700">
-                Track behavior over extended periods (6-12+ months) to distinguish
-                temporary effects from stable changes. Mimetic motivations should
-                show less persistence than intrinsic motivations.
+                Track behavior over 6-12+ months to distinguish stable intrinsic
+                engagement from volatile mimetic patterns.
               </p>
-              <p className="text-sm text-gray-600">
-                <strong>Example:</strong> Compare 12-month retention in exercise
-                programs designed for intrinsic enjoyment versus appearance goals
-                (Prediction 7).
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Design:</p>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li>
+                    <strong>High-I condition:</strong> Design emphasizing skill
+                    progression, private milestones, autonomy
+                  </li>
+                  <li>
+                    <strong>High-M condition:</strong> Design emphasizing leaderboards,
+                    social comparison, status markers
+                  </li>
+                  <li>
+                    <strong>Measure:</strong> 6-month and 12-month retention curves
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>Falsification:</strong> If both show identical retention,
+                I vs M classification fails
               </p>
             </div>
           </div>
         </section>
 
-        {/* Statistical Analysis */}
+        {/* Statistical Approaches */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Statistical Approaches
+            Statistical Analysis Methods
           </h2>
-          <p className="mb-6">
-            Validating AIM predictions requires appropriate statistical methods:
-          </p>
 
           <div className="space-y-6">
             <div className="rounded-xl border-2 border-gray-200 bg-white p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
                 Mediation Analysis
               </h3>
-              <p className="text-gray-600">
-                Test whether changes in motivational source (A, I, or M) mediate
-                the relationship between interventions and outcomes. This validates
-                that the proposed mechanism is actually responsible for observed
-                effects.
+              <p className="text-gray-700">
+                Test whether changes in motivational source (w<sub>A</sub>, w
+                <sub>I</sub>, or w<sub>M</sub>) mediate the relationship between
+                interventions and outcomes. This validates that the proposed mechanism
+                is actually responsible for observed effects.
               </p>
             </div>
 
             <div className="rounded-xl border-2 border-gray-200 bg-white p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Moderation Analysis
+                Within-Subject Designs
               </h3>
-              <p className="text-gray-600">
-                Examine whether individual differences or contextual factors
-                moderate the strength of AIM effects. This helps identify boundary
-                conditions and populations where predictions are strongest.
+              <p className="text-gray-700">
+                Use participants as their own controls when manipulating observability.
+                Measure the same person&apos;s behavior under public and private
+                conditions to isolate mimetic effects while controlling for individual
+                differences.
               </p>
             </div>
 
             <div className="rounded-xl border-2 border-gray-200 bg-white p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Pre-registration
+                Pre-registration Required
               </h3>
-              <p className="text-gray-600">
-                All hypothesis tests should be pre-registered with explicit
-                predictions, sample sizes, analysis plans, and falsification
-                criteria to prevent p-hacking and selective reporting.
+              <p className="text-gray-700">
+                All hypothesis tests must be pre-registered with explicit predictions,
+                sample sizes, analysis plans, and falsification criteria to prevent
+                p-hacking and selective reporting. Include predicted effect sizes.
               </p>
             </div>
 
             <div className="rounded-xl border-2 border-gray-200 bg-white p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Bayesian Methods
+                Bayesian Evidence Accumulation
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-700">
                 Use Bayesian statistics to quantify evidence for and against AIM
-                predictions, allowing accumulation of evidence across studies rather
-                than binary reject/accept decisions.
+                predictions, allowing accumulation across studies rather than binary
+                reject/accept decisions. Report Bayes Factors for each prediction.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Framework-Level Falsification */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">
+            Framework-Level Falsification Criteria
+          </h2>
+
+          <div className="rounded-xl border-2 border-red-200 bg-red-50 p-6">
+            <h3 className="mb-4 text-lg font-bold text-red-900">
+              The AIM Framework Would Be Falsified If:
+            </h3>
+            <ol className="list-decimal space-y-3 pl-6 text-gray-700">
+              <li>
+                <strong>The three sources cannot be reliably distinguished:</strong> If
+                manipulating observability, controlling physiological state, and
+                longitudinal tracking fail to produce consistent separations between A,
+                I, and M, the framework lacks empirical grounding.
+              </li>
+              <li>
+                <strong>Private behavior shows no persistence pattern:</strong> If
+                removing observation has random or inconsistent effects on behavior
+                (rather than consistently revealing I vs M), the core distinction fails.
+              </li>
+              <li>
+                <strong>Interventions targeting specific sources produce opposite
+                effects:</strong> If removing audience increases mimetic behavior, or
+                if meeting appetitive needs decreases intrinsic engagement, the causal
+                mechanisms are wrong.
+              </li>
+              <li>
+                <strong>Cross-domain predictions systematically fail:</strong> If the
+                same mechanisms (e.g., observability manipulation) work in one domain
+                (education) but fail in others (health, law, organizations), the
+                framework isn&apos;t general.
+              </li>
+              <li>
+                <strong>Alternative models consistently outperform AIM:</strong> If
+                simpler models (single motivation source, or traditional utility) make
+                better predictions without the A/I/M distinction, Occam&apos;s razor
+                favors the alternative.
+              </li>
+            </ol>
           </div>
         </section>
 
@@ -315,103 +503,61 @@ export default function MethodologyPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Cross-Domain Validation Strategy
           </h2>
-          <p className="mb-6">
-            A key test of AIM is whether the same principles generate accurate
-            predictions across diverse domains:
+          <p className="mb-6 text-gray-700">
+            A critical test of AIM is whether the same observability manipulations
+            produce consistent results across diverse domains:
           </p>
 
-          <div className="mb-6 grid gap-6 md:grid-cols-2">
-            <div className="rounded-xl border-2 border-primary-200 bg-primary-50 p-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Within-Domain Replication
+                Education Domain
               </h3>
-              <p className="text-gray-700">
-                Test the same prediction using different methods within one domain.
-                For example, test mimetic eating effects through confederate
-                manipulation, video observation, and naturalistic dining data.
+              <p className="text-sm text-gray-700">
+                Does removing public ranking increase intrinsic learning engagement?
+                Test with private-then-public feedback sequence.
               </p>
             </div>
 
-            <div className="rounded-xl border-2 border-primary-200 bg-primary-50 p-6">
-              <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Cross-Domain Generalization
-              </h3>
-              <p className="text-gray-700">
-                Demonstrate that the same mechanism (e.g., removing audience
-                reduces mimetic motivation) works across different contexts:
-                education, health, law, organizations, etc.
+            <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">Health Domain</h3>
+              <p className="text-sm text-gray-700">
+                Does removing social visibility increase exercise persistence? Test
+                flow-based vs appearance-based program retention.
               </p>
             </div>
 
-            <div className="rounded-xl border-2 border-primary-200 bg-primary-50 p-6">
-              <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Cultural Variation
-              </h3>
-              <p className="text-gray-700">
-                Test whether AIM predictions hold across different cultures,
-                accounting for variations in individualism/collectivism while
-                maintaining core neural mechanisms.
+            <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">Legal Domain</h3>
+              <p className="text-sm text-gray-700">
+                Does sealing proceedings increase settlement rates? Test public vs
+                confidential mediation outcomes.
               </p>
             </div>
 
-            <div className="rounded-xl border-2 border-primary-200 bg-primary-50 p-6">
+            <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-6">
               <h3 className="mb-3 text-lg font-bold text-gray-900">
-                Developmental Trajectories
+                Organizational Domain
               </h3>
-              <p className="text-gray-700">
-                Examine how the three motivational sources develop across the
-                lifespan and whether predictions vary by age while maintaining
-                theoretical consistency.
+              <p className="text-sm text-gray-700">
+                Does reducing visibility of individual metrics decrease rivalry? Test
+                private vs public performance feedback.
               </p>
             </div>
           </div>
+
+          <p className="mt-6 text-gray-700">
+            <strong>Validation requirement:</strong> The same mechanism (audience
+            removal reducing M-driven behavior) must work across ALL domains for the
+            framework to be considered validated.
+          </p>
         </section>
 
-        {/* Falsification Criteria */}
+        {/* Open Science */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Falsification Criteria
+            Open Science Commitments
           </h2>
-          <p className="mb-6">
-            Each AIM prediction includes explicit conditions that would falsify it:
-          </p>
-
-          <div className="rounded-xl border-2 border-red-200 bg-red-50 p-6">
-            <h3 className="mb-4 text-lg font-bold text-red-900">
-              Framework-Level Falsification
-            </h3>
-            <p className="mb-4 text-gray-800">
-              The AIM Framework as a whole would be falsified if:
-            </p>
-            <ol className="list-decimal space-y-2 pl-6 text-gray-700">
-              <li>
-                The three proposed motivational sources cannot be reliably
-                distinguished using behavioral, physiological, or neural measures
-              </li>
-              <li>
-                Interventions targeting specific sources produce random or opposite
-                effects compared to predictions
-              </li>
-              <li>
-                Alternative models consistently provide better predictions without
-                requiring the A/I/M distinction
-              </li>
-              <li>
-                Cross-domain predictions fail systematically, suggesting
-                domain-specific rather than general mechanisms
-              </li>
-            </ol>
-          </div>
-        </section>
-
-        {/* Research Collaboration */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-3xl font-bold text-gray-900">
-            Collaboration & Data Sharing
-          </h2>
-          <p className="mb-6">
-            We encourage open science practices for AIM research:
-          </p>
 
           <div className="space-y-4">
             <div className="flex items-start gap-3">
@@ -419,8 +565,9 @@ export default function MethodologyPage() {
               <div>
                 <h3 className="mb-1 font-bold text-gray-900">Open Data</h3>
                 <p className="text-gray-700">
-                  Share de-identified datasets to enable reanalysis and
-                  meta-analysis across studies
+                  Share de-identified datasets including all observability
+                  manipulations, physiological measurements, and longitudinal tracking
+                  to enable reanalysis and meta-analysis
                 </p>
               </div>
             </div>
@@ -430,8 +577,9 @@ export default function MethodologyPage() {
               <div>
                 <h3 className="mb-1 font-bold text-gray-900">Pre-registration</h3>
                 <p className="text-gray-700">
-                  Register hypotheses, methods, and analyses before data
-                  collection
+                  Register all hypotheses, methods, and analyses before data
+                  collection, including predicted effect sizes for observability
+                  manipulations
                 </p>
               </div>
             </div>
@@ -440,11 +588,11 @@ export default function MethodologyPage() {
               <div className="mt-1 text-2xl">🔬</div>
               <div>
                 <h3 className="mb-1 font-bold text-gray-900">
-                  Replication Studies
+                  Direct Replications
                 </h3>
                 <p className="text-gray-700">
-                  Actively support direct and conceptual replications of all
-                  findings
+                  Actively support exact replications of observability experiments
+                  across different labs and populations
                 </p>
               </div>
             </div>
@@ -456,8 +604,8 @@ export default function MethodologyPage() {
                   Multi-Lab Collaborations
                 </h3>
                 <p className="text-gray-700">
-                  Coordinate large-scale studies across multiple research groups
-                  and populations
+                  Coordinate large-scale studies testing the same observability
+                  manipulations across multiple domains simultaneously
                 </p>
               </div>
             </div>
@@ -470,8 +618,8 @@ export default function MethodologyPage() {
             Ready to Test AIM in Your Research?
           </h2>
           <p className="mb-6 text-gray-700">
-            Access detailed research protocols, measurement tools, and
-            collaboration opportunities.
+            Access detailed protocols for observability manipulation experiments,
+            measurement tools, and collaboration opportunities.
           </p>
           <Link
             href="/research-resources"
