@@ -315,7 +315,8 @@ async function uploadArticle(articleData) {
 }
 
 /**
- * Upload document to RAG system
+ * Upload document to RAG system (without processing embeddings)
+ * Embeddings can be generated later from the admin panel
  */
 async function uploadToRAG(articleData) {
   try {
@@ -354,29 +355,8 @@ async function uploadToRAG(articleData) {
       throw new Error(`RAG database error: ${ragError.message}`);
     }
     
-    console.log(`  ✓ Uploaded to RAG (ID: ${ragDoc.id})`);
-    
-    // Now process the document to generate embeddings
-    // We'll call the process-document API endpoint
-    const processUrl = `${API_URL}/api/admin/process-document`;
-    
-    const response = await fetch(processUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        documentId: ragDoc.id,
-        documentType: 'rag'
-      })
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to process embeddings: ${response.status} - ${errorText}`);
-    }
-    
-    console.log(`  ✓ Embeddings generated successfully`);
+    console.log(`  ✓ Added to RAG (ID: ${ragDoc.id})`);
+    console.log(`  ⏳ Embeddings pending (process manually from admin panel)`);
     
     return ragDoc;
   } catch (error) {
@@ -488,8 +468,12 @@ async function importReports() {
   
   if (results.ragSuccessful > 0) {
     console.log('\n🤖 RAG Documents uploaded successfully!');
-    console.log(`   Your chatbot can now reference these ${results.ragSuccessful} reports`);
-    console.log(`   Test it at: ${API_URL}/chat\n`);
+    console.log(`   ${results.ragSuccessful} documents added to RAG system`);
+    console.log(`\n⚠️  IMPORTANT: Embeddings not yet generated`);
+    console.log(`   To make these documents searchable by the chatbot:`);
+    console.log(`   1. Log into admin panel: ${API_URL}/admin/rag-documents`);
+    console.log(`   2. Click "Process All Documents" button`);
+    console.log(`   3. Or run: npm run process-rag-embeddings (requires dev server)\n`);
   } else if (results.ragFailed > 0) {
     console.log('\n⚠️  Some RAG uploads failed. Reports are saved as articles but not available to chatbot.\n');
   }
