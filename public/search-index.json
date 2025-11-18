@@ -537,7 +537,58 @@
         {
           "heading": "Interested in Marketing Research?",
           "anchor": "#interested-in-marketing-research",
-          "content": "How to distinguish between genuine brand stickiness (intrinsic connection) and temporary herd effects (mimetic desire) in marketing analytics. Marketing practice informed by AIM would: (1) Diagnose wh"
+          "content": "How to distinguish between genuine brand stickiness (intrinsic connection) and temporary herd effects (mimetic desire) in marketing analytics. Marketing practice informed by AIM would:"
+        }
+      ]
+    },
+    {
+      "title": "Research Methodology",
+      "url": "/research/methodology",
+      "sections": [
+        {
+          "heading": "Research Methodology",
+          "anchor": "",
+          "content": "How to test, validate, and apply the AIM Framework with scientific rigor All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access research materials → The AIM Framework provides a neuroscientifically grounded theory of human motivatio"
+        },
+        {
+          "heading": "Methodological Approach",
+          "anchor": "#methodological-approach",
+          "content": "How to test, validate, and apply the AIM Framework with scientific rigor All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access rese"
+        },
+        {
+          "heading": "Measuring Motivational Sources",
+          "anchor": "#measuring-motivational-sources",
+          "content": "The AIM Framework provides a neuroscientifically grounded theory of human motivation that generates testable predictions across multiple domains. Our methodology emphasizes: Distinguishing between App"
+        },
+        {
+          "heading": "Experimental Design Principles",
+          "anchor": "#experimental-design-principles",
+          "content": "Physiological Markers: Behavioral Signatures:"
+        },
+        {
+          "heading": "Statistical Approaches",
+          "anchor": "#statistical-approaches",
+          "content": "Validated Scales: Behavioral Signatures:"
+        },
+        {
+          "heading": "Cross-Domain Validation Strategy",
+          "anchor": "#cross-domain-validation-strategy",
+          "content": "Experimental Manipulations: Behavioral Signatures:"
+        },
+        {
+          "heading": "Falsification Criteria",
+          "anchor": "#falsification-criteria",
+          "content": "AIM predictions can be tested through carefully designed experiments that isolate motivational sources: Compare behavior under public versus private conditions to isolate mimetic effects. If a behavio"
+        },
+        {
+          "heading": "Collaboration & Data Sharing",
+          "anchor": "#collaboration-data-sharing",
+          "content": "Example: Test whether legal settlement rates increase when proceedings are sealed versus public (Prediction 8). Ensure participants' appetitive needs are met to isolate intrinsic and mimetic motivatio"
+        },
+        {
+          "heading": "Ready to Test AIM in Your Research?",
+          "anchor": "#ready-to-test-aim-in-your-research",
+          "content": "Example: Standardize meal timing and sleep before testing intrinsic motivation interventions in educational settings. Manipulate when different types of feedback are provided to test whether timing af"
         }
       ]
     },

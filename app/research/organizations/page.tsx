@@ -217,15 +217,29 @@ export default function OrganizationsPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Organizational Implications
           </h2>
-          <p className="mb-6">
-            Organizational practice informed by AIM would: (1) Diversify recognition across
-            multiple dimensions to prevent mimetic convergence on single status markers,
-            (2) Ensure fair compensation and work conditions (appetitive sufficiency) as
-            foundation for intrinsic engagement, (3) Design roles that support autonomy and
-            mastery rather than pure compliance, (4) Identify when organizational conflict
-            stems from mimetic rivalry versus resource scarcity or autonomy constraints, and
-            (5) Create cultures that value mission-driven work over status competition.
+          <p className="mb-4">
+            Organizational practice informed by AIM would:
           </p>
+          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
+            <li>
+              Diversify recognition across multiple dimensions to prevent mimetic convergence
+              on single status markers
+            </li>
+            <li>
+              Ensure fair compensation and work conditions (appetitive sufficiency) as
+              foundation for intrinsic engagement
+            </li>
+            <li>
+              Design roles that support autonomy and mastery rather than pure compliance
+            </li>
+            <li>
+              Identify when organizational conflict stems from mimetic rivalry versus resource
+              scarcity or autonomy constraints
+            </li>
+            <li>
+              Create cultures that value mission-driven work over status competition
+            </li>
+          </ol>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

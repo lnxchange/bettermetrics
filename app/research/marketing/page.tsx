@@ -163,15 +163,30 @@ export default function MarketingPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Marketing Implications
           </h2>
-          <p className="mb-6">
-            Marketing practice informed by AIM would: (1) Diagnose whether products
-            primarily satisfy appetitive needs, provide intrinsic value, or confer
-            mimetic status, (2) Design campaigns aligned with dominant motivational source
-            rather than generic approaches, (3) Build intrinsic brand connections for
-            sustainable loyalty rather than relying solely on social proof, (4) Recognize
-            that mimetic campaigns create unstable demand vulnerable to attention shifts,
-            and (5) Segment consumers by motivational source rather than demographics alone.
+          <p className="mb-4">
+            Marketing practice informed by AIM would:
           </p>
+          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
+            <li>
+              Diagnose whether products primarily satisfy appetitive needs, provide intrinsic
+              value, or confer mimetic status
+            </li>
+            <li>
+              Design campaigns aligned with dominant motivational source rather than generic
+              approaches
+            </li>
+            <li>
+              Build intrinsic brand connections for sustainable loyalty rather than relying
+              solely on social proof
+            </li>
+            <li>
+              Recognize that mimetic campaigns create unstable demand vulnerable to attention
+              shifts
+            </li>
+            <li>
+              Segment consumers by motivational source rather than demographics alone
+            </li>
+          </ol>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

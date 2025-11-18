@@ -213,15 +213,30 @@ export default function EducationPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Educational Implications
           </h2>
-          <p className="mb-6">
-            Educational practice informed by AIM would: (1) Sequence feedback to establish
-            intrinsic competence privately before introducing social comparison, (2) Design
-            curricula that support autonomy and mastery rather than compliance, (3) Ensure
-            students&apos; basic needs (rest, nutrition) are met so they can engage
-            intrinsically, (4) Create assessment systems that provide competence feedback
-            without triggering mimetic rivalry, and (5) Diversify recognition across multiple
-            dimensions to prevent convergence on single status markers.
+          <p className="mb-4">
+            Educational practice informed by AIM would:
           </p>
+          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
+            <li>
+              Sequence feedback to establish intrinsic competence privately before introducing
+              social comparison
+            </li>
+            <li>
+              Design curricula that support autonomy and mastery rather than compliance
+            </li>
+            <li>
+              Ensure students&apos; basic needs (rest, nutrition) are met so they can engage
+              intrinsically
+            </li>
+            <li>
+              Create assessment systems that provide competence feedback without triggering
+              mimetic rivalry
+            </li>
+            <li>
+              Diversify recognition across multiple dimensions to prevent convergence on single
+              status markers
+            </li>
+          </ol>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">
