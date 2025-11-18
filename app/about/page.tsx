@@ -9,6 +9,7 @@ import {
   DescriptiveVsNormative,
   MimeticPremium
 } from '@/components/aim-definitions'
+import { PageWithToc } from '@/components/page-with-toc'
 
 export const metadata: Metadata = {
   title: 'About the AIM Framework',
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
+    <PageWithToc>
     <div className="bg-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
@@ -81,7 +83,7 @@ export default function AboutPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="three-sources" className="mb-4 text-4xl font-bold text-gray-900">
               The Three Motivational Sources
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-gray-600">
@@ -99,7 +101,7 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="how-sources-combine" className="mb-4 text-4xl font-bold text-gray-900">
               How the Sources Combine
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -116,7 +118,7 @@ export default function AboutPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="neural-foundation" className="mb-4 text-4xl font-bold text-gray-900">
               The Neural Foundation
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -132,7 +134,7 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="descriptive-vs-normative" className="mb-4 text-4xl font-bold text-gray-900">
               What AIM Describes vs What It Recommends
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -149,7 +151,7 @@ export default function AboutPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="action-selection" className="mb-4 text-4xl font-bold text-gray-900">
               Action Selection: Buffer and Switching
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -227,7 +229,7 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="mimetic-premium" className="mb-4 text-4xl font-bold text-gray-900">
               A Key Concept: The Mimetic Premium
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -243,7 +245,7 @@ export default function AboutPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 id="using-aim" className="mb-4 text-4xl font-bold text-gray-900">
               Using AIM Without Turning It Into an Ideology
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -347,5 +349,6 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
+    </PageWithToc>
   )
 }
