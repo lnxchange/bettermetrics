@@ -256,16 +256,31 @@ export default function HealthPolicyPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Policy Implications
           </h2>
-          <p className="mb-6">
-            Health policy informed by AIM would: (1) Ensure basic health needs are met
-            (appetitive sufficiency) as foundation for other interventions, (2) Design
-            public health campaigns that support intrinsic health engagement rather than
-            relying solely on fear or social comparison, (3) Recognize when health behaviors
-            are mimetically driven and address social dynamics rather than individual choice,
-            (4) Create healthcare systems that preserve patient autonomy and intrinsic
-            motivation for health, and (5) Target interventions based on motivational source
-            diagnosis rather than one-size-fits-all approaches.
+          <p className="mb-4">
+            Health policy informed by AIM would:
           </p>
+          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
+            <li>
+              Ensure basic health needs are met (appetitive sufficiency) as foundation for
+              other interventions
+            </li>
+            <li>
+              Design public health campaigns that support intrinsic health engagement rather
+              than relying solely on fear or social comparison
+            </li>
+            <li>
+              Recognize when health behaviors are mimetically driven and address social
+              dynamics rather than individual choice
+            </li>
+            <li>
+              Create healthcare systems that preserve patient autonomy and intrinsic
+              motivation for health
+            </li>
+            <li>
+              Target interventions based on motivational source diagnosis rather than
+              one-size-fits-all approaches
+            </li>
+          </ol>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

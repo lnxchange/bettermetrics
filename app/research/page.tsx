@@ -92,6 +92,18 @@ const researchAreas = [
       'Viral marketing and mimetic desire',
       'Consumer segmentation by motivation'
     ]
+  },
+  {
+    name: 'Methodology',
+    href: '/research/methodology',
+    icon: '🔬',
+    description:
+      'How to test, validate, and apply the AIM Framework with scientific rigor across research domains.',
+    keyInsights: [
+      'Measuring motivational sources',
+      'Experimental design principles',
+      'Falsification criteria and validation'
+    ]
   }
 ]
 

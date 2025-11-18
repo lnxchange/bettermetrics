@@ -294,9 +294,30 @@ export default function LawPage() {
         {/* Policy Implications */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Legal Implications</h2>
-          <p className="mb-6">
-            Legal practice informed by AIM would: (1) Design contracts that preserve intrinsic autonomy through opt-out clauses and renegotiation triggers, (2) Recognize when legal disputes are driven by mimetic rivalry (status, pride) versus genuine resource conflict, (3) Create sealed proceedings or confidential mediation to reduce mimetic escalation, (4) Ensure legal systems address appetitive sufficiency (basic needs) as foundation for justice, and (5) Apply neuroscientifically grounded definitions of freedom, respect, and fairness consistently across legal domains.
+          <p className="mb-4">
+            Legal practice informed by AIM would:
           </p>
+          <ol className="mb-6 list-decimal space-y-2 pl-6 text-gray-700">
+            <li>
+              Design contracts that preserve intrinsic autonomy through opt-out clauses and
+              renegotiation triggers
+            </li>
+            <li>
+              Recognize when legal disputes are driven by mimetic rivalry (status, pride)
+              versus genuine resource conflict
+            </li>
+            <li>
+              Create sealed proceedings or confidential mediation to reduce mimetic escalation
+            </li>
+            <li>
+              Ensure legal systems address appetitive sufficiency (basic needs) as foundation
+              for justice
+            </li>
+            <li>
+              Apply neuroscientifically grounded definitions of freedom, respect, and fairness
+              consistently across legal domains
+            </li>
+          </ol>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">
