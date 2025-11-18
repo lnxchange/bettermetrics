@@ -194,6 +194,180 @@ export default function MethodologyPage() {
           </div>
         </section>
 
+        {/* Calculating Mimetic Premium */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">
+            Calculating the Mimetic Premium
+          </h2>
+          <p className="mb-6 text-gray-700">
+            A key empirical method for quantifying motivational sources is decomposing
+            prices and valuations into appetitive (A), intrinsic (I), and mimetic (M)
+            components.
+          </p>
+
+          <div className="mb-6 rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6">
+            <h3 className="mb-4 text-xl font-bold text-gray-900">
+              The Mimetic Premium (V<sub>M</sub>)
+            </h3>
+            <p className="mb-4 text-gray-700">
+              The excess value paid for social signaling, separate from basic need
+              satisfaction and intrinsic quality. This reveals how much of a price is
+              driven by status competition versus actual use value.
+            </p>
+            <div className="rounded-lg border border-purple-300 bg-white p-4">
+              <p className="mb-2 text-sm font-semibold text-gray-900">
+                Example: Premium Bottled Water
+              </p>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>
+                  <strong>Total Price:</strong> $5.00
+                </li>
+                <li className="ml-4">
+                  <span className="text-amber-600">A-component (Appetite):</span> $0.50
+                  — basic hydration value
+                </li>
+                <li className="ml-4">
+                  <span className="text-teal-600">I-component (Intrinsic):</span> $0.50
+                  — taste, convenience, quality preference
+                </li>
+                <li className="ml-4">
+                  <span className="text-purple-600">M-component (Mimetic):</span> $4.00
+                  — brand status, social signaling
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                Method 1: Observability Price Premium
+              </h3>
+              <p className="mb-3 text-gray-700">
+                Compare willingness-to-pay for identical products under public versus
+                private consumption conditions.
+              </p>
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Design:</p>
+                <ol className="space-y-2 text-sm text-gray-600">
+                  <li>
+                    <strong>Condition A (Public):</strong> Product will be visibly
+                    consumed in social setting
+                  </li>
+                  <li>
+                    <strong>Condition B (Private):</strong> Product consumed alone,
+                    not visible to others
+                  </li>
+                  <li>
+                    <strong>Measure:</strong> Maximum willingness-to-pay in each
+                    condition
+                  </li>
+                  <li>
+                    <strong>Calculate:</strong> Mimetic Premium = WTP<sub>public</sub>{' '}
+                    - WTP<sub>private</sub>
+                  </li>
+                </ol>
+              </div>
+              <p className="mt-3 text-sm text-gray-600">
+                <strong>Prediction:</strong> Products with high M-components (luxury
+                brands, status goods) show large price premiums in public conditions.
+                I-driven products show minimal or no premium.
+              </p>
+            </div>
+
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                Method 2: Hedonic Price Decomposition
+              </h3>
+              <p className="mb-3 text-gray-700">
+                Use regression analysis to isolate the contribution of functional
+                attributes (A+I) versus brand/status attributes (M).
+              </p>
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Approach:</p>
+                <ol className="space-y-2 text-sm text-gray-600">
+                  <li>
+                    1. Identify functional attributes (nutritional value, durability,
+                    performance specs)
+                  </li>
+                  <li>
+                    2. Identify status attributes (brand prestige, celebrity
+                    endorsement, exclusivity)
+                  </li>
+                  <li>
+                    3. Regress price on both sets of attributes
+                  </li>
+                  <li>
+                    4. V<sub>M</sub> = coefficient on status attributes × attribute
+                    level
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                Method 3: Experimental Valuation Under Anonymity
+              </h3>
+              <p className="mb-3 text-gray-700">
+                Manipulate whether purchases are anonymous or publicly visible, then
+                measure valuation changes.
+              </p>
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="mb-2 text-sm font-semibold text-gray-900">Protocol:</p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>
+                    • <strong>Baseline:</strong> Elicit WTP for products in standard
+                    marketplace conditions
+                  </li>
+                  <li>
+                    • <strong>Anonymous condition:</strong> Guarantee that purchase is
+                    completely private (unmarked packaging, no receipts, anonymous
+                    payment)
+                  </li>
+                  <li>
+                    • <strong>Public condition:</strong> Purchase visible to relevant
+                    social group
+                  </li>
+                  <li>
+                    • <strong>Compare:</strong> Valuation changes reveal M-component
+                    sensitivity
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+              <h3 className="mb-3 text-lg font-bold text-gray-900">
+                Applications of Mimetic Premium Measurement
+              </h3>
+              <ul className="space-y-2 text-gray-700">
+                <li>
+                  • <strong>Market analysis:</strong> Predict price sensitivity to
+                  social visibility changes
+                </li>
+                <li>
+                  • <strong>Brand positioning:</strong> Quantify how much value comes
+                  from status versus quality
+                </li>
+                <li>
+                  • <strong>Consumer segmentation:</strong> Identify high-M versus
+                  high-I consumer segments
+                </li>
+                <li>
+                  • <strong>Pricing strategy:</strong> Test whether premium pricing is
+                  justified by functional value or requires social signaling
+                </li>
+                <li>
+                  • <strong>Product categories:</strong> Map entire industries by
+                  A/I/M composition (e.g., luxury goods = high M, tools = high I,
+                  groceries = high A)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* Validated Measurement Tools */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">

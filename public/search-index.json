@@ -561,39 +561,44 @@
           "content": "The defining characteristic of intrinsic motivation is that it persists in private—when there's no audience, no social signaling, no status competition. Measuring output of unobserved activities is ho"
         },
         {
+          "heading": "Calculating the Mimetic Premium",
+          "anchor": "#calculating-the-mimetic-premium",
+          "content": "Traditional motivation research struggles to distinguish intrinsic engagement from status-seeking because both can look identical under observation. AIM solves this by manipulating observability: If b"
+        },
+        {
           "heading": "Validated Measurement Scales",
           "anchor": "#validated-measurement-scales",
-          "content": "Traditional motivation research struggles to distinguish intrinsic engagement from status-seeking because both can look identical under observation. AIM solves this by manipulating observability: If b"
+          "content": "Physiological Markers: Behavioral Signatures:"
         },
         {
           "heading": "Five Core Experimental Designs",
           "anchor": "#five-core-experimental-designs",
-          "content": "Physiological Markers: Behavioral Signatures:"
+          "content": "This is the critical test. Compare behavior under public versus private conditions to isolate intrinsic from mimetic motivation. Experimental Design:"
         },
         {
           "heading": "Statistical Analysis Methods",
           "anchor": "#statistical-analysis-methods",
-          "content": "This is the critical test. Compare behavior under public versus private conditions to isolate intrinsic from mimetic motivation. Experimental Design:"
+          "content": "Predicted Outcomes: Intrinsic motivation shows stable persistence over time (6-12+ months), while mimetic motivation tracks social context and shows volatility."
         },
         {
           "heading": "Framework-Level Falsification Criteria",
           "anchor": "#framework-level-falsification-criteria",
-          "content": "Predicted Outcomes: Intrinsic motivation shows stable persistence over time (6-12+ months), while mimetic motivation tracks social context and shows volatility."
+          "content": "Track Over Time: A key empirical method for quantifying motivational sources is decomposing prices and valuations into appetitive (A), intrinsic (I), and mimetic (M) components."
         },
         {
           "heading": "Cross-Domain Validation Strategy",
           "anchor": "#cross-domain-validation-strategy",
-          "content": "Track Over Time: Combine observability manipulation with validated psychological scales for robust measurement:"
+          "content": "The excess value paid for social signaling, separate from basic need satisfaction and intrinsic quality. This reveals how much of a price is driven by status competition versus actual use value. Examp"
         },
         {
           "heading": "Open Science Commitments",
           "anchor": "#open-science-commitments",
-          "content": "Behavioral indicators: Time distortion during activity, persistence without rewards, resistance to overjustification effect Experimental manipulations: Model status variations, audience presence/absen"
+          "content": "Compare willingness-to-pay for identical products under public versus private consumption conditions. Design:"
         },
         {
           "heading": "Ready to Test AIM in Your Research?",
           "anchor": "#ready-to-test-aim-in-your-research",
-          "content": "Test whether the SEQUENCE of feedback affects motivational source. AIM predicts that establishing private competence before introducing social comparison preserves intrinsic motivation. Design:"
+          "content": "Prediction: Products with high M-components (luxury brands, status goods) show large price premiums in public conditions. I-driven products show minimal or no premium. Use regression analysis to isola"
         }
       ]
     },
