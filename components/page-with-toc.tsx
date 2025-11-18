@@ -23,8 +23,8 @@ export function PageWithToc({ children }: PageWithTocProps) {
             <article className="flex-1 min-w-0">{children}</article>
 
             {/* TOC sidebar - desktop only */}
-            <aside className="hidden lg:block w-64 flex-shrink-0">
-              <div className="sticky top-20">
+            <aside className="hidden lg:block w-56 flex-shrink-0">
+              <div className="sticky top-20 text-sm">
                 <TableOfContents
                   headings={headings}
                   activeId={activeId}

@@ -239,7 +239,7 @@ export default function ResearchHypothesisPage() {
 
             {/* CTA Section */}
             <div className="mt-16 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-12 text-center">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              <h3 id="ready-to-collaborate" className="text-3xl font-bold text-gray-900 mb-4">
                 Ready to Collaborate?
               </h3>
               <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
@@ -266,7 +266,7 @@ export default function ResearchHypothesisPage() {
 
             {/* Related Resources */}
             <div className="mt-16 border-t-2 border-gray-200 pt-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              <h3 id="related-resources" className="text-2xl font-bold text-gray-900 mb-6">
                 Related Resources
               </h3>
               <div className="grid gap-6 md:grid-cols-2">
