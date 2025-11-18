@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { HiArrowRight } from 'react-icons/hi'
+import { PageWithToc } from '@/components/page-with-toc'
 
 export const metadata: Metadata = {
   title: 'Research Hypothesis & Collaboration',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default function ResearchHypothesisPage() {
   return (
+    <PageWithToc>
     <div className="bg-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-purple-50 to-white py-16">
@@ -34,9 +36,9 @@ export default function ResearchHypothesisPage() {
             </h2>
 
             {/* Section 1: The Problem */}
-            <h3 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
+            <h2 id="the-problem" className="text-2xl font-bold text-gray-900 mt-12 mb-4">
               1. The Problem: &quot;Code Drift&quot; in Utility Aggregation
-            </h3>
+            </h2>
 
             <p className="text-lg text-gray-700 leading-relaxed">
               Current economic and behavioral models largely rely on a singular metric of 
@@ -75,9 +77,9 @@ export default function ResearchHypothesisPage() {
             </div>
 
             {/* Section 2: The Solution */}
-            <h3 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
+            <h2 id="the-solution" className="text-2xl font-bold text-gray-900 mt-12 mb-4">
               2. The Proposed Solution: The AIM Vector
-            </h3>
+            </h2>
 
             <p className="text-lg text-gray-700 leading-relaxed">
               We propose abandoning the singular &quot;Preference&quot; metric in favor of a 
@@ -128,9 +130,9 @@ export default function ResearchHypothesisPage() {
             </div>
 
             {/* Section 3: Theoretical Application */}
-            <h3 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
+            <h2 id="theoretical-application" className="text-2xl font-bold text-gray-900 mt-12 mb-4">
               3. Theoretical Application (The &quot;Contract&quot;)
-            </h3>
+            </h2>
 
             <p className="text-lg text-gray-700 leading-relaxed">
               Just as a legal contract fails if terms are vaguely defined, behavioral models 
@@ -145,9 +147,9 @@ export default function ResearchHypothesisPage() {
             <div className="space-y-8 my-12">
               {/* Prediction A */}
               <div className="rounded-xl border-2 border-amber-200 bg-amber-50 p-8">
-                <h4 className="text-xl font-bold text-amber-900 mb-3">
+                <h3 id="prediction-a" className="text-xl font-bold text-amber-900 mb-3">
                   Prediction A (Saturation)
-                </h4>
+                </h3>
                 <p className="text-lg text-gray-800">
                   Incentives targeting <em>A</em> (e.g., basic income) will show{' '}
                   <strong>sharp diminishing returns</strong> once biological thresholds are met.
@@ -156,9 +158,9 @@ export default function ResearchHypothesisPage() {
 
               {/* Prediction M */}
               <div className="rounded-xl border-2 border-purple-200 bg-purple-50 p-8">
-                <h4 className="text-xl font-bold text-purple-900 mb-3">
+                <h3 id="prediction-m" className="text-xl font-bold text-purple-900 mb-3">
                   Prediction M (Contagion)
-                </h4>
+                </h3>
                 <p className="text-lg text-gray-800">
                   Incentives targeting <em>M</em> (e.g., status goods, rankings) will show{' '}
                   <strong>no saturation point</strong> but high volatility (bubbles), as they 
@@ -168,9 +170,9 @@ export default function ResearchHypothesisPage() {
 
               {/* Prediction I */}
               <div className="rounded-xl border-2 border-teal-200 bg-teal-50 p-8">
-                <h4 className="text-xl font-bold text-teal-900 mb-3">
+                <h3 id="prediction-i" className="text-xl font-bold text-teal-900 mb-3">
                   Prediction I (Crowding Out)
-                </h4>
+                </h3>
                 <p className="text-lg text-gray-800">
                   Introducing <em>M</em>-based incentives (rewards/rankings) to an{' '}
                   <em>I</em>-based activity will <strong>degrade the stability</strong> of the 
@@ -191,9 +193,9 @@ export default function ResearchHypothesisPage() {
             </div>
 
             {/* Section 4: Call to Collaboration */}
-            <h3 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
+            <h2 id="call-to-collaboration" className="text-2xl font-bold text-gray-900 mt-12 mb-4">
               4. Call to Collaboration
-            </h3>
+            </h2>
 
             <p className="text-lg text-gray-700 leading-relaxed">
               The AIM Framework offers the <strong>definitions</strong> (the taxonomy), but we 
@@ -297,6 +299,7 @@ export default function ResearchHypothesisPage() {
         </div>
       </section>
     </div>
+    </PageWithToc>
   )
 }
 

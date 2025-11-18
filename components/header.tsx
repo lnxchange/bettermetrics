@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { UserMenu } from '@/components/user-menu'
+import { SearchBar } from '@/components/search-bar'
 
 interface HeaderProps {
   session?: any
@@ -262,6 +263,11 @@ export function Header({ session }: HeaderProps) {
           </div>
         </div>
 
+        {/* Search Bar - Desktop */}
+        <div className="hidden md:block w-80">
+          <SearchBar />
+        </div>
+
         <Link
           href="/contact"
           className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
@@ -316,6 +322,11 @@ export function Header({ session }: HeaderProps) {
       {isMobileMenuOpen && (
         <div className="absolute left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden">
           <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
+            {/* Search Bar - Mobile */}
+            <div className="mb-4">
+              <SearchBar onClose={() => setIsMobileMenuOpen(false)} />
+            </div>
+            
             <Link
               href="/about"
               className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
