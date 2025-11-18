@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
 
     await writeFile(filepath, buffer)
 
-    // TODO: Save metadata to database
+    // Note: This endpoint provides simple file upload to public/docs for legacy support.
+    // For full document management with database persistence, use /api/admin/documents
     const doc = {
       id: nanoid(),
       title: file.name.replace('.pdf', ''),

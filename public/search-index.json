@@ -107,12 +107,12 @@
         {
           "heading": "Admin Dashboard | Use Better Metrics",
           "anchor": "",
-          "content": "Manage research documents and RAG system for the AIM Framework Upload and manage research documents, papers, and resources related to the AIM Framework. These documents are publicly accessible and can be referenced by researchers. Upload and manage documents that power the AIM chatbot's responses. T"
+          "content": "Manage articles, research documents, and RAG system for the AIM Framework Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and manage your content pipeline. Upload and manage research documents, papers, and resources related to "
         },
         {
           "heading": "Quick Stats",
           "anchor": "#quick-stats",
-          "content": "Manage research documents and RAG system for the AIM Framework Upload and manage research documents, papers, and resources related to the AIM Framework. These documents are publicly accessible and can"
+          "content": "Manage articles, research documents, and RAG system for the AIM Framework Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and m"
         }
       ]
     },
@@ -338,7 +338,7 @@
         {
           "heading": "Education",
           "anchor": "",
-          "content": "Designing learning environments that protect curiosity and prevent drift to status competition We're seeking researchers to validate these hypotheses. Access research materials → TODO: Add comprehensive overview of how AIM transforms educational understanding, including key educational phenomena exp"
+          "content": "Designing learning environments that protect curiosity and prevent drift to status competition We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding learning and education. By disting"
         },
         {
           "heading": "Overview",
@@ -348,12 +348,12 @@
         {
           "heading": "Key Educational Phenomena",
           "anchor": "#key-educational-phenomena",
-          "content": "TODO: Add comprehensive overview of how AIM transforms educational understanding, including key educational phenomena explained by the framework. The AIM Framework provides a neuroscientifically groun"
+          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding learning and education. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, w"
         },
         {
           "heading": "Novel Testable Predictions",
           "anchor": "#novel-testable-predictions",
-          "content": "TODO: Add detailed explanations of how AIM explains specific educational phenomena like learning, grading, etc. How curiosity and intrinsic motivation drive deep learning, and why extrinsic rewards ca"
+          "content": "Research shows that extrinsic rewards can undermine intrinsic motivation—the \"overjustification effect.\" AIM explains why: introducing external rewards for intrinsically motivated learning shifts neur"
         },
         {
           "heading": "Key Research Questions",
@@ -379,7 +379,7 @@
         {
           "heading": "Health & Policy",
           "anchor": "",
-          "content": "Separating physiological need from social amplification in public health interventions We're seeking researchers to validate these hypotheses. Access research materials → TODO: Add comprehensive overview of how AIM transforms health policy understanding, including key health phenomena explained by t"
+          "content": "Separating physiological need from social amplification in public health interventions We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding health behaviors. By distinguishing betwee"
         },
         {
           "heading": "Overview",
@@ -389,12 +389,12 @@
         {
           "heading": "Key Health Phenomena",
           "anchor": "#key-health-phenomena",
-          "content": "TODO: Add comprehensive overview of how AIM transforms health policy understanding, including key health phenomena explained by the framework. The AIM Framework provides a neuroscientifically grounded"
+          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding health behaviors. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, we can "
         },
         {
           "heading": "Novel Testable Predictions",
           "anchor": "#novel-testable-predictions",
-          "content": "TODO: Add detailed explanations of how AIM explains specific health phenomena like obesity, healthcare access, etc. How obesity interventions must distinguish between genuine appetitive needs and mime"
+          "content": "AIM predicts that health interventions targeting the wrong motivational source will fail. For example, social comparison-based fitness programs may initially attract participants through mimetic desir"
         },
         {
           "heading": "Key Research Questions",
@@ -512,7 +512,7 @@
         {
           "heading": "Marketing",
           "anchor": "",
-          "content": "Diagnosing stickiness vs. herd effects to predict brand loyalty and consumer behavior We're seeking researchers to validate these hypotheses. Access research materials → TODO: Add comprehensive overview of how AIM transforms marketing understanding, including key marketing phenomena explained by the"
+          "content": "Diagnosing stickiness vs. herd effects to predict brand loyalty and consumer behavior We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding consumer behavior and marketing. By disting"
         },
         {
           "heading": "Overview",
@@ -522,12 +522,12 @@
         {
           "heading": "Key Marketing Phenomena",
           "anchor": "#key-marketing-phenomena",
-          "content": "TODO: Add comprehensive overview of how AIM transforms marketing understanding, including key marketing phenomena explained by the framework. The AIM Framework provides a neuroscientifically grounded "
+          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding consumer behavior and marketing. By distinguishing between appetitive needs, intrinsic motivations, and mimetic d"
         },
         {
           "heading": "Key Research Questions",
           "anchor": "#key-research-questions",
-          "content": "TODO: Add detailed explanations of how AIM explains specific marketing phenomena like brand loyalty, viral marketing, etc. How brands can create genuine intrinsic connections with consumers, leading t"
+          "content": "Viral marketing leverages mimetic desire: seeing others adopt a product increases valuation independent of product attributes. AIM predicts these campaigns create rapid adoption but unstable loyalty—w"
         },
         {
           "heading": "Marketing Implications",
@@ -537,7 +537,7 @@
         {
           "heading": "Interested in Marketing Research?",
           "anchor": "#interested-in-marketing-research",
-          "content": "How to distinguish between genuine brand stickiness (intrinsic connection) and temporary herd effects (mimetic desire) in marketing analytics. TODO: Add specific research questions that AIM can help a"
+          "content": "How to distinguish between genuine brand stickiness (intrinsic connection) and temporary herd effects (mimetic desire) in marketing analytics. Marketing practice informed by AIM would: (1) Diagnose wh"
         }
       ]
     },
@@ -548,7 +548,7 @@
         {
           "heading": "Organizations",
           "anchor": "",
-          "content": "From status tournaments to mission-driven work through source-specific interventions We're seeking researchers to validate these hypotheses. Access research materials → TODO: Add comprehensive overview of how AIM transforms organizational understanding, including key organizational phenomena explain"
+          "content": "From status tournaments to mission-driven work through source-specific interventions We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding organizational behavior. By distinguishing b"
         },
         {
           "heading": "Overview",
@@ -558,12 +558,12 @@
         {
           "heading": "Key Organizational Phenomena",
           "anchor": "#key-organizational-phenomena",
-          "content": "TODO: Add comprehensive overview of how AIM transforms organizational understanding, including key organizational phenomena explained by the framework. The AIM Framework provides a neuroscientifically"
+          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding organizational behavior. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, "
         },
         {
           "heading": "Novel Testable Predictions",
           "anchor": "#novel-testable-predictions",
-          "content": "TODO: Add detailed explanations of how AIM explains specific organizational phenomena like culture, leadership, etc. How organizational cultures can support intrinsic motivation while addressing basic"
+          "content": "Traditional performance management often conflates motivational sources: using the same metrics for appetitive compensation (fair pay), intrinsic engagement (meaningful work), and mimetic status (reco"
         },
         {
           "heading": "Key Research Questions",
@@ -803,12 +803,12 @@
         {
           "heading": "Interpersonal AIM: Relationships & Groups",
           "anchor": "#interpersonal-aim-relationships-groups",
-          "content": "Desires shaped by observing others, prestige cues, and social norms. TODO: Add content about recognizing appetites, cultivating intrinsic motivation, identifying/mitigating mimetic pulls. Include self"
+          "content": "Desires shaped by observing others, prestige cues, and social norms. Physical signals like fatigue, hunger, or discomfort indicate appetitive needs. Address these directly through rest, nutrition, or "
         },
         {
           "heading": "Need Personalized Guidance?",
           "anchor": "#need-personalized-guidance",
-          "content": "TODO: Add content about how AIM shapes social dynamics, leadership, persuasion, and conflict. Include communication guides and applied examples. Our AI assistant can help you apply AIM to your specifi"
+          "content": "Identify activities where you lose track of time—these reveal intrinsic engagement. Protect your autonomy and create opportunities for mastery. Be aware that external rewards can undermine intrinsic m"
         }
       ]
     },

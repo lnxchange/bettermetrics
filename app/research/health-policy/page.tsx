@@ -49,19 +49,22 @@ export default function HealthPolicyPage() {
         {/* Overview */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Overview</h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add comprehensive overview of how AIM transforms health
-              policy understanding, including key health phenomena explained by
-              the framework.
-            </p>
-          </div>
-          <p>
+          <p className="mb-4">
             The AIM Framework provides a neuroscientifically grounded foundation
             for understanding health behaviors. By distinguishing between
             appetitive needs, intrinsic motivations, and mimetic desires, we can
             better predict and explain health outcomes, design effective
             interventions, and create sustainable health policies.
+          </p>
+          <p>
+            AIM distinguishes genuine physiological needs (A) from socially amplified
+            health behaviors (M), enabling more targeted interventions. Many health
+            challenges involve multiple sources: obesity may combine appetitive
+            dysregulation with mimetic eating patterns; exercise adherence may depend
+            on intrinsic enjoyment versus appearance-based motivation. By identifying
+            which motivational source drives a behavior, health policy can design
+            interventions that address root causes rather than treating all health
+            behaviors as responding to the same incentives.
           </p>
         </section>
 
@@ -70,12 +73,16 @@ export default function HealthPolicyPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Health Phenomena
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add detailed explanations of how AIM explains specific
-              health phenomena like obesity, healthcare access, etc.
-            </p>
-          </div>
+          <p className="mb-6">
+            AIM predicts that health interventions targeting the wrong motivational source
+            will fail. For example, social comparison-based fitness programs may initially
+            attract participants through mimetic desire but show poor long-term adherence
+            because they don&apos;t develop intrinsic motivation. Conversely, obesity
+            interventions that address only appetitive needs without recognizing mimetic
+            eating (eating more when dining with high-status others) will miss a key
+            behavioral driver. AIM enables precise diagnosis: Is this behavior driven by
+            physiological need, intrinsic health engagement, or social comparison?
+          </p>
 
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6">
@@ -221,33 +228,25 @@ export default function HealthPolicyPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Research Questions
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add specific research questions that AIM can help answer in
-              health policy, with testable predictions and hypotheses.
-            </p>
-          </div>
-
           <ul className="space-y-4 text-gray-600">
             <li>
-              • How do different motivational sources affect health behavior
-              change?
+              • What proportion of health behaviors are driven by appetitive needs versus
+              mimetic desire, and how does this vary across populations?
             </li>
             <li>
-              • What role does intrinsic motivation play in preventive health
-              behaviors?
+              • Can health interventions designed around intrinsic motivation (mastery, flow)
+              outperform appearance-based programs long-term?
             </li>
             <li>
-              • How can we design interventions that reduce harmful mimetic
-              health patterns?
+              • How do social dining contexts amplify or suppress appetitive eating through
+              mimetic mechanisms?
             </li>
             <li>
-              • What are the policy implications of protecting intrinsic health
-              motivation?
+              • What policy interventions can protect intrinsic health motivation while
+              addressing basic health needs?
             </li>
             <li>
-              • How does AIM explain health disparities across different
-              populations?
+              • How does AIM explain health disparities across different populations?
             </li>
           </ul>
         </section>
@@ -257,13 +256,16 @@ export default function HealthPolicyPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Policy Implications
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about how AIM can inform health policy,
-              including specific policy interventions that account for different
-              motivational sources.
-            </p>
-          </div>
+          <p className="mb-6">
+            Health policy informed by AIM would: (1) Ensure basic health needs are met
+            (appetitive sufficiency) as foundation for other interventions, (2) Design
+            public health campaigns that support intrinsic health engagement rather than
+            relying solely on fear or social comparison, (3) Recognize when health behaviors
+            are mimetically driven and address social dynamics rather than individual choice,
+            (4) Create healthcare systems that preserve patient autonomy and intrinsic
+            motivation for health, and (5) Target interventions based on motivational source
+            diagnosis rather than one-size-fits-all approaches.
+          </p>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

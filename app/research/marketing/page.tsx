@@ -49,20 +49,22 @@ export default function MarketingPage() {
         {/* Overview */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Overview</h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add comprehensive overview of how AIM transforms marketing
-              understanding, including key marketing phenomena explained by the
-              framework.
-            </p>
-          </div>
-          <p>
+          <p className="mb-4">
             The AIM Framework provides a neuroscientifically grounded foundation
             for understanding consumer behavior and marketing. By distinguishing
             between appetitive needs, intrinsic motivations, and mimetic
             desires, we can better predict and explain consumer choices, design
             effective marketing strategies, and create sustainable brand
             relationships.
+          </p>
+          <p>
+            AIM enables marketers to distinguish between genuine brand loyalty (intrinsic
+            connection to brand values or product experience) and temporary herd effects
+            (mimetic desire following others&apos; consumption). This distinction is crucial
+            for predicting which marketing strategies will create lasting customer
+            relationships versus short-term viral adoption. Products meeting appetitive
+            needs, providing intrinsic enjoyment, or conferring mimetic status require
+            fundamentally different marketing approaches.
           </p>
         </section>
 
@@ -71,12 +73,16 @@ export default function MarketingPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Marketing Phenomena
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add detailed explanations of how AIM explains specific
-              marketing phenomena like brand loyalty, viral marketing, etc.
-            </p>
-          </div>
+          <p className="mb-6">
+            Viral marketing leverages mimetic desire: seeing others adopt a product
+            increases valuation independent of product attributes. AIM predicts these
+            campaigns create rapid adoption but unstable loyalty—when mimetic attention
+            shifts, customers leave. Conversely, brands creating intrinsic connection
+            (products valued for direct experience rather than social signaling) show
+            stable loyalty resistant to competitive pressure. Luxury goods often combine
+            both: mimetic status value plus intrinsic craftsmanship. Understanding which
+            source dominates helps predict market dynamics and optimal marketing strategy.
+          </p>
 
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
@@ -129,32 +135,25 @@ export default function MarketingPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Research Questions
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add specific research questions that AIM can help answer in
-              marketing, with testable predictions and hypotheses.
-            </p>
-          </div>
-
           <ul className="space-y-4 text-gray-600">
             <li>
-              • How do different motivational sources affect consumer
-              decision-making?
+              • Can consumer loyalty be predicted by measuring intrinsic versus mimetic
+              connection to brands?
             </li>
             <li>
-              • What role does intrinsic motivation play in brand loyalty?
+              • How do marketing campaigns shift motivation between intrinsic engagement
+              and mimetic status-seeking?
             </li>
             <li>
-              • How can we design marketing campaigns that reduce harmful
-              mimetic effects?
+              • What product categories are primarily driven by each motivational source,
+              and how does this affect market dynamics?
             </li>
             <li>
-              • What are the marketing implications of protecting intrinsic
-              motivation?
+              • Can brands transition from mimetic to intrinsic positioning, and what
+              strategies enable this shift?
             </li>
             <li>
-              • How does AIM explain patterns of consumer behavior and brand
-              switching?
+              • How does AIM explain patterns of consumer behavior and brand switching?
             </li>
           </ul>
         </section>
@@ -164,13 +163,15 @@ export default function MarketingPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Marketing Implications
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about how AIM can inform marketing practice,
-              including specific marketing interventions that account for
-              different motivational sources.
-            </p>
-          </div>
+          <p className="mb-6">
+            Marketing practice informed by AIM would: (1) Diagnose whether products
+            primarily satisfy appetitive needs, provide intrinsic value, or confer
+            mimetic status, (2) Design campaigns aligned with dominant motivational source
+            rather than generic approaches, (3) Build intrinsic brand connections for
+            sustainable loyalty rather than relying solely on social proof, (4) Recognize
+            that mimetic campaigns create unstable demand vulnerable to attention shifts,
+            and (5) Segment consumers by motivational source rather than demographics alone.
+          </p>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">

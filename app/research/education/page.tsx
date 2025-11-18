@@ -49,19 +49,21 @@ export default function EducationPage() {
         {/* Overview */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Overview</h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add comprehensive overview of how AIM transforms educational
-              understanding, including key educational phenomena explained by
-              the framework.
-            </p>
-          </div>
-          <p>
+          <p className="mb-4">
             The AIM Framework provides a neuroscientifically grounded foundation
             for understanding learning and education. By distinguishing between
             appetitive needs, intrinsic motivations, and mimetic desires, we can
             better predict and explain learning outcomes, design effective
             educational environments, and create sustainable learning systems.
+          </p>
+          <p>
+            AIM reveals that traditional education often conflates different motivational
+            sources—treating intrinsic curiosity as if it responds to the same interventions
+            as appetitive needs or status competition. By distinguishing these sources,
+            educators can design environments that protect intrinsic learning motivation
+            while ensuring students&apos; basic needs are met and minimizing harmful academic
+            rivalry. This framework predicts which educational interventions will succeed or
+            backfire based on their impact on each motivational source.
           </p>
         </section>
 
@@ -70,12 +72,16 @@ export default function EducationPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Educational Phenomena
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add detailed explanations of how AIM explains specific
-              educational phenomena like learning, grading, etc.
-            </p>
-          </div>
+          <p className="mb-6">
+            Research shows that extrinsic rewards can undermine intrinsic motivation—the
+            &quot;overjustification effect.&quot; AIM explains why: introducing external rewards
+            for intrinsically motivated learning shifts neural valuation from process-based (I)
+            to outcome-based (M or A), reducing autonomous engagement. Similarly, grading systems
+            that emphasize ranking create mimetic tournaments where students compete for scarce
+            status markers rather than engaging with material for its own sake. AIM predicts that
+            educational systems preserving intrinsic engagement while ensuring adequate rest,
+            nutrition, and safety will produce deeper, more sustainable learning.
+          </p>
 
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
@@ -179,31 +185,25 @@ export default function EducationPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Key Research Questions
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add specific research questions that AIM can help answer in
-              education, with testable predictions and hypotheses.
-            </p>
-          </div>
-
           <ul className="space-y-4 text-gray-600">
             <li>
-              • How do different motivational sources affect learning outcomes?
+              • Under what conditions do grading systems shift motivation from intrinsic
+              (I) to mimetic (M)?
             </li>
             <li>
-              • What role does intrinsic motivation play in long-term retention?
+              • Can feedback timing prevent the drift from intrinsic to mimetic motivation
+              in competitive academic environments?
             </li>
             <li>
-              • How can we design educational environments that reduce mimetic
-              rivalry?
+              • How do different educational structures affect the balance between
+              curiosity-driven learning and status competition?
             </li>
             <li>
-              • What are the educational implications of protecting intrinsic
-              motivation?
+              • What interventions can restore intrinsic motivation after it&apos;s been
+              undermined by extrinsic reward systems?
             </li>
             <li>
-              • How does AIM explain patterns of academic achievement and
-              dropout?
+              • How does AIM explain patterns of academic achievement and dropout?
             </li>
           </ul>
         </section>
@@ -213,13 +213,15 @@ export default function EducationPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             Educational Implications
           </h2>
-          <div className="mb-6 border-l-4 border-yellow-400 bg-yellow-50 p-4">
-            <p className="font-semibold text-yellow-800">
-              TODO: Add content about how AIM can inform educational practice,
-              including specific educational interventions that account for
-              different motivational sources.
-            </p>
-          </div>
+          <p className="mb-6">
+            Educational practice informed by AIM would: (1) Sequence feedback to establish
+            intrinsic competence privately before introducing social comparison, (2) Design
+            curricula that support autonomy and mastery rather than compliance, (3) Ensure
+            students&apos; basic needs (rest, nutrition) are met so they can engage
+            intrinsically, (4) Create assessment systems that provide competence feedback
+            without triggering mimetic rivalry, and (5) Diversify recognition across multiple
+            dimensions to prevent convergence on single status markers.
+          </p>
 
           <div className="space-y-6">
             <div className="border-l-4 border-primary-500 pl-6">
