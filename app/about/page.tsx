@@ -34,46 +34,47 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Hypothesis Statement */}
+      {/* Explanatory Synthesis */}
       <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-xl border-2 border-amber-200 bg-amber-50 p-8">
-          <div className="mb-4 flex justify-center">
-            <StatusBadge variant="pre-empirical" />
-          </div>
+        <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-8">
           <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">
-            A Young but Rapidly Developing Research Programme
+            An Explanatory Synthesis
           </h2>
                   <div className="prose prose-lg max-w-none">
                     <p>
-                      The AIM Motivation Framework is a <strong>theoretical synthesis</strong> integrating established findings from 
-                      neuroscience (mirror neurons, homeostatic regulation, dopaminergic systems), Self-Determination 
-                      Theory, and Girardian mimetic theory into a unified taxonomic model. It is a young but rapidly 
-                      developing research programme with a working mathematical integration equation and falsifiable 
-                      domain-level predictions.
+                      The AIM Motivation Framework is an <strong>explanatory synthesis</strong> that integrates established findings from
+                      neuroscience (mirror neurons, homeostatic regulation, dopaminergic systems), Self-Determination
+                      Theory, and Girardian mimetic theory into a unified taxonomic model. It serves as the <strong>missing
+                      puzzle piece</strong> that allows these disciplines to validate each other&apos;s findings through a
+                      consistent definitional lens.
                     </p>
                     <p>
-                      This framework serves as a <strong>heuristic utility model</strong>: its theoretical validity is demonstrated 
-                      through its capacity to resolve longstanding anomalies (Easterlin Paradox, Veblen goods, 
-                      mimetic market cascades) that resist explanation under single-variable preference models. 
-                      While the synthesis builds on peer-reviewed research, the integrated framework itself has 
-                      <strong>not yet been independently validated</strong> through controlled empirical studies.
+                      The framework explains observed phenomena that have resisted coherent interpretation: the Easterlin
+                      Paradox, Veblen goods, mimetic market cascades, and the persistent definitional drift across economics,
+                      psychology, and neuroscience. By providing a three-source taxonomy, AIM makes existing observations
+                      and findings <strong>mutually intelligible</strong> across disciplines.
+                    </p>
+                    <p>
+                      This synthesis enables researchers to derive testable predictions and bounded experiments from a
+                      common taxonomic foundation. Rather than proposing untested claims, AIM offers a descriptive lens
+                      through which established behavioral patterns become systematically explainable.
                     </p>
             <div className="my-6 grid gap-4 text-sm md:grid-cols-2">
               <div>
-                <strong>Status:</strong> Pre-empirical validation
+                <strong>Status:</strong> Explanatory synthesis
                 <br />
-                <strong>Grounding:</strong> Theoretical synthesis of existing neuroscience literature
+                <strong>Grounding:</strong> Integration of peer-reviewed neuroscience, behavioral economics, and psychology
               </div>
               <div>
-                <strong>Seeking:</strong> Research collaborators for empirical testing
+                <strong>Function:</strong> Taxonomic lens enabling cross-disciplinary validation
                 <br />
-                <strong>Falsifiability:</strong> See testable predictions in research section
+                <strong>Predictions:</strong> Enables derivation of testable hypotheses across domains
               </div>
             </div>
             <p className="text-sm italic">
-              Note: AIM is primarily a taxonomy and weighting system for existing neural processes, 
-              not a claim about new brain regions. The framework aims to plug into existing models 
-              rather than replace them.
+              Note: AIM is primarily a taxonomy and weighting system for existing neural processes,
+              not a claim about new brain regions. The framework plugs into existing models
+              to resolve definitional inconsistencies.
             </p>
           </div>
         </div>

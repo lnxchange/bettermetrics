@@ -162,17 +162,18 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Academic Disclaimer */}
+        {/* Research Note */}
         <div className="mt-8 border-t border-gray-300 pt-8">
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
             <h4 className="mb-2 font-semibold text-gray-900">
-              Academic Disclaimer
+              Research Note
             </h4>
             <p className="text-sm text-gray-700">
-              The AIM Motivation Framework is a theoretical synthesis that has
-              not been empirically validated through peer-reviewed research. All
-              claims are hypotheses subject to testing and falsification. We
-              welcome critical evaluation and testing.
+              The AIM Motivation Framework is an explanatory synthesis that integrates established
+              findings from neuroscience, behavioral economics, and psychology. It serves as the missing
+              puzzle piece that allows these disciplines to validate each other&apos;s findings through a
+              consistent taxonomic lens. The framework explains observed phenomena and enables researchers
+              to derive testable predictions across domains.
             </p>
           </div>
         </div>

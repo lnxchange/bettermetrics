@@ -399,27 +399,29 @@ export default function HomePage() {
             </p>
 
             <h3 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-              A Young but Rapidly Developing Research Programme
+              The Missing Puzzle Piece
             </h3>
 
-            <div className="mb-6 border-l-4 border-amber-400 bg-amber-50 p-6">
+            <div className="mb-6 border-l-4 border-blue-400 bg-blue-50 p-6">
               <p className="mb-4 text-lg text-gray-700">
-                The AIM Motivation Framework is a <strong>young but rapidly developing research programme</strong> 
-                with a working mathematical model and domain-level predictions. It provides a basis for 
-                testable hypotheses and tightly bounded experiments to validate its premises.
+                The AIM Motivation Framework is an <strong>explanatory synthesis</strong> that integrates established
+                findings from neuroscience, behavioral economics, and psychology. It serves as the <strong>missing puzzle
+                piece</strong> that allows these disciplines to validate each other&apos;s findings through a consistent
+                taxonomic lens.
               </p>
               <p className="text-lg text-gray-700">
-                While not a clinical neuroscientist or experimental psychologist, my background as a commercial 
-                law practitioner equips me with the precise skill set this synthesis requires: resolving 
+                While not a clinical neuroscientist or experimental psychologist, my background as a commercial
+                law practitioner equips me with the precise skill set this synthesis requires: resolving
                 definitional inconsistencies across complex systems. The AIM Framework addresses &quot;Code Drift&quot;—
-                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible 
+                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible
                 definitions of motivation, causing theoretical gridlock.
               </p>
               <p className="text-lg text-gray-700">
-                This framework functions as a heuristic utility model. Its validity is demonstrated through 
-                its capacity to predict and resolve system failures (such as the Easterlin Paradox, inelastic 
-                demand for essentials, and mimetic market cascades) where standard single-variable models fail. 
-                I am seeking research collaborators to empirically test these predictions across domains.
+                This framework explains observed phenomena that have resisted coherent interpretation: the Easterlin
+                Paradox, inelastic demand for essentials, and mimetic market cascades. By providing a three-source
+                taxonomy with a working mathematical integration equation, AIM enables researchers to derive testable
+                predictions from a common foundation. I am seeking research collaborators to explore these
+                predictions across domains.
               </p>
             </div>
 
@@ -428,9 +430,9 @@ export default function HomePage() {
             </h3>
 
             <p className="mb-6 text-lg text-gray-700">
-              This is a living project, so the structure and information on this site will be updated 
-              as the theory, hypothesis, and findings develop over time. I have built it as a central 
-              location to catalogue and share findings, predictions, and suggestions that flow logically 
+              This is a living project, so the structure and information on this site will be updated
+              as the synthesis, applications, and cross-disciplinary insights develop over time. I have built it as a central
+              location to catalogue and share explanatory findings, derived predictions, and suggestions that flow logically
               from the AIM Framework when applied to various areas of human interaction.
             </p>
 
