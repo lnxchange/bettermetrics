@@ -46,17 +46,17 @@ export default function AboutPage() {
                   <div className="prose prose-lg max-w-none">
                     <p>
                       The AIM Motivation Framework does not introduce novel empirical claims requiring validation—it
-                      <strong> organizes and explains documented phenomena</strong>. Like Darwin's synthesis of existing
+                      <strong> organizes and explains documented phenomena</strong>. Like Darwin&apos;s synthesis of existing
                       observations (fossils, biogeography, comparative anatomy) into a coherent framework, AIM integrates
                       established findings from neuroscience (common-currency valuation, mirror neurons, homeostatic
                       regulation), Self-Determination Theory (40+ years of validation), and Girardian mimetic theory
                       into a unified taxonomic model.
                     </p>
                     <p>
-                      The evidentiary base already exists across fragmented disciplines. AIM's contribution is <strong>translation
+                      The evidentiary base already exists across fragmented disciplines. AIM&apos;s contribution is <strong>translation
                       and reorganization</strong>: converting established neuroscience into behavioral diagnostics, explaining
                       what has already been observed (Easterlin Paradox, SDT boundary failures, mimetic market cascades),
-                      and providing the missing taxonomy that resolves "gear grinding" between economics, psychology, and policy.
+                      and providing the missing taxonomy that resolves &quot;gear grinding&quot; between economics, psychology, and policy.
                     </p>
             <div className="my-6 grid gap-4 text-sm md:grid-cols-2">
               <div>
