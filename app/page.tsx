@@ -46,38 +46,127 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* Hero Section - New Framing */}
+      {/* Hero Section - Problem-First Approach */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-teal-50">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="text-center">
             <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              A Descriptive Lens for What We Already Know
+              Why Do You Want What You Want?<br /><span className="text-gray-700">(And Why Is It So Exhausting?)</span>
             </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 sm:text-2xl">
-              Use Better Metrics presents the <strong>AIM Motivation Framework</strong>: a taxonomic synthesis 
-              built on established neuroscience, Girardian theory, and behavioral economics research.
+            <p className="mx-auto mb-12 max-w-3xl text-xl text-gray-600 sm:text-2xl">
+              You aren&apos;t broken. You are just running three different operating systems that are fighting for control.
             </p>
-            <p className="mx-auto mb-12 max-w-4xl text-lg text-gray-700">
-              Synthesizing findings from mirror neuron systems (Rizzolatti), Self-Determination Theory (Deci &amp; Ryan), 
-              and homeostatic regulation research, the framework reclassifies &quot;preferences&quot; into <strong>three 
-              neurologically distinct motivational sources</strong>—Appetites, Intrinsic Motivation, and Mimetic Desire—
-              demonstrating how they integrate through the brain&apos;s common-currency valuation system (vmPFC/VS).
-            </p>
-            
+
+            {/* Three Systems Cards */}
+            <div className="mx-auto mb-12 grid max-w-5xl gap-6 md:grid-cols-3">
+              <div className="rounded-xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white p-6 text-left shadow-sm">
+                <h3 className="mb-3 text-2xl font-bold text-amber-900">
+                  The Body<br /><span className="text-base font-normal text-gray-700">(Appetites)</span>
+                </h3>
+                <p className="text-gray-700">
+                  Needs <strong>food</strong>, safety, and rest. The drive to survive.
+                </p>
+              </div>
+
+              <div className="rounded-xl border-2 border-teal-300 bg-gradient-to-br from-teal-50 to-white p-6 text-left shadow-sm">
+                <h3 className="mb-3 text-2xl font-bold text-teal-900">
+                  The Self<br /><span className="text-base font-normal text-gray-700">(Intrinsic)</span>
+                </h3>
+                <p className="text-gray-700">
+                  Needs meaning, curiosity, and flow. The drive to do things for their own sake.
+                </p>
+              </div>
+
+              <div className="rounded-xl border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-white p-6 text-left shadow-sm">
+                <h3 className="mb-3 text-2xl font-bold text-purple-900">
+                  The Social World<br /><span className="text-base font-normal text-gray-700">(Mimetic)</span>
+                </h3>
+                <p className="text-gray-700">
+                  Needs status, rank, and approval. The drive to be seen and valued by others.
+                </p>
+              </div>
+            </div>
+
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
-                href="/about"
+                href="/chat"
                 className="inline-flex items-center rounded-lg bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-primary-700"
               >
-                Learn the Framework
+                Ask the AI Chatbot
                 <HiArrowRight className="ml-2 h-5 w-5" />
               </Link>
               <Link
-                href="/chat"
+                href="/about"
                 className="inline-flex items-center rounded-lg border-2 border-primary-600 bg-white px-8 py-4 text-lg font-semibold text-primary-600 shadow-sm transition hover:bg-primary-50"
               >
-                Ask the AI Chatbot
+                Learn the Framework
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Career Persona Example */}
+      <section className="bg-white py-16 border-t border-gray-200">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+              See the Conflict in Real Life
+            </h2>
+          </div>
+
+          <div className="rounded-xl border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 shadow-sm">
+            <p className="mb-8 text-xl font-semibold text-gray-900">
+              Scenario: You want to leave a high-stress job for something meaningful, but you feel paralyzed.
+            </p>
+
+            <div className="mb-8">
+              <h3 className="mb-6 text-2xl font-bold text-gray-900">The AIM Diagnosis:</h3>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border-2 border-amber-300 bg-amber-50 p-6">
+                  <p className="mb-2 text-lg font-bold text-amber-900">
+                    The Body says:
+                  </p>
+                  <p className="mb-2 text-gray-800">
+                    &quot;Don&apos;t quit. We need money for food and safety.&quot;
+                  </p>
+                  <p className="text-sm italic text-amber-800">
+                    (Valid Survival Signal)
+                  </p>
+                </div>
+
+                <div className="rounded-lg border-2 border-teal-300 bg-teal-50 p-6">
+                  <p className="mb-2 text-lg font-bold text-teal-900">
+                    The Self says:
+                  </p>
+                  <p className="mb-2 text-gray-800">
+                    &quot;I am bored. I need to create.&quot;
+                  </p>
+                  <p className="text-sm italic text-teal-800">
+                    (Valid Growth Signal)
+                  </p>
+                </div>
+
+                <div className="rounded-lg border-2 border-purple-300 bg-purple-50 p-6">
+                  <p className="mb-2 text-lg font-bold text-purple-900">
+                    The Social World says:
+                  </p>
+                  <p className="mb-2 text-gray-800">
+                    &quot;If you lose your title, you are nobody.&quot;
+                  </p>
+                  <p className="text-sm italic text-purple-800">
+                    (The Mimetic Trap)
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border-2 border-blue-300 bg-blue-50 p-6">
+              <p className="text-lg font-semibold text-gray-900">
+                <strong>Takeaway:</strong> AIM helps you identify which voice is speaking, so you can satisfy
+                your Body and Self without being held hostage by Social fear.
+              </p>
             </div>
           </div>
         </div>

@@ -185,10 +185,10 @@ export function Header({ session }: HeaderProps) {
           </div>
         </div>
 
-        {/* For Researchers Dropdown */}
+        {/* Research & Theory Dropdown */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            For Researchers
+            Research &amp; Theory
             <svg
               className="ml-1 h-4 w-4"
               fill="currentColor"
@@ -419,10 +419,10 @@ export function Header({ session }: HeaderProps) {
               </Link>
             </div>
 
-            {/* For Researchers Section */}
+            {/* Research & Theory Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                For Researchers
+                Research &amp; Theory
               </div>
               <Link
                 href="/research/theories"

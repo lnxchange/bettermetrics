@@ -10,16 +10,16 @@ const exampleMessages = [
     message: 'What is the AIM Framework?'
   },
   {
-    heading: 'How can AIM help me make better decisions?',
-    message: 'How can the AIM Framework help me make better decisions?'
+    heading: 'What is Mimetic desire?',
+    message: 'What is Mimetic desire?'
   },
   {
-    heading: 'What is Mimetic Desire?',
-    message: 'What is Mimetic Desire?'
+    heading: 'I hate my job but I\'m scared to leave.',
+    message: 'I hate my job but I\'m scared to leave. Can AIM help me understand why?'
   },
   {
-    heading: 'How do Appetites differ from Intrinsic Motivation?',
-    message: 'How do Appetites differ from Intrinsic Motivation in the AIM Framework?'
+    heading: 'Why do I buy things I don\'t need?',
+    message: 'Why do I buy things I don\'t need?'
   }
 ]
 
@@ -28,11 +28,10 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
     <div className="mx-auto max-w-2xl px-4">
       <div className="rounded-lg border bg-background p-8">
         <h1 className="mb-2 text-lg font-semibold">
-          AIM Framework AI Assistant
+          The AIM Decoder
         </h1>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          Ask questions about the AIM Motivation Framework and explore how Appetites, 
-          Intrinsic Motivation, and Mimetic Desire shape human behavior.
+        <p className="mb-4 leading-normal text-muted-foreground">
+          Life is messy. The framework is clear. Ask a question to get started.
         </p>
         <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3">
           <p className="text-sm font-medium text-amber-900 mb-1">
