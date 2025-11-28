@@ -102,27 +102,27 @@ export default function ResearchHypothesisPage() {
             </p>
 
             <div className="space-y-6 mb-8">
-              <div className="border-l-4 border-amber-400 bg-amber-50 p-6">
+              <div className="border-l-4 border-green-400 bg-green-50 p-6">
                 <p className="text-lg text-gray-800">
                   <strong><em>A</em> (Appetites):</strong> A variable governed by{' '}
-                  <strong>Negative Feedback Loops</strong>. It seeks 0 (homeostasis). It is 
+                  <strong>Negative Feedback Loops</strong>. It seeks 0 (homeostasis). It is
                   biologically bounded and cyclical.
                 </p>
               </div>
 
-              <div className="border-l-4 border-teal-400 bg-teal-50 p-6">
+              <div className="border-l-4 border-blue-400 bg-blue-50 p-6">
                 <p className="text-lg text-gray-800">
                   <strong><em>I</em> (Intrinsic):</strong> A variable governed by{' '}
-                  <strong>Internal Reward Loops</strong>. It is independent of external 
-                  observation. It is the source of &quot;noise&quot; in standard models but 
+                  <strong>Internal Reward Loops</strong>. It is independent of external
+                  observation. It is the source of &quot;noise&quot; in standard models but
                   represents &quot;signal&quot; in the AIM framework.
                 </p>
               </div>
 
-              <div className="border-l-4 border-purple-400 bg-purple-50 p-6">
+              <div className="border-l-4 border-red-400 bg-red-50 p-6">
                 <p className="text-lg text-gray-800">
                   <strong><em>M</em> (Mimetic):</strong> A variable governed by{' '}
-                  <strong>Positive Feedback Loops</strong> (Mirror Neurons). It is unbounded 
+                  <strong>Positive Feedback Loops</strong> (Mirror Neurons). It is unbounded
                   and socially recursive (Agent X wants object <em>O</em> <em>because</em>{' '}
                   Agent Y wants object <em>O</em>).
                 </p>
@@ -146,8 +146,8 @@ export default function ResearchHypothesisPage() {
 
             <div className="space-y-8 my-12">
               {/* Prediction A */}
-              <div className="rounded-xl border-2 border-amber-200 bg-amber-50 p-8">
-                <h3 id="prediction-a" className="text-xl font-bold text-amber-900 mb-3">
+              <div className="rounded-xl border-2 border-green-200 bg-green-50 p-8">
+                <h3 id="prediction-a" className="text-xl font-bold text-green-900 mb-3">
                   Prediction A (Saturation)
                 </h3>
                 <p className="text-lg text-gray-800">
@@ -157,35 +157,35 @@ export default function ResearchHypothesisPage() {
               </div>
 
               {/* Prediction M */}
-              <div className="rounded-xl border-2 border-purple-200 bg-purple-50 p-8">
-                <h3 id="prediction-m" className="text-xl font-bold text-purple-900 mb-3">
+              <div className="rounded-xl border-2 border-red-200 bg-red-50 p-8">
+                <h3 id="prediction-m" className="text-xl font-bold text-red-900 mb-3">
                   Prediction M (Contagion)
                 </h3>
                 <p className="text-lg text-gray-800">
                   Incentives targeting <em>M</em> (e.g., status goods, rankings) will show{' '}
-                  <strong>no saturation point</strong> but high volatility (bubbles), as they 
+                  <strong>no saturation point</strong> but high volatility (bubbles), as they
                   rely on external social validation.
                 </p>
               </div>
 
               {/* Prediction I */}
-              <div className="rounded-xl border-2 border-teal-200 bg-teal-50 p-8">
-                <h3 id="prediction-i" className="text-xl font-bold text-teal-900 mb-3">
+              <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-8">
+                <h3 id="prediction-i" className="text-xl font-bold text-blue-900 mb-3">
                   Prediction I (Crowding Out)
                 </h3>
                 <p className="text-lg text-gray-800">
                   Introducing <em>M</em>-based incentives (rewards/rankings) to an{' '}
-                  <em>I</em>-based activity will <strong>degrade the stability</strong> of the 
-                  behavior by shifting the neural driver from a renewable internal loop to a 
+                  <em>I</em>-based activity will <strong>degrade the stability</strong> of the
+                  behavior by shifting the neural driver from a renewable internal loop to a
                   volatile external loop.
                 </p>
-                <div className="mt-4 bg-teal-100 border-l-4 border-teal-600 p-4">
-                  <p className="text-sm text-teal-900">
-                    <strong>Note for SDT researchers:</strong> This prediction directly extends 
-                    and formalizes Self-Determination Theory&apos;s observations about extrinsic 
-                    rewards undermining intrinsic motivation. The AIM Framework provides the 
-                    neural mechanism (switching from VTA dopamine loops to mirror neuron systems) 
-                    and a quantifiable prediction (behavior becomes more volatile and 
+                <div className="mt-4 bg-blue-100 border-l-4 border-blue-600 p-4">
+                  <p className="text-sm text-blue-900">
+                    <strong>Note for SDT researchers:</strong> This prediction directly extends
+                    and formalizes Self-Determination Theory&apos;s observations about extrinsic
+                    rewards undermining intrinsic motivation. The AIM Framework provides the
+                    neural mechanism (switching from VTA dopamine loops to mirror neuron systems)
+                    and a quantifiable prediction (behavior becomes more volatile and
                     context-dependent).
                   </p>
                 </div>

@@ -195,15 +195,15 @@ export default function AboutPage() {
                       Obstacles prevent progress, competence signals drop, autonomy feels blocked
                     </p>
                   </div>
-                  <div className="rounded-lg border border-red-300 bg-red-100 p-4">
-                    <p className="font-semibold text-red-900 mb-2">Urgent Appetite</p>
-                    <p className="text-sm text-red-900">
+                  <div className="rounded-lg border border-green-300 bg-green-100 p-4">
+                    <p className="font-semibold text-green-900 mb-2">Urgent Appetite</p>
+                    <p className="text-sm text-green-900">
                       Physiological need crosses critical threshold, hijacking the valuation signal
                     </p>
                   </div>
-                  <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
-                    <p className="font-semibold text-purple-900 mb-2">Social Salience</p>
-                    <p className="text-sm text-purple-800">
+                  <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+                    <p className="font-semibold text-red-900 mb-2">Social Salience</p>
+                    <p className="text-sm text-red-800">
                       High-status model&apos;s behavior triggers strong mimetic signal that overrides current activity
                     </p>
                   </div>

@@ -87,17 +87,17 @@ export default function UnderstandYourMotivationsPage() {
             </p>
             <ul className="space-y-3 text-gray-700">
               <li>
-                <strong className="text-amber-600">Appetites (A):</strong> Homeostatic
+                <strong className="text-green-600">Appetites (A):</strong> Homeostatic
                 motivation arising from physiological deficits (hunger, thirst, temperature
                 dysregulation) with consummatory relief.
               </li>
               <li>
-                <strong className="text-teal-600">Intrinsic Motivation (I):</strong> Process-rewarding
+                <strong className="text-blue-600">Intrinsic Motivation (I):</strong> Process-rewarding
                 engagement where the activity itself generates dopaminergic reward, independent
                 of external outcomes.
               </li>
               <li>
-                <strong className="text-purple-600">Mimetic Desire (M):</strong> Socially transmitted
+                <strong className="text-red-600">Mimetic Desire (M):</strong> Socially transmitted
                 wanting: observing another person&apos;s pursuit of X increases one&apos;s own
                 valuation of X.
               </li>
@@ -105,9 +105,9 @@ export default function UnderstandYourMotivationsPage() {
           </div>
 
           <div className="mb-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6">
+            <div className="rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Appetites <span className="text-amber-600">(A)</span>
+                Appetites <span className="text-green-600">(A)</span>
               </h3>
               <p className="text-gray-600">
                 Physiological needs that arise from bodily deficits—hunger,
@@ -115,9 +115,9 @@ export default function UnderstandYourMotivationsPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6">
+            <div className="rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Intrinsic Motivation <span className="text-teal-600">(I)</span>
+                Intrinsic Motivation <span className="text-blue-600">(I)</span>
               </h3>
               <p className="text-gray-600">
                 Activities valued for their own sake—curiosity, mastery,
@@ -125,9 +125,9 @@ export default function UnderstandYourMotivationsPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6">
+            <div className="rounded-xl border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-6">
               <h3 className="mb-3 text-xl font-bold text-gray-900">
-                Mimetic Desire <span className="text-purple-600">(M)</span>
+                Mimetic Desire <span className="text-red-600">(M)</span>
               </h3>
               <p className="text-gray-600">
                 Desires shaped by observing others, prestige cues, and social
