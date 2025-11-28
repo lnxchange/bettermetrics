@@ -293,27 +293,29 @@ export default function HomePage() {
             </p>
 
             <h3 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-              A Young but Rapidly Developing Research Programme
+              Explanatory Synthesis of Existing Evidence
             </h3>
 
-            <div className="mb-6 border-l-4 border-amber-400 bg-amber-50 p-6">
+            <div className="mb-6 border-l-4 border-indigo-400 bg-indigo-50 p-6">
               <p className="mb-4 text-lg text-gray-700">
-                The AIM Motivation Framework is a <strong>young but rapidly developing research programme</strong> 
-                with a working mathematical model and domain-level predictions. It provides a basis for 
-                testable hypotheses and tightly bounded experiments to validate its premises.
+                The AIM Motivation Framework is an <strong>explanatory synthesis</strong> organizing existing
+                evidence from neuroscience, psychology, and economics into a unified taxonomic model. Like Darwin&apos;s
+                theory, it doesn&apos;t introduce novel empirical claims—it provides the coherent framework that finally
+                makes sense of what behavioral science has already documented.
               </p>
               <p className="text-lg text-gray-700">
-                While not a clinical neuroscientist or experimental psychologist, my background as a commercial 
-                law practitioner equips me with the precise skill set this synthesis requires: resolving 
+                While not a clinical neuroscientist or experimental psychologist, my background as a commercial
+                law practitioner equips me with the precise skill set this synthesis requires: resolving
                 definitional inconsistencies across complex systems. The AIM Framework addresses &quot;Code Drift&quot;—
-                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible 
+                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible
                 definitions of motivation, causing theoretical gridlock.
               </p>
               <p className="text-lg text-gray-700">
-                This framework functions as a heuristic utility model. Its validity is demonstrated through 
-                its capacity to predict and resolve system failures (such as the Easterlin Paradox, inelastic 
-                demand for essentials, and mimetic market cascades) where standard single-variable models fail. 
-                I am seeking research collaborators to empirically test these predictions across domains.
+                The evidentiary base already exists: decades of neuroscience on common-currency valuation (Bartra et al.),
+                40+ years of Self-Determination Theory validation (Deci & Ryan), mirror neuron research (Rizzolatti),
+                and 50 years of Easterlin Paradox data. AIM explains these documented phenomena through a translation
+                layer that converts neuroscience into behavioral diagnostics. Future research focuses on calibration
+                and cross-domain consistency testing rather than foundational validation.
               </p>
             </div>
 

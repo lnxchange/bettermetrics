@@ -8,10 +8,10 @@ export default function ResearchResourcesPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <StatusBadge variant="pre-empirical" className="mb-6" />
+          <StatusBadge variant="synthesis" className="mb-6" />
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Research Resources</h1>
           <p className="text-xl text-gray-600">
-            Access complete framework documents, testable predictions, and collaboration opportunities.
+            Access complete framework documents, domain applications, and collaboration opportunities.
           </p>
         </div>
       </section>

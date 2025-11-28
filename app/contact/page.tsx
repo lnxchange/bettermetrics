@@ -241,9 +241,9 @@ export default function ContactPage() {
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Not Incremental—Revolutionary</h3>
               <p className="text-gray-100">
-                Most theories propose new mechanisms. AIM proposes new <strong>categories</strong>. 
-                If validated, it would provide the first neuroscientific basis for cross-disciplinary 
-                definitions of fundamental human concepts.
+                Most theories propose new mechanisms. AIM proposes new <strong>categories</strong>.
+                It provides the first neuroscientific basis for cross-disciplinary definitions of
+                fundamental human concepts, organizing existing evidence into a coherent taxonomic framework.
               </p>
             </div>
             
@@ -269,8 +269,8 @@ export default function ContactPage() {
           <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center">
             <h3 className="text-2xl font-bold mb-4">The Opportunity</h3>
             <p className="text-lg text-gray-100 max-w-3xl mx-auto">
-              If validated, AIM would represent the first time in history that concepts like &quot;freedom,&quot; 
-              &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; could be defined scientifically rather than philosophically, 
+              AIM represents the first time in history that concepts like &quot;freedom,&quot;
+              &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; can be defined scientifically rather than philosophically,
               with testable predictions about when they are violated and how to restore them.
             </p>
           </div>

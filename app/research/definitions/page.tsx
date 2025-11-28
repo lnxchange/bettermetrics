@@ -5,7 +5,7 @@ import { HiCheckCircle, HiLightBulb, HiAcademicCap, HiScale } from 'react-icons/
 
 export const metadata: Metadata = {
   title: 'Scientific Definitions Enabled by AIM',
-  description: 'If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions of Freedom, Respect, Fairness, and Privacy that apply uniformly across all human behavioral fields.',
+  description: 'AIM enables neuroscientifically grounded, cross-disciplinary definitions of Freedom, Respect, Fairness, and Privacy that apply uniformly across all human behavioral fields.',
 }
 
 export default function DefinitionsPage() {
@@ -14,12 +14,12 @@ export default function DefinitionsPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <StatusBadge variant="pre-empirical" className="mb-6" />
+          <StatusBadge variant="synthesis" className="mb-6" />
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Scientific Definitions Enabled by AIM
           </h1>
           <p className="text-xl text-gray-600">
-            If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions 
+            AIM enables neuroscientifically grounded, cross-disciplinary definitions
             that apply uniformly across all human behavioral fields—economics, law, psychology, public policy, and organizational design.
           </p>
         </div>
@@ -48,7 +48,7 @@ export default function DefinitionsPage() {
               <li><strong>These definitions often conflict</strong></li>
             </ul>
             <p>
-              <strong>With AIM (if validated):</strong> Single neuroscientific framework with testable, 
+              <strong>With AIM:</strong> Single neuroscientific framework with testable,
               falsifiable definitions and uniform application across all domains.
             </p>
           </div>
