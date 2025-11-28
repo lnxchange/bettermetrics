@@ -116,15 +116,21 @@ export default function HomePage() {
       <section className="bg-white py-16 border-t border-gray-200">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
+            <h2 className="mb-2 text-4xl font-bold text-gray-900">
               See the Conflict in Real Life
             </h2>
+            <p className="text-xl text-gray-600">(The Career Trap)</p>
           </div>
 
           <div className="rounded-xl border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 shadow-sm">
-            <p className="mb-8 text-xl font-semibold text-gray-900">
-              Scenario: You want to leave a high-stress job for something meaningful, but you feel paralyzed.
-            </p>
+            <div className="mb-8">
+              <h3 className="mb-4 text-xl font-bold text-gray-900">The Scenario:</h3>
+              <p className="text-lg text-gray-800">
+                You are a successful professional who wants to leave a high-prestige corporate job for a smaller
+                consultancy or creative role. You feel paralyzed and &quot;indecisive,&quot; but you are actually
+                in a three-way negotiation with yourself.
+              </p>
+            </div>
 
             <div className="mb-8">
               <h3 className="mb-6 text-2xl font-bold text-gray-900">The AIM Diagnosis:</h3>
@@ -132,46 +138,51 @@ export default function HomePage() {
               <div className="space-y-4">
                 <div className="rounded-lg border-2 border-amber-300 bg-amber-50 p-6">
                   <p className="mb-2 text-lg font-bold text-amber-900">
-                    The Body says:
+                    The Body (Appetites) screams:
                   </p>
-                  <p className="mb-2 text-gray-800">
-                    &quot;Don&apos;t quit. We need money for food and safety.&quot;
+                  <p className="mb-3 text-gray-800">
+                    &quot;We have a mortgage to pay. We need food on the table and a secure retirement.
+                    Do not put us in danger.&quot;
                   </p>
                   <p className="text-sm italic text-amber-800">
-                    (Valid Survival Signal)
+                    (This is a valid survival signal.)
                   </p>
                 </div>
 
                 <div className="rounded-lg border-2 border-teal-300 bg-teal-50 p-6">
                   <p className="mb-2 text-lg font-bold text-teal-900">
-                    The Self says:
+                    The Self (Intrinsic) whispers:
                   </p>
-                  <p className="mb-2 text-gray-800">
-                    &quot;I am bored. I need to create.&quot;
+                  <p className="mb-3 text-gray-800">
+                    &quot;I am bored. I haven&apos;t felt creative in years. This work is draining me and
+                    I need to do something that matters.&quot;
                   </p>
                   <p className="text-sm italic text-teal-800">
-                    (Valid Growth Signal)
+                    (This is a valid growth signal.)
                   </p>
                 </div>
 
                 <div className="rounded-lg border-2 border-purple-300 bg-purple-50 p-6">
                   <p className="mb-2 text-lg font-bold text-purple-900">
-                    The Social World says:
+                    The Social World (Mimetic) warns:
                   </p>
-                  <p className="mb-2 text-gray-800">
-                    &quot;If you lose your title, you are nobody.&quot;
+                  <p className="mb-3 text-gray-800">
+                    &quot;If you leave, who are you? You will lose the &apos;VP&apos; title. You will disappear
+                    from the rankings. Your peers will think you failed.&quot;
                   </p>
                   <p className="text-sm italic text-purple-800">
-                    (The Mimetic Trap)
+                    (This is the trap.)
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="rounded-lg border-2 border-blue-300 bg-blue-50 p-6">
-              <p className="text-lg font-semibold text-gray-900">
-                <strong>Takeaway:</strong> AIM helps you identify which voice is speaking, so you can satisfy
-                your Body and Self without being held hostage by Social fear.
+              <h3 className="mb-3 text-xl font-bold text-gray-900">The Takeaway:</h3>
+              <p className="text-lg text-gray-800">
+                AIM helps you distinguish the valid need for Safety (paying the mortgage) from the paralyzing
+                fear of losing Status (the title). You can satisfy your Body and your Self without being held
+                hostage by the Social World.
               </p>
             </div>
           </div>
