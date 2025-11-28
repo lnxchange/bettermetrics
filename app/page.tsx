@@ -58,7 +58,7 @@ export default function HomePage() {
             </p>
 
             {/* Three Systems Cards */}
-            <div className="mx-auto mb-12 grid max-w-5xl gap-6 md:grid-cols-3">
+            <div className="mx-auto mb-8 grid max-w-5xl gap-6 md:grid-cols-3">
               <div className="rounded-xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white p-6 text-left shadow-sm">
                 <h3 className="mb-3 text-2xl font-bold text-amber-900">
                   The Body<br /><span className="text-base font-normal text-gray-700">(Appetites)</span>
@@ -86,6 +86,12 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
+
+            <p className="mx-auto mb-12 max-w-3xl text-lg text-gray-700">
+              Together, these three systems form the <strong>AIM Framework</strong>: <strong>A</strong>ppetites,
+              <strong>I</strong>ntrinsic Motivation, and <strong>M</strong>imetic Desire—a neurologically grounded
+              lens for understanding human motivation and making better decisions.
+            </p>
 
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
