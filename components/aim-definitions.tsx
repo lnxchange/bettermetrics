@@ -188,8 +188,8 @@ export function MimeticPremium() {
         <ul className="space-y-2 text-sm text-gray-700">
           <li><strong>Total Price:</strong> $5.00</li>
           <li className="ml-4"><span className="text-green-600">A-component (Appetite):</span> $0.50 — hydration value</li>
-          <li className="ml-4"><span className="text-blue-600">I-component (Intrinsic):</span> $0.50 — taste, convenience, quality</li>
-          <li className="ml-4"><span className="text-red-600">M-component (Mimetic):</span> $4.00 — status, brand signaling</li>
+          <li className="ml-4"><span className="text-blue-600">I-component (Intrinsic):</span> ~$0.00 — negligible (no process joy in drinking water)</li>
+          <li className="ml-4"><span className="text-red-600">M-component (Mimetic):</span> $4.50 — status, brand signaling</li>
         </ul>
       </div>
       <p className="mt-4 text-xs text-gray-600">
