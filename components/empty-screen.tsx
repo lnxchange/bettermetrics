@@ -43,14 +43,6 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
             <li>Use your own judgement</li>
           </ul>
         </div>
-        <div className="mb-4 rounded-md border border-blue-300 bg-blue-50 dark:bg-blue-900/20 p-3">
-          <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-            Research Note:
-          </p>
-          <p className="text-sm text-blue-800 dark:text-blue-200">
-            The AIM Framework is neuroscientifically grounded, providing a workable, observable taxonomy of three distinct motivational sources. This grounding makes neuroscience applicable to human behaviour observation. While hypotheses derived from the framework can be tested through behavioural observations, the neuroscience provides the foundational basis that enables the framework&apos;s unique predictive power.
-          </p>
-        </div>
         <p className="leading-normal text-muted-foreground">
           You can start a conversation or try these example questions:
         </p>
