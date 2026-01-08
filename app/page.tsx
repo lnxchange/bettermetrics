@@ -46,37 +46,53 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* Hero Section - New Framing */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-teal-50">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      {/* Hero Section - Scientific Framework First */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="text-center">
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              A Descriptive Lens for What We Already Know
-            </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 sm:text-2xl">
-              Use Better Metrics presents the <strong>AIM Motivation Framework</strong>: a taxonomic synthesis 
-              built on established neuroscience, Girardian theory, and behavioral economics research.
+            {/* Book Title */}
+            <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-blue-300">
+              A Unifying General Theory of Human Motivation
             </p>
-            <p className="mx-auto mb-12 max-w-4xl text-lg text-gray-700">
-              Synthesizing findings from mirror neuron systems (Rizzolatti), Self-Determination Theory (Deci &amp; Ryan), 
-              and homeostatic regulation research, the framework reclassifies &quot;preferences&quot; into <strong>three 
-              neurologically distinct motivational sources</strong>—Appetites, Intrinsic Motivation, and Mimetic Desire—
-              demonstrating how they integrate through the brain&apos;s common-currency valuation system (vmPFC/VS).
+            <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Appetites • Intrinsic Motivation • Mimetic Desire
+            </h1>
+            <p className="mx-auto mb-8 max-w-3xl text-xl text-blue-100 sm:text-2xl">
+              The <strong className="text-white">AIM Framework</strong> synthesizes established neuroscience, 
+              behavioral economics, and Girardian theory into a falsifiable taxonomy with{' '}
+              <Link href="/axioms" className="underline decoration-blue-400 hover:text-white">8 core axioms</Link>{' '}
+              and domain-level predictions.
+            </p>
+            <p className="mx-auto mb-12 max-w-4xl text-lg text-blue-200">
+              Three neurologically distinct motivational sources—integrated through the brain&apos;s 
+              common-currency valuation system (vmPFC/VS)—explain patterns that single-variable 
+              models cannot: the Easterlin Paradox, Veblen goods, mimetic market cascades, 
+              and intrinsic motivation crowding-out.
             </p>
             
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
-                href="/about"
-                className="inline-flex items-center rounded-lg bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-primary-700"
+                href="/axioms"
+                className="inline-flex items-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg transition hover:bg-blue-50"
               >
-                Learn the Framework
+                Read the 8 Axioms
                 <HiArrowRight className="ml-2 h-5 w-5" />
               </Link>
               <Link
                 href="/chat"
-                className="inline-flex items-center rounded-lg border-2 border-primary-600 bg-white px-8 py-4 text-lg font-semibold text-primary-600 shadow-sm transition hover:bg-primary-50"
+                className="inline-flex items-center rounded-lg border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-white/10"
               >
-                Ask the AI Chatbot
+                <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                Ask the AI
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex items-center rounded-lg border-2 border-blue-400 bg-transparent px-8 py-4 text-lg font-semibold text-blue-200 shadow-sm transition hover:bg-blue-400/10"
+              >
+                Learn More
               </Link>
             </div>
           </div>
