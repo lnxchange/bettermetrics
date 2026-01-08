@@ -276,7 +276,7 @@ export default function GlossaryPage() {
             <div className="mx-auto max-w-2xl rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
               <p className="text-sm text-gray-700">
                 <strong>Usage Note:</strong> Throughout AIM literature, capitalised terms (e.g.,
-                "Individual", "Mimetic Desire") have the precise meanings defined here. Uncapitalised
+                &quot;Individual&quot;, &quot;Mimetic Desire&quot;) have the precise meanings defined here. Uncapitalised
                 terms default to normal interpretational/vernacular rules.
               </p>
             </div>

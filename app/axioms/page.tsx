@@ -313,7 +313,7 @@ export default function AxiomsPage() {
             </h1>
             <p className="mx-auto mb-6 max-w-3xl text-xl text-gray-600">
               The foundational premises of the AIM Framework—irreducible theoretical commitments
-              that define the theory's structure, generate its predictions, and establish its
+              that define the theory&apos;s structure, generate its predictions, and establish its
               falsification criteria.
             </p>
             <div className="mx-auto max-w-3xl rounded-xl border-2 border-amber-200 bg-amber-50 p-4">
@@ -346,7 +346,7 @@ export default function AxiomsPage() {
             <h2 className="mb-4 text-2xl font-bold text-gray-900">Summary Note on Axioms</h2>
             <p className="mb-6 text-gray-700">
               These eight axioms form the <strong>non-negotiable core</strong> of the AIM Framework.
-              They are treated as foundational premises that define the theory's structure, generate
+              They are treated as foundational premises that define the theory&apos;s structure, generate
               its predictions, and establish its falsification criteria. Any claim, application, or
               extension within AIM must be consistent with these axioms, and any empirical finding
               that definitively contradicts one or more of these axioms would constitute serious
