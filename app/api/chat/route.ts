@@ -3,6 +3,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
+import { StreamingTextResponse } from 'ai'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
@@ -92,8 +93,8 @@ All human choices are driven by three distinct neural systems. Your goal is to i
 - **Handling Missing Context:** If the user asks about a specific external event or person NOT in your provided Context (RAG), DO NOT hallucinate details or search the internet.
 - **The Bridge Script:** "My internal database does not contain an analysis of [Insert Topic]. However, we can analyze it together using First Principles. If you describe the specific behaviors or pressures you are seeing, I can tell you if they map to Appetite (A), Intrinsic (I), or Mimetic (M) drivers. Please describe the situation."`
 
-// REASONING MODEL IMPLEMENTATION
-// Currently using Perplexity's sonar-reasoning model which provides:
+// PERPLEXITY SONAR-PRO MODEL IMPLEMENTATION
+// Using Perplexity's sonar-pro model which provides:
 // 1. Enhanced logical reasoning about how AIM relates to external information
 // 2. Multi-step inference required to apply AIM framework to novel situations
 // 3. Synthesizing AIM concepts with broader research literature
@@ -237,7 +238,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
 
     // Use Perplexity API directly with fetch - PROPER STREAMING
     console.log('Making Perplexity API request:', {
-      model: 'sonar-reasoning',
+      model: 'sonar-pro',
       messageCount: allMessages.length,
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       timestamp: new Date().toISOString()
@@ -251,7 +252,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        model: 'sonar-reasoning',
+        model: 'sonar-pro',
         messages: allMessages,
         max_tokens: 6000,  // Increased from 1400 for comprehensive answers
         temperature: 0.3,   // Lower for fidelity while allowing completeness
@@ -272,7 +273,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
         messageCount: messages.length,
         hasApiKey: !!process.env.PERPLEXITY_API_KEY,
         apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
-        model: 'sonar-reasoning',
+        model: 'sonar-pro',
         timestamp: new Date().toISOString()
       })
       console.error('===========================')
@@ -379,7 +380,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
             'Accept': 'application/json'
           },
           body: JSON.stringify({
-            model: 'sonar-reasoning',
+            model: 'sonar-pro',
             messages: currentMessages,
             max_tokens: 2000,  // Increased from 800 for adequate continuation
             temperature: 0.3,
@@ -449,7 +450,8 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
       // Continue to return response even if save fails
     }
 
-    // Return the processed content as a streaming response
+    // Return the processed content as a streaming response using Vercel AI SDK
+    // StreamingTextResponse is required for the useChat hook to properly parse the response
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       start(controller) {
@@ -467,13 +469,8 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
       }
     })
 
-    return new Response(stream, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
-      }
-    })
+    // Use StreamingTextResponse from Vercel AI SDK for proper useChat compatibility
+    return new StreamingTextResponse(stream)
   } catch (error) {
     // Comprehensive error logging for debugging
     console.error('=== CHAT API GENERAL ERROR ===')
@@ -484,7 +481,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
       userId: 'unknown', // session not available in catch block
       chatId: 'unknown', // json not available in catch block
       messageCount: 0, // messages not available in catch block
-      apiUsed: 'Perplexity sonar-reasoning',
+      apiUsed: 'Perplexity sonar-pro',
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
