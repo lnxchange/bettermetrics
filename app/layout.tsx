@@ -16,12 +16,13 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.usebettermetrics.com'),
   title: {
     default: 'Use Better Metrics | AIM Motivation Framework',
     template: '%s | Use Better Metrics'
   },
   description:
-    'Taxonomic framework synthesizing neuroscience, behavioral economics, and systems analysis to resolve definitional inconsistencies in motivation science. Distinguishes three neurologically distinct sources with domain-level predictive applications.',
+    'A Unifying General Theory of Human Motivation: Taxonomic synthesis integrating neuroscience, behavioral economics, Self-Determination Theory, and Girardian mimetic theory. Resolves Code Drift through three neurologically distinct sources—Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).',
   keywords: [
     'AIM Framework',
     'motivational taxonomy',
@@ -32,14 +33,51 @@ export const metadata: Metadata = {
     'neuroscience integration',
     'intrinsic motivation',
     'mimetic desire',
-    'heuristic utility model'
+    'heuristic utility model',
+    'Code Drift',
+    'Self-Determination Theory',
+    'Girardian theory',
+    'construct validity',
+    'falsifiable predictions'
   ],
-  authors: [{ name: 'Yule Guttenbeil' }],
+  authors: [{ name: 'Yule Guttenbeil', url: 'https://www.usebettermetrics.com' }],
+  creator: 'Yule Guttenbeil',
+  publisher: 'Use Better Metrics',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.usebettermetrics.com',
-    siteName: 'Use Better Metrics'
+    siteName: 'Use Better Metrics',
+    title: 'AIM Framework | A Unifying General Theory of Human Motivation',
+    description:
+      'Taxonomic synthesis resolving definitional inconsistencies in motivation science through three neurologically distinct sources: Appetites, Intrinsic Motivation, and Mimetic Desire.',
+    images: [
+      {
+        url: '/AIM Logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'AIM Framework - Appetites, Intrinsic Motivation, Mimetic Desire'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AIM Framework | A Unifying General Theory of Human Motivation',
+    description:
+      'Taxonomic synthesis resolving Code Drift in motivation science. Three neurologically distinct sources: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M).',
+    images: ['/AIM Logo.png'],
+    creator: '@usebettermetrics'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
   },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
@@ -52,6 +90,12 @@ export const metadata: Metadata = {
     ],
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png'
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION
+  },
+  alternates: {
+    canonical: 'https://www.usebettermetrics.com'
   }
 }
 

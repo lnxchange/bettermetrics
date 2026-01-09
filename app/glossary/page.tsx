@@ -3,230 +3,85 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { HiArrowRight, HiSearch } from 'react-icons/hi'
+import { glossaryEntries, glossaryCategories } from '@/lib/glossary-data'
 
-interface GlossaryEntry {
-  term: string
-  definition: string
-  explanation: string
-  category: string
-  relatedTerms?: string[]
-  epistemicStatus?: string
-}
+// JSON-LD Structured Data for the Glossary page
+function GlossaryJsonLd() {
+  // Create DefinedTerm entries for key terms (subset of most important)
+  const keyTerms = glossaryEntries.slice(0, 30).map((entry) => ({
+    '@type': 'DefinedTerm',
+    name: entry.term,
+    description: entry.definition,
+    inDefinedTermSet: {
+      '@type': 'DefinedTermSet',
+      '@id': 'https://www.usebettermetrics.com/glossary#termset',
+      name: 'AIM Framework Glossary'
+    }
+  }))
 
-const glossaryEntries: GlossaryEntry[] = [
-  // Core Motivational Constructs
-  {
-    term: 'AIM Framework',
-    definition:
-      'A taxonomy of motivation that distinguishes three neurally grounded sources—Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M)—that integrate in the Decision Hub to generate a single choice signal.',
-    explanation:
-      'The AIM Framework posits that every choice is driven by some mix of bodily needs, enjoyment of the activity itself, and socially copied wanting, which are always combined into one scalar "this is what I will do next" impulse. AIM does not suggest new neurological phenomena; it reorganises existing evidence into a source-based map that can plug into human behavioural sciences wherever those fields currently talk about undifferentiated "preferences" or "utility."',
-    category: 'Core Constructs',
-    relatedTerms: ['Appetites (A)', 'Intrinsic Motivation (I)', 'Mimetic Desire (M)', 'Decision Hub'],
-    epistemicStatus: 'Framework-Specific'
-  },
-  {
-    term: 'Appetites (A)',
-    definition:
-      'Homeostatic, bodily and safety-related drives—such as hunger, thirst, sleep, pain avoidance, thermoregulation, sexual drive, and basic material security—that push behaviour toward restoring physiological and socioeconomic sufficiency and rapidly subside once sufficiency is reached.',
-    explanation:
-      'These are the motivations that come from the body being out of balance: needing food, rest, warmth, safety, or basic income and shelter. They feel urgent while active, tightly drive behaviour toward relief, and fall away quickly once the need is properly met, which is why securing A is a precondition for other motives to show up reliably.',
-    category: 'Core Constructs',
-    relatedTerms: ['A-Floor', 'Homeostasis', 'Satiation'],
-    epistemicStatus: 'Established Neuroscience'
-  },
-  {
-    term: 'Intrinsic Motivation (I)',
-    definition:
-      'Self-endorsed engagement in activities that are rewarding in the doing—curiosity, mastery, play, exploration, care, aesthetic and creative work—that people continue in private without audience or external reward, typically strengthening as competence and meaning deepen.',
-    explanation:
-      'These are the things a person still wants to do when nobody is watching and no one is paying: reading out of curiosity, practising music, solving problems, caring for others, or making art for its own sake. Intrinsic Motivation is the main engine of learning, creativity, and durable wellbeing. The I-process itself does not satiate, but I-enabling objects (tools, instruments) do satiate once functionally adequate.',
-    category: 'Core Constructs',
-    relatedTerms: ['I-Override', 'Flow', 'Mastery'],
-    epistemicStatus: 'Established Neuroscience (SDT)'
-  },
-  {
-    term: 'Mimetic Desire (M)',
-    definition:
-      'Socially transmitted wanting that arises because others want, pursue, or signal value for Objects. It is strongly shaped by observability, prestige cues, and scarcity, and prone to rivalry when it converges on High-Observability Goods or scarce targets.',
-    explanation:
-      'Mimetic desires are adopted preconsciously from other people via the mirror neuron system: the brain starts valuing what salient models seem to pursue before the Individual can become aware of it. Because this transmission is largely automatic, people usually confabulate after the fact, telling themselves intrinsic or practical stories about choices that were in fact driven mainly by visibility, prestige, and comparison.',
-    category: 'Core Constructs',
-    relatedTerms: ['Mimesis', 'Mimetic Premium', 'Mimetic Attraction', 'Mimetic Repulsion'],
-    epistemicStatus: 'Established Neuroscience + Framework Integration'
-  },
-  {
-    term: 'Decision Hub',
-    definition:
-      'The neural integration site—centred in the ventromedial prefrontal cortex (vmPFC) and ventral striatum (VS)—where A, I, and M signals converge and are converted into a single scalar value signal that determines choice.',
-    explanation:
-      'Although A, I, and M are distinct systems, the brain must eventually produce a single "do this next" decision. The Decision Hub integrates all three sources into one priority signal, like mixing three audio channels into a single speaker output.',
-    category: 'Core Constructs',
-    relatedTerms: ['Common-Currency Integration', 'Source Opacity'],
-    epistemicStatus: 'Established Neuroscience'
-  },
-  {
-    term: 'Individual',
-    definition:
-      'A natural person (human being) whose behaviour is generated by an integrated motivational architecture in which Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M) are weighted and combined through the Decision Hub to produce choice.',
-    explanation:
-      'In AIM, "Individual" is the unit at which motivational architecture is defined—a person with a body that experiences appetitive needs, a capacity for self-endorsed projects, and exposure to social models. All phenomenology—confabulation, Source Opacity, vulnerability to mimetic attraction—operates at the level of Individuals.',
-    category: 'Core Constructs',
-    relatedTerms: ['Proxy', 'Agent'],
-    epistemicStatus: 'Framework-Specific'
-  },
-  // Mimetic Concepts
-  {
-    term: 'Mimesis',
-    definition:
-      'The neurologically grounded process of social transmission by which humans preconsciously adopt, mirror, and propagate the desires, valuations, avoidances, and behaviours of observed models, mediated primarily through mirror neuron systems and social reward circuits.',
-    explanation:
-      'Mimesis is the basic copying mechanism that makes Individuals social learners: we absorb what others want, avoid what they avoid, and do what they do, often before we can articulate why. This happens automatically through specialized brain circuits that fire both when we act and when we watch others act. Mimesis operates at 100–300 milliseconds from stimulus onset—before conscious awareness can intervene.',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Mimetic Desire (M)', 'Positive Mimesis', 'Negative Mimesis'],
-    epistemicStatus: 'Established Neuroscience'
-  },
-  {
-    term: 'Mimetic Premium (P_M)',
-    definition:
-      'The portion of a price or willingness-to-pay attributable purely to status signalling and social proof, representing the extra value assigned to an object because of its social meaning rather than its A-function or I-function.',
-    explanation:
-      'The Mimetic Premium is what makes people pay more for visible brands than functionally identical alternatives. It can operate even when the individual experiences no direct status-pleasure—they may simply perceive a network consensus that "this is the value."',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Mimetic Desire (M)', 'High-Observability Goods'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Mimetic Attraction',
-    definition:
-      'The form of mimetic transmission in which an Individual comes to desire an Object because models pursue, display, or endorse it, with the acquired valuation integrated into the common-currency system and typically confabulated as self-originating.',
-    explanation:
-      'Unlike appetitive drives that have built-in satiation signals, mimetic attraction targets comparative standing, which means it has no absolute "full" signal. Each time someone else gains a desired Object or rises in perceived social standing, the reference set shifts and is experienced as a felt deficit. This asymmetry drives runaway dynamics.',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Mimetic Repulsion', 'Entanglement'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Mimetic Repulsion',
-    definition:
-      'The form of mimetic transmission in which an Individual comes to avoid an Object because a model shuns, criticises, or refuses it—functioning as a protective filter that converges on stable disengagement and self-terminates because there is no positional contest in avoidance.',
-    explanation:
-      'Unlike Mimetic Attraction, Mimetic Repulsion self-terminates. Once avoidance is achieved—not purchasing, not wearing, not displaying—the control system is complete. There is no status hierarchy of "who avoids most impressively."',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Mimetic Attraction'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Positive Mimesis',
-    definition:
-      'Mimetic transmission that propagates beneficial behaviours, values, or desires which expand I-capacity, secure A-floors, or maintain M at sustainable levels.',
-    explanation:
-      'The goal of AIM is not to eliminate Mimetic Desire—this is neurologically impossible. The goal is to redirect mimetic transmission toward content that supports rather than undermines flourishing. Examples include scientists emulating successful researchers or communities mimetically adopting mutual aid practices.',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Negative Mimesis'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Negative Mimesis',
-    definition:
-      'Mimetic transmission that produces net social harm through rivalry escalation, inflation, scapegoating, or crisis dynamics—occurring when mimetic copying operates in contexts of scarcity, zero-sum competition, or structural conditions that convert coordination mechanisms into conflict amplification.',
-    explanation:
-      'Negative Mimesis is not a different mechanism from Positive Mimesis—both operate through the same preconscious transmission systems. The distinction lies in structural context and outcome. When mimetic transmission occurs in zero-sum environments, the same copying mechanism that enables cultural learning instead produces rivalry escalation.',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Positive Mimesis', 'Mimetic Crisis Trajectory'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Entanglement',
-    definition:
-      'The reciprocal co-determination of valuations between Individuals where w_M is non-zero, making desires fundamentally relational rather than independent, with each Individual functioning as both model and imitator in ongoing cycles.',
-    explanation:
-      'Entanglement describes what happens when mimetic influence becomes a permanent background condition. Unlike simple contagion, entanglement means everyone\'s desires are constantly shaping and being shaped by everyone else\'s in real time, with no clear starting point or direction.',
-    category: 'Mimetic Concepts',
-    relatedTerms: ['Mimetic Desire (M)'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  // Cognitive Concepts
-  {
-    term: 'Source Opacity',
-    definition:
-      'The architectural fact that after common-currency integration, source-specific information is not preserved in the output signal. Downstream circuits, including those supporting conscious introspection, cannot reliably identify which source generated a given motivational input.',
-    explanation:
-      'Once the brain has collapsed A, I, and M into a single "I want this" feeling, it has lost the tag indicating which channel contributed what. Three-dimensional input (A, I, M) has been compressed into a one-dimensional output (scalar value), necessarily discarding source information.',
-    category: 'Cognitive Concepts',
-    relatedTerms: ['Confabulation', 'Common-Currency Integration'],
-    epistemicStatus: 'Established Neuroscience'
-  },
-  {
-    term: 'Confabulation',
-    definition:
-      'The brain\'s routine generation of sincere but inaccurate narratives about the causes of choice, filling gaps in introspection with plausible reasons that do not match the actual motivational sources.',
-    explanation:
-      'When asked to explain their choices, people construct stories that sound reasonable but are often wrong. These are not lies—the person genuinely believes their explanation—but they are post-hoc rationalisations created after the decision has already been made.',
-    category: 'Cognitive Concepts',
-    relatedTerms: ['Source Opacity', 'The Interpreter'],
-    epistemicStatus: 'Established Neuroscience'
-  },
-  {
-    term: 'I-Override',
-    definition:
-      'The cognitive operation of pausing automatic Decision Hub processing of Mimetic signals, bringing them under Intrinsic Motivational scrutiny, and restoring manual Source-tagging before acting.',
-    explanation:
-      'I-Override is the mechanism by which Individuals can resist M-contamination. It requires conceptual vocabulary (knowing M exists), cognitive slack (not being under stress or A-deficit), and practice. It is a proper target of institutional design.',
-    category: 'Cognitive Concepts',
-    relatedTerms: ['I-Override Capacity', 'Two-Question Diagnostic'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'I-Override Capacity',
-    definition:
-      'The Individual\'s context-dependent ability to successfully execute I-Override, which varies with A-security, stress, cognitive load, training, conceptual vocabulary, and social support.',
-    explanation:
-      'Even highly reflective people lose this capacity under sleep deprivation, pain, fear, or when A-floors are threatened. AIM treats I-Override Capacity as a design target: justice, education, and workplace systems can be evaluated by whether they expand or erode typical capacity.',
-    category: 'Cognitive Concepts',
-    relatedTerms: ['I-Override'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Two-Question Diagnostic',
-    definition:
-      'The eliminative method for source-tagging: (1) Would this desire persist if the underlying bodily need were fully met? (If no → A); (2) Would this desire persist if no one would ever know? (If no → M; If yes → I).',
-    explanation:
-      'The Two-Question Diagnostic works by elimination: the Individual uses accessible information (bodily states for Question 1; private persistence for Question 2) to rule out A and I, leaving M as the residual category. This eliminative structure is a design requirement—direct M-detection is architecturally impossible.',
-    category: 'Cognitive Concepts',
-    relatedTerms: ['I-Override', 'Source Opacity'],
-    epistemicStatus: 'Framework-Specific Intervention'
-  },
-  // Mathematical Terms
-  {
-    term: 'AIM Weights (w_A, w_I, w_M)',
-    definition:
-      'The relative influence coefficients that determine how strongly each motivational source (A, I, M) contributes to the integrated value signal at a given moment, varying by context, cognitive state, and Individual.',
-    explanation:
-      'AIM weights are not fixed personality traits. An Individual\'s w_M in a high-pressure sales environment differs from their w_M while gardening alone. The same person exhibits different AIM profiles across contexts, which is why institutional design matters.',
-    category: 'Mathematical Terms',
-    relatedTerms: ['AIM Integration Equation'],
-    epistemicStatus: 'Framework-Specific Construct'
-  },
-  {
-    term: 'Common-Currency Integration',
-    definition:
-      'The neural mechanism by which the three motivational sources converge in a single valuation system that encodes subjective value as a scalar signal, enabling unified choice by converting unlike inputs into a comparable metric.',
-    explanation:
-      'This integration can often be approximated as a weighted sum: V(option) = w_A × V_A + w_I × V_I + w_M × V_M. The common-currency architecture is well-established in decision neuroscience.',
-    category: 'Mathematical Terms',
-    relatedTerms: ['Decision Hub', 'Source Opacity'],
-    epistemicStatus: 'Established Neuroscience'
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'DefinedTermSet',
+        '@id': 'https://www.usebettermetrics.com/glossary#termset',
+        name: 'AIM Framework Glossary',
+        description:
+          'Comprehensive definitions for the AIM Motivation Framework, providing contract-style precision for capitalised terms used throughout the theory.',
+        url: 'https://www.usebettermetrics.com/glossary',
+        inLanguage: 'en',
+        creator: {
+          '@type': 'Person',
+          '@id': 'https://www.usebettermetrics.com/#YuleGuttenbeil',
+          name: 'Yule Guttenbeil',
+          jobTitle: 'Principal Commercial Lawyer & Behavioral Systems Architect'
+        },
+        isPartOf: {
+          '@type': 'CreativeWork',
+          '@id': 'https://www.usebettermetrics.com/#AIMFramework',
+          name: 'AIM Motivation Framework'
+        },
+        hasDefinedTerm: keyTerms
+      },
+      {
+        '@type': 'WebPage',
+        '@id': 'https://www.usebettermetrics.com/glossary',
+        name: 'AIM Framework Glossary',
+        description:
+          'Comprehensive definitions for the AIM Motivation Framework with ' +
+          glossaryEntries.length +
+          ' terms from Chapter 2.',
+        mainEntity: {
+          '@id': 'https://www.usebettermetrics.com/glossary#termset'
+        },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: 'https://www.usebettermetrics.com'
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Glossary',
+              item: 'https://www.usebettermetrics.com/glossary'
+            }
+          ]
+        }
+      }
+    ]
   }
-]
 
-const categories = [
-  'All',
-  'Core Constructs',
-  'Mimetic Concepts',
-  'Cognitive Concepts',
-  'Mathematical Terms'
-]
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  )
+}
 
 export default function GlossaryPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -262,6 +117,7 @@ export default function GlossaryPage() {
 
   return (
     <div className="bg-white">
+      <GlossaryJsonLd />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 via-white to-gray-50 py-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -270,7 +126,7 @@ export default function GlossaryPage() {
               Glossary
             </h1>
             <p className="mx-auto mb-6 max-w-3xl text-xl text-gray-600">
-              Precise definitions for the AIM Framework—designed to function as a contract-style
+              Comprehensive definitions for the AIM Framework—designed as a contract-style
               reference section where capitalised terms have specific, bounded meanings.
             </p>
             <div className="mx-auto max-w-2xl rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
@@ -302,7 +158,7 @@ export default function GlossaryPage() {
 
             {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
+              {glossaryCategories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
@@ -340,7 +196,7 @@ export default function GlossaryPage() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap">
                           <h3 className="text-lg font-bold text-gray-900">{entry.term}</h3>
                           <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
                             {entry.category}
@@ -426,8 +282,8 @@ export default function GlossaryPage() {
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="mb-6 text-gray-600">
-            This glossary represents key terms from Chapter 2 of the AIM Framework book.
-            More terms will be added as chapters are published.
+            This glossary contains {glossaryEntries.length} terms from Chapter 2 of the AIM Framework book,
+            providing a comprehensive reference for the theoretical foundation.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link
@@ -450,4 +306,3 @@ export default function GlossaryPage() {
     </div>
   )
 }
-

@@ -1,6 +1,150 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { HiArrowRight, HiExternalLink } from 'react-icons/hi'
+import { HiArrowRight } from 'react-icons/hi'
+
+// JSON-LD Structured Data for the Axioms page
+function AxiomsJsonLd() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ScholarlyArticle',
+        '@id': 'https://www.usebettermetrics.com/axioms#article',
+        headline: 'The 8 Axioms of the AIM Framework',
+        description:
+          'The foundational axioms of the AIM Framework: irreducible premises that define the theory\'s structure, generate its predictions, and establish its falsification criteria.',
+        author: {
+          '@type': 'Person',
+          '@id': 'https://www.usebettermetrics.com/#YuleGuttenbeil',
+          name: 'Yule Guttenbeil',
+          jobTitle: 'Principal Commercial Lawyer & Behavioral Systems Architect'
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Use Better Metrics',
+          url: 'https://www.usebettermetrics.com'
+        },
+        mainEntityOfPage: 'https://www.usebettermetrics.com/axioms',
+        about: {
+          '@type': 'CreativeWork',
+          '@id': 'https://www.usebettermetrics.com/#AIMFramework',
+          name: 'AIM Motivation Framework'
+        },
+        keywords: [
+          'motivation axioms',
+          'three-source taxonomy',
+          'common-currency integration',
+          'source opacity',
+          'confabulation',
+          'mimetic premium',
+          'differential satiation',
+          'preconscious transmission',
+          'Bayesian belief dynamics'
+        ],
+        citation: [
+          {
+            '@type': 'ScholarlyArticle',
+            name: 'The root of all value: a neural common currency for choice',
+            author: 'Levy, D. J., & Glimcher, P. W.',
+            datePublished: '2012',
+            isPartOf: {
+              '@type': 'Periodical',
+              name: 'Current Opinion in Neurobiology'
+            }
+          },
+          {
+            '@type': 'ScholarlyArticle',
+            name: 'The mirror-neuron system',
+            author: 'Rizzolatti, G., & Craighero, L.',
+            datePublished: '2004',
+            isPartOf: {
+              '@type': 'Periodical',
+              name: 'Annual Review of Neuroscience'
+            }
+          },
+          {
+            '@type': 'Book',
+            name: 'Intrinsic Motivation and Self-Determination in Human Behavior',
+            author: 'Deci, E. L., & Ryan, R. M.',
+            datePublished: '1985',
+            publisher: 'Plenum'
+          }
+        ]
+      },
+      {
+        '@type': 'ItemList',
+        '@id': 'https://www.usebettermetrics.com/axioms#axiom-list',
+        name: 'The 8 Axioms of the AIM Framework',
+        numberOfItems: 8,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Three-Source Taxonomy',
+            description:
+              'Human motivation arises from exactly three neurologically distinct sources—Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).'
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Common-Currency Integration',
+            description:
+              'The three motivational sources converge in a common-currency valuation system centred in vmPFC and ventral striatum.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: 'Source Opacity',
+            description:
+              'After common-currency integration, source-specific information is not preserved in the output signal.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 4,
+            name: 'Confabulation',
+            description:
+              'The brain routinely generates sincere but inaccurate narratives about the causes of choice.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 5,
+            name: 'M as Amplifier (The Mimetic Premium)',
+            description:
+              'Mimetic Desire operates as an amplifying force that inflates the perceived value of A-objects and I-objects.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 6,
+            name: 'Differential Satiation Dynamics',
+            description:
+              'The three sources exhibit structurally different satiation properties.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 7,
+            name: 'Preconscious Transmission',
+            description:
+              'Mimetic desire is transmitted through mirror-neuron systems at latencies of 60–340 milliseconds—prior to conscious awareness.'
+          },
+          {
+            '@type': 'ListItem',
+            position: 8,
+            name: 'Bayesian Belief Dynamics',
+            description:
+              'Human belief revision follows Bayesian updating, where posteriors become priors for subsequent cycles.'
+          }
+        ]
+      }
+    ]
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  )
+}
 
 export const metadata: Metadata = {
   title: 'The 8 Axioms | AIM Framework',
@@ -304,6 +448,7 @@ function AxiomCard({ axiom }: { axiom: Axiom }) {
 export default function AxiomsPage() {
   return (
     <div className="bg-white">
+      <AxiomsJsonLd />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 via-white to-gray-50 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

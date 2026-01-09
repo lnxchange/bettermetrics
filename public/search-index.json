@@ -161,6 +161,22 @@
       ]
     },
     {
+      "title": "The 8 Axioms | AIM Framework",
+      "url": "/axioms",
+      "sections": [
+        {
+          "heading": "The 8 Axioms | AIM Framework",
+          "anchor": "",
+          "content": "  The foundational premises of the AIM Framework—irreducible theoretical commitments that define the theory's structure, generate its predictions, and establish its falsification criteria."
+        },
+        {
+          "heading": "Summary Note on Axioms",
+          "anchor": "#summary-note-on-axioms",
+          "content": " "
+        }
+      ]
+    },
+    {
       "title": "Get in Touch",
       "url": "/contact",
       "sections": [
@@ -229,28 +245,39 @@
       ]
     },
     {
+      "title": "Glossary",
+      "url": "/glossary",
+      "sections": [
+        {
+          "heading": "Glossary",
+          "anchor": "",
+          "content": "Comprehensive definitions for the AIM Framework—designed as a contract-style reference section where capitalised terms have specific, bounded meanings. Usage Note: Throughout AIM literature, capitalised terms (e.g., \"Individual\", \"Mimetic Desire\") have the precise meanings defined here. Uncapitalise"
+        }
+      ]
+    },
+    {
       "title": "AIM Motivation Framework | Use Better Metrics",
       "url": "/",
       "sections": [
         {
           "heading": "AIM Motivation Framework | Use Better Metrics",
           "anchor": "",
-          "content": "Use Better Metrics presents the AIM Motivation Framework: a taxonomic synthesis built on established neuroscience, Girardian theory, and behavioral economics research. Synthesizing findings from mirror neuron systems (Rizzolatti), Self-Determination Theory (Deci & Ryan), and homeostatic regulation r"
+          "content": "A Unifying General Theory of Human Motivation The AIM Framework synthesizes established neuroscience, behavioral economics, and Girardian theory into a falsifiable taxonomy with 8 core axioms and domain-level predictions. Three neurologically distinct motivational sources—integrated through the brai"
         },
         {
           "heading": "From Explanation to Contested Concepts",
           "anchor": "#from-explanation-to-contested-concepts",
-          "content": "Use Better Metrics presents the AIM Motivation Framework: a taxonomic synthesis built on established neuroscience, Girardian theory, and behavioral economics research. Synthesizing findings from mirro"
+          "content": "A Unifying General Theory of Human Motivation The AIM Framework synthesizes established neuroscience, behavioral economics, and Girardian theory into a falsifiable taxonomy with 8 core axioms and doma"
         },
         {
           "heading": "The AIM Framework in One Glance",
           "anchor": "#the-aim-framework-in-one-glance",
-          "content": "The aim is not to discard existing models or findings, but to plug AIM into them so that long-standing anomalies, edge cases, and disagreements across fields can be explained using a single, consisten"
+          "content": "Three neurologically distinct motivational sources—integrated through the brain's common-currency valuation system (vmPFC/VS)—explain patterns that single-variable models cannot: the Easterlin Paradox"
         },
         {
           "heading": "How This Work Began",
           "anchor": "#how-this-work-began",
-          "content": "Any normative suggestions about how societies or organizations ought to be structured are meant to follow directly from that explanatory work: if we can see which parts of behavior are appetitive, whi"
+          "content": "Once the same three sources of motivation are traced through legal systems, markets, and everyday institutions, they provide a more precise way of talking about contested ideas like fairness, freedom,"
         }
       ]
     },
