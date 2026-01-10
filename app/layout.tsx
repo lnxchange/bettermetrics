@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/react'
 import { GAListener } from '@/components/ga-listener'
 
 import { ToasterWrapper } from '@/components/toaster-wrapper'
@@ -145,6 +146,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <TailwindIndicator />
           {gaId ? <GAListener measurementId={gaId} /> : null}
         </Providers>
+        <Analytics />
       </body>
     </html>
   )
