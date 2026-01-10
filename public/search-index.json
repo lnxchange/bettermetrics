@@ -90,6 +90,17 @@
       ]
     },
     {
+      "title": "Inbox",
+      "url": "/admin/inbox",
+      "sections": [
+        {
+          "heading": "Inbox",
+          "anchor": "",
+          "content": "unread message$` : 'No unread messages'}  Make sure the contact_messages table exists in Supabase. See setup instructions below."
+        }
+      ]
+    },
+    {
       "title": "Create New Article",
       "url": "/admin/new-article",
       "sections": [
@@ -107,12 +118,12 @@
         {
           "heading": "Admin Dashboard | Use Better Metrics",
           "anchor": "",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and manage your content pipeline. Upload and manage research documents, papers, and resources related to "
+          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page. Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and"
         },
         {
           "heading": "Quick Stats",
           "anchor": "#quick-stats",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and m"
+          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page."
         }
       ]
     },
