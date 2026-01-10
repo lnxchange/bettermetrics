@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Script from 'next/script'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 import { GAListener } from '@/components/ga-listener'
 
 import { ToasterWrapper } from '@/components/toaster-wrapper'
