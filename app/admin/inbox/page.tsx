@@ -17,6 +17,7 @@ interface ContactMessage {
   email: string
   affiliation: string | null
   interest: string
+  subject: string | null
   message: string | null
   paper_scope: string | null
   paper_questions: string | null
@@ -208,10 +209,10 @@ export default function AdminInboxPage() {
                               </span>
                             </div>
                             <p className="mt-1 truncate text-xs text-gray-500">
-                              {message.email}
+                              {message.subject || getInterestLabel(message.interest)}
                             </p>
                             <p className="mt-1 truncate text-xs text-blue-600">
-                              {getInterestLabel(message.interest)}
+                              {message.email}
                             </p>
                           </div>
                           <span className="ml-2 text-xs text-gray-400 flex-shrink-0">
@@ -233,8 +234,10 @@ export default function AdminInboxPage() {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle>{selectedMessage.name}</CardTitle>
+                      <CardTitle>{selectedMessage.subject || getInterestLabel(selectedMessage.interest)}</CardTitle>
                       <CardDescription>
+                        <span className="font-medium text-gray-700">{selectedMessage.name}</span>
+                        {' • '}
                         <a href={`mailto:${selectedMessage.email}`} className="text-blue-600 hover:underline">
                           {selectedMessage.email}
                         </a>
@@ -329,6 +332,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   email TEXT NOT NULL,
   affiliation TEXT,
   interest TEXT NOT NULL,
+  subject TEXT,
   message TEXT,
   paper_scope TEXT,
   paper_questions TEXT,

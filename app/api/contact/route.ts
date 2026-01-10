@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, affiliation, interest, message, paperScope, paperQuestions } = body
+    const { name, email, affiliation, interest, subject, message, paperScope, paperQuestions } = body
 
     // Validate required fields
     if (!name || !email) {
@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
             email,
             affiliation: affiliation || null,
             interest,
+            subject: subject || null,
             message: message || null,
             paper_scope: paperScope || null,
             paper_questions: paperQuestions || null,
@@ -78,8 +79,8 @@ export async function POST(req: NextRequest) {
           },
         })
 
-        // Build subject based on interest type
-        const subjectMap: { [key: string]: string } = {
+        // Build email subject based on interest type and user's subject
+        const interestMap: { [key: string]: string } = {
           'research-paper': 'Research Paper Request',
           'research': 'Research Collaboration',
           'testing': 'Testing & Validation',
@@ -88,7 +89,9 @@ export async function POST(req: NextRequest) {
           'media': 'Media Inquiry',
           'general': 'General Inquiry'
         }
-        const subject = `AIM Framework: ${subjectMap[interest] || 'Contact Form'}`
+        const emailSubject = subject 
+          ? `AIM Framework: ${subject}`
+          : `AIM Framework: ${interestMap[interest] || 'Contact Form'}`
 
         // Build email content based on whether it's a research paper request
         const htmlContent = interest === 'research-paper' ? `
@@ -153,7 +156,7 @@ export async function POST(req: NextRequest) {
         const mailOptions = {
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
           to: 'yule@attune.legal',
-          subject,
+          subject: emailSubject,
           html: htmlContent,
           text: textContent,
         }
