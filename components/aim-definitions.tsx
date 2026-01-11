@@ -188,9 +188,183 @@ export function MimeticPremium() {
         </ul>
       </div>
       <p className="mt-4 text-xs text-gray-600">
-        Understanding the Mimetic Premium helps explain pricing anomalies, luxury goods markets, 
+        Understanding the Mimetic Premium helps explain pricing anomalies, luxury goods markets,
         and why identical products command different prices based on social visibility.
       </p>
+    </div>
+  )
+}
+
+export function AIMDiagnosticTable() {
+  return (
+    <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+      <div className="mb-6">
+        <h3 className="mb-2 text-2xl font-bold text-gray-900">
+          Diagnostic Comparison Table
+        </h3>
+        <p className="text-gray-700">
+          Use this table to identify which motivational source is driving observed behavior.
+          Apply <strong>backward-elimination logic</strong>: classify by Appetites and Intrinsic first;
+          robust residual cases matching the Mimetic column warrant attribution to Mimetic Desire as a distinct source.
+        </p>
+      </div>
+
+      {/* Horizontal scroll container for mobile */}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[800px] border-collapse text-sm">
+          <thead>
+            <tr className="border-b-2 border-gray-300">
+              <th className="p-3 text-left font-bold text-gray-900 bg-gray-50">Feature type</th>
+              <th className="p-3 text-left font-bold text-amber-900 bg-amber-50 border-l-2 border-amber-200">
+                Appetites (A)
+              </th>
+              <th className="p-3 text-left font-bold text-teal-900 bg-teal-50 border-l-2 border-teal-200">
+                Intrinsic Motivation (I)
+              </th>
+              <th className="p-3 text-left font-bold text-purple-900 bg-purple-50 border-l-2 border-purple-200">
+                Mimetic Desire (M)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Row 1: Trigger */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Trigger</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Emerges with physiological/safety deficit (hunger, thirst, cold, pain, acute insecurity)
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Emerges from engaging in an activity that is rewarding in the doing (curiosity, mastery, play, creative work)
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Emerges or intensifies after exposure to Models pursuing/displaying the Object or goal
+              </td>
+            </tr>
+
+            {/* Row 2: Satiation pattern */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Satiation pattern</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Episodically satiating: urge terminates rapidly once deficit is corrected; clear &quot;after&quot; until next cycle
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Process non-satiating, enabling-Objects satiate: tools or resources reach &quot;enough&quot;; engagement continues and deepens
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Non-satiating: achievement resets comparison set; no stable plateau, just new targets (mimetic/hedonic treadmill)
+              </td>
+            </tr>
+
+            {/* Row 3: Temporal profile */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Temporal profile</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Cyclical and predictable (meal/sleep/safety cycles); recurrence on roughly regular schedules
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Open-ended trajectories; projects evolve with competence and meaning rather than cycling around set-points
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Escalatory/ratcheting: reference points drift upward with peers/rivals; cycles track social dynamics rather than physiology
+              </td>
+            </tr>
+
+            {/* Row 4: Urgency / felt quality */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Urgency / felt quality</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Felt as <em>need</em> or pressure; high urgency under deficit, cognitive bandwidth narrows onto correction
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                High engagement, low survival-urgency; flow-like absorption, time loss, but not panic if briefly interrupted
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Often felt as status anxiety, envy, shame, or &quot;must catch up&quot;; can feel survival-level when hijacking A-channel
+              </td>
+            </tr>
+
+            {/* Row 5: Audience dependence */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Audience dependence</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Audience-independent: behaviour is essentially identical in private and public
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Audience-independent: activity persists with similar intensity when unobserved, no external reward
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Strongly audience-dependent: motivation tracks visibility, metrics, observers; often collapses when no one will ever know
+              </td>
+            </tr>
+
+            {/* Row 6: Comparison role */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Comparison role</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Absolute: keyed to internal set-points (calories, temperature, safety) rather than others&apos; states
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Mostly non-comparative: others can inspire/teach but do not define value of the activity
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Constitutively comparative: value defined by rank, scarcity, and others&apos; desire; inherently positional
+              </td>
+            </tr>
+
+            {/* Row 7: Typical targets */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Typical targets</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Food, water, sleep, shelter, physical safety, basic income/security
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Learning, craft, art, research, caregiving, play, exploration, creative and pro-social projects
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Status goods, elite affiliations, rankings, followers, prestige credentials, fashionable Objects
+              </td>
+            </tr>
+
+            {/* Row 8: Phenomenology of payoff */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Phenomenology of payoff</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Relief, removal of discomfort, ability to redirect attention; &quot;finally, I can relax&quot;
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Enjoyment, meaning, absorption, &quot;this is worth doing in itself&quot;; interruptions feel like loss of thread
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Brief hit (often pride/validation) followed by rapid flattening and renewed comparison; victories feel weirdly hollow
+              </td>
+            </tr>
+
+            {/* Row 9: Response to visibility manipulation */}
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3 font-semibold text-gray-900 bg-gray-50">Response to visibility manipulation</td>
+              <td className="p-3 text-gray-700 border-l-2 border-amber-100">
+                Little change: making eating/sleeping visible does not radically change A-strength (beyond shame signalling)
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-teal-100">
+                Modest change: praise/recognition can modulate I but core drive survives audience removal
+              </td>
+              <td className="p-3 text-gray-700 border-l-2 border-purple-100">
+                Large change: visibility, leaderboards, social media, prestige cues strongly modulate intensity and target selection
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-6 rounded-lg border-l-4 border-blue-400 bg-blue-50 p-4">
+        <p className="text-sm font-semibold text-gray-900 mb-2">How to Use This Table:</p>
+        <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+          <li>Observe the behavior you want to classify</li>
+          <li>Check if it matches Appetites column features (cyclical, satiating, audience-independent)</li>
+          <li>If not, check if it matches Intrinsic Motivation column (process-rewarding, flow, autonomous)</li>
+          <li>If robust residual patterns match Mimetic Desire column (comparative, visibility-dependent, escalatory), attribute to M</li>
+        </ol>
+      </div>
     </div>
   )
 }

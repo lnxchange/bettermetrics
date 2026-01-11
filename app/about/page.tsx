@@ -4,6 +4,7 @@ import { HiArrowRight } from 'react-icons/hi'
 import { StatusBadge } from '@/components/ui/status-badge'
 import {
   AIMDefinitionsShort,
+  AIMDiagnosticTable,
   AIMIntegrationEquation,
   NeuralCircuits,
   DescriptiveVsNormative,
@@ -98,8 +99,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Integration Equation */}
+      {/* Diagnostic Comparison Table */}
       <section className="bg-gray-50 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 id="diagnostic-criteria" className="mb-4 text-4xl font-bold text-gray-900">
+              How to Identify Motivational Sources
+            </h2>
+            <p className="mx-auto max-w-3xl text-xl text-gray-600">
+              A systematic diagnostic tool for distinguishing which source is driving observed behavior
+            </p>
+          </div>
+
+          <AIMDiagnosticTable />
+        </div>
+      </section>
+
+      {/* Integration Equation */}
+      <section className="bg-white py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <h2 id="how-sources-combine" className="mb-4 text-4xl font-bold text-gray-900">
