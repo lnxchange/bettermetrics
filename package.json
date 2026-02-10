@@ -20,6 +20,7 @@
     "process-rag-embeddings": "node scripts/process-rag-embeddings.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.74.0",
     "@langchain/core": "^1.0.1",
     "@langchain/openai": "^1.0.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",

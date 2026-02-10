@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
 import { StreamingTextResponse } from 'ai'
+import Anthropic from '@anthropic-ai/sdk'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
@@ -48,8 +49,6 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
 }
 
 // Use Node.js runtime to support longer response times (up to 10 minutes)
-// Edge runtime has a 30-second timeout limit which is insufficient for
-// the reasoning model's complex logical framework analysis
 export const runtime = 'nodejs'
 export const maxDuration = 600 // 10 minutes in seconds
 
@@ -101,20 +100,13 @@ All human choices are driven by three distinct neural systems. Your goal is to i
 - **Handling Missing Context:** If the user asks about a specific external event or person NOT in your provided Context (RAG), DO NOT hallucinate details or search the internet.
 - **The Bridge Script:** "The AIM research documents do not contain detailed information on [Insert Topic]. However, if you describe specific behaviors or pressures you are observing, I can analyze them through the AIM lens to identify Appetite (A), Intrinsic (I), or Mimetic (M) drivers."`
 
-// PERPLEXITY SONAR-PRO MODEL IMPLEMENTATION
-// Using Perplexity's sonar-pro model which provides:
-// 1. Enhanced logical reasoning about how AIM relates to external information
-// 2. Multi-step inference required to apply AIM framework to novel situations
-// 3. Synthesizing AIM concepts with broader research literature
-// 4. Formalized causal logic chains (IF-THEN reasoning)
-// 5. Systematic extrapolation from AIM premises to testable predictions
-//
-// The system prompt has been tuned with logical framework methodology to:
-// - Extract direct logical consequences from AIM premises
-// - Structure reasoning as explicit IF-THEN chains
-// - Identify assumptions and boundary conditions
-// - Operationalize psychological premises into measurable outcomes
-// - Generate specific, testable predictions from the AIM framework
+// CLAUDE OPUS 4 IMPLEMENTATION
+// 
+// Claude Opus 4 is ideal for RAG applications because:
+// 1. No web search - uses only provided context
+// 2. Excellent at following system prompt instructions
+// 3. Strong grounding in document content
+// 4. Precise adherence to formatting requirements
 
 export async function POST(req: Request) {
   try {
@@ -126,10 +118,16 @@ export async function POST(req: Request) {
       return new Response('Service unavailable - Supabase not configured', { status: 503 })
     }
     
-    // Check if Perplexity API key is configured
-    if (!process.env.PERPLEXITY_API_KEY) {
-      console.log('Perplexity API key not configured')
-      return new Response('Service unavailable - Perplexity API not configured', { status: 503 })
+    // Check if Anthropic API key is configured
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.log('Anthropic API key not configured')
+      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
+    }
+    
+    // Check if OpenAI API key is configured (needed for embeddings)
+    if (!process.env.OPENAI_API_KEY) {
+      console.log('OpenAI API key not configured (needed for embeddings)')
+      return new Response('Service unavailable - OpenAI API not configured', { status: 503 })
     }
     
     // Create Supabase client
@@ -154,15 +152,12 @@ export async function POST(req: Request) {
       sessionExpiry: session?.expires_at,
       currentTime: Date.now(),
       sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false,
-      cookies: cookieStore.getAll().map(c => ({ name: c.name, hasValue: !!c.value })),
       supabaseConfig: {
         hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
         hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
       },
-      perplexityConfig: {
-        hasKey: !!process.env.PERPLEXITY_API_KEY,
-        keyPreview: process.env.PERPLEXITY_API_KEY ? 
-          `${process.env.PERPLEXITY_API_KEY.substring(0, 10)}...` : 'Missing'
+      anthropicConfig: {
+        hasKey: !!process.env.ANTHROPIC_API_KEY
       }
     })
     
@@ -182,11 +177,10 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id
 
-    // Debug Perplexity API key
-    console.log('Perplexity API Key Debug:', {
-      hasKey: !!process.env.PERPLEXITY_API_KEY,
-      keyLength: process.env.PERPLEXITY_API_KEY?.length || 0,
-      keyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10) || 'Missing',
+    // Debug API keys
+    console.log('API Key Debug:', {
+      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       timestamp: new Date().toISOString()
     })
 
@@ -207,6 +201,13 @@ export async function POST(req: Request) {
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
         const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
         hasRagResults = results.length > 0
+        
+        console.log('RAG search results:', {
+          query: userQuery.substring(0, 100),
+          resultsCount: results.length,
+          threshold,
+          topScores: results.slice(0, 3).map(r => r.similarity_score)
+        })
         
         if (hasRagResults) {
           // Filter out Chantal McNaught's name from RAG context
@@ -245,231 +246,90 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
       systemContent += `\n\n${ragContext}`
     }
 
-    const systemMessage = { role: 'system', content: systemContent }
-    const allMessages = [systemMessage, ...messages]
+    // Convert messages to Anthropic format (separate system from user/assistant)
+    const anthropicMessages = messages.map((msg: { role: string; content: string }) => ({
+      role: msg.role === 'user' ? 'user' : 'assistant',
+      content: msg.content
+    }))
 
-    // Use Perplexity API directly with fetch - PROPER STREAMING
-    console.log('Making Perplexity API request:', {
-      model: 'sonar-pro',
-      messageCount: allMessages.length,
-      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
+    // Initialize Anthropic client
+    const anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY
+    })
+
+    console.log('Making Claude Opus 4 API request:', {
+      model: 'claude-opus-4-20250514',
+      messageCount: anthropicMessages.length,
+      hasRagContext: hasRagResults,
+      systemPromptLength: systemContent.length,
       timestamp: new Date().toISOString()
     })
 
-    let perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'sonar-pro',
-        messages: allMessages,
-        max_tokens: 6000,  // Increased from 1400 for comprehensive answers
-        temperature: 0.3,   // Lower for fidelity while allowing completeness
-        stream: true  // Re-enable streaming for proper client parsing
-      })
+    // Use Claude Opus 4 with streaming
+    const stream = await anthropic.messages.stream({
+      model: 'claude-opus-4-20250514',
+      max_tokens: 4000,
+      system: systemContent,
+      messages: anthropicMessages
     })
 
-    if (!perplexityResponse.ok) {
-      const errorText = await perplexityResponse.text()
+    console.log('Claude Opus 4 streaming response initiated')
 
-      // Comprehensive error logging for debugging
-      console.error('=== PERPLEXITY API ERROR ===')
-      console.error('Status:', perplexityResponse.status, perplexityResponse.statusText)
-      console.error('Response body:', errorText)
-      console.error('Request details:', {
-        userId,
-        chatId: json.id,
-        messageCount: messages.length,
-        hasApiKey: !!process.env.PERPLEXITY_API_KEY,
-        apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
-        model: 'sonar-pro',
-        timestamp: new Date().toISOString()
-      })
-      console.error('===========================')
-
-      // Return the upstream HTTP status directly instead of masking as 502
-      return new Response(
-        JSON.stringify({
-          error: 'Perplexity API error',
-          status: perplexityResponse.status,
-          statusText: perplexityResponse.statusText,
-          details: errorText,
-          timestamp: new Date().toISOString()
-        }),
-        {
-          status: perplexityResponse.status,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
-    }
-
-    console.log('Perplexity API streaming response received successfully')
-
-    // Auto-continue loop to ensure complete answers with conclusions
+    // Collect the full response
     let fullContent = ''
-    let citations: string[] = []
-    let iterationCount = 0
-    const maxIterations = 3
-    let currentMessages = [...allMessages]
-
-    while (iterationCount < maxIterations) {
-      iterationCount++
-      console.log(`Auto-continue iteration ${iterationCount}/${maxIterations}`)
-
-      // Collect the response to process citations
-      const responseText = await perplexityResponse.text()
-      console.log(`Response received (iteration ${iterationCount}), processing citations...`)
-
-      // Parse the response to extract content and citations
-      const lines = responseText.split('\n')
-      let iterationContent = ''
-      let iterationCitations: string[] = []
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6)
-
-          if (data === '[DONE]') {
-            break
-          }
-
-          try {
-            const parsed = JSON.parse(data)
-
-            // Extract citations
-            if (parsed.citations) {
-              iterationCitations = parsed.citations
-              console.log(`Found ${iterationCitations.length} citations in iteration ${iterationCount}`)
-            }
-
-            // Extract content
-            if (parsed.choices?.[0]?.delta?.content) {
-              iterationContent += parsed.choices[0].delta.content
-            }
-          } catch (parseError) {
-            console.warn('Failed to parse SSE data:', data)
-          }
-        }
-      }
-
-      // Accumulate content and citations
-      fullContent += iterationContent
-      citations = [...citations, ...iterationCitations]
-
-      // Filter out reasoning model's internal thinking tags
-      let processedIterationContent = iterationContent.replace(/<think>[\s\S]*?<\/think>/g, '')
-      
-      console.log(`Iteration ${iterationCount} content length: ${iterationContent.length}, processed: ${processedIterationContent.length}`)
-
-      // Check if we have a conclusion or if this is the first iteration
-      const hasConclusion = processedIterationContent.toLowerCase().includes('conclusion')
-      const isFirstIteration = iterationCount === 1
-      
-      if (hasConclusion || isFirstIteration) {
-        console.log(`Stopping auto-continue: hasConclusion=${hasConclusion}, isFirstIteration=${isFirstIteration}`)
-        break
-      }
-
-      // If no conclusion and we have more iterations, continue
-      if (iterationCount < maxIterations) {
-        console.log('No conclusion found, continuing with follow-up request...')
-        
-        // Add continuation message
-        currentMessages.push({
-          role: 'user',
-          content: 'Continue until you finish the Conclusion section.'
-        })
-
-        // Make another API call
-        const continueResponse = await fetch('https://api.perplexity.ai/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'sonar-pro',
-            messages: currentMessages,
-            max_tokens: 2000,  // Increased from 800 for adequate continuation
-            temperature: 0.3,
-        stream: true
-          })
-        })
-
-        if (!continueResponse.ok) {
-          console.error('Continue request failed:', continueResponse.status)
-          break
-        }
-
-        perplexityResponse = continueResponse
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        fullContent += event.delta.text
       }
     }
 
-    // Final processing
-    let processedContent = fullContent.replace(/<think>[\s\S]*?<\/think>/g, '')
-    console.log(`Final content length: ${fullContent.length}, processed: ${processedContent.length}`)
-
-    // Process citations to make them clickable
-    if (citations.length > 0) {
-      citations.forEach((url, index) => {
-        const referenceNumber = index + 1
-        const markdownLink = `[${referenceNumber}](${url})`
-        const regex = new RegExp(`\\[${referenceNumber}\\]`, 'g')
-        processedContent = processedContent.replace(regex, markdownLink)
-      })
-      console.log(`Processed ${citations.length} citations into clickable links`)
-    }
+    console.log(`Claude response received, length: ${fullContent.length}`)
 
     // Save chat to database
     try {
       const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
-        const id = json.id ?? nanoid()
-        const createdAt = Date.now()
-        const path = `/chat/${id}`
-        const payload = {
-          id,
-          title,
-          userId,
-          createdAt,
-          path,
-          messages: [
-            ...messages,
-            {
-            content: processedContent,
-              role: 'assistant'
-            }
-          ]
-        }
+      const id = json.id ?? nanoid()
+      const createdAt = Date.now()
+      const path = `/chat/${id}`
+      const payload = {
+        id,
+        title,
+        userId,
+        createdAt,
+        path,
+        messages: [
+          ...messages,
+          {
+            content: fullContent,
+            role: 'assistant'
+          }
+        ]
+      }
 
-        console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
-          await supabase.from('chats').upsert({ 
-            id, 
-            payload, 
-            user_id: userId 
-          }).throwOnError()
+      console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
+      await supabase.from('chats').upsert({ 
+        id, 
+        payload, 
+        user_id: userId 
+      }).throwOnError()
 
       console.log(`Chat saved to database: ${id}`)
       
       // Revalidate chat pages so sidebar updates with new chat
       revalidatePath('/chat')
       revalidatePath(`/chat/${id}`)
-        } catch (error) {
-          console.error('Error saving chat to database:', error)
+    } catch (error) {
+      console.error('Error saving chat to database:', error)
       // Continue to return response even if save fails
     }
 
     // Return the processed content as a streaming response using Vercel AI SDK
-    // StreamingTextResponse is required for the useChat hook to properly parse the response
     const encoder = new TextEncoder()
-    const stream = new ReadableStream({
+    const responseStream = new ReadableStream({
       start(controller) {
         // Send the processed content in small chunks for streaming effect
         const chunkSize = 5 // Send a few words at a time
-        const words = processedContent.split(' ')
+        const words = fullContent.split(' ')
 
         for (let i = 0; i < words.length; i += chunkSize) {
           const chunk = words.slice(i, i + chunkSize).join(' ')
@@ -482,7 +342,7 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
     })
 
     // Use StreamingTextResponse from Vercel AI SDK for proper useChat compatibility
-    return new StreamingTextResponse(stream)
+    return new StreamingTextResponse(responseStream)
   } catch (error) {
     // Comprehensive error logging for debugging
     console.error('=== CHAT API GENERAL ERROR ===')
@@ -490,14 +350,10 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
     console.error('Error message:', error instanceof Error ? error.message : String(error))
     console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
     console.error('Context:', {
-      userId: 'unknown', // session not available in catch block
-      chatId: 'unknown', // json not available in catch block
-      messageCount: 0, // messages not available in catch block
-      apiUsed: 'Perplexity sonar-pro',
-      hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
-      apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
+      apiUsed: 'Claude Opus 4',
+      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
       timestamp: new Date().toISOString(),
       userAgent: req.headers.get('user-agent'),
       url: req.url,
