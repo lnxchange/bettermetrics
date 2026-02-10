@@ -57,6 +57,13 @@ const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are
 **YOUR MISSION:**
 Function as a universal translator for the Human Behavioural Sciences, mapping complex phenomena (Economics, Politics, Sociology) to the AIM (Appetites/Intrinsic/Mimetic) taxonomy.
 
+**RESPONSE STYLE:**
+- Provide thorough, complete answers that fully address the user's question
+- Organize your response naturally based on what the question requires
+- Do NOT use rigid formats or forced section structures
+- You have generous token limits - use them to give comprehensive, well-explained answers
+- Focus on depth and clarity over brevity
+
 **KNOWLEDGE BOUNDARY & CITATIONS:**
 - **Source Priority:** Always prioritize the provided Context Documents (RAG).
 - **External References:** You may reference real-world events/history for context.
@@ -246,7 +253,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
       body: JSON.stringify({
         model: 'sonar-reasoning-pro',
         messages: allMessages,
-        max_tokens: 6000,  // Increased from 1400 for comprehensive answers
+        max_tokens: 10000,  // Increased to allow complete, thorough answers
         temperature: 0.3,   // Lower for fidelity while allowing completeness
         stream: true  // Re-enable streaming for proper client parsing
       })
@@ -288,12 +295,13 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
 
     console.log('Perplexity API streaming response received successfully')
 
-    // Auto-continue loop to ensure complete answers with conclusions
+    // Auto-continue loop to handle truncated responses
     let fullContent = ''
     let citations: string[] = []
     let iterationCount = 0
-    const maxIterations = 3
+    const maxIterations = 2  // Reduced since higher token limit should need fewer continuations
     let currentMessages = [...allMessages]
+    let wasTruncated = false
 
     while (iterationCount < maxIterations) {
       iterationCount++
@@ -301,12 +309,13 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
 
       // Collect the response to process citations
       const responseText = await perplexityResponse.text()
-      console.log(`Response received (iteration ${iterationCount}), processing citations...`)
+      console.log(`Response received (iteration ${iterationCount}), processing...`)
 
-      // Parse the response to extract content and citations
+      // Parse the response to extract content, citations, and finish reason
       const lines = responseText.split('\n')
       let iterationContent = ''
       let iterationCitations: string[] = []
+      let finishReason = ''
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {
@@ -329,6 +338,11 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
             if (parsed.choices?.[0]?.delta?.content) {
               iterationContent += parsed.choices[0].delta.content
             }
+
+            // Check finish reason
+            if (parsed.choices?.[0]?.finish_reason) {
+              finishReason = parsed.choices[0].finish_reason
+            }
           } catch (parseError) {
             console.warn('Failed to parse SSE data:', data)
           }
@@ -341,27 +355,26 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
 
       // Filter out reasoning model's internal thinking tags
       let processedIterationContent = iterationContent.replace(/<think>[\s\S]*?<\/think>/g, '')
-      
-      console.log(`Iteration ${iterationCount} content length: ${iterationContent.length}, processed: ${processedIterationContent.length}`)
 
-      // Check if we have a conclusion or if this is the first iteration
-      const hasConclusion = processedIterationContent.toLowerCase().includes('conclusion')
-      const isFirstIteration = iterationCount === 1
-      
-      if (hasConclusion || isFirstIteration) {
-        console.log(`Stopping auto-continue: hasConclusion=${hasConclusion}, isFirstIteration=${isFirstIteration}`)
+      console.log(`Iteration ${iterationCount}: content=${iterationContent.length}chars, processed=${processedIterationContent.length}chars, finish_reason=${finishReason}`)
+
+      // Only continue if response was actually truncated (hit token limit)
+      wasTruncated = finishReason === 'length'
+
+      if (!wasTruncated || iterationCount === 1) {
+        console.log(`Stopping auto-continue: wasTruncated=${wasTruncated}, isFirstIteration=${iterationCount === 1}`)
         break
       }
 
-      // If no conclusion and we have more iterations, continue
-      if (iterationCount < maxIterations) {
-        console.log('No conclusion found, continuing with follow-up request...')
-        
-        // Add continuation message
-        currentMessages.push({
-          role: 'user',
-          content: 'Continue until you finish the Conclusion section.'
-        })
+      // If truncated and we have more iterations, continue
+      if (wasTruncated && iterationCount < maxIterations) {
+        console.log('Response was truncated, continuing...')
+
+        // Add assistant's partial response and continuation prompt
+        currentMessages.push(
+          { role: 'assistant', content: processedIterationContent },
+          { role: 'user', content: 'Please continue your response.' }
+        )
 
         // Make another API call
         const continueResponse = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -374,7 +387,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
           body: JSON.stringify({
             model: 'sonar-reasoning-pro',
             messages: currentMessages,
-            max_tokens: 2000,  // Increased from 800 for adequate continuation
+            max_tokens: 6000,  // Generous continuation limit
             temperature: 0.3,
         stream: true
           })
