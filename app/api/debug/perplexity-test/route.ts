@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     
     // Test with a simple request using streaming (like main chat API)
     const apiResponse = await client.createChatCompletion({
-      model: 'sonar-reasoning',
+      model: 'sonar-reasoning-pro',
       messages: [
         { role: 'system', content: 'You are a helpful assistant. Respond briefly.' },
         { role: 'user', content: testMessage }
@@ -34,17 +34,17 @@ export async function POST(req: NextRequest) {
       max_tokens: 100,
       stream: true
     })
-    
+
     // For streaming response, we need to handle it differently
     // Let's just check if we got a response object
     const hasResponse = !!apiResponse
     const completion = hasResponse ? 'Perplexity API responded successfully' : 'No response'
-    
+
     return NextResponse.json({
       success: true,
       testMessage,
       response: completion,
-      model: 'sonar-reasoning',
+      model: 'sonar-reasoning-pro',
       timestamp: new Date().toISOString(),
       hasPerplexityKey: true
     })

@@ -85,12 +85,13 @@ Function as a universal translator for the Human Behavioural Sciences, mapping c
 - If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
 
 // REASONING MODEL IMPLEMENTATION
-// Currently using Perplexity's sonar-reasoning model which provides:
+// Currently using Perplexity's sonar-reasoning-pro model which provides:
 // 1. Enhanced logical reasoning about how AIM relates to external information
 // 2. Multi-step inference required to apply AIM framework to novel situations
 // 3. Synthesizing AIM concepts with broader research literature
-// 4. Formalized causal logic chains (IF-THEN reasoning)
-// 5. Systematic extrapolation from AIM premises to testable predictions
+// 4. Powered by DeepSeek-R1 with visible reasoning content through API
+// 5. Formalized causal logic chains (IF-THEN reasoning)
+// 6. Systematic extrapolation from AIM premises to testable predictions
 //
 // The system prompt has been tuned with logical framework methodology to:
 // - Extract direct logical consequences from AIM premises
@@ -229,7 +230,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
 
     // Use Perplexity API directly with fetch - PROPER STREAMING
     console.log('Making Perplexity API request:', {
-      model: 'sonar-reasoning',
+      model: 'sonar-reasoning-pro',
       messageCount: allMessages.length,
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       timestamp: new Date().toISOString()
@@ -243,7 +244,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        model: 'sonar-reasoning',
+        model: 'sonar-reasoning-pro',
         messages: allMessages,
         max_tokens: 6000,  // Increased from 1400 for comprehensive answers
         temperature: 0.3,   // Lower for fidelity while allowing completeness
@@ -264,7 +265,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
         messageCount: messages.length,
         hasApiKey: !!process.env.PERPLEXITY_API_KEY,
         apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
-        model: 'sonar-reasoning',
+        model: 'sonar-reasoning-pro',
         timestamp: new Date().toISOString()
       })
       console.error('===========================')
@@ -371,7 +372,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
             'Accept': 'application/json'
           },
           body: JSON.stringify({
-            model: 'sonar-reasoning',
+            model: 'sonar-reasoning-pro',
             messages: currentMessages,
             max_tokens: 2000,  // Increased from 800 for adequate continuation
             temperature: 0.3,
@@ -476,7 +477,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
       userId: 'unknown', // session not available in catch block
       chatId: 'unknown', // json not available in catch block
       messageCount: 0, // messages not available in catch block
-      apiUsed: 'Perplexity sonar-reasoning',
+      apiUsed: 'Perplexity sonar-reasoning-pro',
       hasPerplexityKey: !!process.env.PERPLEXITY_API_KEY,
       apiKeyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10),
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
