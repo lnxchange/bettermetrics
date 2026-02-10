@@ -104,7 +104,7 @@ Function as a universal translator for the Human Behavioural Sciences, mapping c
 - If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
 
 // REASONING MODEL IMPLEMENTATION
-// Using Claude 3.5 Sonnet (claude-3-5-sonnet-20240620) which provides:
+// Using Claude 3 Opus (claude-3-opus-20240229) which provides:
 // 1. Best-in-class reasoning capabilities for applying AIM framework
 // 2. 200K context window for comprehensive RAG context
 // 3. No web search - relies exclusively on provided RAG documents
@@ -117,6 +117,8 @@ Function as a universal translator for the Human Behavioural Sciences, mapping c
 // - Focuses entirely on your corpus via RAG
 // - Better instruction following for flexible response formats
 // - More natural, less defensive writing style
+//
+// Note: Using Claude 3 Opus as Claude 3.5 Sonnet versions return 404 errors
 
 export async function POST(req: Request) {
   try {
@@ -256,7 +258,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
     })
 
     console.log('Making Claude API request:', {
-      model: 'claude-3-5-sonnet-20240620',
+      model: 'claude-3-opus-20240229',
       messageCount: claudeMessages.length,
       hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
       timestamp: new Date().toISOString()
@@ -266,8 +268,8 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
     let stream
     try {
       stream = await anthropic.messages.stream({
-        model: 'claude-3-5-sonnet-20240620',
-        max_tokens: 8192,  // Claude's maximum output tokens
+        model: 'claude-3-opus-20240229',
+        max_tokens: 4096,  // Claude 3 Opus maximum output tokens
         temperature: 0.3,
         system: systemContent,  // System prompt separate from messages
         messages: claudeMessages,
@@ -280,7 +282,7 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
         chatId: json.id,
         messageCount: messages.length,
         hasApiKey: !!process.env.ANTHROPIC_API_KEY,
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-opus-20240229',
         timestamp: new Date().toISOString()
       })
       console.error('===========================')
