@@ -44,7 +44,7 @@ export class VectorSearch {
           query_embedding: queryEmbedding,
           match_threshold: threshold,
           match_count: limit,
-          document_type: documentType || null
+          p_document_type: documentType || null  // Renamed parameter to avoid SQL ambiguity
         })
 
         if (error) {
@@ -58,10 +58,12 @@ export class VectorSearch {
         console.error('RPC function failed, trying direct query:', rpcError)
         
         // Fallback: Direct query to document_embeddings table
+        // Fetch more documents (up to 500) to have a meaningful sample for similarity calculation
+        const FALLBACK_FETCH_LIMIT = 500
         let queryBuilder = this.supabase
           .from('document_embeddings')
           .select('chunk_text, metadata, document_id, chunk_index, embedding')
-          .limit(limit)
+          .limit(FALLBACK_FETCH_LIMIT)
 
         // Add document type filter if specified
         if (documentType) {
