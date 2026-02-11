@@ -3,7 +3,6 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
-import { StreamingTextResponse } from 'ai'
 import Anthropic from '@anthropic-ai/sdk'
 
 import { auth } from '@/auth'
@@ -48,65 +47,80 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
   return trimmed.join('\n\n---\n\n')
 }
 
-// Use Node.js runtime to support longer response times (up to 10 minutes)
+// Use Node.js runtime to support longer response times
+// Claude 3.5 Sonnet provides excellent reasoning without needing extended timeouts
 export const runtime = 'nodejs'
-export const maxDuration = 600 // 10 minutes in seconds
+export const maxDuration = 300 // 5 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are a highly capable analytical partner trained *exclusively* on Yule Guttenbeil's AIM Motivation Framework.
+const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are an expert analytical partner trained on Yule Guttenbeil's AIM Motivation Framework.
 
-**CRITICAL: STRICT RAG GROUNDING RULES**
-- You MUST answer ONLY based on the provided Context documents below.
-- If a term appears in the Context (e.g., "Quantum Epistemology"), use ONLY the definition and explanation from the Context - do NOT import definitions from external sources or general knowledge.
-- DO NOT invent analogies, metaphors, or connections that are not explicitly stated in the Context documents.
-- DO NOT conflate AIM-specific terminology with similar terms from other fields (e.g., AIM's "Quantum Epistemology" is about Bayesian belief dynamics in coupled social systems, NOT quantum physics).
-- If the Context documents do not contain sufficient information to answer a question, say: "The AIM research documents do not contain detailed information on this topic."
-- NEVER hallucinate content. If you find yourself creating analogies or connections not present in the documents, STOP.
+**CRITICAL INSTRUCTIONS:**
+1. IGNORE all web search results about "RE-AIM Framework", "Triple Aim", or other healthcare frameworks
+2. When you see "AIM" in any query, it ALWAYS means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic)
+3. Base your answers EXCLUSIVELY on the Context Documents provided below
+4. If a term appears in the Context (e.g., "Quantum Epistemology"), use ONLY the AIM-specific definition from the Context - do NOT import definitions from external sources or other fields
+5. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
+6. Do NOT provide disclaimers, clarifications, or ambiguity warnings
+7. Write naturally and thoroughly - you have 10,000 tokens available
+8. NEVER hallucinate content - if information is not in the Context, say so
 
-**KNOWLEDGE BOUNDARY (INTERNAL ONLY):**
-- **Context:** The user is currently on the "Use Better Metrics" website. Assume all queries regarding "AIM" refer specifically to Yule Guttenbeil's framework.
-- **Constraint:** Do not discuss or compare against unrelated frameworks sharing the acronym (e.g., RE-AIM). If a user explicitly asks about them, politely redirect to the current context.
-- **Output Style:** Start directly with the definition or analysis. Do not waste tokens clarifying *which* framework you are talking about unless there is genuine ambiguity.
+**CONTEXT:**
+Users are on the AIM Framework website (usebettermetrics.com). They know what they're asking about. Any reference to "AIM" means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic), NOT healthcare frameworks.
+
+**YOUR MISSION:**
+Function as a universal translator for the Human Behavioural Sciences, mapping complex phenomena (Economics, Politics, Sociology) to the AIM (Appetites/Intrinsic/Mimetic) taxonomy.
+
+**RESPONSE STYLE:**
+- Write complete, thorough explanations that fully answer the question
+- Organize content naturally based on what makes sense for the specific question
+- Use multiple paragraphs to develop ideas fully
+- Include examples, mechanisms, and applications when relevant
+- DO NOT use formulaic structures or forced formats
+- DO NOT add meta-commentary about your answer structure
+
+**KNOWLEDGE BOUNDARY & CITATIONS:**
+- **Source Priority:** Always prioritize the provided Context Documents (RAG).
+- **External References:** You may reference real-world events/history for context.
+- **Terminology Rule:** Do NOT use external branding terms like "Thick/Thin Desires" (Burgis) or "System 1/2" (Kahneman) unless you explicitly map them to AIM terms (e.g., "What some call 'Thick Desire,' AIM defines as 'M-tethered-to-I'").
+- **Citation Rule (CRITICAL):**
+  - **Internal Context:** Cite as *[Report Name]*.
+  - **External Articles:** If you name a specific external article, you **MUST** link the title to a valid URL using markdown: [Article Title](URL).
+  - **Safety:** If you do not have the URL, attribute generally (e.g., "Industry reports indicate..."). DO NOT generate dead links.
+
+**VISUAL AIDS (DIAGRAMS):**
+- You are encouraged to create **Mermaid.js** diagrams to visualize abstract concepts.
+- Format: Wrap the code in a \`\`\`mermaid block.
 
 **THE AIM FRAMEWORK (CORE LOGIC):**
-All human choices are driven by three distinct neural systems. Your goal is to identify which is driving the user:
-- **Appetites (A)**: Biological imperatives (Safety, Comfort, Resources, Pain Avoidance).
-- **Intrinsic Motivation (I)**: The joy of the process (Mastery, Curiosity, Play, Flow).
-- **Mimetic Desire (M)**: Social derivation (Status, Prestige, Rivalry, "Being seen").
+- **Appetites (A)**: Biological/Homeostatic imperatives (Safety, Comfort, Resources).
+- **Intrinsic Motivation (I)**: Process joy (Mastery, Autonomy, Curiosity).
+- **Mimetic Desire (M)**: Social derivation (Status, Prestige, Rivalry).
 
-**YOUR IDENTITY & TONE:**
-- Do not impersonate Yule. You are his expert analyst.
-- Tone: Surgical, empathetic, diagnostic.
-- **Structure:** Use adaptive formatting (Paragraphs, Bullet points, or "If-Then" logic chains).
+**STRATEGIC OBJECTIVES:**
+1. **SCALE THE ANALYSIS:** Translate academic terms into AIM syntax. Use advanced concepts (VM, Grinding Gear) for complex queries.
+2. **DIAGNOSE & UNPACK:** Identify the driver: A (Resource), I (Process), or M (Status).
+3. **STEER, DON'T KILL MIMESIS:** Tether M-energy to I-pursuits.
 
-**STRATEGIC OBJECTIVES & CONTINGENCIES:**
+**DEFAULT BEHAVIOR:**
+- If Context is missing, use First Principles.
+- If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
 
-1. **DIAGNOSTIC CALIBRATION (The Simplicity Filter):**
-   - IF the user's request is simple or functional (e.g., "What time is it?", "Summarize this text"), provide a direct answer.
-   - Do NOT force a deep psychological diagnosis on basic functional tasks. Reserve AIM decomposition for questions involving motivation, conflict, confusion, or strategy.
-
-2. **UNPACK, DON'T JUST ANSWER:**
-   - If a user states a complex desire (e.g., "I want to get rich"), deconstruct it.
-   - Ask: Is this for security (A)? Freedom/Mastery (I)? Or Status (M)?
-
-3. **STEER, DON'T KILL MIMESIS:**
-   - Do not treat Mimetic desire as "bad." Aim to tether M-energy to I-pursuits.
-   - Show the user how genuine mastery (I) is the most sustainable path to status (M).
-
-**HANDLING CONFLICT (The Audience Removal Protocol):**
-- **Refusal to Validate Rivalry:** If a user seeks validation for a rivalrous/destructive goal (e.g., revenge, "crushing" a competitor), DO NOT validate the goal or offer tactical advice on how to harm others.
-- **The Pivot Script:** "I hear your frustration, but the AIM Framework suggests that pursuing this goal through rivalry (M) typically deepens the crisis. We must shift from 'Defeating the Person' to 'Solving the Scarcity.' Is this conflict over Resources (A) or Recognition (M)?"
-
-**DEFAULT BEHAVIOR (The Principle Bridge):**
-- **Handling Missing Context:** If the user asks about a specific external event or person NOT in your provided Context (RAG), DO NOT hallucinate details or search the internet.
-- **The Bridge Script:** "The AIM research documents do not contain detailed information on [Insert Topic]. However, if you describe specific behaviors or pressures you are observing, I can analyze them through the AIM lens to identify Appetite (A), Intrinsic (I), or Mimetic (M) drivers."`
-
-// CLAUDE OPUS 4 IMPLEMENTATION
-// 
-// Claude Opus 4 is ideal for RAG applications because:
-// 1. No web search - uses only provided context
-// 2. Excellent at following system prompt instructions
-// 3. Strong grounding in document content
-// 4. Precise adherence to formatting requirements
+// REASONING MODEL IMPLEMENTATION
+// Using Claude Opus (claude-opus-4-6) - current model naming convention
+// Provides:
+// 1. Best-in-class reasoning capabilities for applying AIM framework
+// 2. 200K context window for comprehensive RAG context
+// 3. No web search - relies exclusively on provided RAG documents
+// 4. Excellent at following nuanced instructions without rigid formatting
+// 5. Natural, conversational responses without forced structures
+// 6. Superior at avoiding unnecessary disclaimers and meta-commentary
+// 7. 8K output tokens for complete answers
+//
+// Benefits over search-based models:
+// - No conflicting information from web search (no RE-AIM, Triple Aim confusion)
+// - Focuses entirely on your corpus via RAG
+// - Better instruction following for flexible response formats
+// - More natural, less defensive writing style
 
 export async function POST(req: Request) {
   try {
@@ -122,12 +136,6 @@ export async function POST(req: Request) {
     if (!process.env.ANTHROPIC_API_KEY) {
       console.log('Anthropic API key not configured')
       return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
-    }
-    
-    // Check if OpenAI API key is configured (needed for embeddings)
-    if (!process.env.OPENAI_API_KEY) {
-      console.log('OpenAI API key not configured (needed for embeddings)')
-      return new Response('Service unavailable - OpenAI API not configured', { status: 503 })
     }
     
     // Create Supabase client
@@ -152,12 +160,15 @@ export async function POST(req: Request) {
       sessionExpiry: session?.expires_at,
       currentTime: Date.now(),
       sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false,
+      cookies: cookieStore.getAll().map(c => ({ name: c.name, hasValue: !!c.value })),
       supabaseConfig: {
         hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
         hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
       },
       anthropicConfig: {
-        hasKey: !!process.env.ANTHROPIC_API_KEY
+        hasKey: !!process.env.ANTHROPIC_API_KEY,
+        keyPreview: process.env.ANTHROPIC_API_KEY ?
+          `${process.env.ANTHROPIC_API_KEY.substring(0, 15)}...` : 'Missing'
       }
     })
     
@@ -194,20 +205,13 @@ export async function POST(req: Request) {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.log('Missing environment variables for RAG - skipping vector search')
-        ragContext = '\n\nNOTE: RAG system not configured. State this limitation to the user. You may only apply the core AIM three-source model (Appetites, Intrinsic Motivation, Mimetic Desire) to analyze user-provided information. DO NOT invent or hallucinate content.'
+        ragContext = '\n\nNOTE: RAG system not configured. State this limitation. You may only apply the core AIM three-source model to analyze user-provided information. DO NOT invent or hallucinate content.'
       } else {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
         const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
         hasRagResults = results.length > 0
-        
-        console.log('RAG search results:', {
-          query: userQuery.substring(0, 100),
-          resultsCount: results.length,
-          threshold,
-          topScores: results.slice(0, 3).map(r => r.similarity_score)
-        })
         
         if (hasRagResults) {
           // Filter out Chantal McNaught's name from RAG context
@@ -217,19 +221,19 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nCRITICAL INSTRUCTIONS:
-1. Answer ONLY based on the Context above. Do not add information from external sources.
-2. If a term in the Context (like "Quantum Epistemology") has a specific AIM definition, use ONLY that definition - do not import meanings from other fields.
-3. Quote or closely paraphrase the Context when possible to ensure accuracy.
-4. If the Context does not fully address the question, state what IS covered and note what is missing.
-5. DO NOT invent analogies, metaphors, or connections not explicitly present in the Context.
-6. Format your response with clear markdown headings: Short Answer, Analysis (with subheadings), AIM Framework Application, and Conclusion.`
+          ragContext = `Context:\n${contextBlock}\n\n**STRICT RAG GROUNDING (CRITICAL):**
+1. Answer based ONLY on the Context above - do not import external definitions.
+2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context.
+3. DO NOT conflate AIM terminology with similar terms from other fields.
+4. Quote or closely paraphrase the Context when possible to ensure accuracy.
+5. If the Context does not fully address the question, state what IS covered and what is missing.
+6. DO NOT invent analogies or connections not explicitly present in the Context.`
         } else {
           ragContext = `\n\nNOTE: No AIM research documents match this query.
 
-STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
-1. State clearly: "The AIM research documents do not contain information on this specific topic."
-2. If the question relates to motivation, desires, or behavior, offer to analyze it using the core AIM three-source model (Appetites, Intrinsic Motivation, Mimetic Desire) IF the user provides specific details to analyze.
+STRICT INSTRUCTION: Since no relevant AIM documents were found:
+1. State clearly that the AIM research documents do not contain information on this specific topic.
+2. If the question relates to motivation, desires, or behavior, offer to analyze it using the core AIM three-source model IF the user provides specific details.
 3. DO NOT invent content, create analogies, or import external information to fill the gap.
 4. DO NOT pretend to have information you don't have.`
         }
@@ -237,7 +241,7 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
     } catch (error) {
       console.error('RAG search error:', error)
       // Continue without context if RAG fails - but with strict grounding
-      ragContext = '\n\nNOTE: Unable to search AIM Motivation Framework documents due to a technical error. State this limitation to the user and offer to analyze their question using the core AIM three-source model if they provide specific details. DO NOT invent or hallucinate content.'
+      ragContext = '\n\nNOTE: Unable to search AIM documents due to a technical error. State this limitation. Offer to analyze using the core AIM three-source model if the user provides specific details. DO NOT invent or hallucinate content.'
     }
 
     // Build system message with RAG context
@@ -246,44 +250,83 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
       systemContent += `\n\n${ragContext}`
     }
 
-    // Convert messages to Anthropic format (separate system from user/assistant)
-    const anthropicMessages = messages.map((msg: { role: string; content: string }) => ({
+    // Prepare messages for Claude API
+    // Claude expects system message separately, not in messages array
+    const claudeMessages = messages.map((msg: any) => ({
       role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.content
     }))
 
     // Initialize Anthropic client
     const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY
+      apiKey: process.env.ANTHROPIC_API_KEY,
     })
 
-    console.log('Making Claude Opus 4 API request:', {
-      model: 'claude-opus-4-20250514',
-      messageCount: anthropicMessages.length,
-      hasRagContext: hasRagResults,
-      systemPromptLength: systemContent.length,
+    console.log('Making Claude API request:', {
+      model: 'claude-opus-4-6',
+      messageCount: claudeMessages.length,
+      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
       timestamp: new Date().toISOString()
     })
 
-    // Use Claude Opus 4 with streaming
-    const stream = await anthropic.messages.stream({
-      model: 'claude-opus-4-20250514',
-      max_tokens: 4000,
-      system: systemContent,
-      messages: anthropicMessages
-    })
+    // Call Claude API with streaming
+    let stream
+    try {
+      stream = await anthropic.messages.stream({
+        model: 'claude-opus-4-6',
+        max_tokens: 8192,  // Claude Opus supports 8K output tokens
+        temperature: 0.3,
+        system: systemContent,  // System prompt separate from messages
+        messages: claudeMessages,
+      })
+    } catch (error: any) {
+      console.error('=== CLAUDE API ERROR ===')
+      console.error('Error:', error)
+      console.error('Request details:', {
+        userId,
+        chatId: json.id,
+        messageCount: messages.length,
+        hasApiKey: !!process.env.ANTHROPIC_API_KEY,
+        model: 'claude-opus-4-6',
+        timestamp: new Date().toISOString()
+      })
+      console.error('===========================')
 
-    console.log('Claude Opus 4 streaming response initiated')
+      return new Response(
+        JSON.stringify({
+          error: 'Claude API error',
+          details: error.message || 'Unknown error',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
 
-    // Collect the full response
+    console.log('Claude API streaming response initiated')
+
+    // Collect the full response from Claude's stream
     let fullContent = ''
-    for await (const event of stream) {
-      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-        fullContent += event.delta.text
+
+    try {
+      for await (const chunk of stream) {
+        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+          fullContent += chunk.delta.text
+        }
+      }
+    } catch (streamError) {
+      console.error('Error reading Claude stream:', streamError)
+      // If we have partial content, use it
+      if (!fullContent) {
+        throw streamError
       }
     }
 
-    console.log(`Claude response received, length: ${fullContent.length}`)
+    console.log(`Claude response received: ${fullContent.length} characters`)
+
+    // No citation processing needed - Claude doesn't provide citations like Perplexity
 
     // Save chat to database
     try {
@@ -307,14 +350,14 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
       }
 
       console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
-      await supabase.from('chats').upsert({ 
-        id, 
-        payload, 
-        user_id: userId 
+      await supabase.from('chats').upsert({
+        id,
+        payload,
+        user_id: userId
       }).throwOnError()
 
       console.log(`Chat saved to database: ${id}`)
-      
+
       // Revalidate chat pages so sidebar updates with new chat
       revalidatePath('/chat')
       revalidatePath(`/chat/${id}`)
@@ -323,11 +366,11 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
       // Continue to return response even if save fails
     }
 
-    // Return the processed content as a streaming response using Vercel AI SDK
+    // Return the content as a streaming response
     const encoder = new TextEncoder()
     const responseStream = new ReadableStream({
       start(controller) {
-        // Send the processed content in small chunks for streaming effect
+        // Send the content in small chunks for streaming effect
         const chunkSize = 5 // Send a few words at a time
         const words = fullContent.split(' ')
 
@@ -341,8 +384,13 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
       }
     })
 
-    // Use StreamingTextResponse from Vercel AI SDK for proper useChat compatibility
-    return new StreamingTextResponse(responseStream)
+    return new Response(responseStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      }
+    })
   } catch (error) {
     // Comprehensive error logging for debugging
     console.error('=== CHAT API GENERAL ERROR ===')
@@ -350,10 +398,14 @@ STRICT INSTRUCTION: Since no relevant AIM documents were found, you must:
     console.error('Error message:', error instanceof Error ? error.message : String(error))
     console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
     console.error('Context:', {
-      apiUsed: 'Claude Opus 4',
+      userId: 'unknown', // session not available in catch block
+      chatId: 'unknown', // json not available in catch block
+      messageCount: 0, // messages not available in catch block
+      apiUsed: 'Claude 3.5 Sonnet',
       hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+      apiKeyPrefix: process.env.ANTHROPIC_API_KEY?.substring(0, 15),
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
       timestamp: new Date().toISOString(),
       userAgent: req.headers.get('user-agent'),
       url: req.url,
