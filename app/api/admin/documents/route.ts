@@ -3,8 +3,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
+
+function toSlug(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -211,6 +216,44 @@ export async function POST(req: NextRequest) {
         { error: `Failed to insert document: ${error.message}` },
         { status: 500 }
       )
+    }
+
+    // Auto-publish RAG documents as site articles
+    if (type === 'rag' && content && data) {
+      try {
+        let slug = toSlug(title)
+        const articlePayload = {
+          title,
+          slug,
+          content,
+          author: 'Yule Guttenbeil',
+          status: 'published' as const,
+          published_at: new Date().toISOString(),
+          user_id: session.user.id,
+          meta_title: title,
+          tags: []
+        }
+
+        const { error: articleError } = await supabase
+          .from('articles')
+          .insert(articlePayload)
+
+        if (articleError) {
+          if (articleError.code === '23505') {
+            // Slug collision — retry with timestamp suffix
+            slug = `${slug}-${Date.now()}`
+            await supabase.from('articles').insert({ ...articlePayload, slug })
+          } else {
+            console.error('Article auto-publish error:', articleError)
+          }
+        }
+
+        revalidatePath('/articles')
+        revalidatePath(`/articles/${slug}`)
+      } catch (articleErr) {
+        // Non-blocking — log but do not fail the RAG upload
+        console.error('Article auto-publish failed (non-blocking):', articleErr)
+      }
     }
 
     return NextResponse.json({ document: data })

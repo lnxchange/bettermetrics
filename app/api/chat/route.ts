@@ -104,6 +104,16 @@ Function as a universal translator for the Human Behavioural Sciences, mapping c
 - If Context is missing, use First Principles.
 - If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
 
+const LAYPERSON_STYLE_OVERRIDE = `
+IMPORTANT — PLAIN ENGLISH MODE:
+You are now speaking to a non-specialist. Adapt your response style:
+- Replace all academic/technical jargon with plain English equivalents
+- Use everyday analogies and real-life examples throughout
+- Introduce AIM concepts (Appetites, Intrinsic, Mimetic) as if the reader is hearing them for the first time
+- Write conversationally, as if explaining to a curious intelligent friend with no academic background
+- Avoid formal citation notation; instead attribute naturally (e.g. "AIM research shows..." or "According to the framework...")
+- Keep the same depth of insight but make every sentence accessible to someone with no prior knowledge of the AIM Framework`
+
 // REASONING MODEL IMPLEMENTATION
 // Using Claude Opus (claude-opus-4-6) - current model naming convention
 // Provides:
@@ -149,7 +159,7 @@ export async function POST(req: Request) {
     }
     
     const json = await req.json()
-    const { messages, previewToken } = json
+    const { messages, previewToken, mode } = json
 
     // Get user session - REQUIRED for chat
     const session = await auth({ cookieStore })
@@ -245,6 +255,9 @@ Example approach: If asked about an economic phenomenon, explain it first, then 
     let systemContent = AIM_SYSTEM_PROMPT
     if (ragContext) {
       systemContent += `\n\n${ragContext}`
+    }
+    if (mode === 'layperson') {
+      systemContent += `\n\n${LAYPERSON_STYLE_OVERRIDE}`
     }
 
     // Prepare messages for Claude API
