@@ -7,6 +7,7 @@ import { auth } from '@/auth'
 import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
 import { marked } from 'marked'
+import { ArticleContent } from '@/components/article-content'
 import '@/styles/print.css'
 
 interface ArticlePageProps {
@@ -265,9 +266,9 @@ export default async function ArticlePage({
 
         {/* Article Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div 
+          <ArticleContent
+            html={htmlContent}
             className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-xl md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
 

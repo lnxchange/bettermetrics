@@ -74,6 +74,7 @@ function cleanArticleContent(content) {
   // Remove Sources/References heading and everything after it at end of article
   cleaned = cleaned.replace(/\n+\s*#{1,6}\s*(?:sources?|references?)[\s:]*\n[\s\S]*$/i, '');
   cleaned = cleaned.replace(/\n+\s*\*{1,2}(?:sources?|references?)\*{1,2}[\s:]*\n[\s\S]*$/i, '');
+  cleaned = cleaned.replace(/\n{2,}\s*(?:sources?|references?)[\s:]*(?:\n|\[)[\s\S]*$/i, '');
 
   return cleaned.trimEnd() + '\n';
 }

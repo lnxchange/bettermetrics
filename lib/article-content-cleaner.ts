@@ -71,9 +71,39 @@ function removePrivatePerplexityLinks(content: string): string {
 }
 
 /**
+ * Normalize markdown tables so they render correctly with GFM.
+ *
+ * - Replace em dash (—) and en dash (–) with hyphen (-) in table separator rows.
+ *   AI tools often output unicode dashes which marked/GFM does not recognize.
+ * - Fix concatenated rows: "| a | b | |---|---|" -> add newline so parser sees
+ *   separate rows.
+ */
+function normalizeMarkdownTables(content: string): string {
+  let cleaned = content
+
+  // Fix concatenated table rows: | ... | | ... | -> | ... |\n| ... |
+  cleaned = cleaned.replace(
+    /\|\s*\|\s*(?=[\s|\-:])/g,
+    '|\n|'
+  )
+
+  // Replace em dash (U+2014) and en dash (U+2013) with hyphen in table separator rows only.
+  // GFM requires ASCII hyphen. AI tools often output unicode dashes. Separator rows contain
+  // only |, -, :, spaces, and unicode dashes—no letters or other punctuation.
+  cleaned = cleaned.replace(/^(\|[^\n]*\|)\s*$/gm, (line) => {
+    if (/[—–]/.test(line) && !/[a-zA-Z]/.test(line)) {
+      return line.replace(/—/g, '-').replace(/–/g, '-')
+    }
+    return line
+  })
+
+  return cleaned
+}
+
+/**
  * Remove the Sources / References section if it appears at the end of the
- * article.  Matches headings of any level (# through ######) as well as bold
- * text markers, with optional trailing colon.
+ * article.  Matches headings of any level (# through ######), bold text
+ * markers, or plain "Sources"/"References" lines.
  *
  * Everything from the matched heading to the end of the document is removed.
  */
@@ -86,8 +116,13 @@ function removeSourcesSection(content: string): string {
   const boldPattern =
     /\n{1,}\s*\*{1,2}(?:sources?|references?)\*{1,2}[\s:]*\n[\s\S]*$/i
 
+  // Match plain "Sources" or "References" at start of line near end (e.g. "Sources [1] ...")
+  const plainPattern =
+    /\n{2,}\s*(?:sources?|references?)[\s:]*(?:\n|\[)[\s\S]*$/i
+
   let cleaned = content.replace(headingPattern, '')
   cleaned = cleaned.replace(boldPattern, '')
+  cleaned = cleaned.replace(plainPattern, '')
 
   return cleaned
 }
@@ -99,6 +134,7 @@ function removeSourcesSection(content: string): string {
 export function cleanArticleContent(content: string): string {
   let cleaned = content
 
+  cleaned = normalizeMarkdownTables(cleaned)
   cleaned = removePrivatePerplexityLinks(cleaned)
   cleaned = removePerplexityImages(cleaned)
   cleaned = removeSourcesSection(cleaned)
