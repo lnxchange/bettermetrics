@@ -34,6 +34,7 @@ export default function EditArticlePage() {
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const [article, setArticle] = useState<Article | null>(null)
   const [formData, setFormData] = useState({
@@ -235,6 +236,20 @@ export default function EditArticlePage() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!confirm('Delete this article? This cannot be undone.')) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      toast.success('Article deleted')
+      router.push('/admin/articles')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete article')
+      setDeleting(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -265,7 +280,7 @@ export default function EditArticlePage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-4">
             <Link href="/admin/articles">
               <Button variant="outline" size="sm">
@@ -274,7 +289,7 @@ export default function EditArticlePage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Article</h1>
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Edit Article</h1>
               <p className="mt-1 text-sm text-gray-500">
                 Status: <span className="font-semibold capitalize">{article.status}</span>
               </p>
@@ -287,6 +302,9 @@ export default function EditArticlePage() {
                 Preview
               </Button>
             </Link>
+            <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting}>
+              {deleting ? 'Deleting…' : 'Delete'}
+            </Button>
           </div>
         </div>
 

@@ -6,6 +6,7 @@ import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
+import { marked } from 'marked'
 import '@/styles/print.css'
 
 interface ArticlePageProps {
@@ -145,6 +146,8 @@ export default async function ArticlePage({
   const wordCount = article.content.split(/\s+/).length
   const readingTime = Math.ceil(wordCount / 200)
 
+  const htmlContent = await marked.parse(article.content ?? '')
+
   return (
     <>
       {/* Structured Data */}
@@ -242,7 +245,7 @@ export default async function ArticlePage({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div 
             className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
 
