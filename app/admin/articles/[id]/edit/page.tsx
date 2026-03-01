@@ -22,6 +22,8 @@ interface Article {
   meta_description: string | null
   status: 'draft' | 'scheduled' | 'published'
   structured_data: any
+  written_at: string | null
+  created_at: string | null
 }
 
 export default function EditArticlePage() {
@@ -47,6 +49,7 @@ export default function EditArticlePage() {
     featured_image_url: '',
     meta_title: '',
     meta_description: '',
+    written_at: '',
     linkedin_message: '',
     facebook_message: '',
     x_message: ''
@@ -66,6 +69,9 @@ export default function EditArticlePage() {
 
       // Populate form
       const socialMessages = data.article.structured_data?.social_messages || {}
+      // written_at falls back to created_at for legacy articles
+      const rawDate = data.article.written_at || data.article.created_at
+      const writtenAtValue = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : ''
       setFormData({
         title: data.article.title || '',
         slug: data.article.slug || '',
@@ -76,6 +82,7 @@ export default function EditArticlePage() {
         featured_image_url: data.article.featured_image_url || '',
         meta_title: data.article.meta_title || data.article.title || '',
         meta_description: data.article.meta_description || '',
+        written_at: writtenAtValue,
         linkedin_message: socialMessages.linkedin || '',
         facebook_message: socialMessages.facebook || '',
         x_message: socialMessages.x || ''
@@ -343,6 +350,24 @@ export default function EditArticlePage() {
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   URL: /articles/{formData.slug}
+                </p>
+              </div>
+
+              {/* Written Date */}
+              <div>
+                <label htmlFor="written_at" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Date Written
+                </label>
+                <input
+                  type="date"
+                  id="written_at"
+                  name="written_at"
+                  value={formData.written_at}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  The date the article was originally written (shown to readers)
                 </p>
               </div>
 

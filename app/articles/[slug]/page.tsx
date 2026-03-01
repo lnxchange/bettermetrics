@@ -56,7 +56,7 @@ export async function generateMetadata({
       type: 'article',
       url: articleUrl,
       images: article.featured_image_url ? [article.featured_image_url] : [],
-      publishedTime: article.published_at || article.created_at,
+      publishedTime: (article as any).written_at || article.published_at || article.created_at,
       modifiedTime: article.updated_at,
       authors: article.author ? [article.author] : undefined,
     },
@@ -95,7 +95,7 @@ export default async function ArticlePage({
     "@type": "Article",
     "headline": article.title,
     "description": article.meta_description,
-    "datePublished": article.published_at || article.created_at,
+    "datePublished": (article as any).written_at || article.published_at || article.created_at,
     "dateModified": article.updated_at,
     "author": {
       "@type": "Person",
@@ -192,9 +192,9 @@ export default async function ArticlePage({
                 <span className="font-semibold">By {article.author}</span>
               </div>
             )}
-            {article.published_at && (
-              <time className="date" dateTime={article.published_at}>
-                {new Date(article.published_at).toLocaleDateString('en-US', {
+            {((article as any).written_at || article.published_at) && (
+              <time className="date" dateTime={(article as any).written_at || article.published_at!}>
+                {new Date((article as any).written_at || article.published_at!).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
