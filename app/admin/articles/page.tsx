@@ -65,6 +65,22 @@ export default function ArticlesPage() {
     }
   }
 
+  const handleHide = async (articleId: string) => {
+    if (!confirm('Hide this article? It will no longer be visible on the site but can be published again later.')) return
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'draft' })
+      })
+      if (!res.ok) throw new Error('Hide failed')
+      toast.success('Article hidden')
+      fetchArticles()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to hide article')
+    }
+  }
+
   const handleDelete = async (articleId: string) => {
     if (!confirm('Delete this article? This cannot be undone.')) return
     try {
@@ -200,11 +216,21 @@ export default function ArticlesPage() {
                       </Link>
 
                       {article.status === 'published' && (
-                        <Link href={`/articles/${article.slug}`} target="_blank">
-                          <Button variant="outline" size="sm" className="w-full">
-                            View Live
+                        <>
+                          <Link href={`/articles/${article.slug}`} target="_blank">
+                            <Button variant="outline" size="sm" className="w-full">
+                              View Live
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full"
+                            onClick={() => handleHide(article.id)}
+                          >
+                            Hide
                           </Button>
-                        </Link>
+                        </>
                       )}
                       
                       {!article.seo_optimized_at && (

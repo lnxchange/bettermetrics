@@ -243,6 +243,22 @@ export default function EditArticlePage() {
     }
   }
 
+  const handleHide = async () => {
+    if (!confirm('Hide this article? It will no longer be visible on the site but can be published again later.')) return
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, status: 'draft' })
+      })
+      if (!res.ok) throw new Error('Hide failed')
+      toast.success('Article hidden')
+      fetchArticle()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to hide article')
+    }
+  }
+
   const handleDelete = async () => {
     if (!confirm('Delete this article? This cannot be undone.')) return
     setDeleting(true)
@@ -309,6 +325,11 @@ export default function EditArticlePage() {
                 Preview
               </Button>
             </Link>
+            {article.status === 'published' && (
+              <Button variant="outline" size="sm" onClick={handleHide}>
+                Hide
+              </Button>
+            )}
             <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting}>
               {deleting ? 'Deleting…' : 'Delete'}
             </Button>

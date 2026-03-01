@@ -147,6 +147,24 @@ export default async function ArticlePage({
   const readingTime = Math.ceil(wordCount / 200)
 
   let htmlContent = await marked.parse(article.content ?? '')
+
+  // Add external link icon and target="_blank" for links that go off-site
+  const PRIVATE_LINK =
+    /^https:\/\/ppl-ai-file-upload\.s3\.amazonaws\.com\/web\/direct-files/i
+  htmlContent = htmlContent.replace(
+    /<a\s+([^>]*href=["']([^"']+)["'][^>]*)>([\s\S]*?)<\/a>/gi,
+    (match, attrs, href, text) => {
+      if (PRIVATE_LINK.test(href.trim())) return text
+      if (
+        /^https?:\/\//i.test(href) &&
+        !href.startsWith(siteUrl)
+      ) {
+        return `<a ${attrs} target="_blank" rel="noopener noreferrer">${text.trim()}<span class="inline-block ml-1 opacity-70" aria-hidden="true">↗</span></a>`
+      }
+      return match
+    }
+  )
+
   // Wrap tables in a scrollable container so they render correctly on all screen sizes
   htmlContent = htmlContent
     .replace(/<table>/g, '<div class="overflow-x-auto my-6"><table>')

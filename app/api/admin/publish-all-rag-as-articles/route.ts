@@ -5,6 +5,7 @@ import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
+import { cleanArticleContent } from '@/lib/article-content-cleaner'
 
 function toSlug(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
         const articlePayload = {
           title: doc.title,
           slug,
-          content: doc.content,
+          content: cleanArticleContent(doc.content),
           author: 'Yule Guttenbeil',
           status: 'published' as const,
           published_at: new Date().toISOString(),

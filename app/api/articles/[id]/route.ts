@@ -53,27 +53,37 @@ export async function PUT(
       written_at,
       linkedin_message,
       facebook_message,
-      x_message
+      x_message,
+      status
     } = body
 
-    const updateData: any = {
-      title,
-      slug,
-      content: content ? cleanArticleContent(content) : content,
-      author,
-      category,
-      tags,
-      featured_image_url,
-      meta_title: meta_title || title,
-      meta_description,
+    const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString()
     }
+
+    if (title !== undefined) updateData.title = title
+    if (slug !== undefined) updateData.slug = slug
+    if (content !== undefined) updateData.content = cleanArticleContent(content)
+    if (author !== undefined) updateData.author = author
+    if (category !== undefined) updateData.category = category
+    if (tags !== undefined) updateData.tags = tags
+    if (featured_image_url !== undefined) updateData.featured_image_url = featured_image_url
+    if (meta_title !== undefined) updateData.meta_title = meta_title || title
+    if (meta_description !== undefined) updateData.meta_description = meta_description
 
     if (written_at !== undefined) {
       updateData.written_at = written_at || null
     }
 
-    // Store social media messages in metadata
+    if (status !== undefined && ['draft', 'scheduled', 'published'].includes(status)) {
+      updateData.status = status
+      if (status === 'draft') {
+        updateData.published_at = null
+      } else if (status === 'published') {
+        updateData.published_at = new Date().toISOString()
+      }
+    }
+
     if (linkedin_message !== undefined || facebook_message !== undefined || x_message !== undefined) {
       updateData.structured_data = {
         social_messages: {

@@ -40,6 +40,37 @@ function removePerplexityImages(content: string): string {
 }
 
 /**
+ * Remove private Perplexity direct-file links. These S3 URLs are private and
+ * return 403/500 when accessed. Strip the link but keep the link text.
+ *
+ * Pattern: https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files
+ */
+const PRIVATE_PERPLEXITY_LINK =
+  /^https:\/\/ppl-ai-file-upload\.s3\.amazonaws\.com\/web\/direct-files/i
+
+function removePrivatePerplexityLinks(content: string): string {
+  // Markdown: [text](url) -> keep text as plain text when url is private
+  let cleaned = content.replace(
+    /\[([^\]]*)\]\((https?:\/\/[^)]+)\)/gi,
+    (match, text, url) => {
+      if (PRIVATE_PERPLEXITY_LINK.test(url.trim())) return text
+      return match
+    }
+  )
+
+  // HTML: <a href="url">text</a> -> keep text when url is private
+  cleaned = cleaned.replace(
+    /<a\s[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi,
+    (match, url, text) => {
+      if (PRIVATE_PERPLEXITY_LINK.test(url.trim())) return text
+      return match
+    }
+  )
+
+  return cleaned
+}
+
+/**
  * Remove the Sources / References section if it appears at the end of the
  * article.  Matches headings of any level (# through ######) as well as bold
  * text markers, with optional trailing colon.
@@ -68,6 +99,7 @@ function removeSourcesSection(content: string): string {
 export function cleanArticleContent(content: string): string {
   let cleaned = content
 
+  cleaned = removePrivatePerplexityLinks(cleaned)
   cleaned = removePerplexityImages(cleaned)
   cleaned = removeSourcesSection(cleaned)
 
