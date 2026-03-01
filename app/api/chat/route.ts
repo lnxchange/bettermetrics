@@ -59,9 +59,11 @@ const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are
 1. IGNORE all web search results about "RE-AIM Framework", "Triple Aim", or other healthcare frameworks
 2. When you see "AIM" in any query, it ALWAYS means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic)
 3. Base your answers EXCLUSIVELY on the Context Documents provided below
-4. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
-5. Do NOT provide disclaimers, clarifications, or ambiguity warnings
-6. Write naturally and thoroughly - you have 10,000 tokens available
+4. If a term appears in the Context (e.g., "Quantum Epistemology"), use ONLY the AIM-specific definition from the Context - do NOT import definitions from external sources or other fields
+5. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
+6. Do NOT provide disclaimers, clarifications, or ambiguity warnings
+7. Write naturally and thoroughly - you have 10,000 tokens available
+8. NEVER hallucinate content - if information is not in the Context, say so
 
 **CONTEXT:**
 Users are on the AIM Framework website (usebettermetrics.com). They know what they're asking about. Any reference to "AIM" means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic), NOT healthcare frameworks.
@@ -205,11 +207,10 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id
 
-    // Debug Perplexity API key
-    console.log('Perplexity API Key Debug:', {
-      hasKey: !!process.env.PERPLEXITY_API_KEY,
-      keyLength: process.env.PERPLEXITY_API_KEY?.length || 0,
-      keyPrefix: process.env.PERPLEXITY_API_KEY?.substring(0, 10) || 'Missing',
+    // Debug API keys
+    console.log('API Key Debug:', {
+      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       timestamp: new Date().toISOString()
     })
 
@@ -223,7 +224,7 @@ export async function POST(req: Request) {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.log('Missing environment variables for RAG - skipping vector search')
-        ragContext = '\n\nNOTE: RAG system not configured. Please answer based on general knowledge.'
+        ragContext = '\n\nNOTE: RAG system not configured. State this limitation. You may only apply the core AIM three-source model to analyze user-provided information. DO NOT invent or hallucinate content.'
       } else {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
@@ -240,23 +241,27 @@ export async function POST(req: Request) {
           }))
           
           const contextBlock = prepareRagContext(filteredResults, userQuery.length)
-          ragContext = `Context:\n${contextBlock}\n\nInstructions: Use this research context as the PRIMARY foundation for your answer. Analyze the user's question strictly through the AIM Framework lens using this context. Format your response with clear markdown headings (not numbered lists): Short Answer (must provide AIM-based solution/explanation), Analysis (with subheadings), AIM Framework Application, and Conclusion (must include AIM-derived logical solution when applicable).`
+          ragContext = `Context:\n${contextBlock}\n\n**STRICT RAG GROUNDING (CRITICAL):**
+1. Answer based ONLY on the Context above - do not import external definitions.
+2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context.
+3. DO NOT conflate AIM terminology with similar terms from other fields.
+4. Quote or closely paraphrase the Context when possible to ensure accuracy.
+5. If the Context does not fully address the question, state what IS covered and what is missing.
+6. DO NOT invent analogies or connections not explicitly present in the Context.`
         } else {
-          ragContext = `\n\nNOTE: No specific AIM research documents match this query. Use general knowledge and apply AIM Framework reasoning.
+          ragContext = `\n\nNOTE: No AIM research documents match this query.
 
-REMEMBER: You are answering as Yule Guttenbeil would. Apply the three-source model:
-- Identify which motivational sources (Appetites, Intrinsic Motivation, Mimetic Desire) are relevant
-- Analyze how they interact in this context
-- Derive logical consequences from their interactions
-- Provide testable predictions or actionable insights
-
-Example approach: If asked about an economic phenomenon, explain it first, then analyze which motivational sources drive the behavior (e.g., Appetites for security, Mimetic patterns in consumption, Intrinsic satisfaction from work), how they interact or conflict, and what this predicts about outcomes or interventions.`
+STRICT INSTRUCTION: Since no relevant AIM documents were found:
+1. State clearly that the AIM research documents do not contain information on this specific topic.
+2. If the question relates to motivation, desires, or behavior, offer to analyze it using the core AIM three-source model IF the user provides specific details.
+3. DO NOT invent content, create analogies, or import external information to fill the gap.
+4. DO NOT pretend to have information you don't have.`
         }
       }
     } catch (error) {
       console.error('RAG search error:', error)
-      // Continue without context if RAG fails
-      ragContext = '\n\nNOTE: Unable to search AIM Motivation Framework documents. Please answer based on general knowledge.'
+      // Continue without context if RAG fails - but with strict grounding
+      ragContext = '\n\nNOTE: Unable to search AIM documents due to a technical error. State this limitation. Offer to analyze using the core AIM three-source model if the user provides specific details. DO NOT invent or hallucinate content.'
     }
 
     // Build system message with RAG context

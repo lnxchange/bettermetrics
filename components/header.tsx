@@ -48,26 +48,77 @@ export function Header({ session }: HeaderProps) {
         </div>
       </div>
 
-      {/* Desktop Navigation - Three Primary Audiences */}
-      <div className="hidden items-center space-x-6 md:flex">
-        <Link
-          href="/about"
-          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          About
-        </Link>
+      {/* Desktop Navigation - Scientific Framework First */}
+      <div className="hidden items-center space-x-5 md:flex">
 
-        <Link
-          href="/articles"
-          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          Articles
-        </Link>
-
-        {/* For Individuals Dropdown */}
+        {/* The Framework Dropdown - Scientific Foundation */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            For Individuals
+            The Framework
+            <svg
+              className="ml-1 h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <div className="absolute left-0 top-full z-50 hidden w-80 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
+            <div className="p-2">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+                Scientific Foundation
+              </div>
+              <Link
+                href="/about"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+              >
+                <div className="font-semibold">Overview</div>
+                <div className="text-xs text-gray-500">Introduction to the AIM Framework</div>
+              </Link>
+              <Link
+                href="/axioms"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+              >
+                <div className="font-semibold">The 8 Axioms</div>
+                <div className="text-xs text-gray-500">Foundational premises with canonical citations</div>
+              </Link>
+              <Link
+                href="/research/definitions"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+              >
+                <div className="font-semibold">Core Definitions (A, I, M)</div>
+                <div className="text-xs text-gray-500">Precise terminology and neural grounding</div>
+              </Link>
+              <Link
+                href="/glossary"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+              >
+                <div className="font-semibold">Glossary</div>
+                <div className="text-xs text-gray-500">Complete definitional reference</div>
+              </Link>
+              <div className="my-2 border-t border-gray-200"></div>
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+                The Book
+              </div>
+              <Link
+                href="/research/theories"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+              >
+                <div className="font-semibold">AIM & Existing Theories</div>
+                <div className="text-xs text-gray-500">Integration with SDT, Girard, economics</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Apply Dropdown - For Individuals */}
+        <div className="group relative">
+          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
+            Apply
             <svg
               className="ml-1 h-4 w-4"
               fill="currentColor"
@@ -83,7 +134,7 @@ export function Header({ session }: HeaderProps) {
           <div className="absolute left-0 top-full z-50 hidden w-72 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
             <div className="p-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Practical Tools
+                Personal Application
               </div>
               <Link
                 href="/understand-your-motivations"
@@ -99,22 +150,14 @@ export function Header({ session }: HeaderProps) {
                 <div className="font-semibold">Apply to Your Life</div>
                 <div className="text-xs text-gray-500">Career, relationships, and personal growth</div>
               </Link>
-              <div className="my-2 border-t border-gray-200"></div>
-              <Link
-                href="/chat"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
-              >
-                <div className="font-semibold">Ask the AI Chatbot</div>
-                <div className="text-xs text-gray-500">Get personalized answers about AIM</div>
-              </Link>
             </div>
           </div>
         </div>
 
-        {/* For Practitioners Dropdown */}
+        {/* Domains Dropdown - For Practitioners */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            For Practitioners
+            Domains
             <svg
               className="ml-1 h-4 w-4"
               fill="currentColor"
@@ -133,6 +176,27 @@ export function Header({ session }: HeaderProps) {
                 Applications by Domain
               </div>
               <Link
+                href="/research/economics"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+              >
+                <div className="font-semibold">💰 Economics</div>
+                <div className="text-xs text-gray-500">Endogenous preferences and market dynamics</div>
+              </Link>
+              <Link
+                href="/research/psychology"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+              >
+                <div className="font-semibold">🧠 Psychology</div>
+                <div className="text-xs text-gray-500">Protecting intrinsic motivation</div>
+              </Link>
+              <Link
+                href="/research/law"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+              >
+                <div className="font-semibold">⚖️ Law</div>
+                <div className="text-xs text-gray-500">Defining fairness, justice, and respect</div>
+              </Link>
+              <Link
                 href="/research/organizations"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
               >
@@ -145,27 +209,6 @@ export function Header({ session }: HeaderProps) {
               >
                 <div className="font-semibold">🏥 Health & Policy</div>
                 <div className="text-xs text-gray-500">Separating need from social amplification</div>
-              </Link>
-              <Link
-                href="/research/economics"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">💰 Economics</div>
-                <div className="text-xs text-gray-500">Endogenous preferences and market dynamics</div>
-              </Link>
-              <Link
-                href="/research/law"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">⚖️ Law</div>
-                <div className="text-xs text-gray-500">Defining fairness, justice, and respect</div>
-              </Link>
-              <Link
-                href="/research/psychology"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">🧠 Psychology</div>
-                <div className="text-xs text-gray-500">Protecting intrinsic motivation</div>
               </Link>
               <Link
                 href="/research/marketing"
@@ -192,10 +235,10 @@ export function Header({ session }: HeaderProps) {
           </div>
         </div>
 
-        {/* For Researchers Dropdown */}
+        {/* Research Dropdown */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            For Researchers
+            Research
             <svg
               className="ml-1 h-4 w-4"
               fill="currentColor"
@@ -211,29 +254,8 @@ export function Header({ session }: HeaderProps) {
           <div className="absolute left-0 top-full z-50 hidden w-80 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
             <div className="p-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Framework & Theory
+                Research Programme
               </div>
-              <Link
-                href="/about"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">About AIM Framework</div>
-                <div className="text-xs text-gray-500">Core concepts and neural foundation</div>
-              </Link>
-              <Link
-                href="/research/theories"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">AIM & Existing Theories</div>
-                <div className="text-xs text-gray-500">How AIM relates to SDT, Girard, economics</div>
-              </Link>
-              <Link
-                href="/research/definitions"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">Scientific Definitions</div>
-                <div className="text-xs text-gray-500">Precise terminology and measurements</div>
-              </Link>
               <Link
                 href="/research/hypothesis"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
@@ -241,10 +263,6 @@ export function Header({ session }: HeaderProps) {
                 <div className="font-semibold">Research Hypothesis</div>
                 <div className="text-xs text-gray-500">Formal proposal for empirical testing</div>
               </Link>
-              <div className="my-2 border-t border-gray-200"></div>
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Research Programme
-              </div>
               <Link
                 href="/research-resources"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
@@ -259,6 +277,7 @@ export function Header({ session }: HeaderProps) {
                 <div className="font-semibold">Testable Predictions</div>
                 <div className="text-xs text-gray-500">Falsifiable hypotheses by domain</div>
               </Link>
+              <div className="my-2 border-t border-gray-200"></div>
               <Link
                 href="/contact"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
@@ -270,10 +289,28 @@ export function Header({ session }: HeaderProps) {
           </div>
         </div>
 
+        <Link
+          href="/articles"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          Articles
+        </Link>
+
         {/* Search Bar - Desktop */}
-        <div className="hidden md:block w-80">
+        <div className="hidden lg:block w-64">
           <SearchBar />
         </div>
+
+        {/* Ask AI - Prominent Button */}
+        <Link
+          href="/chat"
+          className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-primary-700"
+        >
+          <svg className="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          Ask AI
+        </Link>
 
         <Link
           href="/contact"
@@ -294,6 +331,16 @@ export function Header({ session }: HeaderProps) {
 
       {/* Mobile Menu Button */}
       <div className="flex items-center space-x-2 md:hidden">
+        {/* Ask AI Mobile Button */}
+        <Link
+          href="/chat"
+          className="inline-flex items-center rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm"
+        >
+          <svg className="mr-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          Ask AI
+        </Link>
         <ThemeToggle />
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -334,25 +381,45 @@ export function Header({ session }: HeaderProps) {
               <SearchBar onClose={() => setIsMobileMenuOpen(false)} />
             </div>
             
-            <Link
-              href="/about"
-              className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              href="/articles"
-              className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Articles
-            </Link>
-
-            {/* For Individuals Section */}
+            {/* The Framework Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                For Individuals
+                The Framework
+              </div>
+              <Link
+                href="/about"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Overview
+              </Link>
+              <Link
+                href="/axioms"
+                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                The 8 Axioms
+              </Link>
+              <Link
+                href="/research/definitions"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Core Definitions (A, I, M)
+              </Link>
+              <Link
+                href="/glossary"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Glossary
+              </Link>
+            </div>
+            
+            {/* Apply Section */}
+            <div className="border-t border-gray-200 pt-2">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+                Apply
               </div>
               <Link
                 href="/understand-your-motivations"
@@ -368,20 +435,34 @@ export function Header({ session }: HeaderProps) {
               >
                 Apply to Your Life
               </Link>
-              <Link
-                href="/chat"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-primary-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Ask the AI Chatbot
-              </Link>
             </div>
 
-            {/* For Practitioners Section */}
+            {/* Domains Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                For Practitioners
+                Domains
               </div>
+              <Link
+                href="/research/economics"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                💰 Economics
+              </Link>
+              <Link
+                href="/research/psychology"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                🧠 Psychology
+              </Link>
+              <Link
+                href="/research/law"
+                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                ⚖️ Law
+              </Link>
               <Link
                 href="/research/organizations"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
@@ -395,27 +476,6 @@ export function Header({ session }: HeaderProps) {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 🏥 Health & Policy
-              </Link>
-              <Link
-                href="/research/economics"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                💰 Economics
-              </Link>
-              <Link
-                href="/research/law"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                ⚖️ Law
-              </Link>
-              <Link
-                href="/research/psychology"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                🧠 Psychology
               </Link>
               <Link
                 href="/research/marketing"
@@ -433,25 +493,11 @@ export function Header({ session }: HeaderProps) {
               </Link>
             </div>
 
-            {/* For Researchers Section */}
+            {/* Research Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                For Researchers
+                Research
               </div>
-              <Link
-                href="/research/theories"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                AIM & Existing Theories
-              </Link>
-              <Link
-                href="/research/definitions"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Scientific Definitions
-              </Link>
               <Link
                 href="/research/hypothesis"
                 className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
@@ -476,6 +522,13 @@ export function Header({ session }: HeaderProps) {
             </div>
 
             <div className="border-t border-gray-200 pt-2">
+              <Link
+                href="/articles"
+                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Articles
+              </Link>
               <Link
                 href="/contact"
                 className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"

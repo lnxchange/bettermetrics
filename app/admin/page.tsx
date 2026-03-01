@@ -26,6 +26,30 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Inbox Card */}
+          <Card className="border-2 border-blue-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                📬 Inbox
+                <span className="text-xs font-normal text-blue-600 bg-blue-50 px-2 py-1 rounded">New</span>
+              </CardTitle>
+              <CardDescription>
+                View and manage contact form submissions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-gray-600">
+                All contact form messages are stored here. Read, reply, and manage
+                submissions from the contact page.
+              </p>
+              <div className="flex space-x-2">
+                <Button asChild>
+                  <Link href="/admin/inbox">Open Inbox</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Articles Card */}
           <Card className="border-2 border-primary-500">
             <CardHeader>

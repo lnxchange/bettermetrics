@@ -12,6 +12,7 @@ export default function ContactPage() {
     email: '',
     affiliation: '',
     interest: '',
+    subject: '',
     message: '',
     paperScope: '',
     paperQuestions: ''
@@ -37,6 +38,7 @@ export default function ContactPage() {
           email: '',
           affiliation: '',
           interest: '',
+          subject: '',
           message: '',
           paperScope: '',
           paperQuestions: ''
@@ -153,6 +155,21 @@ export default function ContactPage() {
                 <option value="media">Media Inquiry</option>
                 <option value="general">General Question</option>
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                Subject *
+              </label>
+              <input
+                type="text"
+                id="subject"
+                required
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="Brief description of your inquiry"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              />
             </div>
 
             {/* Conditional Research Paper Fields */}

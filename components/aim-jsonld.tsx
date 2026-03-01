@@ -89,6 +89,46 @@ export function AIMJsonLd() {
           "target": "https://www.usebettermetrics.com/chat?query={search_term_string}",
           "query-input": "required name=search_term_string"
         }
+      },
+      {
+        "@type": "Book",
+        "@id": "https://www.usebettermetrics.com/#Book",
+        "name": "A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire (AIM)",
+        "alternateName": "The AIM Framework Book",
+        "author": {
+          "@id": "https://www.usebettermetrics.com/#YuleGuttenbeil"
+        },
+        "about": {
+          "@id": "https://www.usebettermetrics.com/#AIMFramework"
+        },
+        "description": "A comprehensive theoretical synthesis integrating neuroscience, behavioral economics, Self-Determination Theory, and Girardian mimetic theory to resolve definitional inconsistencies (Code Drift) in motivation science through three neurologically distinct sources.",
+        "genre": [
+          "Behavioral Science",
+          "Theoretical Framework",
+          "Neuroscience",
+          "Psychology"
+        ],
+        "keywords": [
+          "motivation theory",
+          "behavioral economics",
+          "neuroscience synthesis",
+          "mimetic desire",
+          "intrinsic motivation",
+          "Self-Determination Theory",
+          "Girardian theory",
+          "motivational taxonomy",
+          "Code Drift"
+        ],
+        "inLanguage": "en",
+        "hasPart": [
+          {
+            "@type": "Chapter",
+            "name": "Chapter 2: General Theory of Motivation",
+            "description": "Defines the core constructs, axioms, theorems, and glossary of the AIM Framework.",
+            "position": 2,
+            "url": "https://www.usebettermetrics.com/glossary"
+          }
+        ]
       }
     ]
   }
