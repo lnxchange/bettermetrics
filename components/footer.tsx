@@ -164,17 +164,20 @@ export function Footer() {
 
         {/* Academic Disclaimer */}
         <div className="mt-8 border-t border-gray-300 pt-8">
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
-            <h4 className="mb-2 font-semibold text-gray-900">
-              Academic Disclaimer
-            </h4>
-            <p className="text-sm text-gray-700">
-              The AIM Motivation Framework is a theoretical synthesis that has
-              not been empirically validated through peer-reviewed research. All
-              claims are hypotheses subject to testing and falsification. We
-              welcome critical evaluation and testing.
-            </p>
-          </div>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+                  <h4 className="mb-2 font-semibold text-gray-900">
+                    Academic Disclaimer
+                  </h4>
+                  <p className="text-sm text-gray-700">
+                    The AIM Motivation Framework is presented as a <strong>heuristic utility model</strong>—a theoretical 
+                    synthesis built on established neuroscience and behavioral economics research. While the 
+                    integrated framework has not been independently validated through peer-reviewed empirical 
+                    studies, its theoretical utility is demonstrated through its capacity to predict and resolve 
+                    system failures (Easterlin Paradox, essential goods inelasticity, mimetic cascades) where 
+                    standard models fail. All claims are falsifiable hypotheses subject to empirical testing. 
+                    We actively seek critical evaluation and research collaboration.
+                  </p>
+                </div>
         </div>
 
         <div className="mt-8 border-t border-gray-200 pt-8">

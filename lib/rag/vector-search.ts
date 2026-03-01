@@ -23,7 +23,8 @@ export class VectorSearch {
 
     this.embeddings = new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY,
-      modelName: 'text-embedding-3-large'
+      modelName: 'text-embedding-3-large',
+      dimensions: 1536 // pgvector ivfflat index limit is 2000; 1536 fits and matches DB
     })
   }
 

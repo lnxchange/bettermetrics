@@ -2,12 +2,9 @@
 --
 -- The document_embeddings table was created with VECTOR(1536) for
 -- text-embedding-ada-002, but document-processor.ts and vector-search.ts
--- both use text-embedding-3-large which produces 3072-dimensional vectors.
---
--- This caused EVERY embedding insert and EVERY RAG query to fail silently:
---   - Inserts: PostgreSQL rejects a 3072-dim vector into VECTOR(1536)
---   - Queries: match_documents(vector(1536),...) rejects 3072-dim query vectors
--- As a result the chatbot received no RAG context and generated hallucinated answers.
+-- both use text-embedding-3-large (default 3072 dims). pgvector's ivfflat
+-- index supports max 2000 dimensions, so we use text-embedding-3-large with
+-- dimensions=1536. App code updated to pass dimensions: 1536.
 --
 -- Since all existing embeddings were generated (or attempted) with the wrong
 -- model/dimension they are invalid. Truncate and rebuild from scratch.
@@ -22,18 +19,18 @@ DROP FUNCTION IF EXISTS match_documents(vector(3072), float, int, text);
 -- 3. Truncate the table — all stored embeddings are invalid (wrong dimensions)
 TRUNCATE TABLE document_embeddings;
 
--- 4. Replace the embedding column with the correct 3072-dimension type
-ALTER TABLE document_embeddings DROP COLUMN embedding;
-ALTER TABLE document_embeddings ADD COLUMN embedding VECTOR(3072);
+-- 4. Ensure embedding column is VECTOR(1536) (fits pgvector index limit of 2000)
+ALTER TABLE document_embeddings DROP COLUMN IF EXISTS embedding;
+ALTER TABLE document_embeddings ADD COLUMN embedding VECTOR(1536);
 
 -- 5. Recreate the vector similarity index
 CREATE INDEX idx_document_embeddings_vector
   ON document_embeddings USING ivfflat (embedding vector_cosine_ops)
   WITH (lists = 100);
 
--- 6. Recreate match_documents with the correct vector dimension
+-- 6. Recreate match_documents with 1536-dim vectors
 CREATE FUNCTION match_documents (
-  query_embedding  vector(3072),
+  query_embedding  vector(1536),
   match_threshold  float   DEFAULT 0.7,
   match_count      int     DEFAULT 5,
   p_document_type  text    DEFAULT NULL
