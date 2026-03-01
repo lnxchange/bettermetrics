@@ -67,10 +67,11 @@ export class DocumentProcessor {
     )
 
     this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      modelName: 'text-embedding-3-large'
     })
 
-    this.textSplitter = new SimpleTextSplitter(500, 50)
+    this.textSplitter = new SimpleTextSplitter(2500, 300)
   }
 
   async processDocument(

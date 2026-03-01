@@ -36,14 +36,15 @@ function trim(text: string, maxChars: number) {
 }
 
 function prepareRagContext(results: SearchResult[], userQueryLength: number = 0) {
-  // Expand to 4-5 chunks for longer questions, trim each to ~1200 chars
-  const topK = userQueryLength > 100 ? 5 : 4
+  // Use 12 chunks for longer questions, 10 for shorter — larger chunks (2500 chars each)
+  // give Claude ~25-30K chars of context per query for deep AIM Framework reasoning
+  const topK = userQueryLength > 100 ? 12 : 10
   const top = results
     .sort((a, b) => (b.similarity_score ?? 0) - (a.similarity_score ?? 0))
     .slice(0, topK * 2) // Get more candidates for deduplication
 
   const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
-  const trimmed = unique.map(r => trim(r.chunk_text, 1200))
+  const trimmed = unique.map(r => trim(r.chunk_text, 3000))
   return trimmed.join('\n\n---\n\n')
 }
 
@@ -209,7 +210,8 @@ export async function POST(req: Request) {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
-        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
+        // Request 24 candidates so prepareRagContext has enough for topK*2 deduplication (topK=12)
+        const results = await vectorSearch.searchSimilarDocuments(userQuery, 24, 'rag', threshold)
         hasRagResults = results.length > 0
         
         if (hasRagResults) {
