@@ -54,6 +54,25 @@ const CATEGORY_KEYWORDS = {
 const AIM_TERMS = ['appetites', 'intrinsic motivation', 'mimetic desire', 'aim framework', 'motivational sources'];
 
 /**
+ * Clean article content: remove Perplexity logo images and Sources sections.
+ */
+function cleanArticleContent(content) {
+  let cleaned = content;
+
+  // Remove inline images whose alt text or URL contains "perplexity"
+  cleaned = cleaned.replace(/!\[([^\]]*)\]\(([^)]*)\)/gi, (match, alt, url) => {
+    if (/perplexity/i.test(alt) || /perplexity/i.test(url)) return '';
+    return match;
+  });
+
+  // Remove Sources/References heading and everything after it at end of article
+  cleaned = cleaned.replace(/\n+\s*#{1,6}\s*(?:sources?|references?)[\s:]*\n[\s\S]*$/i, '');
+  cleaned = cleaned.replace(/\n+\s*\*{1,2}(?:sources?|references?)\*{1,2}[\s:]*\n[\s\S]*$/i, '');
+
+  return cleaned.trimEnd() + '\n';
+}
+
+/**
  * Extract title from markdown content
  */
 function extractTitle(content, filename) {
@@ -246,10 +265,13 @@ function parseMarkdownFile(filepath) {
   console.log(`  ✓ Tags: ${tags.join(', ')}`);
   console.log(`  ✓ Meta description: ${metaDescription.substring(0, 50)}...`);
   
+  // Clean content: remove Perplexity logos and internal source links
+  const cleanedContent = cleanArticleContent(markdownContent);
+
   return {
     title,
     slug,
-    content: markdownContent,
+    content: cleanedContent,
     author: metadata.author || 'Yule Guttenbeil',
     category,
     tags: tags.join(', '),

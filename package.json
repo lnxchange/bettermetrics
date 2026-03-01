@@ -17,7 +17,8 @@
     "format:check": "prettier --check \"{app,lib,components}**/*.{ts,tsx,mdx}\" --cache",
     "clean-report-titles": "node scripts/clean-report-titles.js",
     "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js",
-    "process-rag-embeddings": "node scripts/process-rag-embeddings.js"
+    "process-rag-embeddings": "node scripts/process-rag-embeddings.js",
+    "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
+import { cleanArticleContent } from '@/lib/article-content-cleaner'
 
 // GET - Fetch article by ID
 export async function GET(
@@ -58,7 +59,7 @@ export async function PUT(
     const updateData: any = {
       title,
       slug,
-      content,
+      content: content ? cleanArticleContent(content) : content,
       author,
       category,
       tags,
