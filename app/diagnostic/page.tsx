@@ -118,9 +118,9 @@ export default function DiagnosticPage() {
     (Object.entries(results).sort(([,a], [,b]) => b - a)[0][0] as 'A' | 'I' | 'M') : null
 
   const sourceColors = {
-    A: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', badge: 'bg-amber-600' },
-    I: { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', badge: 'bg-teal-600' },
-    M: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-600' }
+    A: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-600' },
+    I: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', badge: 'bg-blue-600' },
+    M: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', badge: 'bg-red-600' }
   }
 
   const sourceDescriptions = {
@@ -147,7 +147,7 @@ export default function DiagnosticPage() {
   return (
     <div className="bg-white">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-teal-50 to-white py-16">
+      <section className="bg-gradient-to-br from-blue-50 to-white py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="mb-6 text-5xl font-bold text-gray-900">
             Motivational Self-Diagnosis

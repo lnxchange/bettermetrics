@@ -35,6 +35,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     'ai-token',
     null
   )
+  const [chatMode] = useLocalStorage<'academic' | 'layperson'>(
+    'aim-chat-mode',
+    'academic'
+  )
   const [previewTokenDialog, setPreviewTokenDialog] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState('')
   const [hasMounted, setHasMounted] = useState(false)
@@ -68,7 +72,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       id: chatId,
       body: {
         id: chatId,
-        previewToken
+        previewToken,
+        mode: chatMode
       },
       onResponse(response) {
         // Clear error state on successful response

@@ -36,14 +36,15 @@ function trim(text: string, maxChars: number) {
 }
 
 function prepareRagContext(results: SearchResult[], userQueryLength: number = 0) {
-  // Expand to 4-5 chunks for longer questions, trim each to ~1200 chars
-  const topK = userQueryLength > 100 ? 5 : 4
+  // Use 12 chunks for longer questions, 10 for shorter — larger chunks (2500 chars each)
+  // give Claude ~25-30K chars of context per query for deep AIM Framework reasoning
+  const topK = userQueryLength > 100 ? 12 : 10
   const top = results
     .sort((a, b) => (b.similarity_score ?? 0) - (a.similarity_score ?? 0))
     .slice(0, topK * 2) // Get more candidates for deduplication
 
   const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
-  const trimmed = unique.map(r => trim(r.chunk_text, 1200))
+  const trimmed = unique.map(r => trim(r.chunk_text, 3000))
   return trimmed.join('\n\n---\n\n')
 }
 
@@ -62,7 +63,7 @@ const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are
 5. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
 6. Do NOT provide disclaimers, clarifications, or ambiguity warnings
 7. Write naturally and thoroughly - you have 10,000 tokens available
-8. NEVER hallucinate content - if information is not in the Context, say so
+8. NEVER hallucinate content - if information is not in the Context, reason from first principles using the AIM taxonomy
 
 **CONTEXT:**
 Users are on the AIM Framework website (usebettermetrics.com). They know what they're asking about. Any reference to "AIM" means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic), NOT healthcare frameworks.
@@ -104,6 +105,24 @@ Function as a universal translator for the Human Behavioural Sciences, mapping c
 **DEFAULT BEHAVIOR:**
 - If Context is missing, use First Principles.
 - If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
+
+const LAYPERSON_STYLE_OVERRIDE = `
+IMPORTANT — PLAIN ENGLISH MODE:
+The person reading this has never heard of the AIM Framework before. Your job is not just to simplify language — it is to genuinely build their understanding from the ground up.
+
+EXPLAIN THE CONCEPTS THEMSELVES, not just the words:
+- Do not assume the reader knows what Appetites, Intrinsic Motivation, or Mimetic Desire mean. Explain each one as it becomes relevant, as if for the very first time.
+- Use concrete, real-life examples for every concept. Abstract ideas must always be grounded in something familiar — a workplace situation, a social interaction, a personal experience everyone can relate to.
+- Example of how to introduce Appetites: "Think of Appetites as our survival instincts — the part of us that wants to feel safe, comfortable, and secure. When someone takes a stable job they don't love just because the salary is reliable, that's Appetites at work."
+- Example of how to introduce Intrinsic Motivation: "Intrinsic Motivation is the pull you feel when you lose track of time doing something you genuinely enjoy — not for a reward or because someone is watching, but because the activity itself is satisfying. A child building Lego for hours isn't chasing a prize — that's Intrinsic Motivation."
+- Example of how to introduce Mimetic Desire: "Mimetic Desire is the tendency to want things because other people want them. We don't always choose our desires independently — we copy them from the people around us. Someone who suddenly wants a promotion after a colleague gets one isn't just ambitious — they're being driven by Mimetic Desire."
+
+WRITING STYLE:
+- Write conversationally, like a knowledgeable friend explaining something over coffee — warm, clear, curious
+- No jargon without an immediate plain-English definition
+- No formal citations; say things like "the research on this shows..." or "the framework explains this as..."
+- Use analogies freely — the goal is understanding, not impressiveness
+- Keep all the depth and insight of the academic answer, but make every sentence land for someone encountering these ideas for the first time`
 
 // REASONING MODEL IMPLEMENTATION
 // Using Claude Opus (claude-opus-4-6) - current model naming convention
@@ -150,7 +169,7 @@ export async function POST(req: Request) {
     }
     
     const json = await req.json()
-    const { messages, previewToken } = json
+    const { messages, previewToken, mode } = json
 
     // Get user session - REQUIRED for chat
     const session = await auth({ cookieStore })
@@ -205,12 +224,13 @@ export async function POST(req: Request) {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.log('Missing environment variables for RAG - skipping vector search')
-        ragContext = '\n\nNOTE: RAG system not configured. State this limitation. You may only apply the core AIM three-source model to analyze user-provided information. DO NOT invent or hallucinate content.'
+        ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
       } else {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
-        const results = await vectorSearch.searchSimilarDocuments(userQuery, 5, 'rag', threshold)
+        // Request 24 candidates so prepareRagContext has enough for topK*2 deduplication (topK=12)
+        const results = await vectorSearch.searchSimilarDocuments(userQuery, 24, 'rag', threshold)
         hasRagResults = results.length > 0
         
         if (hasRagResults) {
@@ -229,25 +249,22 @@ export async function POST(req: Request) {
 5. If the Context does not fully address the question, state what IS covered and what is missing.
 6. DO NOT invent analogies or connections not explicitly present in the Context.`
         } else {
-          ragContext = `\n\nNOTE: No AIM research documents match this query.
-
-STRICT INSTRUCTION: Since no relevant AIM documents were found:
-1. State clearly that the AIM research documents do not contain information on this specific topic.
-2. If the question relates to motivation, desires, or behavior, offer to analyze it using the core AIM three-source model IF the user provides specific details.
-3. DO NOT invent content, create analogies, or import external information to fill the gap.
-4. DO NOT pretend to have information you don't have.`
+          ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
         }
       }
     } catch (error) {
       console.error('RAG search error:', error)
       // Continue without context if RAG fails - but with strict grounding
-      ragContext = '\n\nNOTE: Unable to search AIM documents due to a technical error. State this limitation. Offer to analyze using the core AIM three-source model if the user provides specific details. DO NOT invent or hallucinate content.'
+      ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
     }
 
     // Build system message with RAG context
     let systemContent = AIM_SYSTEM_PROMPT
     if (ragContext) {
       systemContent += `\n\n${ragContext}`
+    }
+    if (mode === 'layperson') {
+      systemContent += `\n\n${LAYPERSON_STYLE_OVERRIDE}`
     }
 
     // Prepare messages for Claude API

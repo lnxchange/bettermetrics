@@ -42,7 +42,7 @@ export default function AdminDashboard() {
                 All contact form messages are stored here. Read, reply, and manage
                 submissions from the contact page.
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button asChild>
                   <Link href="/admin/inbox">Open Inbox</Link>
                 </Button>
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
                 Edit articles, upload featured images, write social media posts, and publish content.
                 Import reports from markdown files and manage your content pipeline.
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button asChild>
                   <Link href="/admin/articles">Manage Articles</Link>
                 </Button>
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
                 related to the AIM Framework. These documents are publicly
                 accessible and can be referenced by researchers.
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button asChild>
                   <Link href="/admin/research-documents">Manage Documents</Link>
                 </Button>
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
                 responses. These documents are processed into embeddings for
                 semantic search.
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button asChild>
                   <Link href="/admin/rag-documents">Manage Documents</Link>
                 </Button>
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                 Browse users registered in the system. View their email addresses
                 and the date/time they signed up.
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button asChild>
                   <Link href="/admin/users">Open Users</Link>
                 </Button>

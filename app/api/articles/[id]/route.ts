@@ -49,6 +49,7 @@ export async function PUT(
       featured_image_url,
       meta_title,
       meta_description,
+      written_at,
       linkedin_message,
       facebook_message,
       x_message
@@ -65,6 +66,10 @@ export async function PUT(
       meta_title: meta_title || title,
       meta_description,
       updated_at: new Date().toISOString()
+    }
+
+    if (written_at !== undefined) {
+      updateData.written_at = written_at || null
     }
 
     // Store social media messages in metadata

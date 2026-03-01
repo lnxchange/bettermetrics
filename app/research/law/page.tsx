@@ -51,8 +51,8 @@ export default function LawPage() {
             predict and explain legal outcomes, design fairer contracts, and create more just legal systems.
           </p>
           <p>
-            <strong>If validated, AIM would enable the first scientific definitions of fundamental legal concepts</strong> 
-            like freedom, respect, fairness, and privacy—concepts that currently rely on philosophical tradition 
+            <strong>AIM enables the first scientific definitions of fundamental legal concepts</strong>
+            like freedom, respect, fairness, and privacy—concepts that currently rely on philosophical tradition
             or legal precedent rather than neuroscientific understanding.
           </p>
         </section>
@@ -179,8 +179,8 @@ export default function LawPage() {
                 <li>Policy backfires when legal frameworks don&apos;t account for human motivation</li>
               </ul>
               <p>
-                <strong>With AIM (if validated):</strong> Legal concepts would have neuroscientifically grounded, 
-                testable definitions that apply uniformly across all legal domains. This would enable:
+                <strong>With AIM:</strong> Legal concepts have neuroscientifically grounded,
+                testable definitions that apply uniformly across all legal domains. This enables:
               </p>
               <ul>
                 <li>Predictable legal outcomes based on motivational science</li>

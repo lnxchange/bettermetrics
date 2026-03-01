@@ -50,7 +50,7 @@ export function Header({ session }: HeaderProps) {
 
       {/* Desktop Navigation - Scientific Framework First */}
       <div className="hidden items-center space-x-5 md:flex">
-        
+
         {/* The Framework Dropdown - Scientific Foundation */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
@@ -289,6 +289,13 @@ export function Header({ session }: HeaderProps) {
           </div>
         </div>
 
+        <Link
+          href="/articles"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          Articles
+        </Link>
+
         {/* Search Bar - Desktop */}
         <div className="hidden lg:block w-64">
           <SearchBar />
@@ -367,13 +374,31 @@ export function Header({ session }: HeaderProps) {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden">
+        <div className="fixed left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden h-[calc(100svh-4rem)] overflow-y-auto">
           <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
             {/* Search Bar - Mobile */}
             <div className="mb-4">
               <SearchBar onClose={() => setIsMobileMenuOpen(false)} />
             </div>
-            
+
+            {/* Top-level links */}
+            <div className="flex gap-2 pb-2">
+              <Link
+                href="/articles"
+                className="flex-1 rounded-md border border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Articles
+              </Link>
+              <Link
+                href="/contact"
+                className="flex-1 rounded-md border border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+            </div>
+
             {/* The Framework Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
@@ -515,6 +540,13 @@ export function Header({ session }: HeaderProps) {
             </div>
 
             <div className="border-t border-gray-200 pt-2">
+              <Link
+                href="/articles"
+                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Articles
+              </Link>
               <Link
                 href="/contact"
                 className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"

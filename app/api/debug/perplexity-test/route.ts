@@ -34,12 +34,12 @@ export async function POST(req: NextRequest) {
       max_tokens: 100,
       stream: true
     })
-    
+
     // For streaming response, we need to handle it differently
     // Let's just check if we got a response object
     const hasResponse = !!apiResponse
     const completion = hasResponse ? 'Perplexity API responded successfully' : 'No response'
-    
+
     return NextResponse.json({
       success: true,
       testMessage,

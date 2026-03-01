@@ -214,7 +214,7 @@ export default function MethodologyPage() {
               satisfaction and intrinsic quality. This reveals how much of a price is
               driven by status competition versus actual use value.
             </p>
-            <div className="rounded-lg border border-purple-300 bg-white p-4">
+            <div className="rounded-lg border border-red-300 bg-white p-4">
               <p className="mb-2 text-sm font-semibold text-gray-900">
                 Example: Premium Bottled Water
               </p>
@@ -223,15 +223,15 @@ export default function MethodologyPage() {
                   <strong>Total Price:</strong> $5.00
                 </li>
                 <li className="ml-4">
-                  <span className="text-amber-600">A-component (Appetite):</span> $0.50
+                  <span className="text-green-600">A-component (Appetite):</span> $0.50
                   — basic hydration value
                 </li>
                 <li className="ml-4">
-                  <span className="text-teal-600">I-component (Intrinsic):</span> $0.50
-                  — taste, convenience, quality preference
+                  <span className="text-blue-600">I-component (Intrinsic):</span> ~$0.00
+                  — negligible (no process joy in drinking water)
                 </li>
                 <li className="ml-4">
-                  <span className="text-purple-600">M-component (Mimetic):</span> $4.00
+                  <span className="text-red-600">M-component (Mimetic):</span> $4.50
                   — brand status, social signaling
                 </li>
               </ul>

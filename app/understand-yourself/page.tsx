@@ -29,7 +29,7 @@ export default function UnderstandYourselfPage() {
           </p>
 
           <div className="space-y-6">
-            <div className="border-l-4 border-amber-500 pl-6">
+            <div className="border-l-4 border-green-500 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
                 1️⃣ Is my body telling me I need this? (Appetite)
               </h3>
@@ -40,7 +40,7 @@ export default function UnderstandYourselfPage() {
               </ul>
             </div>
 
-            <div className="border-l-4 border-teal-500 pl-6">
+            <div className="border-l-4 border-blue-500 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
                 2️⃣ Do I genuinely enjoy the process? (Intrinsic)
               </h3>
@@ -53,7 +53,7 @@ export default function UnderstandYourselfPage() {
               </ul>
             </div>
 
-            <div className="border-l-4 border-purple-500 pl-6">
+            <div className="border-l-4 border-red-500 pl-6">
               <h3 className="mb-2 text-xl font-bold text-gray-900">
                 3️⃣ Am I wanting this because others have/want it? (Mimetic)
               </h3>
@@ -92,7 +92,7 @@ export default function UnderstandYourselfPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="mb-2 font-semibold text-teal-600">
+                  <h4 className="mb-2 font-semibold text-blue-600">
                     Intrinsic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -104,7 +104,7 @@ export default function UnderstandYourselfPage() {
                 </div>
 
                 <div>
-                  <h4 className="mb-2 font-semibold text-purple-600">
+                  <h4 className="mb-2 font-semibold text-red-600">
                     Mimetic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -130,7 +130,7 @@ export default function UnderstandYourselfPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="mb-2 font-semibold text-teal-600">
+                  <h4 className="mb-2 font-semibold text-blue-600">
                     Intrinsic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -144,7 +144,7 @@ export default function UnderstandYourselfPage() {
                 </div>
 
                 <div>
-                  <h4 className="mb-2 font-semibold text-purple-600">
+                  <h4 className="mb-2 font-semibold text-red-600">
                     Mimetic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -170,7 +170,7 @@ export default function UnderstandYourselfPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="mb-2 font-semibold text-teal-600">
+                  <h4 className="mb-2 font-semibold text-blue-600">
                     Intrinsic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -182,7 +182,7 @@ export default function UnderstandYourselfPage() {
                 </div>
 
                 <div>
-                  <h4 className="mb-2 font-semibold text-purple-600">
+                  <h4 className="mb-2 font-semibold text-red-600">
                     Mimetic Signs:
                   </h4>
                   <ul className="space-y-1 text-sm text-gray-700">
@@ -235,7 +235,7 @@ export default function UnderstandYourselfPage() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-xl border-2 border-amber-200 bg-amber-50 p-6">
+        <div className="mt-8 rounded-xl border-2 border-red-200 bg-red-50 p-6">
           <h3 className="mb-4 text-xl font-bold text-gray-900">
             Warning Signs
           </h3>

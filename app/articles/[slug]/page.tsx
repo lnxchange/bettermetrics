@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
+import { auth } from '@/auth'
 import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
+import { marked } from 'marked'
 import '@/styles/print.css'
 
 interface ArticlePageProps {
@@ -54,7 +56,7 @@ export async function generateMetadata({
       type: 'article',
       url: articleUrl,
       images: article.featured_image_url ? [article.featured_image_url] : [],
-      publishedTime: article.published_at || article.created_at,
+      publishedTime: (article as any).written_at || article.published_at || article.created_at,
       modifiedTime: article.updated_at,
       authors: article.author ? [article.author] : undefined,
     },
@@ -70,14 +72,20 @@ export async function generateMetadata({
   }
 }
 
-export default async function ArticlePage({ 
-  params 
+export default async function ArticlePage({
+  params
 }: ArticlePageProps) {
-  const article = await getArticleBySlug(params.slug)
-  
+  const cookieStore = cookies()
+  const [article, session] = await Promise.all([
+    getArticleBySlug(params.slug),
+    auth({ cookieStore })
+  ])
+
   if (!article || article.status !== 'published') {
     notFound()
   }
+
+  const isAdmin = session?.user?.user_metadata?.is_admin === true
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://usebettermetrics.com'
   
@@ -87,7 +95,7 @@ export default async function ArticlePage({
     "@type": "Article",
     "headline": article.title,
     "description": article.meta_description,
-    "datePublished": article.published_at || article.created_at,
+    "datePublished": (article as any).written_at || article.published_at || article.created_at,
     "dateModified": article.updated_at,
     "author": {
       "@type": "Person",
@@ -138,6 +146,8 @@ export default async function ArticlePage({
   const wordCount = article.content.split(/\s+/).length
   const readingTime = Math.ceil(wordCount / 200)
 
+  const htmlContent = await marked.parse(article.content ?? '')
+
   return (
     <>
       {/* Structured Data */}
@@ -152,19 +162,27 @@ export default async function ArticlePage({
 
       <article className="article-container min-h-screen bg-white print:px-4">
         {/* Breadcrumb Navigation */}
-        <nav className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm no-print">
+        <nav className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm no-print flex items-center justify-between">
           <ol className="flex items-center space-x-2 text-gray-600">
             <li><Link href="/" className="hover:text-primary-600">Home</Link></li>
             <li>/</li>
             <li><Link href="/articles" className="hover:text-primary-600">Articles</Link></li>
             <li>/</li>
-            <li className="text-gray-900">{article.title}</li>
+            <li className="text-gray-900 truncate max-w-[8rem] sm:max-w-xs">{article.title}</li>
           </ol>
+          {isAdmin && (
+            <Link
+              href={`/admin/articles/${article.id}/edit`}
+              className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 no-print"
+            >
+              ✏️ Edit Article
+            </Link>
+          )}
         </nav>
 
         {/* Article Header */}
         <header className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 article-meta">
-          <h1 className="article-title text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="article-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             {article.title}
           </h1>
           
@@ -174,9 +192,9 @@ export default async function ArticlePage({
                 <span className="font-semibold">By {article.author}</span>
               </div>
             )}
-            {article.published_at && (
-              <time className="date" dateTime={article.published_at}>
-                {new Date(article.published_at).toLocaleDateString('en-US', {
+            {((article as any).written_at || article.published_at) && (
+              <time className="date" dateTime={(article as any).written_at || article.published_at!}>
+                {new Date((article as any).written_at || article.published_at!).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -226,8 +244,8 @@ export default async function ArticlePage({
         {/* Article Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div 
-            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-xl md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
 
@@ -236,7 +254,7 @@ export default async function ArticlePage({
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Share this article</h3>
-              <div className="flex gap-3 social-share">
+              <div className="flex flex-wrap gap-3 social-share">
                 <a
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(siteUrl + '/articles/' + params.slug)}&text=${encodeURIComponent(article.title)}`}
                   target="_blank"

@@ -4,6 +4,7 @@ import remarkMath from 'remark-math'
 
 import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
+import { Mermaid } from '@/components/ui/mermaid'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconPerplexity, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
@@ -80,6 +81,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
               }
 
               const match = /language-(\w+)/.exec(className || '')
+              const language = match && match[1]
 
               if (inline) {
                 return (
@@ -89,10 +91,20 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                 )
               }
 
+              // Render Mermaid diagrams with the Mermaid component
+              if (language === 'mermaid') {
+                return (
+                  <Mermaid
+                    key={`mermaid-${message.id}-${children.length}`}
+                    chart={String(children).replace(/\n$/, '')}
+                  />
+                )
+              }
+
               return (
                 <CodeBlock
                   key={`codeblock-${message.id}-${children.length}`}
-                  language={(match && match[1]) || ''}
+                  language={language || ''}
                   value={String(children).replace(/\n$/, '')}
                   {...props}
                 />

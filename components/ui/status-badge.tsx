@@ -2,11 +2,11 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 export interface StatusBadgeProps {
-  variant?: 'pre-empirical' | 'validated' | 'developing' | 'hypothesis'
+  variant?: 'pre-empirical' | 'validated' | 'developing' | 'hypothesis' | 'synthesis'
   className?: string
 }
 
-export function StatusBadge({ variant = 'pre-empirical', className }: StatusBadgeProps) {
+export function StatusBadge({ variant = 'synthesis', className }: StatusBadgeProps) {
   const variants = {
     'pre-empirical': {
       label: 'Pre-Empirical Validation',
@@ -23,6 +23,10 @@ export function StatusBadge({ variant = 'pre-empirical', className }: StatusBadg
     'hypothesis': {
       label: 'Testable Hypothesis',
       className: 'bg-purple-100 text-purple-900 border-purple-300'
+    },
+    'synthesis': {
+      label: 'Explanatory Synthesis',
+      className: 'bg-indigo-100 text-indigo-900 border-indigo-300'
     }
   }
 

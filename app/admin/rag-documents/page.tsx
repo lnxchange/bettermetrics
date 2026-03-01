@@ -32,6 +32,7 @@ export default function RAGDocumentsPage() {
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
   const [debugInfo, setDebugInfo] = useState<any>(null)
 
   // Fetch documents on page load
@@ -112,6 +113,32 @@ export default function RAGDocumentsPage() {
       }
     } catch (error) {
       toast.error('Failed to delete document')
+    }
+  }
+
+  const handlePublishAllAsArticles = async () => {
+    if (!confirm('This will publish all RAG documents as site articles. Documents that already have a matching article will be skipped. Continue?')) {
+      return
+    }
+
+    setIsPublishing(true)
+    try {
+      const response = await fetch('/api/admin/publish-all-rag-as-articles', { method: 'POST' })
+      if (response.ok) {
+        const data = await response.json()
+        toast.success(`Published ${data.created} new articles, skipped ${data.skipped} already existing`)
+        if (data.errors && data.errors.length > 0) {
+          toast.error(`${data.errors.length} documents failed. Check console for details.`)
+          console.error('Publish errors:', data.errors)
+        }
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to publish articles')
+      }
+    } catch (error) {
+      toast.error('Failed to publish articles')
+    } finally {
+      setIsPublishing(false)
     }
   }
 
@@ -605,7 +632,15 @@ export default function RAGDocumentsPage() {
                     </CardDescription>
                   </div>
                   {documents.length > 0 && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
+                      <Button
+                        onClick={handlePublishAllAsArticles}
+                        disabled={isPublishing || isProcessing}
+                        variant="outline"
+                        size="sm"
+                      >
+                        {isPublishing ? 'Publishing...' : 'Publish All as Articles'}
+                      </Button>
                       <Button
                         onClick={handleProcessAllDocuments}
                         disabled={isProcessing}

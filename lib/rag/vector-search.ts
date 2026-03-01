@@ -22,15 +22,16 @@ export class VectorSearch {
     )
 
     this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      modelName: 'text-embedding-3-large'
     })
   }
 
   async searchSimilarDocuments(
     query: string,
-    limit: number = 4, // Expanded from 3 to 4-5 chunks
+    limit: number = 20,
     documentType?: 'research' | 'rag',
-    threshold: number = 0.35 // More permissive threshold
+    threshold: number = 0.35
   ): Promise<SearchResult[]> {
     try {
       // Generate embedding for the query

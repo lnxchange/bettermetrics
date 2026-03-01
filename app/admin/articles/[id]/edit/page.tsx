@@ -22,6 +22,8 @@ interface Article {
   meta_description: string | null
   status: 'draft' | 'scheduled' | 'published'
   structured_data: any
+  written_at: string | null
+  created_at: string | null
 }
 
 export default function EditArticlePage() {
@@ -34,6 +36,7 @@ export default function EditArticlePage() {
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const [article, setArticle] = useState<Article | null>(null)
   const [formData, setFormData] = useState({
@@ -46,6 +49,7 @@ export default function EditArticlePage() {
     featured_image_url: '',
     meta_title: '',
     meta_description: '',
+    written_at: '',
     linkedin_message: '',
     facebook_message: '',
     x_message: ''
@@ -65,6 +69,9 @@ export default function EditArticlePage() {
 
       // Populate form
       const socialMessages = data.article.structured_data?.social_messages || {}
+      // written_at falls back to created_at for legacy articles
+      const rawDate = data.article.written_at || data.article.created_at
+      const writtenAtValue = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : ''
       setFormData({
         title: data.article.title || '',
         slug: data.article.slug || '',
@@ -75,6 +82,7 @@ export default function EditArticlePage() {
         featured_image_url: data.article.featured_image_url || '',
         meta_title: data.article.meta_title || data.article.title || '',
         meta_description: data.article.meta_description || '',
+        written_at: writtenAtValue,
         linkedin_message: socialMessages.linkedin || '',
         facebook_message: socialMessages.facebook || '',
         x_message: socialMessages.x || ''
@@ -235,6 +243,20 @@ export default function EditArticlePage() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!confirm('Delete this article? This cannot be undone.')) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      toast.success('Article deleted')
+      router.push('/admin/articles')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete article')
+      setDeleting(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -265,7 +287,7 @@ export default function EditArticlePage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-4">
             <Link href="/admin/articles">
               <Button variant="outline" size="sm">
@@ -274,7 +296,7 @@ export default function EditArticlePage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Article</h1>
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Edit Article</h1>
               <p className="mt-1 text-sm text-gray-500">
                 Status: <span className="font-semibold capitalize">{article.status}</span>
               </p>
@@ -287,6 +309,9 @@ export default function EditArticlePage() {
                 Preview
               </Button>
             </Link>
+            <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting}>
+              {deleting ? 'Deleting…' : 'Delete'}
+            </Button>
           </div>
         </div>
 
@@ -325,6 +350,24 @@ export default function EditArticlePage() {
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   URL: /articles/{formData.slug}
+                </p>
+              </div>
+
+              {/* Written Date */}
+              <div>
+                <label htmlFor="written_at" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Date Written
+                </label>
+                <input
+                  type="date"
+                  id="written_at"
+                  name="written_at"
+                  value={formData.written_at}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  The date the article was originally written (shown to readers)
                 </p>
               </div>
 

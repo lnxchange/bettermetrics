@@ -65,6 +65,18 @@ export default function ArticlesPage() {
     }
   }
 
+  const handleDelete = async (articleId: string) => {
+    if (!confirm('Delete this article? This cannot be undone.')) return
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      toast.success('Article deleted')
+      fetchArticles()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete article')
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     const variants: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' } = {
       draft: 'secondary',
@@ -92,9 +104,9 @@ export default function ArticlesPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-wrap justify-between items-start gap-3 sm:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Article Management</h1>
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Article Management</h1>
             <p className="text-gray-600 mt-2">Manage your published articles and drafts</p>
           </div>
           <Link href="/admin/new-article">
@@ -142,7 +154,7 @@ export default function ArticlesPage() {
             {articles.map((article) => (
               <Card key={article.id}>
                 <CardContent className="p-6">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-xl font-semibold text-gray-900">
@@ -180,7 +192,7 @@ export default function ArticlesPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 ml-4">
+                    <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
                       <Link href={`/admin/articles/${article.id}/edit`}>
                         <Button variant="default" size="sm" className="w-full">
                           Edit
@@ -209,6 +221,7 @@ export default function ArticlesPage() {
                         variant="ghost"
                         size="sm"
                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => handleDelete(article.id)}
                       >
                         Delete
                       </Button>
