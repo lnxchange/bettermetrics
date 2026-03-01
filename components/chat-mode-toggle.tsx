@@ -12,16 +12,13 @@ export function ChatModeToggle() {
   return (
     <div className="flex items-center gap-2 text-sm">
       <span className={mode === 'academic' ? 'font-medium' : 'text-muted-foreground'}>
-        Academic
+        Academic Mode
       </span>
       <Switch
-        checked={mode === 'layperson'}
-        onCheckedChange={checked => setMode(checked ? 'layperson' : 'academic')}
-        aria-label="Toggle between Academic and Plain English response mode"
+        checked={mode === 'academic'}
+        onCheckedChange={checked => setMode(checked ? 'academic' : 'layperson')}
+        aria-label="Toggle Academic Mode — turn off for plain English explanations"
       />
-      <span className={mode === 'layperson' ? 'font-medium' : 'text-muted-foreground'}>
-        Plain English
-      </span>
     </div>
   )
 }
