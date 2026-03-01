@@ -146,7 +146,11 @@ export default async function ArticlePage({
   const wordCount = article.content.split(/\s+/).length
   const readingTime = Math.ceil(wordCount / 200)
 
-  const htmlContent = await marked.parse(article.content ?? '')
+  let htmlContent = await marked.parse(article.content ?? '')
+  // Wrap tables in a scrollable container so they render correctly on all screen sizes
+  htmlContent = htmlContent
+    .replace(/<table>/g, '<div class="overflow-x-auto my-6"><table>')
+    .replace(/<\/table>/g, '</table></div>')
 
   return (
     <>
