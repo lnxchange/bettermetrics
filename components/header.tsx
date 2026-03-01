@@ -57,6 +57,13 @@ export function Header({ session }: HeaderProps) {
           About
         </Link>
 
+        <Link
+          href="/articles"
+          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          Articles
+        </Link>
+
         {/* For Individuals Dropdown */}
         <div className="group relative">
           <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
@@ -320,7 +327,7 @@ export function Header({ session }: HeaderProps) {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden">
+        <div className="absolute left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
             {/* Search Bar - Mobile */}
             <div className="mb-4">
@@ -334,7 +341,14 @@ export function Header({ session }: HeaderProps) {
             >
               About
             </Link>
-            
+            <Link
+              href="/articles"
+              className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Articles
+            </Link>
+
             {/* For Individuals Section */}
             <div className="border-t border-gray-200 pt-2">
               <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">

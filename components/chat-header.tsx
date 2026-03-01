@@ -5,7 +5,6 @@ import { SidebarList } from '@/components/sidebar-list'
 import { Button } from '@/components/ui/button'
 import { IconPlus } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { ChatModeToggle } from '@/components/chat-mode-toggle'
 
 export async function ChatHeader({ userId }: { userId?: string }) {
   return (
@@ -23,10 +22,7 @@ export async function ChatHeader({ userId }: { userId?: string }) {
           </Link>
         </Button>
       </div>
-      <div className="flex items-center gap-3">
-        <ChatModeToggle />
-        <ThemeToggle />
-      </div>
+      <ThemeToggle />
     </div>
   )
 }
