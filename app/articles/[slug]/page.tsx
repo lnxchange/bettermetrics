@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
+import { auth } from '@/auth'
 import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
 import '@/styles/print.css'
@@ -70,14 +71,20 @@ export async function generateMetadata({
   }
 }
 
-export default async function ArticlePage({ 
-  params 
+export default async function ArticlePage({
+  params
 }: ArticlePageProps) {
-  const article = await getArticleBySlug(params.slug)
-  
+  const cookieStore = cookies()
+  const [article, session] = await Promise.all([
+    getArticleBySlug(params.slug),
+    auth({ cookieStore })
+  ])
+
   if (!article || article.status !== 'published') {
     notFound()
   }
+
+  const isAdmin = session?.user?.user_metadata?.is_admin === true
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://usebettermetrics.com'
   
@@ -152,7 +159,7 @@ export default async function ArticlePage({
 
       <article className="article-container min-h-screen bg-white print:px-4">
         {/* Breadcrumb Navigation */}
-        <nav className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm no-print">
+        <nav className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm no-print flex items-center justify-between">
           <ol className="flex items-center space-x-2 text-gray-600">
             <li><Link href="/" className="hover:text-primary-600">Home</Link></li>
             <li>/</li>
@@ -160,6 +167,14 @@ export default async function ArticlePage({
             <li>/</li>
             <li className="text-gray-900">{article.title}</li>
           </ol>
+          {isAdmin && (
+            <Link
+              href={`/admin/articles/${article.id}/edit`}
+              className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 no-print"
+            >
+              ✏️ Edit Article
+            </Link>
+          )}
         </nav>
 
         {/* Article Header */}
