@@ -13,6 +13,9 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { optimizeArticleSEO } from '../lib/seo-optimizer'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '.env.local' })
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -24,8 +27,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
   process.exit(1)
 }
 
-if (!process.env.PERPLEXITY_API_KEY) {
-  console.error('ERROR: Missing PERPLEXITY_API_KEY environment variable')
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error('ERROR: Missing ANTHROPIC_API_KEY environment variable')
   process.exit(1)
 }
 

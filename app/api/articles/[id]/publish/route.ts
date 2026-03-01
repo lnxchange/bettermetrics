@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
+import { optimizeArticleSEO } from '@/lib/seo-optimizer'
 
 export async function POST(
   req: NextRequest,
@@ -28,6 +29,36 @@ export async function POST(
 
     if (articleError) {
       return NextResponse.json({ error: articleError.message }, { status: 500 })
+    }
+
+    // Auto-populate SEO fields on publish when blank
+    if (
+      article &&
+      (!article.meta_title || !article.meta_description || !article.structured_data)
+    ) {
+      try {
+        const optimization = await optimizeArticleSEO({
+          title: article.title,
+          content: article.content,
+          slug: article.slug,
+          author: article.author || undefined,
+          category: article.category || undefined,
+          publishedAt: article.published_at || undefined
+        })
+
+        await supabase
+          .from('articles')
+          .update({
+            meta_title: article.meta_title || optimization.metaTitle,
+            meta_description: article.meta_description || optimization.metaDescription,
+            structured_data: article.structured_data || optimization.structuredData,
+            seo_optimized_at: new Date().toISOString()
+          })
+          .eq('id', params.id)
+      } catch (seoError) {
+        // Non-blocking: publication should still succeed if SEO generation fails
+        console.error('Auto SEO on publish failed:', seoError)
+      }
     }
 
     // 2. Create social_posts records for each platform

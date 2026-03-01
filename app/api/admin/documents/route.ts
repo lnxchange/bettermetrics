@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 import { cleanArticleContent, extractDateFromContent } from '@/lib/article-content-cleaner'
+import { optimizeArticleSEO } from '@/lib/seo-optimizer'
 
 function toSlug(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -226,6 +227,13 @@ export async function POST(req: NextRequest) {
         const cleanedContent = cleanArticleContent(content)
         const parsedDate = extractDateFromContent(cleanedContent)
         const publishDate = parsedDate ?? new Date().toISOString()
+        const seo = await optimizeArticleSEO({
+          title,
+          content: cleanedContent,
+          slug,
+          author: 'Yule Guttenbeil',
+          publishedAt: publishDate
+        })
 
         const articlePayload = {
           title,
@@ -236,8 +244,11 @@ export async function POST(req: NextRequest) {
           published_at: publishDate,
           written_at: parsedDate ?? publishDate,
           user_id: session.user.id,
-          meta_title: title,
-          tags: []
+          meta_title: seo.metaTitle || title,
+          meta_description: seo.metaDescription || null,
+          structured_data: seo.structuredData || null,
+          seo_optimized_at: new Date().toISOString(),
+          tags: (seo.keywords || []).slice(0, 8)
         }
 
         const { error: articleError } = await supabase

@@ -21,16 +21,24 @@ export function ArticleContent({ html, className }: ArticleContentProps) {
     const container = containerRef.current
     if (!container) return
 
-    const mermaidBlocks = container.querySelectorAll<HTMLElement>(
-      'pre > code.language-mermaid'
-    )
+    const roots: Array<{ unmount: () => void }> = []
+    const codeBlocks = container.querySelectorAll<HTMLElement>('pre > code')
 
-    mermaidBlocks.forEach((codeEl) => {
+    codeBlocks.forEach((codeEl) => {
       const pre = codeEl.closest('pre')
       if (!pre) return
 
+      const className = (codeEl.className || '').toLowerCase()
       const chart = codeEl.textContent?.trim()
       if (!chart) return
+
+      // Accept common marked outputs and content-based fallback.
+      const looksLikeMermaidClass =
+        className.includes('language-mermaid') || className.includes('lang-mermaid')
+      const looksLikeMermaidCode = /^(graph|flowchart|sequencediagram|classdiagram|statediagram|erdiagram|journey|gantt|mindmap|timeline|quadrantchart|pie)\b/i.test(
+        chart
+      )
+      if (!looksLikeMermaidClass && !looksLikeMermaidCode) return
 
       const wrapper = document.createElement('div')
       wrapper.className = 'mermaid-diagram-wrapper my-6'
@@ -38,7 +46,12 @@ export function ArticleContent({ html, className }: ArticleContentProps) {
 
       const root = createRoot(wrapper)
       root.render(<Mermaid chart={chart} />)
+      roots.push(root)
     })
+
+    return () => {
+      roots.forEach(root => root.unmount())
+    }
   }, [html])
 
   return (

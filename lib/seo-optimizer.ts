@@ -1,6 +1,8 @@
+import Anthropic from '@anthropic-ai/sdk'
+
 /**
- * SEO Optimization Module using Perplexity API
- * 
+ * SEO Optimization Module using Claude API.
+ *
  * Generates SEO metadata including:
  * - Meta title (50-60 chars)
  * - Meta description (150-160 chars)
@@ -26,33 +28,41 @@ interface OptimizationInput {
   slug: string
   author?: string
   category?: string
+  publishedAt?: string
 }
 
 export async function optimizeArticleSEO(
   input: OptimizationInput
 ): Promise<SEOOptimizationResult> {
-  const { title, content, slug, author, category } = input
+  const { title, content, slug, author, category, publishedAt } = input
 
   // Truncate content for API call (first 2000 chars should be sufficient for SEO analysis)
   const truncatedContent = content.substring(0, 2000)
 
   try {
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
-        messages: [{
+    const anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY
+    })
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('Missing ANTHROPIC_API_KEY')
+    }
+
+    const response = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-latest',
+      max_tokens: 1200,
+      temperature: 0.2,
+      messages: [
+        {
           role: 'user',
           content: `Analyze this article and provide SEO optimization in JSON format.
 
 Article Title: ${title}
+Article Slug: ${slug}
+Article Category: ${category || 'General'}
 Article Content: ${truncatedContent}${content.length > 2000 ? '... [truncated]' : ''}
 
-Provide a JSON response ONLY (no additional text) with the following structure:
+Provide a JSON response ONLY (no additional text) with this exact structure:
 {
   "metaTitle": "optimized SEO title 50-60 chars",
   "metaDescription": "compelling SEO description 150-160 chars",
@@ -66,7 +76,7 @@ Provide a JSON response ONLY (no additional text) with the following structure:
       "@type": "Person",
       "name": "${author || 'Yule Guttenbeil'}"
     },
-    "datePublished": "${new Date().toISOString()}",
+    "datePublished": "${publishedAt || new Date().toISOString()}",
     "publisher": {
       "@type": "Organization",
       "name": "AIM Framework",
@@ -81,25 +91,21 @@ Provide a JSON response ONLY (no additional text) with the following structure:
     "internalLinks": ["topic1", "topic2"]
   }
 }`
-        }],
-        max_tokens: 1000,
-        temperature: 0.3
-      })
+        }
+      ]
     })
 
-    if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.status} ${response.statusText}`)
-    }
+    const contentBlock = response.content.find(block => block.type === 'text')
+    const contentText = contentBlock && contentBlock.type === 'text'
+      ? contentBlock.text
+      : ''
 
-    const data = await response.json()
-    const content_text = data.choices?.[0]?.message?.content
-
-    if (!content_text) {
-      throw new Error('No content in Perplexity response')
+    if (!contentText) {
+      throw new Error('No text content in Claude response')
     }
 
     // Extract JSON from response (handle potential markdown code blocks)
-    let jsonText = content_text.trim()
+    let jsonText = contentText.trim()
     if (jsonText.startsWith('```json')) {
       jsonText = jsonText.replace(/```json\s*/, '').replace(/```\s*$/, '')
     } else if (jsonText.startsWith('```')) {
@@ -124,7 +130,7 @@ Provide a JSON response ONLY (no additional text) with the following structure:
       metaTitle: title.substring(0, 60),
       metaDescription: truncatedContent.substring(0, 160).replace(/<[^>]*>/g, ''),
       keywords: [],
-      structuredData: generateDefaultStructuredData(input),
+      structuredData: generateDefaultStructuredData({ ...input, publishedAt }),
       recommendations: {
         headings: 'Unable to generate recommendations',
         internalLinks: []
@@ -142,7 +148,7 @@ function generateDefaultStructuredData(input: OptimizationInput) {
       "@type": "Person",
       "name": input.author || "Yule Guttenbeil"
     },
-    "datePublished": new Date().toISOString(),
+    "datePublished": input.publishedAt || new Date().toISOString(),
     "publisher": {
       "@type": "Organization",
       "name": "AIM Framework",

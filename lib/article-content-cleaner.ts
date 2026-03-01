@@ -101,6 +101,24 @@ function normalizeMarkdownTables(content: string): string {
 }
 
 /**
+ * Apply text transforms only outside fenced code blocks.
+ * This avoids mutating Mermaid/code samples while still cleaning prose.
+ */
+function transformOutsideCodeFences(
+  content: string,
+  transform: (text: string) => string
+): string {
+  // Split on fenced blocks and keep delimiters.
+  const parts = content.split(/(```[\s\S]*?```)/g)
+  return parts
+    .map((part, index) => {
+      const isFence = index % 2 === 1 && part.startsWith('```')
+      return isFence ? part : transform(part)
+    })
+    .join('')
+}
+
+/**
  * Remove the Sources / References section if it appears at the end of the
  * article.  Matches headings of any level (# through ######), bold text
  * markers, or plain "Sources"/"References" lines.
@@ -199,9 +217,9 @@ export function extractDateFromContent(content: string): string | null {
 export function cleanArticleContent(content: string): string {
   let cleaned = content
 
-  cleaned = normalizeMarkdownTables(cleaned)
-  cleaned = removePrivatePerplexityLinks(cleaned)
-  cleaned = removePerplexityImages(cleaned)
+  cleaned = transformOutsideCodeFences(cleaned, normalizeMarkdownTables)
+  cleaned = transformOutsideCodeFences(cleaned, removePrivatePerplexityLinks)
+  cleaned = transformOutsideCodeFences(cleaned, removePerplexityImages)
   cleaned = removeSourcesSection(cleaned)
 
   // Normalise trailing whitespace

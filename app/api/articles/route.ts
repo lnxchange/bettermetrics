@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
 import { revalidatePath } from 'next/cache'
+import { optimizeArticleSEO } from '@/lib/seo-optimizer'
 
 // GET - List articles
 export async function GET(req: NextRequest) {
@@ -83,6 +84,35 @@ export async function POST(req: NextRequest) {
     // Generate meta title if not provided
     const metaTitle = body.metaTitle || title
 
+    const publishDate = status === 'published' ? new Date().toISOString() : null
+    let resolvedMetaTitle = metaTitle
+    let resolvedMetaDescription = metaDescription
+    let resolvedStructuredData = body.structuredData || null
+    let seoOptimizedAt: string | null = null
+
+    // Auto-generate SEO when publishing and fields are missing
+    if (
+      status === 'published' &&
+      (!resolvedMetaTitle || !resolvedMetaDescription || !resolvedStructuredData)
+    ) {
+      try {
+        const optimization = await optimizeArticleSEO({
+          title,
+          content,
+          slug,
+          author: author || undefined,
+          category: category || undefined,
+          publishedAt: publishDate || undefined
+        })
+        resolvedMetaTitle = resolvedMetaTitle || optimization.metaTitle
+        resolvedMetaDescription = resolvedMetaDescription || optimization.metaDescription
+        resolvedStructuredData = resolvedStructuredData || optimization.structuredData
+        seoOptimizedAt = new Date().toISOString()
+      } catch (seoError) {
+        console.error('Auto SEO on create failed:', seoError)
+      }
+    }
+
     // Insert article
     const { data: article, error: articleError } = await supabase
       .from('articles')
@@ -94,11 +124,13 @@ export async function POST(req: NextRequest) {
         category,
         tags: tags || [],
         featured_image_url: featuredImage,
-        meta_title: metaTitle,
-        meta_description: metaDescription,
+        meta_title: resolvedMetaTitle,
+        meta_description: resolvedMetaDescription,
+        structured_data: resolvedStructuredData,
+        seo_optimized_at: seoOptimizedAt,
         status: status || 'draft',
         user_id: session.user.id,
-        published_at: status === 'published' ? new Date().toISOString() : null
+        published_at: publishDate
       })
       .select()
       .single()
