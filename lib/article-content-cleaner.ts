@@ -128,6 +128,71 @@ function removeSourcesSection(content: string): string {
 }
 
 /**
+ * Extract a date from article content if present.
+ * Scans the first ~3000 chars for common patterns (byline dates, ISO dates).
+ * Returns ISO string or null.
+ */
+export function extractDateFromContent(content: string): string | null {
+  const scan = content.slice(0, 3000)
+  const monthNames =
+    'january|february|march|april|may|june|july|august|september|october|november|december'
+  const monthNum: Record<string, number> = {
+    january: 1,
+    february: 2,
+    march: 3,
+    april: 4,
+    may: 5,
+    june: 6,
+    july: 7,
+    august: 8,
+    september: 9,
+    october: 10,
+    november: 11,
+    december: 12
+  }
+
+  // ISO: 2025-12-01 or 2026-01-15
+  const isoMatch = scan.match(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/)
+  if (isoMatch) {
+    const [, y, m, d] = isoMatch
+    const date = new Date(parseInt(y!, 10), parseInt(m!, 10) - 1, parseInt(d!, 10))
+    if (!isNaN(date.getTime())) return date.toISOString()
+  }
+
+  // "December 2025", "January 2026" (month year, with optional day)
+  const monthYear = new RegExp(
+    `\\b(${monthNames})\\s+(\\d{1,2})?,?\\s*(20\\d{2})\\b`,
+    'i'
+  )
+  const myMatch = scan.match(monthYear)
+  if (myMatch) {
+    const [, month, day, year] = myMatch
+    const m = monthNum[month!.toLowerCase()]
+    const y = parseInt(year!, 10)
+    const d = day ? parseInt(day, 10) : 1
+    const date = new Date(y, m - 1, d)
+    if (!isNaN(date.getTime())) return date.toISOString()
+  }
+
+  // "1 December 2025", "15 January 2026"
+  const dayMonthYear = new RegExp(
+    `\\b(\\d{1,2})\\s+(${monthNames})\\s+(20\\d{2})\\b`,
+    'i'
+  )
+  const dmyMatch = scan.match(dayMonthYear)
+  if (dmyMatch) {
+    const [, day, month, year] = dmyMatch
+    const d = parseInt(day!, 10)
+    const m = monthNum[month!.toLowerCase()]
+    const y = parseInt(year!, 10)
+    const date = new Date(y, m - 1, d)
+    if (!isNaN(date.getTime())) return date.toISOString()
+  }
+
+  return null
+}
+
+/**
  * Run all content cleaning steps.
  * Returns the cleaned markdown string.
  */

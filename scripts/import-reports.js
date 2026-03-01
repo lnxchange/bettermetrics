@@ -80,6 +80,42 @@ function cleanArticleContent(content) {
 }
 
 /**
+ * Extract date from article content if present (December 2025, 2025-12-01, etc.)
+ * Returns ISO string or null.
+ */
+function extractDateFromContent(content) {
+  const scan = content.slice(0, 3000);
+  const months = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  const monthNum = Object.fromEntries(months.map((m, i) => [m, i + 1]));
+
+  const isoMatch = scan.match(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/);
+  if (isoMatch) {
+    const d = new Date(parseInt(isoMatch[1], 10), parseInt(isoMatch[2], 10) - 1, parseInt(isoMatch[3], 10));
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+
+  const monthStr = months.join('|');
+  const monthYear = new RegExp(`\\b(${monthStr})\\s+(\\d{1,2})?,?\\s*(20\\d{2})\\b`, 'i');
+  const myMatch = scan.match(monthYear);
+  if (myMatch) {
+    const m = monthNum[myMatch[1].toLowerCase()];
+    const y = parseInt(myMatch[3], 10);
+    const day = myMatch[2] ? parseInt(myMatch[2], 10) : 1;
+    const d = new Date(y, m - 1, day);
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+
+  const dayMonthYear = new RegExp(`\\b(\\d{1,2})\\s+(${monthStr})\\s+(20\\d{2})\\b`, 'i');
+  const dmyMatch = scan.match(dayMonthYear);
+  if (dmyMatch) {
+    const d = new Date(parseInt(dmyMatch[3], 10), monthNum[dmyMatch[2].toLowerCase()] - 1, parseInt(dmyMatch[1], 10));
+    if (!isNaN(d.getTime())) return d.toISOString();
+  }
+
+  return null;
+}
+
+/**
  * Extract title from markdown content
  */
 function extractTitle(content, filename) {
@@ -276,6 +312,8 @@ function parseMarkdownFile(filepath) {
   console.log(`  ✓ Tags: ${tags.join(', ')}`);
   console.log(`  ✓ Meta description: ${metaDescription.substring(0, 50)}...`);
 
+  const writtenAt = extractDateFromContent(cleanedContent) || metadata.date || null;
+
   return {
     title,
     slug,
@@ -286,6 +324,7 @@ function parseMarkdownFile(filepath) {
     metaDescription,
     status: metadata.status || 'draft',
     featuredImage: metadata.featured_image || metadata.image || '',
+    writtenAt,
     linkedinMessage: metadata.linkedin_message || '',
     facebookMessage: metadata.facebook_message || '',
     xMessage: metadata.x_message || ''
@@ -320,6 +359,8 @@ async function uploadArticle(articleData) {
       meta_title: articleData.title,
       meta_description: articleData.metaDescription,
       status: articleData.status || 'draft',
+      written_at: articleData.writtenAt || null,
+      published_at: articleData.status === 'published' ? (articleData.writtenAt || new Date().toISOString()) : null,
       user_id: userId,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

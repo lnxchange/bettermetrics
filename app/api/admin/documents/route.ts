@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
-import { cleanArticleContent } from '@/lib/article-content-cleaner'
+import { cleanArticleContent, extractDateFromContent } from '@/lib/article-content-cleaner'
 
 function toSlug(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -223,13 +223,18 @@ export async function POST(req: NextRequest) {
     if (type === 'rag' && content && data) {
       try {
         let slug = toSlug(title)
+        const cleanedContent = cleanArticleContent(content)
+        const parsedDate = extractDateFromContent(cleanedContent)
+        const publishDate = parsedDate ?? new Date().toISOString()
+
         const articlePayload = {
           title,
           slug,
-          content: cleanArticleContent(content),
+          content: cleanedContent,
           author: 'Yule Guttenbeil',
           status: 'published' as const,
-          published_at: new Date().toISOString(),
+          published_at: publishDate,
+          written_at: parsedDate ?? publishDate,
           user_id: session.user.id,
           meta_title: title,
           tags: []

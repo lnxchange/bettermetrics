@@ -174,11 +174,6 @@ export default function EditArticlePage() {
 
   const handlePublish = async () => {
     // Validate required fields
-    if (!formData.featured_image_url) {
-      toast.error('Featured image is required before publishing')
-      return
-    }
-
     if (!formData.title || !formData.content) {
       toast.error('Title and content are required')
       return
@@ -602,19 +597,13 @@ export default function EditArticlePage() {
                   <Button
                     type="button"
                     onClick={handlePublish}
-                    disabled={saving || publishing || !formData.featured_image_url}
+                    disabled={saving || publishing}
                     className="bg-green-600 hover:bg-green-700"
                   >
                     {publishing ? 'Publishing...' : '🚀 Publish & Share'}
                   </Button>
                 </div>
               </div>
-
-              {!formData.featured_image_url && (
-                <p className="text-sm text-amber-600 text-center">
-                  ⚠️ Featured image required before publishing
-                </p>
-              )}
             </form>
           </CardContent>
         </Card>
