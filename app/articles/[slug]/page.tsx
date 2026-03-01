@@ -168,7 +168,7 @@ export default async function ArticlePage({
             <li>/</li>
             <li><Link href="/articles" className="hover:text-primary-600">Articles</Link></li>
             <li>/</li>
-            <li className="text-gray-900">{article.title}</li>
+            <li className="text-gray-900 truncate max-w-[8rem] sm:max-w-xs">{article.title}</li>
           </ol>
           {isAdmin && (
             <Link
@@ -182,7 +182,7 @@ export default async function ArticlePage({
 
         {/* Article Header */}
         <header className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 article-meta">
-          <h1 className="article-title text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="article-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             {article.title}
           </h1>
           
@@ -244,7 +244,7 @@ export default async function ArticlePage({
         {/* Article Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div 
-            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
+            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-xl md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </div>
@@ -254,7 +254,7 @@ export default async function ArticlePage({
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Share this article</h3>
-              <div className="flex gap-3 social-share">
+              <div className="flex flex-wrap gap-3 social-share">
                 <a
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(siteUrl + '/articles/' + params.slug)}&text=${encodeURIComponent(article.title)}`}
                   target="_blank"

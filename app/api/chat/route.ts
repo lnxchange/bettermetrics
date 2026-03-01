@@ -63,7 +63,7 @@ const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are
 5. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
 6. Do NOT provide disclaimers, clarifications, or ambiguity warnings
 7. Write naturally and thoroughly - you have 10,000 tokens available
-8. NEVER hallucinate content - if information is not in the Context, say so
+8. NEVER hallucinate content - if information is not in the Context, reason from first principles using the AIM taxonomy
 
 **CONTEXT:**
 Users are on the AIM Framework website (usebettermetrics.com). They know what they're asking about. Any reference to "AIM" means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic), NOT healthcare frameworks.
@@ -224,7 +224,7 @@ export async function POST(req: Request) {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.log('Missing environment variables for RAG - skipping vector search')
-        ragContext = '\n\nNOTE: RAG system not configured. State this limitation. You may only apply the core AIM three-source model to analyze user-provided information. DO NOT invent or hallucinate content.'
+        ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
       } else {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
@@ -249,19 +249,13 @@ export async function POST(req: Request) {
 5. If the Context does not fully address the question, state what IS covered and what is missing.
 6. DO NOT invent analogies or connections not explicitly present in the Context.`
         } else {
-          ragContext = `\n\nNOTE: No AIM research documents match this query.
-
-STRICT INSTRUCTION: Since no relevant AIM documents were found:
-1. State clearly that the AIM research documents do not contain information on this specific topic.
-2. If the question relates to motivation, desires, or behavior, offer to analyze it using the core AIM three-source model IF the user provides specific details.
-3. DO NOT invent content, create analogies, or import external information to fill the gap.
-4. DO NOT pretend to have information you don't have.`
+          ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
         }
       }
     } catch (error) {
       console.error('RAG search error:', error)
       // Continue without context if RAG fails - but with strict grounding
-      ragContext = '\n\nNOTE: Unable to search AIM documents due to a technical error. State this limitation. Offer to analyze using the core AIM three-source model if the user provides specific details. DO NOT invent or hallucinate content.'
+      ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
     }
 
     // Build system message with RAG context
