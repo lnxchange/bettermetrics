@@ -59,9 +59,15 @@ const AIM_TERMS = ['appetites', 'intrinsic motivation', 'mimetic desire', 'aim f
 function cleanArticleContent(content) {
   let cleaned = content;
 
-  // Remove inline images whose alt text or URL contains "perplexity"
+  // Remove inline markdown images whose alt text or URL contains "perplexity"
   cleaned = cleaned.replace(/!\[([^\]]*)\]\(([^)]*)\)/gi, (match, alt, url) => {
     if (/perplexity/i.test(alt) || /perplexity/i.test(url)) return '';
+    return match;
+  });
+
+  // Remove HTML img tags whose src or attributes contain "perplexity"
+  cleaned = cleaned.replace(/<img\b[^>]*>/gi, (match) => {
+    if (/perplexity/i.test(match)) return '';
     return match;
   });
 
@@ -186,6 +192,7 @@ function extractTags(content, category) {
 function generateMetaDescription(content, title) {
   // Remove markdown formatting
   const plainText = content
+    .replace(/<[^>]+>/g, '') // Strip HTML tags
     .replace(/^#.*$/gm, '') // Remove headings
     .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // Remove links
     .replace(/[*_~`]/g, '') // Remove formatting
@@ -248,25 +255,25 @@ function parseMarkdownFile(filepath) {
     });
   }
   
+  // Clean content first so metadata extraction never sees perplexity artefacts
+  const cleanedContent = cleanArticleContent(markdownContent);
+
   // Extract metadata (use manual frontmatter if provided, otherwise auto-extract)
-  const title = metadata.title || extractTitle(markdownContent, filename);
+  const title = metadata.title || extractTitle(cleanedContent, filename);
   const slug = metadata.slug || generateSlug(title);
-  const category = metadata.category || detectCategory(markdownContent);
-  const tags = metadata.tags ? 
-    metadata.tags.split(',').map(t => t.trim()) : 
-    extractTags(markdownContent, category);
-  const metaDescription = metadata.meta_description || 
-    metadata.description || 
-    generateMetaDescription(markdownContent, title);
-  
+  const category = metadata.category || detectCategory(cleanedContent);
+  const tags = metadata.tags ?
+    metadata.tags.split(',').map(t => t.trim()) :
+    extractTags(cleanedContent, category);
+  const metaDescription = metadata.meta_description ||
+    metadata.description ||
+    generateMetaDescription(cleanedContent, title);
+
   console.log(`  ✓ Title: "${title}"`);
   console.log(`  ✓ Slug: ${slug}`);
   console.log(`  ✓ Category: ${category}`);
   console.log(`  ✓ Tags: ${tags.join(', ')}`);
   console.log(`  ✓ Meta description: ${metaDescription.substring(0, 50)}...`);
-  
-  // Clean content: remove Perplexity logos and internal source links
-  const cleanedContent = cleanArticleContent(markdownContent);
 
   return {
     title,

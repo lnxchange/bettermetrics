@@ -14,8 +14,8 @@
  *   ![logo](https://perplexity.ai/logo.png)
  */
 function removePerplexityImages(content: string): string {
-  // Inline images: ![alt](url)
-  return content.replace(
+  // Inline markdown images: ![alt](url)
+  let cleaned = content.replace(
     /!\[([^\]]*)\]\(([^)]*)\)/gi,
     (match, alt, url) => {
       if (
@@ -27,6 +27,16 @@ function removePerplexityImages(content: string): string {
       return match
     }
   )
+
+  // HTML img tags: <img src="https://r2cdn.perplexity.ai/..." ...>
+  cleaned = cleaned.replace(/<img\b[^>]*>/gi, (match) => {
+    if (/perplexity/i.test(match)) {
+      return ''
+    }
+    return match
+  })
+
+  return cleaned
 }
 
 /**
