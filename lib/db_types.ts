@@ -92,6 +92,51 @@ export interface Database {
         }
         Relationships: []
       }
+      glossary_entries: {
+        Row: {
+          slug: string
+          term: string
+          letter: string
+          definition: string
+          explanation: string
+          derivation: string | null
+          epistemic_status: string | null
+          cross_references: string[]
+          notes: string | null
+          source_sha: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          slug: string
+          term: string
+          letter: string
+          definition: string
+          explanation?: string
+          derivation?: string | null
+          epistemic_status?: string | null
+          cross_references?: string[]
+          notes?: string | null
+          source_sha: string
+          position: number
+          updated_at?: string
+        }
+        Update: {
+          slug?: string
+          term?: string
+          letter?: string
+          definition?: string
+          explanation?: string
+          derivation?: string | null
+          epistemic_status?: string | null
+          cross_references?: string[]
+          notes?: string | null
+          source_sha?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rag_documents: {
         Row: {
           id: string
