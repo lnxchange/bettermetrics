@@ -47,7 +47,7 @@ export function AIMDefinitionsShort() {
             prestigious, and what is scarce; prone to rivalry when people converge on the same
             targets.
           </p>
-          <p className="mt-2 text-xs italic text-gray-600">Signature: evaporates without an audience.</p>
+          <p className="mt-2 text-xs italic text-gray-600">Signature: interest evaporates once novelty is worn off.</p>
         </div>
       </div>
     </div>

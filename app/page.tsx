@@ -35,8 +35,9 @@ export default function HomePage() {
           <p className="mb-5 max-w-3xl text-xl text-blue-100">
             The human sciences stand roughly where medicine stood in 1850. Doctors could
             describe diseases in detail but could not say why they occurred or which
-            treatments would work. Germ theory changed that with one idea. AIM proposes the
-            equivalent for wanting: motivation comes from three distinct sources that the
+            treatments would work. Germ theory changed that with one idea: disease has a
+            cause you can name. The AIM Framework is that idea for wanting. It is based on
+            three sources — Appetites, Intrinsic Motivation, and Mimetic Desire — which the
             brain mixes into a single signal, and the mixing loses information that most of
             our institutions assume we still have.
           </p>
