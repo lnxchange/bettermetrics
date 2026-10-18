@@ -1,8 +1,8 @@
 /**
  * Canonical AIM Framework Definitions Component
  *
- * These definitions are extracted from Report 1.1 and serve as the single source
- * of truth for how the framework is described across the entire website.
+ * Definitions follow the AIM Treatise, Chapter 4, Section 4.3.1 (Axiom 1).
+ * Keep this the single place the three sources are described on the site.
  *
  * COLOR SCHEME (RGB Analogy - Black & White to Full Color):
  * - Appetites (A) = Green (biological/natural)
@@ -19,11 +19,11 @@ export function AIMDefinitionsShort() {
             Appetites <span className="text-green-600">(A)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            Homeostatic and physiological motivation plus basic safety needs. Cyclical, satiable, state-dependent.
+            What the body and basic security need: food, rest, warmth, safety, shelter, a
+            floor of income. Urgent while active; fades once met; returns when the deficit
+            does.
           </p>
-          <p className="mt-2 text-xs text-gray-600 italic">
-            Examples: hunger, thirst, sleep, temperature regulation, physical safety
-          </p>
+          <p className="mt-2 text-xs italic text-gray-600">Signature: satiates, then recurs.</p>
         </div>
 
         <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6">
@@ -31,11 +31,11 @@ export function AIMDefinitionsShort() {
             Intrinsic Motivation <span className="text-blue-600">(I)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            Process-rewarding engagement. Persists in private, autonomy-aligned, context-independent.
+            What is rewarding in the doing: curiosity, mastery, play, care, creative work,
+            genuine connection. Continues in private with no audience or reward, and deepens
+            as competence grows.
           </p>
-          <p className="mt-2 text-xs text-gray-600 italic">
-            Examples: curiosity, mastery, flow states, autonomous projects, aesthetic creation
-          </p>
+          <p className="mt-2 text-xs italic text-gray-600">Signature: persists in private.</p>
         </div>
 
         <div className="rounded-lg border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-6">
@@ -43,11 +43,11 @@ export function AIMDefinitionsShort() {
             Mimetic Desire <span className="text-red-600">(M)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            Socially transmitted wanting through observation of models. Rivalry-prone, observability-sensitive.
+            Wanting caught from watching others want. Shaped by what is visible, who is
+            prestigious, and what is scarce; prone to rivalry when people converge on the same
+            targets.
           </p>
-          <p className="mt-2 text-xs text-gray-600 italic">
-            Examples: status-seeking, keeping up with neighbors, social comparison, viral trends
-          </p>
+          <p className="mt-2 text-xs italic text-gray-600">Signature: evaporates without an audience.</p>
         </div>
       </div>
     </div>
@@ -178,23 +178,23 @@ export function DescriptiveVsNormative() {
 export function MimeticPremium() {
   return (
     <div className="rounded-lg border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-6">
-      <h3 className="mb-3 text-xl font-bold text-gray-900">The Mimetic Premium (V<sub>M</sub>)</h3>
+      <h3 className="mb-3 text-xl font-bold text-gray-900">Price Decomposition and the Mimetic Premium (P<sub>M</sub>)</h3>
       <p className="mb-4 text-gray-700">
-        A key concept from the AIM Framework: the excess value paid for social signaling,
-        separate from basic need or intrinsic quality.
+        Any price separates into three parts: what the object would cost bought purely to
+        correct a deficit, the extra for quality sufficient to support genuine engagement, and
+        the residual paid for what owning it signals.
       </p>
-      <div className="rounded-lg bg-white p-4 border border-red-200">
-        <p className="text-sm font-semibold text-gray-900 mb-2">Example: Bottled Water</p>
+      <div className="rounded-lg border border-red-200 bg-white p-4">
+        <p className="mb-2 text-sm font-semibold text-gray-900">Example: a $5 bottle of water</p>
         <ul className="space-y-2 text-sm text-gray-700">
-          <li><strong>Total Price:</strong> $5.00</li>
-          <li className="ml-4"><span className="text-green-600">A-component (Appetite):</span> $0.50 — hydration value</li>
-          <li className="ml-4"><span className="text-blue-600">I-component (Intrinsic):</span> ~$0.00 — negligible (no process joy in drinking water)</li>
-          <li className="ml-4"><span className="text-red-600">M-component (Mimetic):</span> $4.50 — status, brand signaling</li>
+          <li className="ml-4"><span className="font-medium text-green-700">A-Functional Price:</span> about $0.50 for hydration</li>
+          <li className="ml-4"><span className="font-medium text-blue-700">I-Adequate Price:</span> close to nothing; there is no process to support</li>
+          <li className="ml-4"><span className="font-medium text-red-700">Mimetic Premium:</span> the remaining $4.50, paid for the brand and the bottle being seen</li>
         </ul>
       </div>
       <p className="mt-4 text-xs text-gray-600">
-        Understanding the Mimetic Premium helps explain pricing anomalies, luxury goods markets,
-        and why identical products command different prices based on social visibility.
+        The premium is not set by any one model; it is the internalised network average of a
+        reference group&apos;s valuations, each of which its holder experiences as their own.
       </p>
     </div>
   )

@@ -4,15 +4,11 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  IconGitHub,
-  IconNextChat,
-  IconSeparator,
-  IconVercel
-} from '@/components/ui/icons'
+import { Button } from '@/components/ui/button'
+import { IconSeparator } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { UserMenu } from '@/components/user-menu'
 import { SearchBar } from '@/components/search-bar'
@@ -21,305 +17,81 @@ interface HeaderProps {
   session?: any
 }
 
+const navLinks = [
+  { href: '/theory', label: 'The Theory' },
+  { href: '/axioms', label: 'Axioms' },
+  { href: '/glossary', label: 'Glossary' },
+  { href: '/articles', label: 'Articles' },
+  { href: '/about', label: 'About' }
+]
+
+function ChatIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+      />
+    </svg>
+  )
+}
+
 export function Header({ session }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const isAdmin = session?.user?.user_metadata?.is_admin
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 backdrop-blur-xl px-4 md:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 px-4 backdrop-blur-xl md:px-6 lg:px-8">
       <div className="flex items-center">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/AIM Logo.png"
-            alt="AIM Framework"
-            width={24}
-            height={24}
-            className="mr-2"
-          />
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/AIM Logo.png" alt="AIM Framework" width={24} height={24} />
+          <span className="hidden text-sm font-semibold text-gray-900 sm:inline">AIM</span>
         </Link>
-        <div className="flex items-center">
+        <div className="ml-2 flex items-center">
           <IconSeparator className="h-6 w-6 text-muted-foreground/50" />
           {session?.user ? (
             <UserMenu user={session.user} />
           ) : (
-            <Button variant="default" asChild className="-ml-2 bg-gray-900 text-white hover:bg-gray-800">
-              <Link href="/sign-in">Login</Link>
-            </Button>
+            <Link
+              href="/sign-in"
+              className="-ml-1 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              Sign in
+            </Link>
           )}
         </div>
       </div>
 
-      {/* Desktop Navigation - Scientific Framework First */}
-      <div className="hidden items-center space-x-5 md:flex">
-
-        {/* The Framework Dropdown - Scientific Foundation */}
-        <div className="group relative">
-          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            The Framework
-            <svg
-              className="ml-1 h-4 w-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <div className="absolute left-0 top-full z-50 hidden w-80 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
-            <div className="p-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Scientific Foundation
-              </div>
-              <Link
-                href="/about"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-              >
-                <div className="font-semibold">Overview</div>
-                <div className="text-xs text-gray-500">Introduction to the AIM Framework</div>
-              </Link>
-              <Link
-                href="/axioms"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-              >
-                <div className="font-semibold">The 8 Axioms</div>
-                <div className="text-xs text-gray-500">Foundational premises with canonical citations</div>
-              </Link>
-              <Link
-                href="/research/definitions"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-              >
-                <div className="font-semibold">Core Definitions (A, I, M)</div>
-                <div className="text-xs text-gray-500">Precise terminology and neural grounding</div>
-              </Link>
-              <Link
-                href="/glossary"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-              >
-                <div className="font-semibold">Glossary</div>
-                <div className="text-xs text-gray-500">Complete definitional reference</div>
-              </Link>
-              <div className="my-2 border-t border-gray-200"></div>
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                The Book
-              </div>
-              <Link
-                href="/research/theories"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-              >
-                <div className="font-semibold">AIM & Existing Theories</div>
-                <div className="text-xs text-gray-500">Integration with SDT, Girard, economics</div>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Apply Dropdown - For Individuals */}
-        <div className="group relative">
-          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            Apply
-            <svg
-              className="ml-1 h-4 w-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <div className="absolute left-0 top-full z-50 hidden w-72 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
-            <div className="p-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Personal Application
-              </div>
-              <Link
-                href="/understand-your-motivations"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-teal-50"
-              >
-                <div className="font-semibold">Understand Your Motivations</div>
-                <div className="text-xs text-gray-500">Self-diagnosis tools and everyday examples</div>
-              </Link>
-              <Link
-                href="/understand-yourself"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-teal-50"
-              >
-                <div className="font-semibold">Apply to Your Life</div>
-                <div className="text-xs text-gray-500">Career, relationships, and personal growth</div>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Domains Dropdown - For Practitioners */}
-        <div className="group relative">
-          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            Domains
-            <svg
-              className="ml-1 h-4 w-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <div className="absolute left-0 top-full z-50 hidden w-80 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
-            <div className="p-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Applications by Domain
-              </div>
-              <Link
-                href="/research/economics"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">💰 Economics</div>
-                <div className="text-xs text-gray-500">Endogenous preferences and market dynamics</div>
-              </Link>
-              <Link
-                href="/research/psychology"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">🧠 Psychology</div>
-                <div className="text-xs text-gray-500">Protecting intrinsic motivation</div>
-              </Link>
-              <Link
-                href="/research/law"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">⚖️ Law</div>
-                <div className="text-xs text-gray-500">Defining fairness, justice, and respect</div>
-              </Link>
-              <Link
-                href="/research/organizations"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">🏢 Organizations</div>
-                <div className="text-xs text-gray-500">From status tournaments to mission-driven work</div>
-              </Link>
-              <Link
-                href="/research/health-policy"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">🏥 Health & Policy</div>
-                <div className="text-xs text-gray-500">Separating need from social amplification</div>
-              </Link>
-              <Link
-                href="/research/marketing"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">📈 Marketing</div>
-                <div className="text-xs text-gray-500">Authentic engagement vs viral trends</div>
-              </Link>
-              <Link
-                href="/research/education"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-              >
-                <div className="font-semibold">📚 Education</div>
-                <div className="text-xs text-gray-500">Protecting curiosity from status competition</div>
-              </Link>
-              <div className="my-2 border-t border-gray-200"></div>
-              <Link
-                href="/research"
-                className="block rounded px-4 py-2 text-sm font-semibold text-primary-600 hover:bg-primary-50"
-              >
-                View All Applications →
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Research Dropdown */}
-        <div className="group relative">
-          <button className="flex items-center text-sm font-medium text-muted-foreground transition hover:text-foreground">
-            Research
-            <svg
-              className="ml-1 h-4 w-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <div className="absolute left-0 top-full z-50 hidden w-80 rounded-lg border-2 border-gray-200 bg-white shadow-xl group-hover:block">
-            <div className="p-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Research Programme
-              </div>
-              <Link
-                href="/research/hypothesis"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">Research Hypothesis</div>
-                <div className="text-xs text-gray-500">Formal proposal for empirical testing</div>
-              </Link>
-              <Link
-                href="/research-resources"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">Research Documents</div>
-                <div className="text-xs text-gray-500">Comprehensive reports and papers</div>
-              </Link>
-              <Link
-                href="/research-resources#predictions"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">Testable Predictions</div>
-                <div className="text-xs text-gray-500">Falsifiable hypotheses by domain</div>
-              </Link>
-              <div className="my-2 border-t border-gray-200"></div>
-              <Link
-                href="/contact"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-              >
-                <div className="font-semibold">Collaborate</div>
-                <div className="text-xs text-gray-500">Join the research programme</div>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <Link
-          href="/articles"
-          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          Articles
-        </Link>
-
-        {/* Search Bar - Desktop */}
-        <div className="hidden lg:block w-64">
+      {/* Desktop */}
+      <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        {navLinks.map(l => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className={cn(
+              'text-sm font-medium transition hover:text-foreground',
+              pathname === l.href || pathname?.startsWith(l.href + '/')
+                ? 'text-foreground'
+                : 'text-muted-foreground'
+            )}
+          >
+            {l.label}
+          </Link>
+        ))}
+        <div className="hidden w-56 lg:block">
           <SearchBar />
         </div>
-
-        {/* Ask AI - Prominent Button */}
         <Link
           href="/chat"
           className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-primary-700"
         >
-          <svg className="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
+          <ChatIcon className="mr-1.5 h-4 w-4" />
           Ask AI
         </Link>
-
-        <Link
-          href="/contact"
-          className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          Contact
-        </Link>
-        
-        {session?.user?.user_metadata?.is_admin && (
+        {isAdmin && (
           <Link
             href="/admin"
             className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
@@ -327,246 +99,71 @@ export function Header({ session }: HeaderProps) {
             Admin
           </Link>
         )}
-      </div>
+        <ThemeToggle />
+      </nav>
 
-      {/* Mobile Menu Button */}
-      <div className="flex items-center space-x-2 md:hidden">
-        {/* Ask AI Mobile Button */}
+      {/* Mobile */}
+      <div className="flex items-center gap-2 md:hidden">
         <Link
           href="/chat"
           className="inline-flex items-center rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm"
         >
-          <svg className="mr-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
+          <ChatIcon className="mr-1 h-3 w-3" />
           Ask AI
         </Link>
-        <ThemeToggle />
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 text-gray-900 hover:text-gray-700"
-          aria-label="Toggle mobile menu"
+          aria-label="Toggle menu"
+          aria-expanded={isMobileMenuOpen}
         >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             )}
           </svg>
-        </button>
+        </Button>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed left-0 right-0 top-16 z-40 border-b border-gray-200 bg-white shadow-lg md:hidden h-[calc(100svh-4rem)] overflow-y-auto">
-          <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
-            {/* Search Bar - Mobile */}
-            <div className="mb-4">
+        <div className="fixed left-0 right-0 top-16 z-40 max-h-[calc(100svh-4rem)] overflow-y-auto border-b border-gray-200 bg-white shadow-lg md:hidden">
+          <div className="space-y-1 px-4 py-4">
+            <div className="mb-3">
               <SearchBar onClose={() => setIsMobileMenuOpen(false)} />
             </div>
-
-            {/* Top-level links */}
-            <div className="flex gap-2 pb-2">
+            {navLinks.map(l => (
               <Link
-                href="/articles"
-                className="flex-1 rounded-md border border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+                key={l.href}
+                href={l.href}
+                className="block rounded px-3 py-2.5 text-base font-medium text-gray-800 hover:bg-gray-50"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Articles
+                {l.label}
               </Link>
+            ))}
+            <Link
+              href="/contact"
+              className="block rounded px-3 py-2.5 text-base font-medium text-gray-800 hover:bg-gray-50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+            {isAdmin && (
               <Link
-                href="/contact"
-                className="flex-1 rounded-md border border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+                href="/admin"
+                className="block rounded px-3 py-2.5 text-base font-medium text-gray-800 hover:bg-gray-50"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Contact
+                Admin
               </Link>
-            </div>
-
-            {/* The Framework Section */}
-            <div className="border-t border-gray-200 pt-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                The Framework
-              </div>
-              <Link
-                href="/about"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Overview
-              </Link>
-              <Link
-                href="/axioms"
-                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                The 8 Axioms
-              </Link>
-              <Link
-                href="/research/definitions"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Core Definitions (A, I, M)
-              </Link>
-              <Link
-                href="/glossary"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Glossary
-              </Link>
-            </div>
-            
-            {/* Apply Section */}
-            <div className="border-t border-gray-200 pt-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Apply
-              </div>
-              <Link
-                href="/understand-your-motivations"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-teal-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Understand Your Motivations
-              </Link>
-              <Link
-                href="/understand-yourself"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-teal-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Apply to Your Life
-              </Link>
-            </div>
-
-            {/* Domains Section */}
-            <div className="border-t border-gray-200 pt-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Domains
-              </div>
-              <Link
-                href="/research/economics"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                💰 Economics
-              </Link>
-              <Link
-                href="/research/psychology"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                🧠 Psychology
-              </Link>
-              <Link
-                href="/research/law"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                ⚖️ Law
-              </Link>
-              <Link
-                href="/research/organizations"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                🏢 Organizations
-              </Link>
-              <Link
-                href="/research/health-policy"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                🏥 Health & Policy
-              </Link>
-              <Link
-                href="/research/marketing"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                📈 Marketing
-              </Link>
-              <Link
-                href="/research/education"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                📚 Education
-              </Link>
-            </div>
-
-            {/* Research Section */}
-            <div className="border-t border-gray-200 pt-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">
-                Research
-              </div>
-              <Link
-                href="/research/hypothesis"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Research Hypothesis
-              </Link>
-              <Link
-                href="/research-resources"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Research Documents
-              </Link>
-              <Link
-                href="/contact"
-                className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Collaborate
-              </Link>
-            </div>
-
-            <div className="border-t border-gray-200 pt-2">
-              <Link
-                href="/articles"
-                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Articles
-              </Link>
-              <Link
-                href="/contact"
-                className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
-            </div>
-
-            {session?.user?.user_metadata?.is_admin && (
-              <div className="border-t border-gray-200 pt-2">
-                <Link
-                  href="/admin"
-                  className="block rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Admin
-                </Link>
-              </div>
             )}
+            <div className="flex items-center justify-between border-t border-gray-200 pt-3">
+              <span className="px-3 text-sm text-gray-500">Theme</span>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       )}

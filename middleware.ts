@@ -7,7 +7,10 @@ export async function middleware(req: NextRequest) {
   try {
     const res = NextResponse.next()
 
-    // Routes that require Supabase authentication
+    // Routes where we need to touch the Supabase session (to refresh cookies
+    // and/or enforce sign-in). /chat is included so signed-in users keep a
+    // fresh session, but guests are allowed through (quota enforced in
+    // /api/chat).
     const requiresAuth = 
       req.url.includes('/admin') || 
       req.url.includes('/chat') || 
@@ -31,7 +34,7 @@ export async function middleware(req: NextRequest) {
     // Check if Supabase is configured
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       // For auth-required routes without Supabase, show service unavailable
-      if (req.url.includes('/admin') || req.url.includes('/chat')) {
+      if (req.url.includes('/admin')) {
         const redirectUrl = req.nextUrl.clone()
         redirectUrl.pathname = '/service-unavailable'
         return NextResponse.redirect(redirectUrl)
@@ -59,13 +62,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Handle chat routes - redirect to sign-in
-    if (req.url.includes('/chat') && !session) {
-      const redirectUrl = req.nextUrl.clone()
-      redirectUrl.pathname = '/sign-in'
-      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
-      return NextResponse.redirect(redirectUrl)
-    }
+    // /chat is open to guests; the API enforces the guest quota.
 
     // Handle admin routes - require admin status
     if (req.url.includes('/admin')) {

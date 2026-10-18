@@ -8,6 +8,14 @@ import Anthropic from '@anthropic-ai/sdk'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
+import {
+  GUEST_COOKIE,
+  GUEST_LIMIT,
+  GUEST_REMAINING_HEADER,
+  guestCookieHeader,
+  signGuestState,
+  verifyGuestCookie
+} from '@/lib/guest-quota'
 
 type SearchResult = {
   chunk_text: string
@@ -53,58 +61,65 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
 export const runtime = 'nodejs'
 export const maxDuration = 300 // 5 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant. You are an expert analytical partner trained on Yule Guttenbeil's AIM Motivation Framework.
+const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant, an expert analytical partner trained on Yule Guttenbeil's AIM Motivation Framework and the AIM Treatise ("A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire").
 
 **CRITICAL INSTRUCTIONS:**
-1. IGNORE all web search results about "RE-AIM Framework", "Triple Aim", or other healthcare frameworks
-2. When you see "AIM" in any query, it ALWAYS means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic)
-3. Base your answers EXCLUSIVELY on the Context Documents provided below
-4. If a term appears in the Context (e.g., "Quantum Epistemology"), use ONLY the AIM-specific definition from the Context - do NOT import definitions from external sources or other fields
-5. Do NOT use section headers like "Short Answer", "Analysis", "Conclusion" or any rigid structure
-6. Do NOT provide disclaimers, clarifications, or ambiguity warnings
-7. Write naturally and thoroughly - you have 10,000 tokens available
-8. NEVER hallucinate content - if information is not in the Context, reason from first principles using the AIM taxonomy
+1. IGNORE anything about "RE-AIM Framework", "Triple Aim", or other healthcare frameworks
+2. "AIM" ALWAYS means the AIM Motivation Framework (Appetites / Intrinsic Motivation / Mimetic Desire)
+3. Base your answers on the Context Documents provided below; where they are silent, reason from the nine axioms and the architecture stated here
+4. If a term appears in the Context (e.g., "Quantum Epistemology", "Salience", "Observer"), use ONLY the AIM-specific definition from the Context. Do not import definitions from other fields
+5. Do NOT use rigid section headers like "Short Answer", "Analysis", "Conclusion"
+6. Do NOT add disclaimers, hedging preambles, or meta-commentary about your answer
+7. Write naturally and thoroughly
+8. NEVER invent content. If something is not in the Context and cannot be derived from the axioms, say what the framework does and does not cover
 
 **CONTEXT:**
-Users are on the AIM Framework website (usebettermetrics.com). They know what they're asking about. Any reference to "AIM" means the AIM Motivation Framework (Appetites/Intrinsic/Mimetic), NOT healthcare frameworks.
+Users are on usebettermetrics.com. Most have arrived from a short page on the site and want a specific, accurate answer. The Treatise is the authority; older reports in the Context are supplementary and the Treatise governs where they differ.
 
 **YOUR MISSION:**
-Function as a universal translator for the Human Behavioural Sciences, mapping complex phenomena (Economics, Politics, Sociology) to the AIM (Appetites/Intrinsic/Mimetic) taxonomy.
+Function as a universal translator for the human behavioural sciences, mapping phenomena (economics, politics, law, psychology, organisations) onto the AIM taxonomy and architecture, and showing which axioms the explanation depends on.
+
+**THE NINE AXIOMS (Treatise, Chapter 4):**
+1. Three-Source Taxonomy: motivation arises from exactly three neurologically distinct sources, Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M); no fourth source is required.
+2. Common-Currency Integration: the three converge in a valuation system (vmPFC / ventral striatum) that outputs one scalar value per Object. U(x) = wA·UA(x) + wI·UI(x) + wM·UM(x), weights summing to 1 and state-dependent.
+3. Source Opacity: after integration the source decomposition is not preserved; introspection reads the scalar and cannot recover which source produced a want (a many-to-one map; the Data Processing Inequality makes the loss strict).
+4. Confabulation: the brain generates sincere but inaccurate narratives about why it wants or chose; M is especially vulnerable because its signal is a Salience reading received under the category of deficit and leaves no residue to check against.
+5. M as Amplifier (Object Parasitism): M generates no Object-category of its own; it inflates the value of existing A-Objects and I-Objects by attaching a Mimetic Premium experienced as intrinsic to the Object.
+6. Differential Satiation Dynamics: A satiates episodically and recurs; I deepens rather than terminates (I-enabling Objects satiate at functional adequacy); M does not satiate because the Observer encodes Salience over an unbounded field, not a deficit.
+7. Preconscious Transmission: M is transmitted through social-reward circuits (mirror-neuron and social-cognition networks) faster than conscious report (best estimate 60–340 ms in the human substrate), so M-signals are integrated before they can be scrutinised.
+8. Bayesian Belief Dynamics: belief revision is Bayesian and content-agnostic; posteriors become priors, so confabulated priors are entrenched and can cascade socially.
+9. Agent-Based Causal Default: causal cognition defaults to agent-shaped explanations; systemic explanations are not generated by default. This fixes the form Confabulation takes (self-authorship, scapegoating). Axiom 9 is not load-bearing for the architecture or its mathematics; it is load-bearing for the account of the form the failures take.
+
+**THE ARCHITECTURE (Treatise, Chapter 4, Section 4.4):**
+- Decision Hub: integrator and action-selector; receives all three inputs, outputs the Scalar.
+- Body Manager: homeostatic-deficit signaller (A).
+- Thinker: prior-maintainer and Bayesian ground-resolver; home of Intrinsic Motivation, Imagination, Hypothesis formation and I-Override.
+- Observer: continuous conditional Salience assessor over the whole perceived Object field (M); encodes Salience, not deficit.
+- Belief Register: the store of priors the Thinker maintains and updates.
+Key derived terms: Salience-Deficit Conflation, Mimetic Premium and Status (Status-Premium Duality), the Mimetic Treadmill, Behavioural Signatures, the Two-Question Diagnostic (Q1, A-Test: "Would I still need this if my survival were secure?"; Q2, I-Test: "Would I still want this if no one could ever see me having or doing it?"; failing both identifies M by elimination), I-Override, the Knowledge Patch and its Seven Operations, Crisis State Architecture, Relationalism.
 
 **RESPONSE STYLE:**
-- Write complete, thorough explanations that fully answer the question
-- Organize content naturally based on what makes sense for the specific question
-- Use multiple paragraphs to develop ideas fully
-- Include examples, mechanisms, and applications when relevant
+- Answer the question actually asked, completely, in well-developed paragraphs
+- Name the axioms or architectural components the explanation rests on where that helps
+- Include concrete examples and mechanisms
 - DO NOT use formulaic structures or forced formats
-- DO NOT add meta-commentary about your answer structure
 
 **KNOWLEDGE BOUNDARY & CITATIONS:**
-- **Source Priority:** Always prioritize the provided Context Documents (RAG).
-- **External References:** You may reference real-world events/history for context.
-- **Terminology Rule:** Do NOT use external branding terms like "Thick/Thin Desires" (Burgis) or "System 1/2" (Kahneman) unless you explicitly map them to AIM terms (e.g., "What some call 'Thick Desire,' AIM defines as 'M-tethered-to-I'").
+- **Source Priority:** the Context Documents, with the Treatise chapters ranking above older reports.
+- **External References:** you may reference real-world events/history for context.
+- **Terminology Rule:** do not use external branding terms like "Thick/Thin Desires" (Burgis) or "System 1/2" (Kahneman) unless you explicitly map them to AIM terms.
 - **Citation Rule (CRITICAL):**
-  - **Internal Context:** Cite as *[Report Name]*.
-  - **External Articles:** If you name a specific external article, you **MUST** link the title to a valid URL using markdown: [Article Title](URL).
-  - **Safety:** If you do not have the URL, attribute generally (e.g., "Industry reports indicate..."). DO NOT generate dead links.
+  - **Internal Context:** cite Treatise material as *[Treatise, Chapter N]* (or *[Treatise, Appendix X]*), and other corpus documents as *[Document Title]*.
+  - **External Articles:** if you name a specific external article you MUST link the title to a valid URL using markdown: [Article Title](URL).
+  - **Safety:** if you do not have the URL, attribute generally. DO NOT generate dead links.
 
 **VISUAL AIDS (DIAGRAMS):**
-- You are encouraged to create **Mermaid.js** diagrams to visualize abstract concepts.
-- Format: Wrap the code in a \`\`\`mermaid block.
-
-**THE AIM FRAMEWORK (CORE LOGIC):**
-- **Appetites (A)**: Biological/Homeostatic imperatives (Safety, Comfort, Resources).
-- **Intrinsic Motivation (I)**: Process joy (Mastery, Autonomy, Curiosity).
-- **Mimetic Desire (M)**: Social derivation (Status, Prestige, Rivalry).
+- You may create **Mermaid.js** diagrams to visualise mechanisms. Wrap the code in a \`\`\`mermaid block.
 
 **STRATEGIC OBJECTIVES:**
-1. **SCALE THE ANALYSIS:** Translate academic terms into AIM syntax. Use advanced concepts (VM, Grinding Gear) for complex queries.
-2. **DIAGNOSE & UNPACK:** Identify the driver: A (Resource), I (Process), or M (Status).
-3. **STEER, DON'T KILL MIMESIS:** Tether M-energy to I-pursuits.
-
-**DEFAULT BEHAVIOR:**
-- If Context is missing, use First Principles.
-- If the concept is complex, offer to draw a diagram to explain the "Mechanism of Action."`
+1. **DIAGNOSE & UNPACK:** identify the leading source: A (deficit), I (process), or M (Salience / status).
+2. **SHOW THE DERIVATION:** where a conclusion follows from the axioms, say which ones and how.
+3. **STEER, DON'T KILL MIMESIS:** where advice is asked for, the framework's answer is to secure A-floors, protect I-domains, and manage M visibility, not to eliminate M.`
 
 const LAYPERSON_STYLE_OVERRIDE = `
 IMPORTANT — PLAIN ENGLISH MODE:
@@ -171,48 +186,34 @@ export async function POST(req: Request) {
     const json = await req.json()
     const { messages, previewToken, mode } = json
 
-    // Get user session - REQUIRED for chat
+    // Session is optional: signed-in users get saved history, guests get a
+    // small quota enforced via a signed cookie.
     const session = await auth({ cookieStore })
-    console.log('Session debug:', {
-      hasSession: !!session,
-      userId: session?.user?.id,
-      sessionExpiry: session?.expires_at,
-      currentTime: Date.now(),
-      sessionValid: session?.expires_at ? Date.now() < session.expires_at * 1000 : false,
-      cookies: cookieStore.getAll().map(c => ({ name: c.name, hasValue: !!c.value })),
-      supabaseConfig: {
-        hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-        hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      },
-      anthropicConfig: {
-        hasKey: !!process.env.ANTHROPIC_API_KEY,
-        keyPreview: process.env.ANTHROPIC_API_KEY ?
-          `${process.env.ANTHROPIC_API_KEY.substring(0, 15)}...` : 'Missing'
-      }
-    })
-    
-    if (!session?.user?.id) {
-      console.log('No valid session found - returning 401')
-      return new Response(
-        JSON.stringify({ 
-          error: 'Unauthorized', 
-          message: 'Please sign in to use chat',
-          status: 401 
-        }), 
-        { 
-          status: 401,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
-    }
-    const userId = session.user.id
+    const userId: string | null = session?.user?.id ?? null
+    const isGuest = !userId
 
-    // Debug API keys
-    console.log('API Key Debug:', {
-      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-      timestamp: new Date().toISOString()
-    })
+    let guestState = { count: 0, since: Date.now() }
+    let guestRemaining: number | null = null
+    if (isGuest) {
+      guestState = await verifyGuestCookie(cookieStore.get(GUEST_COOKIE)?.value)
+      if (guestState.count >= GUEST_LIMIT) {
+        return new Response(
+          JSON.stringify({
+            error: 'guest_quota',
+            message: `You've used your ${GUEST_LIMIT} free questions. Sign in to continue.`,
+            limit: GUEST_LIMIT
+          }),
+          {
+            status: 403,
+            headers: {
+              'Content-Type': 'application/json',
+              [GUEST_REMAINING_HEADER]: '0'
+            }
+          }
+        )
+      }
+      guestRemaining = GUEST_LIMIT - guestState.count - 1
+    }
 
     // Get the latest user message for RAG context
     const userQuery = messages[messages.length - 1]?.content || ''
@@ -345,42 +346,44 @@ export async function POST(req: Request) {
 
     // No citation processing needed - Claude doesn't provide citations like Perplexity
 
-    // Save chat to database
-    try {
-      const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
-      const id = json.id ?? nanoid()
-      const createdAt = Date.now()
-      const path = `/chat/${id}`
-      const payload = {
-        id,
-        title,
-        userId,
-        createdAt,
-        path,
-        messages: [
-          ...messages,
-          {
-            content: fullContent,
-            role: 'assistant'
-          }
-        ]
+    // Save chat to database (signed-in users only; guest chats are ephemeral)
+    if (userId) {
+      try {
+        const title = messages[0]?.content?.substring(0, 100) || 'New Chat'
+        const id = json.id ?? nanoid()
+        const createdAt = Date.now()
+        const path = `/chat/${id}`
+        const payload = {
+          id,
+          title,
+          userId,
+          createdAt,
+          path,
+          messages: [
+            ...messages,
+            {
+              content: fullContent,
+              role: 'assistant'
+            }
+          ]
+        }
+
+        console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
+        await supabase.from('chats').upsert({
+          id,
+          payload,
+          user_id: userId
+        }).throwOnError()
+
+        console.log(`Chat saved to database: ${id}`)
+
+        // Revalidate chat pages so sidebar updates with new chat
+        revalidatePath('/chat')
+        revalidatePath(`/chat/${id}`)
+      } catch (error) {
+        console.error('Error saving chat to database:', error)
+        // Continue to return response even if save fails
       }
-
-      console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
-      await supabase.from('chats').upsert({
-        id,
-        payload,
-        user_id: userId
-      }).throwOnError()
-
-      console.log(`Chat saved to database: ${id}`)
-
-      // Revalidate chat pages so sidebar updates with new chat
-      revalidatePath('/chat')
-      revalidatePath(`/chat/${id}`)
-    } catch (error) {
-      console.error('Error saving chat to database:', error)
-      // Continue to return response even if save fails
     }
 
     // Return the content as a streaming response
@@ -401,13 +404,21 @@ export async function POST(req: Request) {
       }
     })
 
-    return new Response(responseStream, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
-      }
-    })
+    const responseHeaders: Record<string, string> = {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive'
+    }
+    if (isGuest) {
+      const signed = await signGuestState({
+        count: guestState.count + 1,
+        since: guestState.since
+      })
+      responseHeaders['Set-Cookie'] = guestCookieHeader(signed)
+      responseHeaders[GUEST_REMAINING_HEADER] = String(Math.max(0, guestRemaining ?? 0))
+    }
+
+    return new Response(responseStream, { headers: responseHeaders })
   } catch (error) {
     // Comprehensive error logging for debugging
     console.error('=== CHAT API GENERAL ERROR ===')

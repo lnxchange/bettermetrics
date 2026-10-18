@@ -62,7 +62,7 @@ export const glossaryEntries: GlossaryEntry[] = [
   {
     term: 'Mimetic Desire (M)',
     definition:
-      'Wanting that arises from observing others wanting—social contagion of goals transmitted preconsciously (100–300 ms) through mirror-neuron and mentalising circuits before conscious evaluation can intervene, producing desires experienced as authentic despite external origin. Neural mediation: mirror neuron system → mentalising network → ventromedial prefrontal cortex value tagging.',
+      'Wanting that arises from observing others wanting—social contagion of goals transmitted preconsciously (60–340 ms in the human substrate) through mirror-neuron and social-cognition circuits before conscious evaluation can intervene, producing desires experienced as authentic despite external origin. Neural mediation: mirror neuron system → mentalising network → ventromedial prefrontal cortex value tagging.',
     explanation:
       'Mimetic Desire is René Girard\'s insight given neural grounding: we do not only learn what to do from others; we learn what to want. The mimetic system is fast (preconscious), automatic, and invisible to introspection, which is why copied desires feel spontaneously "mine." M explains otherwise puzzling phenomena—trend cycles, speculative bubbles, collective panics—by tracing them to socially transmitted wanting rather than independent evaluation.',
     category: 'Core Constructs',
@@ -96,8 +96,100 @@ export const glossaryEntries: GlossaryEntry[] = [
     explanation:
       'You feel "I want that house" but you cannot feel "I want that house because my neighbour bought one and the mimetic system copied his goal." Source Opacity is structural, not a failure of attention: the Decision Hub discards source labels after integration. This is why sincere introspection cannot reliably distinguish authentic from copied desires—and why external behavioural tests (satiation patterns, audience-dependence) are required.',
     category: 'Core Constructs',
-    relatedTerms: ['Confabulation', 'Decision Hub', 'Two-Question Diagnostic'],
+    relatedTerms: ['Confabulation', 'Decision Hub', 'Two-Question Diagnostic', 'Salience-Deficit Conflation Principle'],
     epistemicStatus: 'Core Axiom'
+  },
+
+  // ---- Architecture components (Treatise Chapter 4, Section 4.4) ----
+  {
+    term: 'Body Manager',
+    definition:
+      'The homeostatic-deficit signaller of the AIM architecture: the component that reads internal physiological state and delivers deficit-scaled valuation signals to the Decision Hub. Its output is the Appetites (A) channel, and it terminates when consumption or repair restores the set-point.',
+    explanation:
+      'The Body Manager is the part of the system that knows you are hungry, cold, tired or unsafe. It reports a departure from a set-point and quiets when the departure is corrected. Because it carries its own stopping condition, the wants it generates can be genuinely met, which is what makes A-sufficiency a precondition for the other two sources to show up reliably.',
+    category: 'Core Constructs',
+    relatedTerms: ['Appetites (A)', 'Decision Hub', 'Thinker', 'Observer'],
+    epistemicStatus: 'Architectural Component'
+  },
+  {
+    term: 'Thinker',
+    definition:
+      'The prior-maintainer and Bayesian ground-resolver of the AIM architecture: the component that holds priors (about the body, itself, the Observer and the Object field), pursues intrinsically rewarding engagement, performs deliberative inference, and resolves the grounds of the tag-stripped Scalar it receives back from the Decision Hub, writing its posteriors to the Belief Register.',
+    explanation:
+      'The Thinker is where Intrinsic Motivation lives and where explanations get made. It receives the integrated value signal with its source tags already gone and has to decide what the wanting was for, which is why Confabulation is its characteristic output. It is also the component that can run I-Override: inferring, before acting, a source attribution that introspection cannot read directly. Flow is the Thinker operating with the Observer quiet.',
+    category: 'Core Constructs',
+    relatedTerms: ['Intrinsic Motivation (I)', 'Belief Register', 'I-Override', 'Confabulation'],
+    epistemicStatus: 'Architectural Component'
+  },
+  {
+    term: 'Observer',
+    definition:
+      'The continuous conditional Object-field Salience assessor of the AIM architecture: the general perception channel that samples the surrounding field, reads which Objects other Individuals mark as valued, and delivers Salience signals over Objects to the Decision Hub. Its output is the Mimetic Desire (M) channel. It has no termination condition.',
+    explanation:
+      'The Observer is not a dedicated status detector; it is perception, conditioned by the Belief Register, continuously reading where value sits in the environment. It reports Salience, not deficit. Because the field it reads is unbounded and sampling is what produces the signal, it never completes, which is the architectural root of M\'s non-satiation. After integration its reading is indistinguishable from a deficit, so a pointer to where value is located arrives feeling like a lack.',
+    category: 'Core Constructs',
+    relatedTerms: ['Mimetic Desire (M)', 'Salience', 'Belief Register', 'Salience-Deficit Conflation Principle'],
+    epistemicStatus: 'Architectural Component'
+  },
+  {
+    term: 'Belief Register',
+    definition:
+      'The state component of the AIM architecture: the persistent store of the Thinker\'s committed posteriors over the Hypothesis Space, written following ground-resolution and supplied to the Observer as its Salience-conditioning configuration. It does not decay.',
+    explanation:
+      'The Belief Register is what you currently believe, held as the starting point for the next update and used to tell the Observer what to look for. It changes only when the Thinker is recruited onto a belief and the evidence then supports a rival hypothesis better than the incumbent. Because it does not decay and each restatement is credited as evidence, deeply held beliefs release slowly, and a quiet fast loop is no evidence the Register has moved.',
+    category: 'Core Constructs',
+    relatedTerms: ['Thinker', 'Observer', 'Bayesian Updating', 'Confabulation'],
+    epistemicStatus: 'Architectural Component'
+  },
+  {
+    term: 'Salience',
+    definition:
+      'The Observer\'s reading of which Objects in the perceived field are marked as valued by other Individuals. A Salience signal reports where value is located rather than that anything is missing, and so carries no termination condition.',
+    explanation:
+      'Salience is the quantity M actually encodes. Appetites and Intrinsic Motivation each report a deficit that some Object would close; the Observer reports that the environment values this Object. The distinction is load-bearing: a deficit silences itself when repaired, a Salience reading has no terminal value. Common-Currency Integration strips the difference, which is why Salience is experienced as lack.',
+    category: 'Core Constructs',
+    relatedTerms: ['Observer', 'Mimetic Desire (M)', 'Salience-Deficit Conflation Principle', 'Mimetic Premium (PM)'],
+    epistemicStatus: 'Core Definition'
+  },
+  {
+    term: 'Salience-Deficit Conflation Principle',
+    definition:
+      'The principle that, because Common-Currency Integration strips source tags and the Decision Hub has a single interpretive category for a positive action-demanding term in the Scalar, the Observer\'s Salience reading is received as a deficit to be corrected. The felt-deficit character of a Mimetic contribution is conferred at integration, not carried in the signal at encoding.',
+    explanation:
+      'This names the principal cost of Source Opacity. It is not that you cannot say where a want came from; it is that a pointer to where value sits arrives wearing the form of a lack. Acquiring the Object then closes nothing, because nothing was open, and no amount of introspection will disclose that. Non-satiation, the Mimetic Treadmill, Confabulation and the Mimetic Premium all follow from this conflation together with the Observer\'s unbounded domain.',
+    category: 'Core Theorems',
+    relatedTerms: ['Source Opacity', 'Salience', 'Observer', 'Differential Satiation'],
+    epistemicStatus: 'Derived Principle'
+  },
+  {
+    term: 'Object Parasitism',
+    definition:
+      'Axiom 5 of the AIM Framework: Mimetic Desire does not generate its own independent Object-category. Its Salience reading falls on Objects that already carry A- or I-functional roles, and integration renders that reading as additional value attached to them, a Mimetic Premium experienced as intrinsic to the Object rather than as socially added.',
+    explanation:
+      'Mimetic Desire is a parasite, not a creator. It does not make you want things with no bodily or intrinsic function; it makes you want more of things that already serve A or I purposes, and pay more for them than their functional value warrants. The parasitic structure is what makes M hard to detect: the A and I reasons for wanting the larger house are genuinely present, and the M-inflation rides on top of them with no distinctive phenomenology.',
+    category: 'Mimetic Concepts',
+    relatedTerms: ['Mimetic Premium (PM)', 'Mimetic Desire (M)', 'Status', 'Price Decomposition'],
+    epistemicStatus: 'Core Axiom (Novel Synthesis)'
+  },
+  {
+    term: 'Agent-Based Causal Default',
+    definition:
+      'Axiom 9 of the AIM Framework: human causal cognition is architecturally optimised for detecting and modelling agents and defaults to agent-based explanations when causal demands arise. Systemic, emergent or distributed causes are structurally unavailable as default explanatory completions, so Confabulation characteristically takes agent-based form.',
+    explanation:
+      'When something goes wrong the brain asks "who did this?" before "what system produced this?" Agents generate dense, fast-changing evidence; systems generate almost none and must be constructed deliberately. This is why confabulated explanations of our own wants attribute them to our own authorship, and why collective distress converges on scapegoats rather than on dynamics. Axiom 9 is not load-bearing for the architecture or its mathematics; it is load-bearing for the account of the form the architecture\'s failures take.',
+    category: 'Core Constructs',
+    relatedTerms: ['Confabulation', 'Scapegoat Mechanism', 'Presumption Against Scapegoating'],
+    epistemicStatus: 'Core Axiom (Inherited)'
+  },
+  {
+    term: 'Relationalism',
+    definition:
+      'The position derived in Chapter 19 of the Treatise: because the five canonical premises of philosophical Individualism are each falsified by AIM\'s established architecture, the Individual is constituted relationally, with one Individual\'s visible valuation serving as another\'s mimetic input and one Individual\'s expressed account of their wanting serving as evidence in another\'s belief updating.',
+    explanation:
+      'Relationalism is not offered as an alternative commitment but as a structural result. If wants are transmitted preconsciously between people, if beliefs update on each other\'s expressed beliefs, and if status is computed in other people\'s heads, then the self-contained individual of liberal theory does not describe the architecture. The Relational Constitution Principle and the Correction Asymmetry follow.',
+    category: 'Epistemological and Philosophical Concepts',
+    relatedTerms: ['Individual', 'Mimetic Desire (M)', 'Status'],
+    epistemicStatus: 'Derived Result'
   },
   {
     term: 'Individual',

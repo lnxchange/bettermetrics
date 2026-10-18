@@ -293,7 +293,7 @@ export default function DiagnosticPage() {
                 Take Again
               </button>
               <Link
-                href="/understand-your-motivations"
+                href="/theory"
                 className="inline-flex items-center justify-center rounded-lg bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-primary-700"
               >
                 Learn More About AIM

@@ -1,12 +1,12 @@
 import { type Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
-import { AimNotification } from '@/components/aim-notification'
 import { cookies } from 'next/headers'
+import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
@@ -15,6 +15,7 @@ export interface ChatPageProps {
   params: {
     id: string
   }
+  searchParams?: { q?: string }
 }
 
 export async function generateMetadata({
@@ -24,7 +25,7 @@ export async function generateMetadata({
   const session = await auth({ cookieStore })
 
   if (!session?.user) {
-    return {}
+    return { title: 'Ask the AI' }
   }
 
   const chat = await getChat(params.id)
@@ -33,25 +34,45 @@ export async function generateMetadata({
   }
 }
 
-export default async function ChatPage({ params }: ChatPageProps) {
+export default async function ChatPage({ params, searchParams }: ChatPageProps) {
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 
+  // Guests get a fresh, unsaved conversation at this URL.
   if (!session?.user) {
-    redirect(`/sign-in?next=/chat/${params.id}`)
+    const guestRemaining = Math.max(
+      0,
+      GUEST_LIMIT - peekGuestCount(cookieStore.get(GUEST_COOKIE)?.value)
+    )
+    return (
+      <>
+        <ChatHeader isGuest />
+        <div className="flex-1 overflow-auto">
+          <Chat
+            id={params.id}
+            initialMessages={[]}
+            isGuest
+            initialGuestRemaining={guestRemaining}
+            initialQuestion={searchParams?.q}
+          />
+        </div>
+      </>
+    )
   }
 
   const chat = await getChat(params.id)
 
   if (!chat) {
-    // If chat doesn&apos;t exist yet (new chat), create a new chat instance
-    // This happens when navigating to a unique URL before any messages are sent
+    // New chat: the URL was created before any message was sent.
     return (
       <>
-        <AimNotification />
         <ChatHeader userId={session.user.id} />
         <div className="flex-1 overflow-auto">
-          <Chat id={params.id} initialMessages={[]} />
+          <Chat
+            id={params.id}
+            initialMessages={[]}
+            initialQuestion={searchParams?.q}
+          />
         </div>
       </>
     )
@@ -63,7 +84,6 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   return (
     <>
-      <AimNotification />
       <ChatHeader userId={session.user.id} />
       <div className="flex-1 overflow-auto">
         <Chat id={chat.id} initialMessages={chat.messages} />

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { HiArrowRight, HiSearch } from 'react-icons/hi'
 import { glossaryEntries, glossaryCategories } from '@/lib/glossary-data'
+import { AskAI } from '@/components/ask-ai'
 
 // JSON-LD Structured Data for the Glossary page
 function GlossaryJsonLd() {
@@ -48,9 +49,9 @@ function GlossaryJsonLd() {
         '@id': 'https://www.usebettermetrics.com/glossary',
         name: 'AIM Framework Glossary',
         description:
-          'Comprehensive definitions for the AIM Motivation Framework with ' +
+          'Definitions for the AIM Motivation Framework: ' +
           glossaryEntries.length +
-          ' terms from Chapter 2.',
+          ' terms from Chapter 2 of the AIM Treatise.',
         mainEntity: {
           '@id': 'https://www.usebettermetrics.com/glossary#termset'
         },
@@ -125,17 +126,10 @@ export default function GlossaryPage() {
             <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Glossary
             </h1>
-            <p className="mx-auto mb-6 max-w-3xl text-xl text-gray-600">
-              Comprehensive definitions for the AIM Framework—designed as a contract-style
-              reference section where capitalised terms have specific, bounded meanings.
+            <p className="mx-auto max-w-3xl text-xl text-gray-600">
+              Capitalised terms in AIM have the bounded meanings defined here. For anything not
+              listed, or for how a term is used in a particular chapter, ask the AI.
             </p>
-            <div className="mx-auto max-w-2xl rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
-              <p className="text-sm text-gray-700">
-                <strong>Usage Note:</strong> Throughout AIM literature, capitalised terms (e.g.,
-                &quot;Individual&quot;, &quot;Mimetic Desire&quot;) have the precise meanings defined here. Uncapitalised
-                terms default to normal interpretational/vernacular rules.
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -284,7 +278,22 @@ export default function GlossaryPage() {
 
           {filteredEntries.length === 0 && (
             <div className="py-12 text-center">
-              <p className="text-gray-500">No terms found matching your search.</p>
+              <p className="mb-4 text-gray-600">
+                No glossary entry matches &ldquo;{searchQuery}&rdquo;.
+              </p>
+              <AskAI
+                variant="button"
+                question={`What does "${searchQuery.trim()}" mean in the AIM Framework, and where is it defined in the Treatise?`}
+                label={`Ask the AI what "${searchQuery.trim()}" means`}
+              />
+            </div>
+          )}
+          {filteredEntries.length > 0 && searchQuery.trim() !== '' && (
+            <div className="mt-8 text-center">
+              <AskAI
+                question={`In the AIM Framework, explain "${searchQuery.trim()}" and how it connects to the rest of the architecture.`}
+                label={`Ask the AI to explain "${searchQuery.trim()}" in context`}
+              />
             </div>
           )}
         </div>
@@ -294,15 +303,15 @@ export default function GlossaryPage() {
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="mb-6 text-gray-600">
-            This glossary contains {glossaryEntries.length} terms from Chapter 2 of the AIM Framework book,
-            providing a comprehensive reference for the theoretical foundation.
+            {glossaryEntries.length} terms, drawn from Chapter 2 of the Treatise. The chat has
+            the full chapter.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/axioms"
               className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
             >
-              Read the 8 Axioms
+              The nine axioms
               <HiArrowRight className="ml-2 h-4 w-4" />
             </Link>
             <Link

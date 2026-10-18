@@ -17,179 +17,41 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
   )
 }
 
+const links = [
+  { href: '/theory', label: 'The Theory' },
+  { href: '/axioms', label: 'Axioms' },
+  { href: '/glossary', label: 'Glossary' },
+  { href: '/articles', label: 'Articles' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
+]
+
 export function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-4">
-          {/* About */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">
-              About AIM
-            </h3>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <Link href="/" className="transition hover:text-primary-600">
-                  Welcome to Use Better Metrics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="transition hover:text-primary-600"
-                >
-                  Framework Overview
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/understand-your-motivations"
-                  className="transition hover:text-primary-600"
-                >
-                  Understand Your Motivations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="transition hover:text-primary-600"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Research Areas */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">
-              Research Areas
-            </h3>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <Link
-                  href="/research"
-                  className="transition hover:text-primary-600"
-                >
-                  All Research
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/economics"
-                  className="transition hover:text-primary-600"
-                >
-                  Economics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/psychology"
-                  className="transition hover:text-primary-600"
-                >
-                  Psychology
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/health-policy"
-                  className="transition hover:text-primary-600"
-                >
-                  Health & Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/law"
-                  className="transition hover:text-primary-600"
-                >
-                  Law
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/education"
-                  className="transition hover:text-primary-600"
-                >
-                  Education
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/organizations"
-                  className="transition hover:text-primary-600"
-                >
-                  Organizations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/research/marketing"
-                  className="transition hover:text-primary-600"
-                >
-                  Marketing
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">
-              Quick Links
-            </h3>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <Link
-                  href="/chat"
-                  className="transition hover:text-primary-600"
-                >
-                  Try AI Chat
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">
-              Connect
-            </h3>
-            <p className="mb-4 text-sm text-gray-600">
-              Join researchers, practitioners, and organizations exploring the
-              AIM Framework.
-            </p>
-          </div>
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Footer">
+            {links.map(l => (
+              <Link key={l.href} href={l.href} className="text-gray-600 transition hover:text-primary-600">
+                {l.label}
+              </Link>
+            ))}
+            <Link href="/chat" className="font-medium text-primary-600 transition hover:text-primary-700">
+              Ask AI
+            </Link>
+          </nav>
+          <p className="max-w-md text-xs text-gray-500">
+            AIM is a theoretical synthesis awaiting peer-reviewed validation. Its claims are
+            stated so they can be tested; critical evaluation and research collaboration are
+            welcome.
+          </p>
         </div>
-
-        {/* Academic Disclaimer */}
-        <div className="mt-8 border-t border-gray-300 pt-8">
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
-                  <h4 className="mb-2 font-semibold text-gray-900">
-                    Academic Disclaimer
-                  </h4>
-                  <p className="text-sm text-gray-700">
-                    The AIM Motivation Framework is presented as a <strong>heuristic utility model</strong>—a theoretical 
-                    synthesis built on established neuroscience and behavioral economics research. While the 
-                    integrated framework has not been independently validated through peer-reviewed empirical 
-                    studies, its theoretical utility is demonstrated through its capacity to predict and resolve 
-                    system failures (Easterlin Paradox, essential goods inelasticity, mimetic cascades) where 
-                    standard models fail. All claims are falsifiable hypotheses subject to empirical testing. 
-                    We actively seek critical evaluation and research collaboration.
-                  </p>
-                </div>
-        </div>
-
-        <div className="mt-8 border-t border-gray-200 pt-8">
-          <div className="flex flex-col items-center justify-between md:flex-row">
-            <div className="text-sm text-gray-600">
-              © 2025 Yule Guttenbeil - All rights reserved. Material on this
-              site may be used for validation research and personal use only.
-            </div>
-            <div className="mt-4 text-sm text-gray-600 md:mt-0">
-              Built by Yule Guttenbeil
-            </div>
-          </div>
+        <div className="mt-8 flex flex-col items-start justify-between gap-2 border-t border-gray-200 pt-6 text-xs text-gray-500 md:flex-row">
+          <span>
+            © {new Date().getFullYear()} Yule Guttenbeil. Material on this site may be used for
+            validation research and personal use.
+          </span>
         </div>
       </div>
     </footer>

@@ -1,24 +1,31 @@
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
-import { AimNotification } from '@/components/aim-notification'
+import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
-export default async function ChatPage() {
+export default async function ChatPage({
+  searchParams
+}: {
+  searchParams?: { q?: string }
+}) {
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
+  const isGuest = !session?.user
 
-  if (!session?.user) {
-    redirect('/sign-in?redirectedFrom=/chat')
-  }
+  const guestRemaining = isGuest
+    ? Math.max(0, GUEST_LIMIT - peekGuestCount(cookieStore.get(GUEST_COOKIE)?.value))
+    : undefined
 
   return (
     <>
-      <AimNotification />
-      <ChatHeader userId={session.user.id} />
+      <ChatHeader userId={session?.user?.id} isGuest={isGuest} />
       <div className="flex-1 overflow-auto">
-        <Chat />
+        <Chat
+          isGuest={isGuest}
+          initialGuestRemaining={guestRemaining}
+          initialQuestion={searchParams?.q}
+        />
       </div>
     </>
   )

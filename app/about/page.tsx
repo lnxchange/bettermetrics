@@ -1,354 +1,229 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { HiArrowRight } from 'react-icons/hi'
-import { StatusBadge } from '@/components/ui/status-badge'
-import {
-  AIMDefinitionsShort,
-  AIMIntegrationEquation,
-  NeuralCircuits,
-  DescriptiveVsNormative,
-  MimeticPremium
-} from '@/components/aim-definitions'
-import { PageWithToc } from '@/components/page-with-toc'
+import { AskAI, AskAIGroup } from '@/components/ask-ai'
 
 export const metadata: Metadata = {
-  title: 'About the AIM Framework',
+  title: 'About',
   description:
-    'The AIM Motivation Framework: a theoretical synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology through a three-source taxonomic model.'
+    'Who is behind the AIM Framework, what the Treatise claims and does not claim, and how to challenge it.',
+  openGraph: {
+    title: 'About | AIM Framework',
+    description: 'The author, the book, its claims, and how to challenge it.',
+    url: 'https://www.usebettermetrics.com/about',
+    type: 'website'
+  }
 }
+
+const claims = [
+  'Human motivation decomposes into three neurologically distinct sources: Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).',
+  'A and I report deficits; M reports Salience. The three converge through Common-Currency Integration in the Decision Hub, which produces a single decision signal.',
+  'The architecture does not stop at the boundary of the individual. It is one coupled system, the same loops at every scale, with no new primitives beyond the first.',
+  'After integration, which source produced which part of the signal is lost (Source Opacity). A Salience signal is therefore felt as a deficit.',
+  'The brain compensates by generating sincere but often inaccurate narratives about why it chose (Confabulation).',
+  'The three sources satiate differently. A and I close when repaired; M has no terminal value and so no natural stopping point.',
+  'These features, with the preconscious transmission of M, produce predictable patterns of individual dysfunction and collective crisis.',
+  'Thin normative concepts (freedom, fairness, justice, coercion, consent, harm, dignity, well-being) can be derived from the architecture without importing moral premises.',
+  'Institutions can be evaluated by how well they secure basic needs, protect the space in which I operates, and manage the M dynamics that lead to crisis.'
+]
+
+const nonClaims = [
+  'That only three categories can ever exist. Three is the most parsimonious decomposition consistent with current evidence; a fourth would require revision.',
+  'That AIM is already validated. It is a coherent synthesis that generates testable predictions and awaits peer-reviewed validation. A validation roadmap is in the appendices.',
+  'That AIM explains all of cognition, emotion or behaviour. It is a theory of motivation: how wanting arises, forms beliefs, and drives action.',
+  'That AIM replaces other frameworks. Self-Determination Theory, behavioural economics, mimetic theory and drive theories remain valuable; AIM integrates and clarifies them.',
+  'That applying it is simple. Identifying the dominant source and designing an intervention takes skill and judgement. The framework supplies diagnostics, not automatic answers.',
+  'That AIM-aligned interventions always succeed. Correct diagnosis does not guarantee effective treatment.'
+]
+
+const partOne = [
+  'Introduction', 'Definitions and Glossary', 'System Scope and OCEP', 'The Axiomatic and Architectural Foundation of AIM',
+  'Why Motivation Requires Disaggregation', 'Appetites', 'Intrinsic Motivation', 'Mimetic Desire',
+  'Neural Integration and Source Opacity', 'The Evolutionary Mismatch Hypothesis', 'Confabulation, Projection and the Scapegoat Mechanism',
+  'Money, Debt and the Architecture of Mimetic Extraction', 'Bayesian Belief Dynamics', 'Quantum Epistemology'
+]
+const partTwo = [
+  'The Bayesian Self-Model', 'Conflict and Justice', 'Violence as Architectural Output', 'The Knowledge Patch',
+  'The Dissolution of Individualism and the Derivation of Relationalism', 'The Governance Architecture'
+]
 
 export default function AboutPage() {
   return (
-    <PageWithToc>
     <div className="bg-white">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="mb-6 text-5xl font-bold text-gray-900">
-            The AIM Motivation Framework
-          </h1>
-          <p className="text-xl text-gray-600">
-            A neuroscience-grounded taxonomy for understanding how three distinct
-            motivational sources combine in the brain&apos;s common-currency valuation system
+      <section className="border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-gray-50 py-14">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">About</h1>
+          <p className="text-lg text-gray-700">
+            The author, the book, what it claims and does not claim, and where it can be
+            challenged.
           </p>
         </div>
       </section>
 
-      {/* Framework Positioning Statement */}
-      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-8">
-          <div className="mb-4 flex justify-center">
-            <StatusBadge variant="synthesis" />
-          </div>
-          <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">
-            Explanatory Synthesis of Existing Evidence
-          </h2>
-                  <div className="prose prose-lg max-w-none">
-                    <p>
-                      The AIM Motivation Framework does not introduce novel empirical claims requiring validation—it
-                      <strong> organizes and explains documented phenomena</strong>. Like Darwin&apos;s synthesis of existing
-                      observations (fossils, biogeography, comparative anatomy) into a coherent framework, AIM integrates
-                      established findings from neuroscience (common-currency valuation, mirror neurons, homeostatic
-                      regulation), Self-Determination Theory (40+ years of validation), and Girardian mimetic theory
-                      into a unified taxonomic model.
-                    </p>
-                    <p>
-                      The evidentiary base already exists across fragmented disciplines. AIM&apos;s contribution is <strong>translation
-                      and reorganization</strong>: converting established neuroscience into behavioral diagnostics, explaining
-                      what has already been observed (Easterlin Paradox, SDT boundary failures, mimetic market cascades),
-                      and providing the missing taxonomy that resolves &quot;gear grinding&quot; between economics, psychology, and policy.
-                    </p>
-            <div className="my-6 grid gap-4 text-sm md:grid-cols-2">
-              <div>
-                <strong>Framework Type:</strong> Explanatory synthesis
-                <br />
-                <strong>Evidence Base:</strong> Decades of peer-reviewed neuroscience, psychology, and economics
-              </div>
-              <div>
-                <strong>Future Research:</strong> Calibration and refinement of weight estimation precision
-                <br />
-                <strong>Application:</strong> Cross-domain consistency testing and intervention optimization
-              </div>
-            </div>
-            <p className="text-sm italic">
-              Note: AIM is primarily a taxonomy and weighting system for existing neural processes,
-              not a claim about new brain regions. The framework aims to plug into existing models
-              rather than replace them, making sense of what behavioral science has already documented.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Canonical Definitions */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 id="three-sources" className="mb-4 text-4xl font-bold text-gray-900">
-              The Three Motivational Sources
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600">
-              What ancient philosophy suspected—Plato&apos;s tripartite soul, Aristotle&apos;s motivational 
-              distinctions—neuroscience now confirms: three functionally distinct sources that converge 
-              on a common-currency valuation system
-            </p>
-          </div>
-
-          <AIMDefinitionsShort />
-        </div>
-      </section>
-
-      {/* Integration Equation */}
-      <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 id="how-sources-combine" className="mb-4 text-4xl font-bold text-gray-900">
-              How the Sources Combine
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              The three sources integrate through the brain&apos;s common-currency valuation system, 
-              creating a unified motivational signal that determines our choices
-            </p>
-          </div>
-
-          <AIMIntegrationEquation />
-        </div>
-      </section>
-
-      {/* Neural Architecture */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 id="neural-foundation" className="mb-4 text-4xl font-bold text-gray-900">
-              The Neural Foundation
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              Each motivational source has distinct neural pathways identified in neuroscience literature
-            </p>
-          </div>
-
-          <NeuralCircuits />
-        </div>
-      </section>
-
-      {/* Descriptive vs Normative */}
-      <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 id="descriptive-vs-normative" className="mb-4 text-4xl font-bold text-gray-900">
-              What AIM Describes vs What It Recommends
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              AIM is first a descriptive taxonomy. The normative proposals flow directly from 
-              that descriptive clarity.
-            </p>
-          </div>
-
-          <DescriptiveVsNormative />
-        </div>
-      </section>
-
-      {/* Buffer and Switching Mechanism */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 id="action-selection" className="mb-4 text-4xl font-bold text-gray-900">
-              Action Selection: Buffer and Switching
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              How the brain decides which motivation to act on through threshold-and-switch mechanisms
-            </p>
-          </div>
-
-          <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="mb-3 text-xl font-bold text-gray-900">The Buffer System</h3>
-                <p className="mb-4 text-gray-700">
-                  Motivational signals don&apos;t translate immediately into action. Instead, they enter a &quot;buffer&quot; 
-                  where the brain maintains the current activity until a threshold is crossed. This creates 
-                  behavioral stickiness and explains why we often continue what we&apos;re doing even when other 
-                  motivations are building.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="mb-3 text-xl font-bold text-gray-900">Switching Triggers</h3>
-                <p className="mb-4 text-gray-700">
-                  The brain switches from one motivation to another when specific conditions are met:
-                </p>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                    <p className="font-semibold text-amber-900 mb-2">Completion</p>
-                    <p className="text-sm text-amber-800">
-                      Task finishes, goal is reached, or project naturally concludes
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-                    <p className="font-semibold text-red-900 mb-2">Boredom</p>
-                    <p className="text-sm text-red-800">
-                      Intrinsic engagement drops below threshold, activity no longer rewarding
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
-                    <p className="font-semibold text-orange-900 mb-2">Frustration</p>
-                    <p className="text-sm text-orange-800">
-                      Obstacles prevent progress, competence signals drop, autonomy feels blocked
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-green-300 bg-green-100 p-4">
-                    <p className="font-semibold text-green-900 mb-2">Urgent Appetite</p>
-                    <p className="text-sm text-green-900">
-                      Physiological need crosses critical threshold, hijacking the valuation signal
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-                    <p className="font-semibold text-red-900 mb-2">Social Salience</p>
-                    <p className="text-sm text-red-800">
-                      High-status model&apos;s behavior triggers strong mimetic signal that overrides current activity
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-lg bg-blue-100 p-6">
-                <p className="font-semibold text-blue-900 mb-2">Why This Matters</p>
-                <p className="text-sm text-blue-800">
-                  Understanding buffer and switching explains structural features of human experience: 
-                  why we feel &quot;stuck&quot; in unrewarding activities, why hunger makes us irritable, why 
-                  social media is so distracting, and why flow states are precious but fragile. It also 
-                  informs better institutional design: protect people&apos;s buffers, reduce unnecessary 
-                  switching costs, and respect the threshold dynamics of each motivational source.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mimetic Premium */}
-      <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 id="mimetic-premium" className="mb-4 text-4xl font-bold text-gray-900">
-              A Key Concept: The Mimetic Premium
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              Understanding how social signaling adds value separate from utility and quality
-            </p>
-          </div>
-
-          <MimeticPremium />
-        </div>
-      </section>
-
-      {/* Using AIM Without Ideology */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 id="using-aim" className="mb-4 text-4xl font-bold text-gray-900">
-              Using AIM Without Turning It Into an Ideology
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              Explicit safeguards against AIM becoming a prestige badge or tribal marker
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="rounded-lg border-2 border-amber-200 bg-amber-50 p-6">
-              <h3 className="mb-3 text-xl font-bold text-gray-900">What Is Ideology Through AIM?</h3>
-              <p className="text-gray-700">
-                An ideology, viewed through the AIM Framework, is a &quot;social operating system for wanting&quot; 
-                that manipulates mimetic desire (M) and controls access to appetitive satisfaction (A) and 
-                intrinsic projects (I). Ideologies weaponize the M-layer by making belief-adherence a 
-                prerequisite for social belonging and material security.
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        {/* Author */}
+        <section id="author" className="scroll-mt-24 py-12">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <Image
+              src="/20250911-lex-nova-web-res-106.jpg"
+              alt="Yule Guttenbeil"
+              width={160}
+              height={160}
+              className="h-40 w-40 shrink-0 rounded-lg object-cover shadow"
+            />
+            <div>
+              <h2 className="mb-3 text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
+              <p className="mb-4 text-lg text-gray-700">
+                Principal commercial lawyer and the author of the AIM Framework. Contract work
+                is definitional work: a system fails when two parties are using slightly
+                different meanings of the same word. Reading across psychology, economics and
+                neuroscience, the same failure was visible. Each field had its own drifting
+                definitions of wants, needs and preferences, and the gears no longer lined up.
+                AIM is an attempt to repair that drift with tighter, neurologically grounded
+                definitions that can be applied back onto what the fields have already
+                observed.
               </p>
-            </div>
-
-            <div className="rounded-lg border-2 border-green-200 bg-green-50 p-6">
-              <h3 className="mb-3 text-xl font-bold text-gray-900">The Two Operational Tests</h3>
-              <div className="space-y-4">
-                <div>
-                  <p className="font-semibold text-green-900 mb-2">1. Audience-Removal Test</p>
-                  <p className="text-sm text-green-800">
-                    If adopting AIM would feel pointless without an audience to observe your adoption, 
-                    it has become mimetic signaling rather than genuine understanding. AIM should help 
-                    you understand motivation even if no one else ever knows you use it.
-                  </p>
-                </div>
-                <div>
-                  <p className="font-semibold text-green-900 mb-2">2. Low-Cost Opt-Out Test</p>
-                  <p className="text-sm text-green-800">
-                    You should be able to reject or ignore AIM without material consequences to your 
-                    income, safety, or basic respect. If &quot;being AIM-fluent&quot; becomes a promotion criterion 
-                    or social requirement, it has crossed into ideological territory.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg border-2 border-blue-200 bg-blue-50 p-6">
-              <h3 className="mb-3 text-xl font-bold text-gray-900">The Reflexive Non-Ideology Principle</h3>
-              <p className="mb-4 text-gray-700">
-                AIM adoption should never be tied to income, safety, or basic respect. Organizations using 
-                AIM must avoid making framework knowledge a status signal or requirement for belonging. 
-                The moment AIM becomes a badge of prestige or a gatekeeper of opportunity, it violates its 
-                own descriptive premises about how mimetic pressure distorts intrinsic engagement.
-              </p>
-              <p className="text-sm italic text-gray-600">
-                This principle is not an optional add-on but follows directly from AIM&apos;s descriptive account: 
-                if we understand how M can hijack A and I, we must deliberately prevent AIM itself from 
-                becoming a mimetic weapon.
+              <p className="text-lg text-gray-700">
+                The personal version is shorter. In 2010 I told a therapist I could not tell
+                whether I wanted things because I wanted them or because my father wanted
+                them for me. She said: then that is where your work is. The framework is the
+                result of taking that seriously, and discovering that the question was not
+                only mine. It is the question Source Opacity leaves every one of us unable to
+                answer by introspection alone.
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Why This Matters */}
-      <section className="bg-gradient-to-br from-primary-50 to-blue-50 py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-6 text-4xl font-bold text-gray-900">
-            Why This Framework Matters
-          </h2>
-          <div className="prose prose-lg mx-auto">
-            <p className="text-xl text-gray-700">
-              For centuries, we&apos;ve observed that people want different things in different ways, 
-              but we&apos;ve lacked the precise categories to talk about it systematically across disciplines. 
-              Economics, psychology, law, and policy have all developed their own vocabularies for 
-              motivation, creating &quot;gear grinding&quot; between fields.
-            </p>
-            <p className="text-xl text-gray-700">
-              AIM provides the missing taxonomy. It doesn&apos;t claim new neural mechanisms—it reclassifies 
-              what we already know into three sources, each with different properties, policy levers, 
-              and ethical implications. Once you can distinguish appetitive from intrinsic from mimetic 
-              motivation, long-standing puzzles in market behavior, policy failure, and interpersonal 
-              conflict become clearer.
-            </p>
-            <p className="text-xl font-semibold text-gray-900">
-              The proposals about fairness, freedom, and justice follow from that clarity: if we respect 
-              the different sources, we can design institutions that secure appetites, protect intrinsic 
-              projects, and avoid weaponizing mimetic rivalry.
-            </p>
+        {/* The book */}
+        <section id="book" className="scroll-mt-24 border-t border-gray-100 py-12">
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">The book</h2>
+          <p className="mb-1 text-xl font-semibold text-gray-800">
+            A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and
+            Mimetic Desire
+          </p>
+          <p className="mb-6 text-gray-600">
+            Twenty chapters and appendices, stated axiomatically so that each step can be
+            checked and each prediction tested. In active revision; the chat is always
+            answering from the current text.
+          </p>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+                Part I: Diagnosis
+              </h3>
+              <ol className="list-decimal space-y-1 pl-5 text-sm text-gray-700">
+                {partOne.map(c => <li key={c}>{c}</li>)}
+              </ol>
+            </div>
+            <div>
+              <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+                Part II: Response
+              </h3>
+              <ol start={15} className="list-decimal space-y-1 pl-5 text-sm text-gray-700">
+                {partTwo.map(c => <li key={c}>{c}</li>)}
+              </ol>
+              <p className="mt-3 text-sm text-gray-600">
+                Appendices: the mathematical structure of the AIM system, a proposed validation
+                roadmap, and the architecture applied to artificial intelligence.
+              </p>
+            </div>
           </div>
-          
-          <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <AskAIGroup
+            questions={[
+              'Give me a chapter-by-chapter summary of the AIM Treatise.',
+              'What is in Appendix A, the mathematical structure of the AIM system?',
+              'What does the validation roadmap in Appendix B propose?'
+            ]}
+          />
+        </section>
+
+        {/* Claims */}
+        <section id="claims" className="scroll-mt-24 border-t border-gray-100 py-12">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">What AIM claims, and does not</h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">Claims</h3>
+              <ol className="list-decimal space-y-2 pl-5 text-sm text-gray-700">
+                {claims.map((c, i) => <li key={i}>{c}</li>)}
+              </ol>
+            </div>
+            <div>
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">Does not claim</h3>
+              <ol className="list-decimal space-y-2 pl-5 text-sm text-gray-700">
+                {nonClaims.map((c, i) => <li key={i}>{c}</li>)}
+              </ol>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-gray-500">From the Treatise, Chapter 1, Section 1.4.</p>
+        </section>
+
+        {/* How to challenge */}
+        <section id="research" className="scroll-mt-24 border-t border-gray-100 py-12">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900">How to challenge it</h2>
+          <p className="mb-4 text-lg text-gray-700">
+            The framework is stated axiomatically to maximise the number of ways it can be
+            shown wrong, and to make each cheap to test. Most of its components are inherited
+            from established literatures; one is mathematically entailed; the contestable part
+            reduces to two assertions:
+          </p>
+          <ol className="mb-6 list-decimal space-y-3 pl-5 text-gray-700">
+            <li>
+              That A, I and M are the correct decomposition, exactly these three and not two or
+              four. Defended by the bidirectional consilience argument in Chapter 4 and the
+              Fourth-Source Objection analysis there. A critic proposing a fourth source must
+              identify its distinct neural substrate, its satiation dynamics, and behavioural
+              signatures that cannot be decomposed into A, I or M.
+            </li>
+            <li>
+              That M operates through the specific mechanisms claimed: preconscious social
+              observation circuits, Object Parasitism, and non-satiation.
+            </li>
+          </ol>
+          <p className="mb-6 text-lg text-gray-700">
+            Everything downstream, from Source Opacity to the scapegoat mechanism to the
+            Knowledge Patch, is derived from those two plus the inherited architecture. Each
+            derivation is stated so the step can be checked. Rejecting a derivation means
+            identifying the step that fails; rejecting an inherited premise means engaging the
+            literature it comes from; a replacement theory must account for the same record
+            with equal or greater parsimony.
+          </p>
+          <AskAIGroup
+            questions={[
+              'What would falsify the AIM Framework?',
+              'What is the Fourth-Source Objection and how does Chapter 4 answer it?',
+              'What is the bidirectional consilience argument?',
+              'What is the Replacement Requirement in Chapter 3?'
+            ]}
+          />
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="scroll-mt-24 border-t border-gray-100 py-12">
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">Get in touch</h2>
+          <p className="mb-6 text-lg text-gray-700">
+            Peer review, falsification attempts, research collaboration and corrections are all
+            welcome. For questions about the theory itself, the chat will usually be faster and
+            more precise than I can be by email.
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/research-resources"
-              className="inline-flex items-center rounded-lg bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-primary-700"
+              href="/contact"
+              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-blue-700"
             >
-              Explore the Research Programme
-              <HiArrowRight className="ml-2 h-5 w-5" />
+              Contact
+              <HiArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <Link
-              href="/understand-your-motivations"
-              className="inline-flex items-center rounded-lg border-2 border-primary-600 bg-white px-8 py-4 text-lg font-semibold text-primary-600 transition hover:bg-primary-50"
-            >
-              Apply It to Your Life
-            </Link>
+            <AskAI
+              variant="button"
+              question="I'm a researcher. Which AIM predictions are most tractable to test first, and what does the validation roadmap recommend?"
+              label="Ask about testing AIM"
+              className="border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+            />
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-    </PageWithToc>
   )
 }

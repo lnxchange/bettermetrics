@@ -1,58 +1,38 @@
 {
   "pages": [
     {
-      "title": "About the AIM Framework",
+      "title": "About",
       "url": "/about",
       "sections": [
         {
-          "heading": "About the AIM Framework",
+          "heading": "About",
           "anchor": "",
-          "content": "A neuroscience-grounded taxonomy for understanding how three distinct motivational sources combine in the brain's common-currency valuation system The AIM Motivation Framework is a theoretical synthesis integrating established findings from neuroscience (mirror neurons, homeostatic regulation, dopam"
+          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. Principal commercial lawyer and the author of the AIM Framework. Contract work is definitional work: a system fails when two parties are using slightly different meanings of the same word. Reading across psychol"
         },
         {
-          "heading": "A Young but Rapidly Developing Research Programme",
-          "anchor": "#a-young-but-rapidly-developing-research-programme",
-          "content": "A neuroscience-grounded taxonomy for understanding how three distinct motivational sources combine in the brain's common-currency valuation system The AIM Motivation Framework is a theoretical synthes"
+          "heading": "Yule Guttenbeil",
+          "anchor": "#yule-guttenbeil",
+          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. Principal commercial lawyer and the author of the AIM Framework. Contract work is definitional work: a system f"
         },
         {
-          "heading": "The Three Motivational Sources",
-          "anchor": "#the-three-motivational-sources",
-          "content": "This framework serves as a heuristic utility model: its theoretical validity is demonstrated through its capacity to resolve longstanding anomalies (Easterlin Paradox, Veblen goods, mimetic market cas"
+          "heading": "The book",
+          "anchor": "#the-book",
+          "content": "The personal version is shorter. In 2010 I told a therapist I could not tell whether I wanted things because I wanted them or because my father wanted them for me. She said: then that is where your wo"
         },
         {
-          "heading": "How the Sources Combine",
-          "anchor": "#how-the-sources-combine",
-          "content": "What ancient philosophy suspected—Plato's tripartite soul, Aristotle's motivational distinctions—neuroscience now confirms: three functionally distinct sources that converge on a common-currency valua"
+          "heading": "What AIM claims, and does not",
+          "anchor": "#what-aim-claims-and-does-not",
+          "content": "Twenty chapters and appendices, stated axiomatically so that each step can be checked and each prediction tested. In active revision; the chat is always answering from the current text. Appendices: th"
         },
         {
-          "heading": "The Neural Foundation",
-          "anchor": "#the-neural-foundation",
-          "content": "Each motivational source has distinct neural pathways identified in neuroscience literature AIM is first a descriptive taxonomy. The normative proposals flow directly from that descriptive clarity."
+          "heading": "How to challenge it",
+          "anchor": "#how-to-challenge-it",
+          "content": "From the Treatise, Chapter 1, Section 1.4. The framework is stated axiomatically to maximise the number of ways it can be shown wrong, and to make each cheap to test. Most of its components are inheri"
         },
         {
-          "heading": "What AIM Describes vs What It Recommends",
-          "anchor": "#what-aim-describes-vs-what-it-recommends",
-          "content": "How the brain decides which motivation to act on through threshold-and-switch mechanisms Motivational signals don't translate immediately into action. Instead, they enter a \"buffer\" where the brain ma"
-        },
-        {
-          "heading": "Action Selection: Buffer and Switching",
-          "anchor": "#action-selection-buffer-and-switching",
-          "content": "The brain switches from one motivation to another when specific conditions are met: Completion"
-        },
-        {
-          "heading": "A Key Concept: The Mimetic Premium",
-          "anchor": "#a-key-concept-the-mimetic-premium",
-          "content": "Task finishes, goal is reached, or project naturally concludes Boredom"
-        },
-        {
-          "heading": "Using AIM Without Turning It Into an Ideology",
-          "anchor": "#using-aim-without-turning-it-into-an-ideology",
-          "content": "Intrinsic engagement drops below threshold, activity no longer rewarding Frustration"
-        },
-        {
-          "heading": "Why This Framework Matters",
-          "anchor": "#why-this-framework-matters",
-          "content": "Obstacles prevent progress, competence signals drop, autonomy feels blocked Urgent Appetite"
+          "heading": "Get in touch",
+          "anchor": "#get-in-touch",
+          "content": "Everything downstream, from Source Opacity to the scapegoat mechanism to the Knowledge Patch, is derived from those two plus the inherited architecture. Each derivation is stated so the step can be ch"
         }
       ]
     },
@@ -63,7 +43,7 @@
         {
           "heading": "Edit Article",
           "anchor": "",
-          "content": "Status: URL: /articles/ Comma-separated"
+          "content": "Status: URL: /articles/ The date the article was originally written (shown to readers)"
         }
       ]
     },
@@ -172,18 +152,50 @@
       ]
     },
     {
-      "title": "The 8 Axioms | AIM Framework",
+      "title": "Articles | AIM Framework",
+      "url": "/articles",
+      "sections": [
+        {
+          "heading": "Articles | AIM Framework",
+          "anchor": "",
+          "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet. "
+        },
+        {
+          "heading": "",
+          "anchor": "#",
+          "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet."
+        }
+      ]
+    },
+    {
+      "title": "The Nine Axioms",
       "url": "/axioms",
       "sections": [
         {
-          "heading": "The 8 Axioms | AIM Framework",
+          "heading": "The Nine Axioms",
           "anchor": "",
-          "content": "  The foundational premises of the AIM Framework—irreducible theoretical commitments that define the theory's structure, generate its predictions, and establish its falsification criteria."
+          "content": "  "
         },
         {
-          "heading": "Summary Note on Axioms",
-          "anchor": "#summary-note-on-axioms",
+          "heading": "",
+          "anchor": "#",
           "content": " "
+        },
+        {
+          "heading": "How they fit together",
+          "anchor": "#how-they-fit-together",
+          "content": " AIM Treatise, Chapter 4, Section 4.3."
+        }
+      ]
+    },
+    {
+      "title": "Ask the AI",
+      "url": "/chat/[id]",
+      "sections": [
+        {
+          "heading": "Ask the AI",
+          "anchor": "",
+          "content": ""
         }
       ]
     },
@@ -209,7 +221,7 @@
         {
           "heading": "Why Collaborate on AIM?",
           "anchor": "#why-collaborate-on-aim",
-          "content": "Most theories propose new mechanisms. AIM proposes new categories. If validated, it would provide the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts. AIM "
+          "content": "Most theories propose new mechanisms. AIM proposes new categories. It provides the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts, organizing existing evi"
         },
         {
           "heading": "Collaboration Opportunities",
@@ -262,551 +274,38 @@
         {
           "heading": "Glossary",
           "anchor": "",
-          "content": "Comprehensive definitions for the AIM Framework—designed as a contract-style reference section where capitalised terms have specific, bounded meanings. Usage Note: Throughout AIM literature, capitalised terms (e.g., \"Individual\", \"Mimetic Desire\") have the precise meanings defined here. Uncapitalise"
+          "content": "Capitalised terms in AIM have the bounded meanings defined here. For anything not listed, or for how a term is used in a particular chapter, ask the AI. )} className=`} > ))} Showing of terms "
         }
       ]
     },
     {
-      "title": "AIM Motivation Framework | Use Better Metrics",
+      "title": "AIM Framework | Use Better Metrics",
       "url": "/",
       "sections": [
         {
-          "heading": "AIM Motivation Framework | Use Better Metrics",
+          "heading": "AIM Framework | Use Better Metrics",
           "anchor": "",
-          "content": "A Unifying General Theory of Human Motivation The AIM Framework synthesizes established neuroscience, behavioral economics, and Girardian theory into a falsifiable taxonomy with 8 core axioms and domain-level predictions. Three neurologically distinct motivational sources—integrated through the brai"
+          "content": "A general theory of human motivation Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea. AIM proposes the equivalent for wanting: motivation comes from three distinct sources that the brain mixes into a"
         },
         {
-          "heading": "From Explanation to Contested Concepts",
-          "anchor": "#from-explanation-to-contested-concepts",
-          "content": "A Unifying General Theory of Human Motivation The AIM Framework synthesizes established neuroscience, behavioral economics, and Girardian theory into a falsifiable taxonomy with 8 core axioms and doma"
+          "heading": "Three sources of wanting",
+          "anchor": "#three-sources-of-wanting",
+          "content": "A general theory of human motivation Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea. AIM proposes "
         },
         {
-          "heading": "The AIM Framework in One Glance",
-          "anchor": "#the-aim-framework-in-one-glance",
-          "content": "Three neurologically distinct motivational sources—integrated through the brain's common-currency valuation system (vmPFC/VS)—explain patterns that single-variable models cannot: the Easterlin Paradox"
+          "heading": "What gets lost in the mix",
+          "anchor": "#what-gets-lost-in-the-mix",
+          "content": "Not categories invented for convenience. Each has its own neural pathway, its own satiation pattern, and its own tell. The brain cannot act on three signals at once, so it integrates them into one val"
         },
         {
-          "heading": "How This Work Began",
-          "anchor": "#how-this-work-began",
-          "content": "Once the same three sources of motivation are traced through legal systems, markets, and everyday institutions, they provide a more precise way of talking about contested ideas like fairness, freedom,"
-        }
-      ]
-    },
-    {
-      "title": "Scientific Definitions Enabled by AIM",
-      "url": "/research/definitions",
-      "sections": [
-        {
-          "heading": "Scientific Definitions Enabled by AIM",
-          "anchor": "",
-          "content": "If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions that apply uniformly across all human behavioral fields—economics, law, psychology, public policy, and organizational design. Unlike current approaches that rely on philosophical tradition or legal precedent,"
-        },
-        {
-          "heading": "Why This Matters",
-          "anchor": "#why-this-matters",
-          "content": "If validated, AIM would enable neuroscientifically grounded, cross-disciplinary definitions that apply uniformly across all human behavioral fields—economics, law, psychology, public policy, and organ"
-        },
-        {
-          "heading": "Core Scientific Definitions",
-          "anchor": "#core-scientific-definitions",
-          "content": "Current Problem: Each field has its own incompatible definition of these concepts: With AIM (if validated): Single neuroscientific framework with testable, falsifiable definitions and uniform applicat"
-        },
-        {
-          "heading": "Uniform Application Across Fields",
-          "anchor": "#uniform-application-across-fields",
-          "content": "AIM Definition: The capacity to pursue intrinsically motivated (I) activities without coercion by unmet appetites (A) or mimetic pressure (M). Current definitions of freedom are either too broad (phil"
-        },
-        {
-          "heading": "Why This Is Revolutionary",
-          "anchor": "#why-this-is-revolutionary",
-          "content": "Contracts signed under A-deficit (hunger, fatigue) should show higher regret rates than those signed under A-sufficient states. AIM Definition: Recognition and protection of another person's intrinsic"
-        },
-        {
-          "heading": "Ready to Test These Definitions?",
-          "anchor": "#ready-to-test-these-definitions",
-          "content": "Interventions perceived as \"disrespectful\" will correlate with I-override, not just A-denial or M-status loss. AIM Definition: Distribution of resources and opportunities that:"
-        }
-      ]
-    },
-    {
-      "title": "Economics",
-      "url": "/research/economics",
-      "sections": [
-        {
-          "heading": "Economics",
-          "anchor": "",
-          "content": "Understanding endogenous preferences, status goods, and market dynamics through three sources of motivation We're seeking researchers to validate these hypotheses. Access research materials → Standard economic theory assumes markets efficiently aggregate \"preferences\" into prices. But AIM reveals a "
-        },
-        {
-          "heading": "When Markets Price Blindly: AIM's Revolutionary Economic Insight",
-          "anchor": "#when-markets-price-blindly-aims-revolutionary-economic-insight",
-          "content": "Understanding endogenous preferences, status goods, and market dynamics through three sources of motivation We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "Standard economic theory assumes markets efficiently aggregate \"preferences\" into prices. But AIM reveals a critical blind spot: markets cannot separately price appetitive needs (A), intrinsic values "
-        },
-        {
-          "heading": "Specific Research Questions AIM Enables",
-          "anchor": "#specific-research-questions-aim-enables",
-          "content": "Private, variable, and non-observable at market scale Internal, personal, and resist public display"
-        },
-        {
-          "heading": "Economic Policy Implications",
-          "anchor": "#economic-policy-implications",
-          "content": "Public, observable, and easily transmitted Result: When markets cannot distinguish A from I, they use M as a proxy. This isn't efficient—it's structurally blind."
-        },
-        {
-          "heading": "When Markets Go Blind: AIM's Most Radical Economic Prediction",
-          "anchor": "#when-markets-go-blind-aims-most-radical-economic-prediction",
-          "content": "Markets cannot separately price: When observability increases (social media, public display), demand shifts from stable/persistent (I) to volatile/trend-sensitive (M)"
-        },
-        {
-          "heading": "Interested in Economic Research?",
-          "anchor": "#interested-in-economic-research",
-          "content": "Markets fail for A-goods when M-signaling is possible (cannot separate \"housing as shelter\" from \"housing as status\") Asset bubbles form when: high M-visibility + low I/A functional value + mimetic ca"
-        }
-      ]
-    },
-    {
-      "title": "Education",
-      "url": "/research/education",
-      "sections": [
-        {
-          "heading": "Education",
-          "anchor": "",
-          "content": "Designing learning environments that protect curiosity and prevent drift to status competition We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding learning and education. By disting"
-        },
-        {
-          "heading": "Overview",
-          "anchor": "#overview",
-          "content": "Designing learning environments that protect curiosity and prevent drift to status competition We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Key Educational Phenomena",
-          "anchor": "#key-educational-phenomena",
-          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding learning and education. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, w"
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "Research shows that extrinsic rewards can undermine intrinsic motivation—the \"overjustification effect.\" AIM explains why: introducing external rewards for intrinsically motivated learning shifts neur"
-        },
-        {
-          "heading": "Key Research Questions",
-          "anchor": "#key-research-questions",
-          "content": "How traditional grading systems create mimetic rivalry that undermines learning, and alternative approaches that support intrinsic motivation. How educational environments can support autonomy and mas"
-        },
-        {
-          "heading": "Educational Implications",
-          "anchor": "#educational-implications",
-          "content": "How academic competition becomes a status game through mimetic desire, leading to both achievement and harmful comparison patterns. What AIM Uniquely Predicts: The SEQUENCE of feedback matters: giving"
-        },
-        {
-          "heading": "Interested in Educational Research?",
-          "anchor": "#interested-in-educational-research",
-          "content": "Why This Is Novel: Educators know \"reduce social comparison\" but not HOW to sequence feedback. AIM predicts that once wᵢ is established privately, it's more resistant to mimetic pressure. Tests whethe"
-        }
-      ]
-    },
-    {
-      "title": "Health & Policy",
-      "url": "/research/health-policy",
-      "sections": [
-        {
-          "heading": "Health & Policy",
-          "anchor": "",
-          "content": "Separating physiological need from social amplification in public health interventions We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding health behaviors. By distinguishing betwee"
-        },
-        {
-          "heading": "Overview",
-          "anchor": "#overview",
-          "content": "Separating physiological need from social amplification in public health interventions We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Key Health Phenomena",
-          "anchor": "#key-health-phenomena",
-          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding health behaviors. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, we can "
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "AIM predicts that health interventions targeting the wrong motivational source will fail. For example, social comparison-based fitness programs may initially attract participants through mimetic desir"
-        },
-        {
-          "heading": "Key Research Questions",
-          "anchor": "#key-research-questions",
-          "content": "How intrinsic motivation drives health-seeking behavior and why extrinsic incentives may undermine long-term health engagement. How health becomes a status symbol through mimetic desire, leading to bo"
-        },
-        {
-          "heading": "Policy Implications",
-          "anchor": "#policy-implications",
-          "content": "How health policies must account for different motivational sources, from basic appetitive needs to complex mimetic health behaviors. What AIM Uniquely Predicts: Social dining increases food intake th"
-        },
-        {
-          "heading": "Interested in Health Policy Research?",
-          "anchor": "#interested-in-health-policy-research",
-          "content": "Why This Is Novel: Existing research shows \"social eating increases intake\" but doesn't test DIRECTION. AIM predicts it's mimetic (matching the model) not just social presence. Can test by manipulatin"
-        }
-      ]
-    },
-    {
-      "title": "Research Hypothesis & Collaboration",
-      "url": "/research/hypothesis",
-      "sections": [
-        {
-          "heading": "Research Hypothesis & Collaboration",
-          "anchor": "",
-          "content": "A formal proposal for behavioral economists, game theorists, and neuroscientists to test the AIM Framework's core predictions Current economic and behavioral models largely rely on a singular metric of \"Preference\" (or Utility, U) to predict agent behavior. These models assume that U acts as a coher"
-        },
-        {
-          "heading": "Re-Specifying the Utility Function: Resolving \"Code Drift\" in Behavioral Models via the AIM Framework",
-          "anchor": "#re-specifying-the-utility-function-resolving-code-drift-in-behavioral-models-via-the-aim-framework",
-          "content": "A formal proposal for behavioral economists, game theorists, and neuroscientists to test the AIM Framework's core predictions Current economic and behavioral models largely rely on a singular metric o"
-        },
-        {
-          "heading": "1. The Problem: \"Code Drift\" in Utility Aggregation",
-          "anchor": "#1-the-problem-code-drift-in-utility-aggregation",
-          "content": "However, this singular definition aggregates three neurobiologically distinct drivers that obey contradictory mathematical laws: The Hypothesis: Treating these three distinct vectors as a single varia"
-        },
-        {
-          "heading": "2. The Proposed Solution: The AIM Vector",
-          "anchor": "#2-the-proposed-solution-the-aim-vector",
-          "content": "We propose abandoning the singular \"Preference\" metric in favor of a tri-partite vector based on the AIM Motivation Framework. We posit that an agent's decision (D) is not a function of maximized Util"
-        },
-        {
-          "heading": "3. Theoretical Application (The \"Contract\")",
-          "anchor": "#3-theoretical-application-the-contract",
-          "content": "Where: A (Appetites): A variable governed by Negative Feedback Loops. It seeks 0 (homeostasis). It is biologically bounded and cyclical."
-        },
-        {
-          "heading": "4. Call to Collaboration",
-          "anchor": "#4-call-to-collaboration",
-          "content": "I (Intrinsic): A variable governed by Internal Reward Loops. It is independent of external observation. It is the source of \"noise\" in standard models but represents \"signal\" in the AIM framework. M ("
-        }
-      ]
-    },
-    {
-      "title": "Law",
-      "url": "/research/law",
-      "sections": [
-        {
-          "heading": "Law",
-          "anchor": "",
-          "content": "Defining fairness, justice, and respect through appetitive sufficiency and intrinsic autonomy We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding legal behavior and justice. By dist"
-        },
-        {
-          "heading": "Overview",
-          "anchor": "#overview",
-          "content": "Defining fairness, justice, and respect through appetitive sufficiency and intrinsic autonomy We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Scientific Legal Definitions Enabled by AIM",
-          "anchor": "#scientific-legal-definitions-enabled-by-aim",
-          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding legal behavior and justice. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desire"
-        },
-        {
-          "heading": "Cross-Cutting Legal Applications",
-          "anchor": "#cross-cutting-legal-applications",
-          "content": "AIM Definition: The capacity to pursue intrinsically motivated (I) activities without coercion by unmet appetites (A) or mimetic pressure (M). Legal Applications: Contract law (when is consent truly \""
-        },
-        {
-          "heading": "Why This Matters for Jurisprudence",
-          "anchor": "#why-this-matters-for-jurisprudence",
-          "content": "AIM Definition: Recognition and protection of another person's intrinsic motivations (I) and autonomy, distinct from mere appetitive provision (A) or mimetic status-granting (M). Legal Applications: D"
-        },
-        {
-          "heading": "Policy and Institutional Design",
-          "anchor": "#policy-and-institutional-design",
-          "content": "AIM Definition: Distribution of resources and opportunities that ensures appetitive sufficiency (A), protects intrinsic autonomy (I), and minimizes mimetic rivalry (M). Legal Applications: Resolves te"
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "AIM Definition: The right to control observability of one's activities, particularly the ability to pursue intrinsic motivations (I) without triggering mimetic dynamics (M) or exposing appetitive vuln"
-        },
-        {
-          "heading": "Key Research Questions",
-          "anchor": "#key-research-questions",
-          "content": "How legal justice fundamentally requires meeting basic appetitive needs (food, shelter, safety), and why this forms the foundation of fair legal systems. AIM predicts that legal systems that fail to e"
-        },
-        {
-          "heading": "Legal Implications",
-          "anchor": "#legal-implications",
-          "content": "How legal systems can protect intrinsic autonomy while addressing mimetic rivalry and ensuring appetitive sufficiency for all citizens. AIM provides a framework for designing legal institutions that w"
-        },
-        {
-          "heading": "Interested in Legal Research?",
-          "anchor": "#interested-in-legal-research",
-          "content": "Current Problem: Legal concepts like \"freedom,\" \"respect,\" \"fairness,\" and \"privacy\" are defined through philosophical tradition or legal precedent, leading to: With AIM (if validated): Legal concepts"
-        }
-      ]
-    },
-    {
-      "title": "Marketing",
-      "url": "/research/marketing",
-      "sections": [
-        {
-          "heading": "Marketing",
-          "anchor": "",
-          "content": "Diagnosing stickiness vs. herd effects to predict brand loyalty and consumer behavior We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding consumer behavior and marketing. By disting"
-        },
-        {
-          "heading": "Overview",
-          "anchor": "#overview",
-          "content": "Diagnosing stickiness vs. herd effects to predict brand loyalty and consumer behavior We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Key Marketing Phenomena",
-          "anchor": "#key-marketing-phenomena",
-          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding consumer behavior and marketing. By distinguishing between appetitive needs, intrinsic motivations, and mimetic d"
-        },
-        {
-          "heading": "Key Research Questions",
-          "anchor": "#key-research-questions",
-          "content": "Viral marketing leverages mimetic desire: seeing others adopt a product increases valuation independent of product attributes. AIM predicts these campaigns create rapid adoption but unstable loyalty—w"
-        },
-        {
-          "heading": "Marketing Implications",
-          "anchor": "#marketing-implications",
-          "content": "How viral marketing leverages mimetic desire and social proof, creating herd effects that can be both powerful and unpredictable. How consumers can be segmented by their dominant motivational sources,"
-        },
-        {
-          "heading": "Interested in Marketing Research?",
-          "anchor": "#interested-in-marketing-research",
-          "content": "How to distinguish between genuine brand stickiness (intrinsic connection) and temporary herd effects (mimetic desire) in marketing analytics. Marketing practice informed by AIM would:"
-        }
-      ]
-    },
-    {
-      "title": "Research Methodology",
-      "url": "/research/methodology",
-      "sections": [
-        {
-          "heading": "Research Methodology",
-          "anchor": "",
-          "content": "Testing the AIM Framework through observability manipulation and source isolation All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Access research materials → The defining characteristic of intrinsic motivation is that it persists in"
-        },
-        {
-          "heading": "The Central Test: Persistence in Private",
-          "anchor": "#the-central-test-persistence-in-private",
-          "content": "Testing the AIM Framework through observability manipulation and source isolation All claims can and should be empirically validated. We provide specific falsification criteria for each prediction. Ac"
-        },
-        {
-          "heading": "Distinguishing A, I, and M: Three Methods",
-          "anchor": "#distinguishing-a-i-and-m-three-methods",
-          "content": "The defining characteristic of intrinsic motivation is that it persists in private—when there's no audience, no social signaling, no status competition. Measuring output of unobserved activities is ho"
-        },
-        {
-          "heading": "Calculating the Mimetic Premium",
-          "anchor": "#calculating-the-mimetic-premium",
-          "content": "Traditional motivation research struggles to distinguish intrinsic engagement from status-seeking because both can look identical under observation. AIM solves this by manipulating observability: If b"
-        },
-        {
-          "heading": "Validated Measurement Scales",
-          "anchor": "#validated-measurement-scales",
-          "content": "Physiological Markers: Behavioral Signatures:"
-        },
-        {
-          "heading": "Five Core Experimental Designs",
-          "anchor": "#five-core-experimental-designs",
-          "content": "This is the critical test. Compare behavior under public versus private conditions to isolate intrinsic from mimetic motivation. Experimental Design:"
-        },
-        {
-          "heading": "Statistical Analysis Methods",
-          "anchor": "#statistical-analysis-methods",
-          "content": "Predicted Outcomes: Intrinsic motivation shows stable persistence over time (6-12+ months), while mimetic motivation tracks social context and shows volatility."
-        },
-        {
-          "heading": "Framework-Level Falsification Criteria",
-          "anchor": "#framework-level-falsification-criteria",
-          "content": "Track Over Time: A key empirical method for quantifying motivational sources is decomposing prices and valuations into appetitive (A), intrinsic (I), and mimetic (M) components."
-        },
-        {
-          "heading": "Cross-Domain Validation Strategy",
-          "anchor": "#cross-domain-validation-strategy",
-          "content": "The excess value paid for social signaling, separate from basic need satisfaction and intrinsic quality. This reveals how much of a price is driven by status competition versus actual use value. Examp"
-        },
-        {
-          "heading": "Open Science Commitments",
-          "anchor": "#open-science-commitments",
-          "content": "Compare willingness-to-pay for identical products under public versus private consumption conditions. Design:"
-        },
-        {
-          "heading": "Ready to Test AIM in Your Research?",
-          "anchor": "#ready-to-test-aim-in-your-research",
-          "content": "Prediction: Products with high M-components (luxury brands, status goods) show large price premiums in public conditions. I-driven products show minimal or no premium. Use regression analysis to isola"
-        }
-      ]
-    },
-    {
-      "title": "Organizations",
-      "url": "/research/organizations",
-      "sections": [
-        {
-          "heading": "Organizations",
-          "anchor": "",
-          "content": "From status tournaments to mission-driven work through source-specific interventions We're seeking researchers to validate these hypotheses. Access research materials → The AIM Framework provides a neuroscientifically grounded foundation for understanding organizational behavior. By distinguishing b"
-        },
-        {
-          "heading": "Overview",
-          "anchor": "#overview",
-          "content": "From status tournaments to mission-driven work through source-specific interventions We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Key Organizational Phenomena",
-          "anchor": "#key-organizational-phenomena",
-          "content": "The AIM Framework provides a neuroscientifically grounded foundation for understanding organizational behavior. By distinguishing between appetitive needs, intrinsic motivations, and mimetic desires, "
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "Traditional performance management often conflates motivational sources: using the same metrics for appetitive compensation (fair pay), intrinsic engagement (meaningful work), and mimetic status (reco"
-        },
-        {
-          "heading": "Key Research Questions",
-          "anchor": "#key-research-questions",
-          "content": "How leadership styles can either support or undermine intrinsic motivation, and the role of mimetic desire in leadership dynamics. How team dynamics are shaped by mimetic patterns of competition and c"
-        },
-        {
-          "heading": "Organizational Implications",
-          "anchor": "#organizational-implications",
-          "content": "How organizations can shift from status tournaments driven by mimetic desire to mission-driven work supported by intrinsic motivation. What AIM Uniquely Predicts: When organizations recognize achievem"
-        },
-        {
-          "heading": "Interested in Organizational Research?",
-          "anchor": "#interested-in-organizational-research",
-          "content": "Why This Is Novel: Management research shows \"recognition matters\" but doesn't explain rivalry dynamics. AIM predicts that single metrics (sales numbers, publications) create mimetic tournaments. Dive"
-        }
-      ]
-    },
-    {
-      "title": "Research Areas",
-      "url": "/research",
-      "sections": [
-        {
-          "heading": "Research Areas",
-          "anchor": "",
-          "content": "The AIM Framework provides a unified lens for understanding human behavior across academic disciplines. Explore how this framework transforms research and practice in different fields.  By distinguishing between three neural sources of motivation, AIM provides researchers with precise tools for unde"
-        },
-        {
-          "heading": "",
-          "anchor": "#",
-          "content": "The AIM Framework provides a unified lens for understanding human behavior across academic disciplines. Explore how this framework transforms research and practice in different fields. "
-        },
-        {
-          "heading": "How AIM Transforms Research",
-          "anchor": "#how-aim-transforms-research",
-          "content": "By distinguishing between three neural sources of motivation, AIM provides researchers with precise tools for understanding and predicting human behavior across all domains. Physiological needs that d"
-        },
-        {
-          "heading": "Join the Research",
-          "anchor": "#join-the-research",
-          "content": "Self-endorsed activities that persist across contexts. Essential for understanding creativity, learning, and long-term engagement. Socially transmitted desires that create herding, rivalry, and status"
-        }
-      ]
-    },
-    {
-      "title": "Psychology",
-      "url": "/research/psychology",
-      "sections": [
-        {
-          "heading": "Psychology",
-          "anchor": "",
-          "content": "Protecting intrinsic motivation, understanding social anxiety, and preventing mimetic pathology We're seeking researchers to validate these hypotheses. Access research materials → Psychology has long recognized that human behavior is multiply motivated, but existing frameworks struggle to cleanly se"
-        },
-        {
-          "heading": "How AIM Transforms Psychological Understanding",
-          "anchor": "#how-aim-transforms-psychological-understanding",
-          "content": "Protecting intrinsic motivation, understanding social anxiety, and preventing mimetic pathology We're seeking researchers to validate these hypotheses. Access research materials →"
-        },
-        {
-          "heading": "Detailed Psychological Mechanisms",
-          "anchor": "#detailed-psychological-mechanisms",
-          "content": "Psychology has long recognized that human behavior is multiply motivated, but existing frameworks struggle to cleanly separate motivational sources. Self-Determination Theory distinguishes \"intrinsic\""
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "Social anxiety stems from fear of negative evaluation Social anxiety emerges when wₘ (mimetic weight) becomes dysregulated—excessive attention to others' perceived judgments inflates mimetic signals w"
-        },
-        {
-          "heading": "Research Questions for Psychological Science",
-          "anchor": "#research-questions-for-psychological-science",
-          "content": "Why this matters: Treatment should focus on re-weighting motivational sources, not just exposure therapy. Prediction: Interventions that strengthen wᵢ (intrinsic self-knowledge) will outperform pure e"
-        },
-        {
-          "heading": "Therapeutic Implications",
-          "anchor": "#therapeutic-implications",
-          "content": "Flow occurs when wᵢ approaches 1.0 (near-complete intrinsic weight) with wₐ and wₘ minimized This explains why:"
-        },
-        {
-          "heading": "Interested in Psychological Research?",
-          "anchor": "#interested-in-psychological-research",
-          "content": "Why this matters: Can design flow-inducing environments by systematically reducing A-interference and M-observation while supporting I-activity. Extrinsic rewards undermine intrinsic motivation (estab"
-        }
-      ]
-    },
-    {
-      "title": "AIM and Existing Theories | AIM Framework",
-      "url": "/research/theories",
-      "sections": [
-        {
-          "heading": "AIM and Existing Theories | AIM Framework",
-          "anchor": "",
-          "content": "How the AIM Framework relates to, extends, and integrates with established theories across psychology, economics, and social philosophy The AIM Framework is designed as a plug-in to existing theories, not a wholesale replacement. It provides a neurologically grounded taxonomy that clarifies how diff"
-        },
-        {
-          "heading": "A Framework for Integration, Not Replacement",
-          "anchor": "#a-framework-for-integration-not-replacement",
-          "content": "How the AIM Framework relates to, extends, and integrates with established theories across psychology, economics, and social philosophy The AIM Framework is designed as a plug-in to existing theories,"
-        },
-        {
-          "heading": "Self-Determination Theory (SDT)",
-          "anchor": "#self-determination-theory-sdt",
-          "content": "Rather than dismissing established literatures, AIM shows how Self-Determination Theory, Girard's mimetic theory, behavioral economics, and neuroscience research all describe real phenomena—but throug"
-        },
-        {
-          "heading": "Girard's Mimetic Theory",
-          "anchor": "#girards-mimetic-theory",
-          "content": "Core Insight: Three universal psychological needs—autonomy, competence, and relatedness—are essential for intrinsic motivation and well-being. Autonomy"
-        },
-        {
-          "heading": "Behavioral Economics",
-          "anchor": "#behavioral-economics",
-          "content": "Self-endorsed choice and volition Competence"
-        },
-        {
-          "heading": "The Synthesis: A Unified Framework",
-          "anchor": "#the-synthesis-a-unified-framework",
-          "content": "Mastery and effective action Relatedness"
-        }
-      ]
-    },
-    {
-      "title": "Research Resources",
-      "url": "/research-resources",
-      "sections": [
-        {
-          "heading": "Research Resources",
-          "anchor": "",
-          "content": "Access complete framework documents, testable predictions, and collaboration opportunities. Request Custom Research Papers Research papers are prepared in direct response to your specific field or topic of interest. This ensures targeted engagement and better knowledge transfer within your framework"
-        },
-        {
-          "heading": "Core Framework Documents",
-          "anchor": "#core-framework-documents",
-          "content": "Access complete framework documents, testable predictions, and collaboration opportunities. Request Custom Research Papers Research papers are prepared in direct response to your specific field or top"
-        },
-        {
-          "heading": "Novel Testable Predictions",
-          "anchor": "#novel-testable-predictions",
-          "content": "Note: As Yule is a working lawyer, papers will generally include limited references but will provide sufficient information for you to further investigate and critique the framework's application to y"
+          "heading": "Try the Two-Question Diagnostic",
+          "anchor": "#try-the-two-question-diagnostic",
+          "content": "Asked why you chose, the brain does not answer &ldquo;I don't know.&rdquo; It builds a plausible story and believes it. Socially caught wants are the most likely to be misfiled as your own, because th"
         },
         {
-          "heading": "How to Collaborate",
-          "anchor": "#how-to-collaborate",
-          "content": "Available by request • Customized to your research field or topic Detailed neuroscience literature review supporting the three-source model. Explores the neural substrates underlying Appetites, Intrin"
+          "heading": "Where to go next",
+          "anchor": "#where-to-go-next",
+          "content": "Introspection cannot read the source, but behaviour can be tested for it. Two questions, by elimination. The architecture in seven short sections: sources, integration, opacity, confabulation, parasit"
         }
       ]
     },
@@ -871,74 +370,18 @@
       ]
     },
     {
-      "title": "Understand Your Motivations",
-      "url": "/understand-your-motivations",
+      "title": "The Theory",
+      "url": "/theory",
       "sections": [
         {
-          "heading": "Understand Your Motivations",
+          "heading": "The Theory",
           "anchor": "",
-          "content": "Apply the AIM Framework to better understand yourself and improve your relationships Try the Self-Diagnosis Tool Answer three quick questions to identify which motivational source is currently dominant in your decision-making Introduction The AIM Framework provides a powerful lens for understanding "
+          "content": "Part  Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself."
         },
         {
-          "heading": "Try the Self-Diagnosis Tool",
-          "anchor": "#try-the-self-diagnosis-tool",
-          "content": "Apply the AIM Framework to better understand yourself and improve your relationships Try the Self-Diagnosis Tool Answer three quick questions to identify which motivational source is currently dominan"
-        },
-        {
-          "heading": "Introduction",
-          "anchor": "#introduction",
-          "content": "Introduction The AIM Framework provides a powerful lens for understanding your own motivations and those of others. By distinguishing between Appetites, Intrinsic Motivation, and Mimetic Desire, you c"
-        },
-        {
-          "heading": "The AIM Framework Overview",
-          "anchor": "#the-aim-framework-overview",
-          "content": "Understanding these distinctions isn't about judging which source is \"better\"—all three are essential parts of being human. It's about recognizing which is active in a given moment so you can respond "
-        },
-        {
-          "heading": "Personal AIM: Self-Understanding",
-          "anchor": "#personal-aim-self-understanding",
-          "content": "Physiological needs that arise from bodily deficits—hunger, thirst, fatigue, etc. Activities valued for their own sake—curiosity, mastery, autonomy, flow."
-        },
-        {
-          "heading": "Interpersonal AIM: Relationships & Groups",
-          "anchor": "#interpersonal-aim-relationships-groups",
-          "content": "Desires shaped by observing others, prestige cues, and social norms. Physical signals like fatigue, hunger, or discomfort indicate appetitive needs. Address these directly through rest, nutrition, or "
-        },
-        {
-          "heading": "Need Personalized Guidance?",
-          "anchor": "#need-personalized-guidance",
-          "content": "Identify activities where you lose track of time—these reveal intrinsic engagement. Protect your autonomy and create opportunities for mastery. Be aware that external rewards can undermine intrinsic m"
-        }
-      ]
-    },
-    {
-      "title": "Understanding Your Motivations",
-      "url": "/understand-yourself",
-      "sections": [
-        {
-          "heading": "Understanding Your Motivations",
-          "anchor": "",
-          "content": "Even as a hypothesis, AIM offers a useful lens for understanding yourself and your relationships. When you want something, ask: Most wants involve multiple sources. The key is knowing which is driving you."
-        },
-        {
-          "heading": "The Three Questions",
-          "anchor": "#the-three-questions",
-          "content": "Even as a hypothesis, AIM offers a useful lens for understanding yourself and your relationships. When you want something, ask:"
-        },
-        {
-          "heading": "Applying AIM to Your Life",
-          "anchor": "#applying-aim-to-your-life",
-          "content": "Most wants involve multiple sources. The key is knowing which is driving you. AIM suggests that mimetic desire can create rivalry when two people want the same thing for status reasons. This can damag"
-        },
-        {
-          "heading": "When Mimetic Desire Becomes Problematic",
-          "anchor": "#when-mimetic-desire-becomes-problematic",
-          "content": "Remember: If you're both pursuing something for intrinsic reasons, there's generally no rivalry—you can both succeed - even if it means sharing a tool. Rivalry mostly exists when you're competing for "
-        },
-        {
-          "heading": "Relationships & Rivalry",
-          "anchor": "#relationships-rivalry",
-          "content": ""
+          "heading": "",
+          "anchor": "#",
+          "content": "Part "
         }
       ]
     },

@@ -1,43 +1,22 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { HiArrowRight, HiUserGroup, HiBriefcase, HiAcademicCap } from 'react-icons/hi'
+import { HiArrowRight } from 'react-icons/hi'
 import { AIMDefinitionsShort } from '@/components/aim-definitions'
+import { AskAI, AskAIGroup } from '@/components/ask-ai'
+import { TwoQuestionDiagnostic } from '@/components/two-question-diagnostic'
 
 export const metadata: Metadata = {
-  title: 'AIM Motivation Framework | Use Better Metrics',
+  title: 'AIM Framework | Use Better Metrics',
   description:
-    'A taxonomic framework synthesizing neuroscience, behavioral economics, and legal systems analysis to resolve definitional inconsistencies in motivation science. Classifies behavior through three neurologically distinct sources.',
-  keywords: [
-    'AIM Framework',
-    'motivational taxonomy',
-    'behavioral economics synthesis',
-    'definitional framework',
-    'motivation',
-    'psychology',
-    'economics',
-    'neuroscience',
-    'behavioral science',
-    'mimetic desire',
-    'intrinsic motivation',
-    'systems architecture',
-    'theoretical synthesis'
-  ],
-  authors: [{ name: 'Yule Guttenbeil' }],
+    'A general theory of human motivation. Three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what gets lost in the mixing.',
   openGraph: {
-    title: 'AIM Motivation Framework | Use Better Metrics',
+    title: 'AIM Framework | Use Better Metrics',
     description:
-      'A descriptive, neuroscience-grounded lens for understanding human motivation through three distinct sources.',
+      'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
     url: 'https://www.usebettermetrics.com',
     siteName: 'Use Better Metrics',
-    images: [
-      {
-        url: 'https://www.usebettermetrics.com/AIM Logo.png',
-        width: 1200,
-        height: 630,
-        alt: 'AIM Motivation Framework'
-      }
-    ],
+    images: [{ url: 'https://www.usebettermetrics.com/AIM Logo.png', width: 1200, height: 630, alt: 'AIM Framework' }],
     locale: 'en_US',
     type: 'website'
   }
@@ -46,349 +25,173 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* Hero Section - Scientific Framework First */}
+      {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="text-center">
-            {/* Book Title */}
-            <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-blue-300">
-              A Unifying General Theory of Human Motivation
-            </p>
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Appetites • Intrinsic Motivation • Mimetic Desire
-            </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl text-blue-100 sm:text-2xl">
-              The <strong className="text-white">AIM Framework</strong> synthesizes established neuroscience, 
-              behavioral economics, and Girardian theory into a falsifiable taxonomy with{' '}
-              <Link href="/axioms" className="underline decoration-blue-400 hover:text-white">8 core axioms</Link>{' '}
-              and domain-level predictions.
-            </p>
-            <p className="mx-auto mb-12 max-w-4xl text-lg text-blue-200">
-              Three neurologically distinct motivational sources—integrated through the brain&apos;s 
-              common-currency valuation system (vmPFC/VS)—explain patterns that single-variable 
-              models cannot: the Easterlin Paradox, Veblen goods, mimetic market cascades, 
-              and intrinsic motivation crowding-out.
-            </p>
-            
-            <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link
-                href="/axioms"
-                className="inline-flex items-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg transition hover:bg-blue-50"
-              >
-                Read the 8 Axioms
-                <HiArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-              <Link
-                href="/chat"
-                className="inline-flex items-center rounded-lg border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-white/10"
-              >
-                <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
-                Ask the AI
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center rounded-lg border-2 border-blue-400 bg-transparent px-8 py-4 text-lg font-semibold text-blue-200 shadow-sm transition hover:bg-blue-400/10"
-              >
-                Learn More
-              </Link>
-            </div>
+        <div className="relative mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-blue-300">
+            A general theory of human motivation
+          </p>
+          <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            The human sciences stand roughly where medicine stood in 1850.
+          </h1>
+          <p className="mb-5 max-w-3xl text-xl text-blue-100">
+            Doctors could describe diseases in detail but could not say why they occurred or
+            which treatments would work. Germ theory changed that with one idea. AIM proposes
+            the equivalent for wanting: motivation comes from three distinct sources that the
+            brain mixes into a single signal, and the mixing loses information that most of
+            our institutions assume we still have.
+          </p>
+          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+            <AskAI
+              variant="button"
+              question="Explain the AIM Framework to me in plain terms, as if I have never heard of it."
+              label="Ask the AI to explain it"
+              className="bg-white text-slate-900 hover:bg-blue-50"
+            />
+            <Link
+              href="/theory"
+              className="inline-flex items-center rounded-lg border-2 border-white px-5 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+            >
+              Read the theory
+              <HiArrowRight className="ml-2 h-5 w-5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* What This Explains - From Explanation to Contested Concepts */}
-      <section className="bg-white py-16">
+      {/* Three sources */}
+      <section className="py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
-              From Explanation to Contested Concepts
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600">
-              The aim is not to discard existing models or findings, but to plug AIM into them 
-              so that long-standing anomalies, edge cases, and disagreements across fields can be 
-              explained using a single, consistent motivational taxonomy.
-            </p>
-          </div>
-
-          <div className="mb-12 rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-8">
-            <p className="mb-4 text-lg text-gray-700">
-              Once the same three sources of motivation are traced through legal systems, markets, 
-              and everyday institutions, they provide a more precise way of talking about contested 
-              ideas like <strong>fairness</strong>, <strong>freedom</strong>, and <strong>justice</strong>.
-            </p>
-            <p className="mb-4 text-lg text-gray-700">
-              Any normative suggestions about how societies or organizations ought to be structured 
-              are meant to follow directly from that explanatory work: if we can see which parts of 
-              behavior are appetitive, which are intrinsic, and which are mimetic, then we can spell 
-              out more carefully what it would mean to secure appetites, protect intrinsic projects, 
-              and deliberately manage mimetic pressure.
-            </p>
-            <p className="text-lg font-semibold text-gray-900">
-              In that sense, AIM is first a tool for interpreting existing observations and findings; 
-              the proposals about fairness, freedom, and justice are attempts to let that clearer 
-              motivational picture do as much of the normative work as possible.
-            </p>
-          </div>
-
-          {/* Three Audience Pathways */}
-          <div className="grid gap-6 md:grid-cols-3">
-            <Link
-              href="/understand-your-motivations"
-              className="group rounded-xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-white p-6 transition hover:border-teal-400 hover:shadow-lg"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-600 text-white">
-                <HiUserGroup className="h-6 w-6" />
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">For Individuals</h3>
-              <p className="mb-4 text-gray-700">
-                Understand your own motivations and improve your relationships through practical 
-                self-diagnosis tools and everyday examples.
-              </p>
-              <span className="inline-flex items-center text-teal-600 group-hover:underline">
-                Start here <HiArrowRight className="ml-1 h-4 w-4" />
-              </span>
-            </Link>
-
-            <Link
-              href="/research"
-              className="group rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6 transition hover:border-amber-400 hover:shadow-lg"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-amber-600 text-white">
-                <HiBriefcase className="h-6 w-6" />
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">For Practitioners</h3>
-              <p className="mb-4 text-gray-700">
-                Explore applications across organizations, health policy, marketing, economics, 
-                law, and education.
-              </p>
-              <span className="inline-flex items-center text-amber-600 group-hover:underline">
-                See applications <HiArrowRight className="ml-1 h-4 w-4" />
-              </span>
-            </Link>
-
-            <Link
-              href="/research-resources"
-              className="group rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6 transition hover:border-purple-400 hover:shadow-lg"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600 text-white">
-                <HiAcademicCap className="h-6 w-6" />
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">For Researchers</h3>
-              <p className="mb-4 text-gray-700">
-                Access the theoretical foundation, testable predictions, and research collaboration 
-                opportunities.
-              </p>
-              <span className="inline-flex items-center text-purple-600 group-hover:underline">
-                Research programme <HiArrowRight className="ml-1 h-4 w-4" />
-              </span>
-            </Link>
-          </div>
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">Three sources of wanting</h2>
+          <p className="mb-8 max-w-3xl text-lg text-gray-600">
+            Not categories invented for convenience. Each has its own neural pathway, its own
+            satiation pattern, and its own tell.
+          </p>
+          <AIMDefinitionsShort />
+          <AskAIGroup
+            questions={[
+              'Is wanting to be with other people Intrinsic or Mimetic?',
+              'Can one object carry all three sources at once?',
+              'Where does money fit: Appetite, Intrinsic, or Mimetic?'
+            ]}
+          />
         </div>
       </section>
 
-      {/* Quick Framework Overview */}
+      {/* What gets lost */}
+      <section className="bg-gray-50 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900">What gets lost in the mix</h2>
+          <p className="mb-4 text-lg text-gray-700">
+            The brain cannot act on three signals at once, so it integrates them into one value
+            per option. That output records <em>how much</em> you want something but not{' '}
+            <em>why</em>. The source tags are not hidden; they are gone, the way red, green and
+            blue paint stirred together cannot be separated by staring at the result.
+          </p>
+          <p className="mb-4 text-lg text-gray-700">
+            Asked why you chose, the brain does not answer &ldquo;I don&apos;t know.&rdquo; It
+            builds a plausible story and believes it. Socially caught wants are the most likely
+            to be misfiled as your own, because they arrive before awareness and leave nothing
+            behind to check.
+          </p>
+          <p className="text-lg text-gray-700">
+            This is why asking people what they want, the foundation of consumer research,
+            welfare economics and much of therapy, asks a question the architecture cannot
+            reliably answer.
+          </p>
+          <AskAIGroup
+            questions={[
+              'Why is Source Opacity a mathematical result and not just a psychological observation?',
+              'How can anything be done about a want I cannot see the source of?',
+              'What does AIM mean by the Romantic Lie?'
+            ]}
+          />
+        </div>
+      </section>
+
+      {/* Two-Question Diagnostic */}
+      <section id="diagnostic" className="scroll-mt-20 py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">Try the Two-Question Diagnostic</h2>
+          <p className="mb-6 text-lg text-gray-600">
+            Introspection cannot read the source, but behaviour can be tested for it. Two
+            questions, by elimination.
+          </p>
+          <TwoQuestionDiagnostic />
+        </div>
+      </section>
+
+      {/* Where to go next */}
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">
-              The AIM Framework in One Glance
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600">
-              Three neurologically distinct sources of motivation that converge in the brain&apos;s 
-              common-currency valuation system
-            </p>
-          </div>
-
-          <AIMDefinitionsShort />
-
-          <div className="mt-8 text-center">
+          <h2 className="mb-8 text-3xl font-bold text-gray-900">Where to go next</h2>
+          <div className="grid gap-6 md:grid-cols-3">
             <Link
-              href="/about"
-              className="inline-flex items-center text-lg font-semibold text-primary-600 hover:text-primary-700"
+              href="/theory"
+              className="group rounded-xl border border-gray-200 bg-white p-6 transition hover:border-blue-400 hover:shadow-md"
             >
-              Learn more about how these systems work
-              <HiArrowRight className="ml-2 h-5 w-5" />
+              <h3 className="mb-2 text-lg font-bold text-gray-900">The theory</h3>
+              <p className="mb-3 text-sm text-gray-600">
+                The architecture in seven short sections: sources, integration, opacity,
+                confabulation, parasitism, satiation, and the patch.
+              </p>
+              <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
+                Read <HiArrowRight className="ml-1 h-4 w-4" />
+              </span>
+            </Link>
+            <Link
+              href="/axioms"
+              className="group rounded-xl border border-gray-200 bg-white p-6 transition hover:border-blue-400 hover:shadow-md"
+            >
+              <h3 className="mb-2 text-lg font-bold text-gray-900">The nine axioms</h3>
+              <p className="mb-3 text-sm text-gray-600">
+                The premises everything is derived from, with what each one rests on and what
+                would falsify it.
+              </p>
+              <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
+                Read <HiArrowRight className="ml-1 h-4 w-4" />
+              </span>
+            </Link>
+            <Link
+              href="/chat"
+              className="group rounded-xl border border-blue-200 bg-blue-50 p-6 transition hover:border-blue-400 hover:shadow-md"
+            >
+              <h3 className="mb-2 text-lg font-bold text-gray-900">Ask the AI</h3>
+              <p className="mb-3 text-sm text-gray-700">
+                The corpus behind the chat is the full Treatise and research archive, kept
+                current. Specific questions get specific answers.
+              </p>
+              <span className="inline-flex items-center text-sm text-blue-700 group-hover:underline">
+                Open the chat <HiArrowRight className="ml-1 h-4 w-4" />
+              </span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* About Me and This Project - Personal Story Moved Here */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-12 text-center text-4xl font-bold text-gray-900">
-            How This Work Began
-          </h2>
-
-          <article className="prose prose-lg max-w-none">
-            <div className="mb-8 flex flex-col items-start gap-8 md:flex-row">
-              <div className="flex-shrink-0">
-                <Image
-                  src="/20250911-lex-nova-web-res-106.jpg"
-                  alt="Yule Guttenbeil"
-                  width={300}
-                  height={300}
-                  className="rounded-lg shadow-lg"
-                />
-              </div>
-              <div className="flex-1">
-                <p className="mb-4 text-lg text-gray-700">
-                  I&apos;m <strong>Yule Guttenbeil</strong>, Principal Commercial Lawyer &amp; Behavioral Systems Architect, 
-                  creator of the AIM Motivation Framework.
-                </p>
-                <p className="text-lg text-gray-700">
-                  My professional training in commercial law and contract systems—where definitional precision 
-                  is non-negotiable—provides the specific methodology required for this project. The behavioral 
-                  sciences suffer from &quot;Code Drift&quot;: drifting definitions of wants, needs, and preferences 
-                  across disciplines. AIM applies legal-grade definitional rigor to resolve these inconsistencies.
-                </p>
-              </div>
-            </div>
-
-            <p className="mb-6 text-lg text-gray-700">
-              Reading across psychology, economics, philosophy, and neuroscience, it became clear to me 
-              that something similar was happening in the human behavioral sciences: we were using slightly 
-              different, drifting definitions of wants, needs, and preferences in each field, and the 
-              &quot;gears&quot; no longer lined up.
+      {/* Author strip */}
+      <section className="py-14">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 sm:flex-row sm:px-6 lg:px-8">
+          <Image
+            src="/20250911-lex-nova-web-res-106.jpg"
+            alt="Yule Guttenbeil"
+            width={112}
+            height={112}
+            className="h-28 w-28 shrink-0 rounded-full object-cover shadow"
+          />
+          <div>
+            <p className="text-lg text-gray-800">
+              AIM is the work of <strong>Yule Guttenbeil</strong>, a commercial lawyer whose
+              training in definitional precision led him to the drift in how psychology,
+              economics and neuroscience each define wanting, and to a question his therapist
+              set him in 2010 that the framework is an attempt to answer.
             </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              The AIM Framework is my attempt to repair that drift by offering a set of tighter, 
-              neurologically grounded definitions that can be applied back onto existing observations 
-              and models, rather than starting from scratch.
-            </p>
-
-            <div className="my-8 border-l-4 border-blue-400 bg-blue-50 p-6">
-              <p className="text-lg text-gray-700">
-                When these refined motivational categories are applied consistently, they not only help 
-                explain patterns that different disciplines have already noticed, they also clarify why 
-                people disagree so deeply about fairness, freedom, and justice.
-              </p>
-            </div>
-
-            <p className="mb-6 text-lg text-gray-700">
-              Much of the work on this site is therefore two-step: first, use AIM to make sense of 
-              existing findings and lived experience; second, let that clearer picture guide careful, 
-              testable suggestions about how our laws, markets, and institutions might better respect 
-              appetites, protect intrinsic motivations, and avoid weaponizing mimetic rivalry.
-            </p>
-
-            <h3 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-              The Personal Journey
-            </h3>
-
-            <p className="mb-6 text-lg text-gray-700">
-              One of my strongest early memories is believing I was an alien. I was no older than 4. 
-              I felt that my dad didn&apos;t understand me and that I couldn&apos;t understand him—I couldn&apos;t 
-              relate to him or effectively communicate the importance of my wants and needs to him. 
-              That feeling persisted in various forms throughout my life and ultimately led me to 
-              therapy in 2010.
-            </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              It was here that I told my therapist that I didn&apos;t know whether I wanted things for 
-              myself because I genuinely wanted them, or because my dad wanted them for me. The 
-              therapist responded, &quot;Well, then that&apos;s where your work is—finding that out.&quot;
-            </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              The AIM Framework represents the culmination of that work. Reflecting on my therapy, 
-              I realized that my dad&apos;s desires had &quot;infected&quot; mine. He transmitted his motivations—
-              sometimes deliberately, sometimes not—and I adopted them automatically, in conflict 
-              with my intrinsic motivations. My natural curiosity and love of mastery were strained 
-              by mimetic desires that weren&apos;t my own, causing anxiety, confusion, and depression.
-            </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              This tension—between intrinsic motivation and mimetic desire—lies at the heart of 
-              human interaction. It appears to me that in answering that question for myself, I may 
-              have inadvertently answered the same question for everyone&apos;s self.
-            </p>
-
-            <h3 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-              Explanatory Synthesis of Existing Evidence
-            </h3>
-
-            <div className="mb-6 border-l-4 border-indigo-400 bg-indigo-50 p-6">
-              <p className="mb-4 text-lg text-gray-700">
-                The AIM Motivation Framework is an <strong>explanatory synthesis</strong> organizing existing
-                evidence from neuroscience, psychology, and economics into a unified taxonomic model. Like Darwin&apos;s
-                theory, it doesn&apos;t introduce novel empirical claims—it provides the coherent framework that finally
-                makes sense of what behavioral science has already documented.
-              </p>
-              <p className="text-lg text-gray-700">
-                While not a clinical neuroscientist or experimental psychologist, my background as a commercial
-                law practitioner equips me with the precise skill set this synthesis requires: resolving
-                definitional inconsistencies across complex systems. The AIM Framework addresses &quot;Code Drift&quot;—
-                the phenomenon where economics, psychology, and neuroscience each use subtly incompatible
-                definitions of motivation, causing theoretical gridlock.
-              </p>
-              <p className="text-lg text-gray-700">
-                The evidentiary base already exists: decades of neuroscience on common-currency valuation (Bartra et al.),
-                40+ years of Self-Determination Theory validation (Deci & Ryan), mirror neuron research (Rizzolatti),
-                and 50 years of Easterlin Paradox data. AIM explains these documented phenomena through a translation
-                layer that converts neuroscience into behavioral diagnostics. Future research focuses on calibration
-                and cross-domain consistency testing rather than foundational validation.
-              </p>
-            </div>
-
-            <h3 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-              Using This Site
-            </h3>
-
-            <p className="mb-6 text-lg text-gray-700">
-              This is a living project, so the structure and information on this site will be updated 
-              as the theory, hypothesis, and findings develop over time. I have built it as a central 
-              location to catalogue and share findings, predictions, and suggestions that flow logically 
-              from the AIM Framework when applied to various areas of human interaction.
-            </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              Given that the AIM Framework proposes a significant shift in how we understand motivation 
-              across disciplines, I know you&apos;re going to have questions. I&apos;ve built an AIM chatbot that 
-              references my research materials, writings, and conversations so that you should be able 
-              to get answers. As I tell the lawyers I train on how to ethically use AI tools:
-            </p>
-
-            <div className="mb-6 border-l-4 border-blue-400 bg-blue-50 p-6">
-              <ul className="list-inside list-disc space-y-2 text-gray-700">
-                <li>Don&apos;t assume it is correct.</li>
-                <li>Verify it for yourself.</li>
-                <li>Use your own judgment.</li>
-              </ul>
-            </div>
-
-            <p className="mb-6 text-lg text-gray-700">
-              My hope is that the better metrics and definitions offered on this site can help clear 
-              up confusion both within and between various fields of study in the human behavioral 
-              sciences, and provide practical tools for understanding our own motivations and improving 
-              our relationships.
-            </p>
-
-            <p className="mb-6 text-lg text-gray-700">
-              Whatever the AIM Framework raises for you once you start exploring it, please be kind 
-              to yourself and understanding of the various motivations operating on those around you.
-            </p>
-
-            <p className="mb-8 text-lg text-gray-700">
-              I genuinely wish you all the very best.
-            </p>
-
-            <p className="text-lg font-semibold text-gray-900">
-              Yule Guttenbeil
-            </p>
-          </article>
-
-          <div className="mt-12 text-center">
             <Link
-              href="/contact"
-              className="inline-flex items-center rounded-lg bg-primary-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-primary-700"
+              href="/about"
+              className="mt-2 inline-flex items-center text-blue-600 hover:underline"
             >
-              Get in Touch
-              <HiArrowRight className="ml-2 h-5 w-5" />
+              About the author and the book <HiArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
         </div>
