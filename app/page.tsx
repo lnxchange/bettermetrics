@@ -29,16 +29,14 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
         <div className="relative mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-blue-300">
-            A general theory of human motivation
-          </p>
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            The human sciences stand roughly where medicine stood in 1850.
+            A General Theory of Human Motivation
           </h1>
           <p className="mb-5 max-w-3xl text-xl text-blue-100">
-            Doctors could describe diseases in detail but could not say why they occurred or
-            which treatments would work. Germ theory changed that with one idea. AIM proposes
-            the equivalent for wanting: motivation comes from three distinct sources that the
+            The human sciences stand roughly where medicine stood in 1850. Doctors could
+            describe diseases in detail but could not say why they occurred or which
+            treatments would work. Germ theory changed that with one idea. AIM proposes the
+            equivalent for wanting: motivation comes from three distinct sources that the
             brain mixes into a single signal, and the mixing loses information that most of
             our institutions assume we still have.
           </p>
