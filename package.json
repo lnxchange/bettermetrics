@@ -19,7 +19,7 @@
     "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js",
     "process-rag-embeddings": "node scripts/process-rag-embeddings.js",
     "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts",
-    "sync-treatise": "tsx scripts/sync-treatise-chapters.ts"
+    "sync-treatise": "tsx scripts/sync-treatise-chapters.ts && tsx scripts/publish-treatise-ebook.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",
@@ -75,6 +75,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^12.0.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^17.0.45",
     "@types/react": "^18.2.6",

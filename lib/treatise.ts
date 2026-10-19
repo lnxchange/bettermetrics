@@ -39,6 +39,34 @@ export const TREATISE_PARTS: { id: TreatisePart; title: string }[] = [
   { id: 'appendix', title: 'Appendices' }
 ]
 
+export interface TreatiseDraft {
+  sourceDate: string
+  filename: string
+  url: string
+}
+
+export async function loadTreatiseDraft(): Promise<TreatiseDraft | null> {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!base) return null
+  try {
+    const response = await fetch(`${base}/storage/v1/object/public/treatise-ebooks/current.json`, {
+      cache: 'no-store'
+    })
+    if (!response.ok) return null
+    const data = await response.json()
+    if (
+      typeof data?.sourceDate !== 'string' ||
+      typeof data?.filename !== 'string' ||
+      typeof data?.url !== 'string'
+    ) {
+      return null
+    }
+    return { sourceDate: data.sourceDate, filename: data.filename, url: data.url }
+  } catch {
+    return null
+  }
+}
+
 export function formatSourceDate(yymmdd: string) {
   if (!/^\d{6}$/.test(yymmdd)) return yymmdd
   const year = 2000 + Number(yymmdd.slice(0, 2))

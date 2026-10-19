@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {
   formatSourceDate,
   loadTreatiseChapters,
+  loadTreatiseDraft,
   TREATISE_PARTS,
   TreatiseChapterSummary
 } from '@/lib/treatise'
@@ -35,7 +36,7 @@ function ChapterList({ chapters }: { chapters: TreatiseChapterSummary[] }) {
 }
 
 export default async function TreatiseIndexPage() {
-  const chapters = await loadTreatiseChapters()
+  const [chapters, draft] = await Promise.all([loadTreatiseChapters(), loadTreatiseDraft()])
   const loaded = chapters.filter(chapter => chapter.slug !== '2')
   const latest = loaded.reduce<string | null>((newest, chapter) => {
     if (!chapter.source_date) return newest
@@ -58,6 +59,20 @@ export default async function TreatiseIndexPage() {
             {latest ? `Latest text ${formatSourceDate(latest)}. ` : ''}
             The book is unfinished. These pages change when the source text changes.
           </p>
+          {draft && (
+            <div className="mt-6">
+              <a
+                href={draft.url}
+                download={draft.filename}
+                className="inline-flex items-center rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+              >
+                Download the draft ebook
+              </a>
+              <p className="mt-2 text-sm text-gray-500">
+                Draft of {formatSourceDate(draft.sourceDate)}. The book is unfinished.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
