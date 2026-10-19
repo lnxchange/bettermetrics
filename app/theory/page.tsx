@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { HiArrowRight } from 'react-icons/hi'
 import { AIMDefinitionsShort, AIMIntegrationEquation, MimeticPremium } from '@/components/aim-definitions'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
-import { Mermaid } from '@/components/ui/mermaid'
+import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 
 export const metadata: Metadata = {
   title: 'The Theory',
@@ -16,16 +16,6 @@ export const metadata: Metadata = {
     type: 'article'
   }
 }
-
-const architectureChart = `flowchart LR
-  BM["Body Manager<br/>(Appetites: deficit)"] --> DH["Decision Hub<br/>(Common-Currency Integration)"]
-  TH["Thinker<br/>(Intrinsic Motivation: priors, I-Override)"] --> DH
-  OB["Observer<br/>(Mimetic Desire: Salience)"] --> DH
-  DH --> SC["One Scalar value per Object<br/>(source tags gone)"]
-  SC --> ACT["Action"]
-  SC -. tag-stripped .-> TH
-  TH <--> BR["Belief Register"]
-  BR -. conditions .-> OB`
 
 const sections = [
   { id: 'sources', label: 'Three sources' },
@@ -129,7 +119,7 @@ export default function TheoryPage() {
             feed a Decision Hub (the ventromedial prefrontal cortex and ventral striatum) that
             converts them into one value per option and selects an action.
           </P>
-          <Mermaid chart={architectureChart} />
+          <DecisionHubDiagram />
           <AIMIntegrationEquation />
           <AskAIGroup
             questions={[
@@ -195,7 +185,7 @@ export default function TheoryPage() {
           <P>
             Every price can therefore be decomposed into an A-functional price, an I-adequate
             price, and a Mimetic Premium. The premium is paid as though status could be bought,
-            but status is computed in other people&apos;s heads, is zero-sum across the group,
+            but status is computed in other people&apos;s minds, is zero-sum across the group,
             and is not for sale.
           </P>
           <MimeticPremium />

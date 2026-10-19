@@ -5,6 +5,7 @@ import { GAListener } from '@/components/ga-listener'
 
 import { ToasterWrapper } from '@/components/toaster-wrapper'
 
+import 'katex/dist/katex.min.css'
 import '@/app/globals.css'
 import { fontMono, fontSans } from '@/lib/fonts'
 import { cn } from '@/lib/utils'

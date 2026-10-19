@@ -18,7 +18,8 @@
     "clean-report-titles": "node scripts/clean-report-titles.js",
     "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js",
     "process-rag-embeddings": "node scripts/process-rag-embeddings.js",
-    "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts"
+    "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts",
+    "sync-treatise": "tsx scripts/sync-treatise-chapters.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",
@@ -33,6 +34,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.6",
+    "@react-email/render": "^2.1.1",
     "@supabase/auth-helpers-nextjs": "^0.7.2",
     "@supabase/supabase-js": "^2.26.0",
     "@types/nodemailer": "^7.0.3",
@@ -46,6 +48,7 @@
     "focus-trap-react": "^10.1.1",
     "framer-motion": "^10.18.0",
     "fuse.js": "^7.1.0",
+    "katex": "^0.19.0",
     "langchain": "^1.0.1",
     "mammoth": "^1.11.0",
     "marked": "^17.0.0",
@@ -65,8 +68,10 @@
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.4.1",
+    "rehype-katex": "^6.0.3",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "resend": "^6.34.1",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
@@ -86,6 +91,7 @@
     "tailwind-merge": "^1.12.0",
     "tailwindcss": "^3.3.2",
     "tailwindcss-animate": "^1.0.5",
+    "tsx": "^4.23.15",
     "typescript": "^5.1.3"
   }
 }

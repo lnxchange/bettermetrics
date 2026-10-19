@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { createRoot } from 'react-dom/client'
+import { useMemo } from 'react'
 import { Mermaid } from '@/components/ui/mermaid'
 
 interface ArticleContentProps {
@@ -9,56 +8,54 @@ interface ArticleContentProps {
   className?: string
 }
 
+type ArticlePart =
+  | { kind: 'html'; html: string }
+  | { kind: 'diagram'; chart: string }
+
+const MERMAID_BLOCK = /<pre><code class="[^"]*mermaid[^"]*">([\s\S]*?)<\/code><\/pre>/gi
+
+function decodeCode(value: string) {
+  return value
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+}
+
+function splitDiagrams(html: string): ArticlePart[] {
+  const parts: ArticlePart[] = []
+  let last = 0
+  let match: RegExpExecArray | null
+  const pattern = new RegExp(MERMAID_BLOCK.source, MERMAID_BLOCK.flags)
+  while ((match = pattern.exec(html)) !== null) {
+    if (match.index > last) parts.push({ kind: 'html', html: html.slice(last, match.index) })
+    parts.push({ kind: 'diagram', chart: decodeCode(match[1]).trim() })
+    last = match.index + match[0].length
+  }
+  if (last < html.length) parts.push({ kind: 'html', html: html.slice(last) })
+  return parts
+}
+
 /**
- * Renders article HTML and hydrates Mermaid code blocks client-side.
- * Marked outputs <pre><code class="language-mermaid">...</code></pre> for
- * ```mermaid blocks; we find these and replace with rendered Mermaid diagrams.
+ * Renders article HTML, with Mermaid blocks drawn as diagrams.
+ * Marked leaves ```mermaid fences as code blocks. Those are split out
+ * before the HTML is inserted, so a re-render cannot drop the figure.
  */
 export function ArticleContent({ html, className }: ArticleContentProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    const roots: Array<{ unmount: () => void }> = []
-    const codeBlocks = container.querySelectorAll<HTMLElement>('pre > code')
-
-    codeBlocks.forEach((codeEl) => {
-      const pre = codeEl.closest('pre')
-      if (!pre) return
-
-      const className = (codeEl.className || '').toLowerCase()
-      const chart = codeEl.textContent?.trim()
-      if (!chart) return
-
-      // Accept common marked outputs and content-based fallback.
-      const looksLikeMermaidClass =
-        className.includes('language-mermaid') || className.includes('lang-mermaid')
-      const looksLikeMermaidCode = /^(graph|flowchart|sequencediagram|classdiagram|statediagram|erdiagram|journey|gantt|mindmap|timeline|quadrantchart|pie)\b/i.test(
-        chart
-      )
-      if (!looksLikeMermaidClass && !looksLikeMermaidCode) return
-
-      const wrapper = document.createElement('div')
-      wrapper.className = 'mermaid-diagram-wrapper my-6'
-      pre.parentNode?.replaceChild(wrapper, pre)
-
-      const root = createRoot(wrapper)
-      root.render(<Mermaid chart={chart} />)
-      roots.push(root)
-    })
-
-    return () => {
-      roots.forEach(root => root.unmount())
-    }
-  }, [html])
+  const parts = useMemo(() => splitDiagrams(html), [html])
 
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className={className}>
+      {parts.map((part, index) =>
+        part.kind === 'html' ? (
+          <div key={index} dangerouslySetInnerHTML={{ __html: part.html }} />
+        ) : (
+          <div key={index} className="my-6">
+            <Mermaid chart={part.chart} />
+          </div>
+        )
+      )}
+    </div>
   )
 }

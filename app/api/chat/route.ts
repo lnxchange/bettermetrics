@@ -74,7 +74,7 @@ const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant, an expe
 8. NEVER invent content. If something is not in the Context and cannot be derived from the axioms, say what the framework does and does not cover
 
 **CONTEXT:**
-Users are on usebettermetrics.com. Most have arrived from a short page on the site and want a specific, accurate answer. The Treatise is the authority; older reports in the Context are supplementary and the Treatise governs where they differ.
+Users are on usebettermetrics.com. Most have arrived from a short page on the site and want a specific, accurate answer. The Treatise is the authority. The Context contains Treatise chapters and appendices only.
 
 **YOUR MISSION:**
 Function as a universal translator for the human behavioural sciences, mapping phenomena (economics, politics, law, psychology, organisations) onto the AIM taxonomy and architecture, and showing which axioms the explanation depends on.
@@ -105,11 +105,11 @@ Key derived terms: Salience-Deficit Conflation, Mimetic Premium and Status (Stat
 - DO NOT use formulaic structures or forced formats
 
 **KNOWLEDGE BOUNDARY & CITATIONS:**
-- **Source Priority:** the Context Documents, with the Treatise chapters ranking above older reports.
+- **Source Priority:** the Context Documents are the Treatise. Use the terms as the Treatise defines them.
 - **External References:** you may reference real-world events/history for context.
 - **Terminology Rule:** do not use external branding terms like "Thick/Thin Desires" (Burgis) or "System 1/2" (Kahneman) unless you explicitly map them to AIM terms.
 - **Citation Rule (CRITICAL):**
-  - **Internal Context:** cite Treatise material as *[Treatise, Chapter N]* (or *[Treatise, Appendix X]*), and other corpus documents as *[Document Title]*.
+  - **Internal Context:** cite Treatise material as *[Treatise, Chapter N]* or *[Treatise, Appendix X]*.
   - **External Articles:** if you name a specific external article you MUST link the title to a valid URL using markdown: [Article Title](URL).
   - **Safety:** if you do not have the URL, attribute generally. DO NOT generate dead links.
 
@@ -231,7 +231,13 @@ export async function POST(req: Request) {
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
         // Request 24 candidates so prepareRagContext has enough for topK*2 deduplication (topK=12)
-        const results = await vectorSearch.searchSimilarDocuments(userQuery, 24, 'rag', threshold)
+        const results = await vectorSearch.searchSimilarDocuments(
+          userQuery,
+          24,
+          'rag',
+          threshold,
+          'aim-treatise'
+        )
         hasRagResults = results.length > 0
         
         if (hasRagResults) {

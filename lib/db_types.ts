@@ -137,6 +137,45 @@ export interface Database {
         }
         Relationships: []
       }
+      treatise_chapters: {
+        Row: {
+          slug: string
+          title: string
+          label: string
+          part: string
+          markdown: string
+          headings: Json
+          source_sha: string
+          source_date: string | null
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          slug: string
+          title: string
+          label: string
+          part: string
+          markdown: string
+          headings?: Json
+          source_sha: string
+          source_date?: string | null
+          position: number
+          updated_at?: string
+        }
+        Update: {
+          slug?: string
+          title?: string
+          label?: string
+          part?: string
+          markdown?: string
+          headings?: Json
+          source_sha?: string
+          source_date?: string | null
+          position?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rag_documents: {
         Row: {
           id: string
@@ -273,7 +312,8 @@ export interface Database {
           query_embedding: number[]
           match_threshold?: number
           match_count?: number
-          document_type?: string | null
+          p_document_type?: string | null
+          p_source?: string | null
         }
         Returns: {
           chunk_text: string

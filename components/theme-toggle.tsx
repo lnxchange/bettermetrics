@@ -9,6 +9,11 @@ import { IconMoon, IconSun } from '@/components/ui/icons'
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const [_, startTransition] = React.useTransition()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <Button
@@ -20,7 +25,7 @@ export function ThemeToggle() {
         })
       }}
     >
-      {!theme ? null : theme === 'dark' ? (
+      {!mounted || !theme ? null : theme === 'dark' ? (
         <IconMoon className="transition-all" />
       ) : (
         <IconSun className="transition-all" />

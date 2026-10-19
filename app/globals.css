@@ -83,6 +83,20 @@ html {
   }
 }
 
+/* Inline diagrams fit the column so the whole figure is visible.
+   The enlarged view is sized in the component. */
+.aim-mermaid-inline svg {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
 /* Article prose table styles */
 .prose table {
   border-collapse: collapse;

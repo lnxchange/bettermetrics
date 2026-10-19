@@ -64,7 +64,7 @@ export default function AboutPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Author */}
         <section id="author" className="scroll-mt-24 py-12">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+          <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start">
             <Image
               src="/20250911-lex-nova-web-res-106.jpg"
               alt="Yule Guttenbeil"
@@ -74,25 +74,117 @@ export default function AboutPage() {
             />
             <div>
               <h2 className="mb-3 text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
-              <p className="mb-4 text-lg text-gray-700">
-                Principal commercial lawyer and the author of the AIM Framework. Contract work
-                is definitional work: a system fails when two parties are using slightly
-                different meanings of the same word. Reading across psychology, economics and
-                neuroscience, the same failure was visible. Each field had its own drifting
-                definitions of wants, needs and preferences, and the gears no longer lined up.
-                AIM is an attempt to repair that drift with tighter, neurologically grounded
-                definitions that can be applied back onto what the fields have already
-                observed.
-              </p>
               <p className="text-lg text-gray-700">
-                The personal version is shorter. In 2010 I told a therapist I could not tell
-                whether I wanted things because I wanted them or because my father wanted
-                them for me. She said: then that is where your work is. The framework is the
-                result of taking that seriously, and discovering that the question was not
-                only mine. It is the question Source Opacity leaves every one of us unable to
-                answer by introspection alone.
+                I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the AIM
+                Motivation Framework (&quot;AIM Framework&quot;) and creator of the website Use
+                Better Metrics (www.usebettermetrics.com).
               </p>
             </div>
+          </div>
+
+          <div className="space-y-6 text-lg text-gray-700">
+            <p>
+              The purpose of Use Better Metrics and the AIM Framework is to explain how recent
+              neuroscientific discoveries shed light on where our motivations come from in the
+              brain. These discoveries make it easier to understand ourselves, our relationships
+              with others, and how society is arranged as a whole. The flow-on effects from how
+              we understand our own motivations extend to how we think about most of the human
+              behavioural sciences.
+            </p>
+            <p>
+              I&apos;m a technology lawyer with a bachelor&apos;s degree in commerce majoring in
+              management. Management is the study of how to align the motivations of the members
+              of an organisation with the goals of that organisation. It adopts frameworks from
+              many fields of the humanities that study motivation, many of which when examined
+              closely and compared with each other can&apos;t be reconciled. I&apos;m also a{' '}
+              <a
+                href="https://libris.au/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline underline-offset-2 hover:text-blue-900"
+              >
+                software developer
+              </a>
+              ,{' '}
+              <a
+                href="https://smbtech.au/news/attune-legals-yule-guttenbeil-awarded-ai-consultant-of-the-year-for-responsible-ai-advocacy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline underline-offset-2 hover:text-blue-900"
+              >
+                award winning AI ethicist and consultant
+              </a>
+              , and{' '}
+              <a
+                href="https://themusic.com.au/features/ulysses-wulf-brynn-davies/4ZHy9fT39vk/15-04-16"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline underline-offset-2 hover:text-blue-900"
+              >
+                musician
+              </a>
+              .
+            </p>
+            <p>
+              While it might seem unusual for a lawyer to develop a framework of human
+              motivation, my professional background, particularly in writing and analysing
+              contracts, has given me a unique ability when assessing the literature I&apos;ve
+              read across the human behavioural sciences (psychology, economics, philosophy,
+              neuroscience, etc.). Writing contracts is like building a machine: every definition
+              and term in a contract operates like a cog that must fit precisely with the others,
+              or the machine breaks down.
+            </p>
+            <p>
+              In behavioural science, I believe we&apos;ve been dealing with a definitional error
+              that causes a kind of &quot;code drift&quot;, in how we define wants, needs, and
+              preferences. The AIM Framework provides refined definitions that align more
+              accurately with how our motivations work neurologically and play out in behaviour,
+              allowing the reduction of friction in human interactions.
+            </p>
+            <p>
+              Contracts exist to manage rivalry; they make implicit expectations explicit and
+              help prevent conflict by clearly defining boundaries and roles. Without them,
+              confusion and disputes arise because competing motivations remain unarticulated. In
+              that sense, (despite the popular imagining) lawyers help grease the wheels of human
+              relationships.
+            </p>
+            <p>
+              In that light, I invite you to explore the resources I have made available on this
+              website which are based on my own research. This is a living project, so the
+              structure and information on this site will be updated as the theory, hypothesis
+              and findings develop over time.
+            </p>
+            <div className="border-l-4 border-amber-400 bg-amber-50 p-6">
+              <p>
+                The AIM Motivation Framework is a synthetic theory. It provides a basis for
+                hypothesising predictions and tightly boundered tests in order to validate its
+                premise. I am not a professional psychologist, economist, philosopher or
+                neuro-scientist. Though I have read broadly across those fields. Therefore, I am
+                seeking assistance from experts in each of those fields to help me validate the
+                theory, because if what the AIM Framework suggests is correct, it may provide a
+                scientific basis for restructuring human societies, economies and governmental
+                structures to enable human flourishing – by removing memetic noise and distortion
+                from areas where it should not override the intrinsic motivations of every
+                individual.
+              </p>
+            </div>
+
+            <h3 className="pt-4 text-2xl font-bold text-gray-900">How It All Started</h3>
+            <p>
+              One of my strongest early memories is believing I was an alien. I was no older than
+              4. I felt that my father didn&apos;t understand me and that I couldn&apos;t
+              understand him. I couldn&apos;t relate to him or effectively communicate the
+              importance of my wants and needs to him. That feeling persisted in various forms
+              throughout my life and ultimately led me to therapy in 2010.
+            </p>
+            <p>
+              It was here that I told my therapist that I didn&apos;t know whether I wanted things
+              for myself because I genuinely wanted them, or because my dad wanted them for me.
+              The therapist responded, &quot;Well, then that&apos;s where your work is — finding
+              that out.&quot; The AIM Framework represents the culmination of that work. It
+              appears to me that in answering that question for myself, I may have inadvertently
+              answered the same question for everyone&apos;s self.
+            </p>
           </div>
         </section>
 

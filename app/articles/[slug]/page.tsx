@@ -8,6 +8,7 @@ import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
 import { marked } from 'marked'
 import { ArticleContent } from '@/components/article-content'
+import { renderMathInHtml } from '@/lib/render-math'
 import '@/styles/print.css'
 
 interface ArticlePageProps {
@@ -170,6 +171,8 @@ export default async function ArticlePage({
   htmlContent = htmlContent
     .replace(/<table>/g, '<div class="overflow-x-auto my-6"><table>')
     .replace(/<\/table>/g, '</table></div>')
+
+  htmlContent = renderMathInHtml(htmlContent)
 
   return (
     <>

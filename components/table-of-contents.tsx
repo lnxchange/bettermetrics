@@ -18,14 +18,14 @@ export function TableOfContents({ headings, activeId, onHeadingClick }: TableOfC
       <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">On this page</h3>
       <ul className="space-y-1">
         {headings.map(heading => (
-          <li key={heading.id} className={heading.level === 3 ? 'pl-3' : ''}>
+          <li key={heading.id} className={heading.level >= 4 ? 'pl-6' : heading.level === 3 ? 'pl-3' : ''}>
             <button
               onClick={() => onHeadingClick(heading.id)}
               className={`block w-full text-left text-xs transition ${
                 activeId === heading.id
                   ? 'font-medium text-primary-600'
                   : 'text-gray-600 hover:text-gray-900'
-              } ${heading.level === 3 ? 'text-[11px]' : ''}`}
+              } ${heading.level >= 3 ? 'text-[11px]' : ''}`}
             >
               {heading.text}
             </button>
@@ -81,7 +81,10 @@ export function TableOfContentsMobile({
             <nav>
               <ul className="space-y-3">
                 {headings.map(heading => (
-                  <li key={heading.id} className={heading.level === 3 ? 'pl-4' : ''}>
+                  <li
+                    key={heading.id}
+                    className={heading.level >= 4 ? 'pl-8' : heading.level === 3 ? 'pl-4' : ''}
+                  >
                     <button
                       onClick={() => {
                         onHeadingClick(heading.id)

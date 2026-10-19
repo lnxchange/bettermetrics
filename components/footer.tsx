@@ -20,6 +20,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
 const links = [
   { href: '/theory', label: 'The Theory' },
   { href: '/axioms', label: 'Axioms' },
+  { href: '/treatise', label: 'Treatise' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' },

@@ -1,3 +1,5 @@
+import { MathText } from '@/components/math-text'
+
 /**
  * Canonical AIM Framework Definitions Component
  *
@@ -61,16 +63,16 @@ export function AIMIntegrationEquation() {
       <p className="mb-4 text-gray-700">
         All three sources combine in the brain&apos;s common-currency valuation system to create a unified motivational signal:
       </p>
-      <div className="my-6 rounded bg-white p-4 text-center font-mono text-lg">
-        U(x) = w<sub>A</sub> · U<sub>A</sub>(x) + w<sub>I</sub> · U<sub>I</sub>(x) + w<sub>M</sub> · U<sub>M</sub>(x)
+      <div className="my-6 overflow-x-auto rounded bg-white p-4 text-center text-lg text-gray-900">
+        <MathText text="$U(x) = w_A \cdot U_A(x) + w_I \cdot U_I(x) + w_M \cdot U_M(x)$" />
       </div>
       <div className="space-y-2 text-sm text-gray-700">
         <p><strong>Where:</strong></p>
         <ul className="ml-6 list-disc space-y-1">
-          <li><strong>w<sub>A</sub>, w<sub>I</sub>, w<sub>M</sub></strong>: Normalized weights (sum to 1) representing how much each source influences this choice right now</li>
-          <li><strong>U<sub>A</sub></strong>: Utility from appetite satisfaction (cyclical, terminally satisfiable)</li>
-          <li><strong>U<sub>I</sub></strong>: Utility from intrinsic engagement (persistent, autonomous)</li>
-          <li><strong>U<sub>M</sub></strong>: Utility from mimetic desire (amplified by social visibility)</li>
+        <li><MathText text="$\mathbf{w_A}$, $\mathbf{w_I}$, $\mathbf{w_M}$" />: weights that sum to 1, for how much each source influences this choice right now</li>
+        <li><MathText text="$U_A$" />: utility from appetite satisfaction (cyclical, terminally satisfiable)</li>
+        <li><MathText text="$U_I$" />: utility from intrinsic engagement (persistent, autonomous)</li>
+        <li><MathText text="$U_M$" />: utility from mimetic desire (amplified by social visibility)</li>
         </ul>
       </div>
     </div>

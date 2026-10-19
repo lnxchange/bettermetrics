@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
+
+const NOTIFY_TO = 'yule@attune.legal'
+const NOTIFY_FROM = 'Use Better Metrics <notifications@lexnova.com.au>'
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +44,7 @@ export async function POST(req: NextRequest) {
 
     // Save to database (always do this first - this is the primary storage)
     let savedToDatabase = false
+    let messageId: string | undefined
     if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
       try {
         const supabase = createClient(
@@ -40,7 +52,7 @@ export async function POST(req: NextRequest) {
           process.env.SUPABASE_SERVICE_ROLE_KEY
         )
 
-        const { error: dbError } = await supabase
+        const { data: saved, error: dbError } = await supabase
           .from('contact_messages')
           .insert({
             name,
@@ -53,11 +65,14 @@ export async function POST(req: NextRequest) {
             paper_questions: paperQuestions || null,
             is_read: false
           })
+          .select('id')
+          .single()
 
         if (dbError) {
           console.error('Database save error:', dbError)
         } else {
           savedToDatabase = true
+          messageId = saved?.id
           console.log('Contact message saved to database')
         }
       } catch (dbErr) {
@@ -65,21 +80,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Try to send email (optional - will succeed silently if SMTP not configured)
+    // Notify by email. The sending domain is Lex Nova; the subject and body
+    // name usebettermetrics.com so the message is identifiable.
     let emailSent = false
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (process.env.RESEND_API_KEY) {
       try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST || 'smtp.gmail.com',
-          port: parseInt(process.env.SMTP_PORT || '587'),
-          secure: false,
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        })
-
-        // Build email subject based on interest type and user's subject
+        const resend = new Resend(process.env.RESEND_API_KEY)
         const interestMap: { [key: string]: string } = {
           'research-paper': 'Research Paper Request',
           'research': 'Research Collaboration',
@@ -89,84 +95,78 @@ export async function POST(req: NextRequest) {
           'media': 'Media Inquiry',
           'general': 'General Inquiry'
         }
-        const emailSubject = subject 
-          ? `AIM Framework: ${subject}`
-          : `AIM Framework: ${interestMap[interest] || 'Contact Form'}`
-
-        // Build email content based on whether it's a research paper request
+        const topic = subject || interestMap[interest] || 'Contact Form'
+        const emailSubject = `usebettermetrics.com: ${topic}`
+        const safe = (value?: string) => escapeHtml(value || '')
         const htmlContent = interest === 'research-paper' ? `
+          <p><strong>From the contact form on usebettermetrics.com</strong></p>
           <h2>Research Paper Request</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          ${affiliation ? `<p><strong>Affiliation:</strong> ${affiliation}</p>` : ''}
-          
+          <p><strong>Name:</strong> ${safe(name)}</p>
+          <p><strong>Email:</strong> ${safe(email)}</p>
+          ${affiliation ? `<p><strong>Affiliation:</strong> ${safe(affiliation)}</p>` : ''}
           <h3>Research Paper Scope</h3>
-          <p>${paperScope.replace(/\n/g, '<br>')}</p>
-          
+          <p>${safe(paperScope).replace(/\n/g, '<br>')}</p>
           <h3>Specific Questions to Address</h3>
-          <p>${paperQuestions.replace(/\n/g, '<br>')}</p>
-          
-          <hr>
-          <p><em>This is a research paper request. Papers will include limited references but sufficient information for further investigation and critique.</em></p>
-          <p><em>This message was sent from the AIM Framework contact form.</em></p>
+          <p>${safe(paperQuestions).replace(/\n/g, '<br>')}</p>
         ` : `
+          <p><strong>From the contact form on usebettermetrics.com</strong></p>
           <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          ${affiliation ? `<p><strong>Affiliation:</strong> ${affiliation}</p>` : ''}
-          ${interest ? `<p><strong>Interest:</strong> ${interest}</p>` : ''}
+          <p><strong>Name:</strong> ${safe(name)}</p>
+          <p><strong>Email:</strong> ${safe(email)}</p>
+          ${affiliation ? `<p><strong>Affiliation:</strong> ${safe(affiliation)}</p>` : ''}
+          ${interest ? `<p><strong>Interest:</strong> ${safe(interestMap[interest] || interest)}</p>` : ''}
           <p><strong>Message:</strong></p>
-          <p>${message.replace(/\n/g, '<br>')}</p>
-          
-          <hr>
-          <p><em>This message was sent from the AIM Framework contact form.</em></p>
+          <p>${safe(message).replace(/\n/g, '<br>')}</p>
         `
+        const textContent = interest === 'research-paper'
+          ? [
+              'From the contact form on usebettermetrics.com',
+              '',
+              'Research Paper Request',
+              `Name: ${name}`,
+              `Email: ${email}`,
+              affiliation ? `Affiliation: ${affiliation}` : '',
+              '',
+              'Research Paper Scope:',
+              paperScope,
+              '',
+              'Specific Questions to Address:',
+              paperQuestions
+            ].filter(line => line !== '').join('\n')
+          : [
+              'From the contact form on usebettermetrics.com',
+              '',
+              'New Contact Form Submission',
+              `Name: ${name}`,
+              `Email: ${email}`,
+              affiliation ? `Affiliation: ${affiliation}` : '',
+              interest ? `Interest: ${interestMap[interest] || interest}` : '',
+              '',
+              'Message:',
+              message
+            ].filter(line => line !== '').join('\n')
 
-        const textContent = interest === 'research-paper' ? `
-          Research Paper Request
-          
-          Name: ${name}
-          Email: ${email}
-          ${affiliation ? `Affiliation: ${affiliation}` : ''}
-          
-          Research Paper Scope:
-          ${paperScope}
-          
-          Specific Questions to Address:
-          ${paperQuestions}
-          
-          ---
-          This is a research paper request. Papers will include limited references but sufficient information for further investigation and critique.
-          This message was sent from the AIM Framework contact form.
-        ` : `
-          New Contact Form Submission
-          
-          Name: ${name}
-          Email: ${email}
-          ${affiliation ? `Affiliation: ${affiliation}` : ''}
-          ${interest ? `Interest: ${interest}` : ''}
-          
-          Message:
-          ${message}
-          
-          ---
-          This message was sent from the AIM Framework contact form.
-        `
+        const { error: sendError } = await resend.emails.send(
+          {
+            from: NOTIFY_FROM,
+            to: [NOTIFY_TO],
+            replyTo: email,
+            subject: emailSubject,
+            html: htmlContent,
+            text: textContent,
+            tags: [{ name: 'site', value: 'usebettermetrics' }]
+          },
+          messageId ? { idempotencyKey: `contact-notification/${messageId}` } : undefined
+        )
 
-        const mailOptions = {
-          from: process.env.SMTP_FROM || process.env.SMTP_USER,
-          to: 'yule@attune.legal',
-          subject: emailSubject,
-          html: htmlContent,
-          text: textContent,
+        if (sendError) {
+          console.error('Email send error:', sendError)
+        } else {
+          emailSent = true
+          console.log('Email notification sent')
         }
-
-        await transporter.sendMail(mailOptions)
-        emailSent = true
-        console.log('Email notification sent')
       } catch (emailErr) {
         console.error('Email send error:', emailErr)
-        // Don't fail the request if email fails - we have the database record
       }
     }
 

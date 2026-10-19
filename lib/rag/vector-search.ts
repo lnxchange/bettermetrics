@@ -32,7 +32,8 @@ export class VectorSearch {
     query: string,
     limit: number = 20,
     documentType?: 'research' | 'rag',
-    threshold: number = 0.35
+    threshold: number = 0.35,
+    source?: string
   ): Promise<SearchResult[]> {
     try {
       // Generate embedding for the query
@@ -46,7 +47,8 @@ export class VectorSearch {
           query_embedding: queryEmbedding,
           match_threshold: threshold,
           match_count: limit,
-          p_document_type: documentType || null  // Renamed parameter to avoid SQL ambiguity
+          p_document_type: documentType || null,  // Renamed parameter to avoid SQL ambiguity
+          p_source: source || null
         })
 
         if (error) {
@@ -70,6 +72,26 @@ export class VectorSearch {
         // Add document type filter if specified
         if (documentType) {
           queryBuilder = queryBuilder.eq('document_type', documentType)
+        }
+
+        // Same boundary as match_documents: only chunks whose parent document
+        // carries this metadata.source. An empty allow-list returns nothing
+        // rather than falling open to the rest of the corpus.
+        if (source) {
+          const { data: allowed, error: allowedError } = await this.supabase
+            .from('rag_documents')
+            .select('id')
+            .filter('metadata->>source', 'eq', source)
+
+          if (allowedError) {
+            throw new Error(`Source filter failed: ${allowedError.message}`)
+          }
+
+          const allowedIds = (allowed || []).map((row: { id: string }) => row.id)
+          if (allowedIds.length === 0) {
+            return []
+          }
+          queryBuilder = queryBuilder.in('document_id', allowedIds)
         }
 
         const { data: embeddings, error: directError } = await queryBuilder
