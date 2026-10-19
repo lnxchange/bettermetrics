@@ -38,16 +38,25 @@ export default function AdminInboxPage() {
     fetchMessages()
   }, [filter])
 
+  useEffect(() => {
+    if (messages.length === 0) return
+    const selectedStillVisible = selectedMessage && messages.some(message => message.id === selectedMessage.id)
+    if (!selectedStillVisible) {
+      setSelectedMessage(messages[0])
+    }
+  }, [messages, selectedMessage])
+
   const fetchMessages = async () => {
     try {
       setLoading(true)
+      setError(null)
       const res = await fetch(`/api/admin/inbox?filter=${filter}`)
+      const data = await res.json().catch(() => null)
       if (!res.ok) {
-        throw new Error('Failed to fetch messages')
+        throw new Error(data?.error || 'Failed to fetch messages')
       }
-      const data = await res.json()
-      setMessages(data.messages)
-      setUnreadCount(data.unreadCount)
+      setMessages(data?.messages || [])
+      setUnreadCount(data?.unreadCount || 0)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -134,7 +143,11 @@ export default function AdminInboxPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Inbox</h1>
             <p className="mt-1 text-gray-600">
-              {unreadCount > 0 ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}` : 'No unread messages'}
+              {unreadCount > 0
+                ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`
+                : messages.length > 0
+                  ? 'No unread messages'
+                  : 'No messages yet'}
             </p>
           </div>
           <Button variant="outline" asChild>
@@ -167,10 +180,6 @@ export default function AdminInboxPage() {
         {error && (
           <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4">
             <p className="text-red-700">{error}</p>
-            <p className="mt-2 text-sm text-red-600">
-              Make sure the contact_messages table exists in Supabase. 
-              <a href="#setup" className="underline ml-1">See setup instructions below.</a>
-            </p>
           </div>
         )}
 
@@ -185,8 +194,12 @@ export default function AdminInboxPage() {
                 {loading ? (
                   <div className="p-4 text-center text-gray-500">Loading...</div>
                 ) : messages.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500">
-                    No messages found
+                  <div className="p-8 text-center text-gray-500">
+                    {filter === 'unread'
+                      ? 'No unread messages.'
+                      : filter === 'read'
+                        ? 'No read messages.'
+                        : 'No contact form messages yet.'}
                   </div>
                 ) : (
                   <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
@@ -314,50 +327,6 @@ export default function AdminInboxPage() {
           </div>
         </div>
 
-        {/* Setup Instructions */}
-        <div id="setup" className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Database Setup</CardTitle>
-              <CardDescription>
-                Run this SQL in your Supabase SQL editor to create the contact_messages table
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <pre className="overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm text-gray-100">
-{`-- Create contact_messages table
-CREATE TABLE IF NOT EXISTS contact_messages (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  affiliation TEXT,
-  interest TEXT NOT NULL,
-  subject TEXT,
-  message TEXT,
-  paper_scope TEXT,
-  paper_questions TEXT,
-  is_read BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Create index for faster queries
-CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at 
-ON contact_messages(created_at DESC);
-
-CREATE INDEX IF NOT EXISTS idx_contact_messages_is_read 
-ON contact_messages(is_read);
-
--- Enable RLS
-ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
-
--- Allow service role full access
-CREATE POLICY "Service role has full access" ON contact_messages
-  FOR ALL USING (true) WITH CHECK (true);`}
-              </pre>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   )
