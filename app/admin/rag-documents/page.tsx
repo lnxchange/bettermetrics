@@ -172,6 +172,25 @@ export default function RAGDocumentsPage() {
     }
   }
 
+  const handleIndexTreatise = async () => {
+    setIsProcessing(true)
+    try {
+      const response = await fetch('/api/admin/index-treatise', { method: 'POST' })
+      const data = await response.json()
+      if (response.ok) {
+        toast.success(
+          `Treatise indexed for chat: ${data.indexed.length} updated, ${data.unchanged.length} unchanged`
+        )
+      } else {
+        toast.error(data.error || 'Failed to index the treatise')
+      }
+    } catch (error) {
+      toast.error('Failed to index the treatise')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
   const handleReprocessAllDocuments = async () => {
     if (!confirm('This will reprocess ALL RAG documents for embeddings, including those already processed. This may take several minutes. Continue?')) {
       return
@@ -631,6 +650,13 @@ export default function RAGDocumentsPage() {
                       Documents processed for the AIM chatbot
                     </CardDescription>
                   </div>
+                  <Button
+                    onClick={handleIndexTreatise}
+                    disabled={isProcessing}
+                    size="sm"
+                  >
+                    {isProcessing ? 'Processing...' : 'Index Treatise for Chat'}
+                  </Button>
                   {documents.length > 0 && (
                     <div className="flex gap-2 flex-wrap">
                       <Button

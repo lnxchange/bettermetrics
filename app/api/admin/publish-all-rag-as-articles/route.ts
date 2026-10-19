@@ -34,6 +34,8 @@ export async function POST(req: NextRequest) {
       .from('rag_documents')
       .select('id, title, content')
       .not('content', 'is', null)
+      // Treatise chapters are indexed by lib/rag/treatise-index.ts, not here
+      .or('metadata->>source.is.null,metadata->>source.neq.aim-treatise')
 
     if (fetchError) {
       return NextResponse.json({ error: 'Failed to fetch RAG documents' }, { status: 500 })

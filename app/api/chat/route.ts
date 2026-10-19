@@ -8,6 +8,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
+import { treatiseContext } from '@/lib/rag/treatise-context'
 import {
   GUEST_COOKIE,
   GUEST_LIMIT,
@@ -52,7 +53,12 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
     .slice(0, topK * 2) // Get more candidates for deduplication
 
   const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
-  const trimmed = unique.map(r => trim(r.chunk_text, 3000))
+  const trimmed = unique.map(r => {
+    const text = trim(r.chunk_text, 3000)
+    // Treatise chunks already open with "[Treatise, Chapter N: Title]"
+    if (text.startsWith('[Treatise') || !r.metadata?.label) return text
+    return `[Treatise, ${r.metadata.label}: ${r.metadata.title}]\n${text}`
+  })
   return trimmed.join('\n\n---\n\n')
 }
 
@@ -217,6 +223,13 @@ export async function POST(req: Request) {
 
     // Get the latest user message for RAG context
     const userQuery = messages[messages.length - 1]?.content || ''
+    // Follow-ups ("and in chapter 12?") need the earlier questions to retrieve well
+    const recentUserText = messages
+      .filter((msg: any) => msg.role === 'user' && typeof msg.content === 'string')
+      .slice(-3)
+      .map((msg: any) => msg.content)
+      .join('\n')
+    const retrievalQuery = trim(recentUserText || userQuery, 2000)
 
     // Search for relevant context using RAG with strict AIM definition
     let ragContext = ''
@@ -231,14 +244,19 @@ export async function POST(req: Request) {
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
         // Request 24 candidates so prepareRagContext has enough for topK*2 deduplication (topK=12)
-        const results = await vectorSearch.searchSimilarDocuments(
-          userQuery,
-          24,
-          'rag',
-          threshold,
-          'aim-treatise'
-        )
-        hasRagResults = results.length > 0
+        const [results, definitionsAndChapters] = await Promise.all([
+          vectorSearch
+            .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
+            .catch(error => {
+              console.error('Vector search error:', error)
+              return []
+            }),
+          treatiseContext(retrievalQuery).catch(error => {
+            console.error('Treatise context error:', error)
+            return ''
+          })
+        ])
+        hasRagResults = results.length > 0 || definitionsAndChapters.length > 0
         
         if (hasRagResults) {
           // Filter out Chantal McNaught's name from RAG context
@@ -247,10 +265,13 @@ export async function POST(req: Request) {
             chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
           }))
           
-          const contextBlock = prepareRagContext(filteredResults, userQuery.length)
+          const contextBlock = [definitionsAndChapters, prepareRagContext(filteredResults, userQuery.length)]
+            .filter(Boolean)
+            .join('\n\n---\n\n')
+            .replace(/Chantal McNaught/gi, 'a PhD candidate')
           ragContext = `Context:\n${contextBlock}\n\n**STRICT RAG GROUNDING (CRITICAL):**
 1. Answer based ONLY on the Context above - do not import external definitions.
-2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context.
+2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context. Treatise Definitions from Chapter 2 are authoritative: state and use them when the question turns on that term.
 3. DO NOT conflate AIM terminology with similar terms from other fields.
 4. Quote or closely paraphrase the Context when possible to ensure accuracy.
 5. If the Context does not fully address the question, state what IS covered and what is missing.

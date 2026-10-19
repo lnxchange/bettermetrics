@@ -1,6 +1,7 @@
 /**
  * Upsert the current treatise chapters into treatise_chapters.
  * Chapter 2 is the glossary and is not stored.
+ * Then embed the chapters and glossary for chat retrieval (needs OPENAI_API_KEY).
  *
  *   TREATISE_DIR="/path/to/CORPUS/TREATISE" npx tsx scripts/sync-treatise-chapters.ts
  *
@@ -12,6 +13,7 @@ import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { prepareTreatiseMarkdown } from '../lib/treatise-render'
+import { indexTreatise } from '../lib/rag/treatise-index'
 import { Database, Json } from '../lib/db_types'
 
 config({ path: path.join(process.cwd(), '.env.local') })
@@ -334,6 +336,15 @@ async function main() {
     console.log('removed', stale.join(', '))
   }
   console.log(`synced ${slugs.length} chapters`)
+
+  if (!process.env.OPENAI_API_KEY) {
+    console.log('chat index: OPENAI_API_KEY not set, skipped')
+    return
+  }
+  const index = await indexTreatise(supabase)
+  console.log(
+    `chat index  ${index.indexed.length} embedded, ${index.unchanged.length} unchanged, ${index.removed.length} removed`
+  )
 }
 
 main().catch(error => {

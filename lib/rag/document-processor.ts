@@ -79,11 +79,15 @@ export class DocumentProcessor {
     documentId: string,
     documentType: 'research' | 'rag',
     content: string,
-    metadata: any = {}
+    metadata: any = {},
+    chunkPrefix: string = ''
   ): Promise<void> {
     try {
-      // Split document into chunks
-      const chunks = await this.textSplitter.splitText(content)
+      // Split document into chunks. The prefix (e.g. "[Treatise, Chapter 12: ...]")
+      // is embedded with every chunk so the chapter's subject is part of its vector.
+      const chunks = (await this.textSplitter.splitText(content)).map(
+        chunk => chunkPrefix + chunk
+      )
 
       // Generate embeddings for each chunk
       const embeddings = await this.embeddings.embedDocuments(chunks)
