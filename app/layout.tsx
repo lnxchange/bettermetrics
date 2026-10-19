@@ -81,10 +81,7 @@ export const metadata: Metadata = {
       'max-snippet': -1
     }
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' }
-  ],
+  themeColor: '#ffffff',
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
@@ -137,7 +134,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             </Script>
           </>
         ) : null}
-        <Providers attribute="class" defaultTheme="system" enableSystem>
+        <Providers attribute="class" defaultTheme="light" enableSystem={false}>
           <ToasterWrapper />
           <div className="flex min-h-screen flex-col">
             <Header session={session} />

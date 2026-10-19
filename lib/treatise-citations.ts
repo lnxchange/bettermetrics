@@ -34,6 +34,24 @@ export function citationHref(chapter: string | undefined, appendix: string | und
   return `${path}#${anchor}`
 }
 
+/** Chapter or appendix slug plus section id, in the order the derivation names them. */
+export function citationTargets(input: string): { slug: string; section: string }[] {
+  if (!input) return []
+  const targets: { slug: string; section: string }[] = []
+  const re = new RegExp(CITATION_SOURCE, 'g')
+  let match: RegExpExecArray | null
+  while ((match = re.exec(input)) !== null) {
+    const section = match[4].toLowerCase()
+    if (match[2]) {
+      const slug = String(Number(match[2]))
+      if (slug !== '2') targets.push({ slug, section })
+    } else if (match[3]) {
+      targets.push({ slug: `appendix-${match[3].toLowerCase()}`, section })
+    }
+  }
+  return targets
+}
+
 export function splitCitations(input: string): CitationPart[] {
   if (!input) return []
   const re = new RegExp(CITATION_SOURCE, 'g')

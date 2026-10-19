@@ -127,12 +127,11 @@ Key derived terms: Salience-Deficit Conflation, Mimetic Premium and Status (Stat
 2. **SHOW THE DERIVATION:** where a conclusion follows from the axioms, say which ones and how.
 3. **STEER, DON'T KILL MIMESIS:** where advice is asked for, the framework's answer is to secure A-floors, protect I-domains, and manage M visibility, not to eliminate M.`
 
-const LAYPERSON_STYLE_OVERRIDE = `
-IMPORTANT — PLAIN ENGLISH MODE:
-The person reading this has never heard of the AIM Framework before. Your job is not just to simplify language — it is to genuinely build their understanding from the ground up.
+const LAYPERSON_FIRST = `
+IMPORTANT — PLAIN ENGLISH MODE. This is the first reply in the conversation.
+The person reading this has never heard of the AIM Framework before. Explain how Appetites, Intrinsic Motivation, and Mimetic Desire bear on the question, as if for the first time.
 
 EXPLAIN THE CONCEPTS THEMSELVES, not just the words:
-- Do not assume the reader knows what Appetites, Intrinsic Motivation, or Mimetic Desire mean. Explain each one as it becomes relevant, as if for the very first time.
 - Use concrete, real-life examples for every concept. Abstract ideas must always be grounded in something familiar — a workplace situation, a social interaction, a personal experience everyone can relate to.
 - Example of how to introduce Appetites: "Think of Appetites as our survival instincts — the part of us that wants to feel safe, comfortable, and secure. When someone takes a stable job they don't love just because the salary is reliable, that's Appetites at work."
 - Example of how to introduce Intrinsic Motivation: "Intrinsic Motivation is the pull you feel when you lose track of time doing something you genuinely enjoy — not for a reward or because someone is watching, but because the activity itself is satisfying. A child building Lego for hours isn't chasing a prize — that's Intrinsic Motivation."
@@ -144,6 +143,32 @@ WRITING STYLE:
 - No formal citations; say things like "the research on this shows..." or "the framework explains this as..."
 - Use analogies freely — the goal is understanding, not impressiveness
 - Keep all the depth and insight of the academic answer, but make every sentence land for someone encountering these ideas for the first time`
+
+const LAYPERSON_CONTINUE = `
+IMPORTANT — PLAIN ENGLISH MODE. This conversation has already begun.
+An earlier reply has introduced Appetites, Intrinsic Motivation, and Mimetic Desire. Continue from what has been said. Do not define those three again.
+If a new glossary term appears for the first time, give its plain-English explanation once, then treat it as known.
+Keep the same voice: conversational, concrete, and without formal citations. Do not define a term again once this conversation has explained it.`
+
+const ACADEMIC_STYLE = `
+IMPORTANT — ACADEMIC MODE. The reader can follow the Treatise. The following replaces Response Style, the Citation Rule, and Strategic Objective 3 for this reply.
+
+Write the argument in the Treatise's own vocabulary.
+- When a named term is supplied under Treatise Definitions, state the formal definition and, where the entry has one, its plain-English explanation. Both belong to the glossary. Do not replace either with a paraphrase of your own, and do not add analogies unless the supplied chapter uses them.
+- Give the epistemic status with the definition, so a framework-specific construct is not presented as an established finding.
+- Name the axioms and the architectural components the conclusion depends on, and say how the conclusion follows.
+- Cite each load-bearing claim at the section it comes from, as *[Treatise, Chapter 12, Section 12.2]* or *[Treatise, Appendix A, Section A.2]*.
+- When the supplied text gives a URL for a reference the answer relies on, include that reference as a markdown link. A reference with no URL is named without a link. Do not invent a URL, and do not add a source that is not in the supplied text.
+- Answer the question asked. Give a recommendation only when one was asked for, and then state it as the framework's derived result.`
+
+const ACADEMIC_FIRST = `
+This is the first reply. Identify Appetites, Intrinsic Motivation, and Mimetic Desire once, using the glossary definition and its plain-English explanation where those are supplied.`
+
+const ACADEMIC_CONTINUE = `
+This conversation has already begun. Continue from what has been said. Do not define Appetites, Intrinsic Motivation, or Mimetic Desire again. A new glossary term is stated, with its plain-English explanation where the glossary has one, the first time it enters the conversation, and is then treated as known.`
+
+const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
+A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
 // REASONING MODEL IMPLEMENTATION
 // Using Claude Opus (claude-opus-4-6) - current model naming convention
@@ -243,20 +268,21 @@ export async function POST(req: Request) {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
-        // Request 24 candidates so prepareRagContext has enough for topK*2 deduplication (topK=12)
-        const [results, definitionsAndChapters] = await Promise.all([
-          vectorSearch
-            .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
-            .catch(error => {
-              console.error('Vector search error:', error)
-              return []
-            }),
-          treatiseContext(retrievalQuery).catch(error => {
-            console.error('Treatise context error:', error)
-            return ''
-          })
-        ])
-        hasRagResults = results.length > 0 || definitionsAndChapters.length > 0
+        // A named glossary term brings its definition and chapter. Search would
+        // let other passages compete with that definition, so it stays out.
+        const treatise = await treatiseContext(retrievalQuery).catch(error => {
+          console.error('Treatise context error:', error)
+          return { text: '', grounded: false }
+        })
+        const results = treatise.grounded
+          ? []
+          : await vectorSearch
+              .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
+              .catch(error => {
+                console.error('Vector search error:', error)
+                return []
+              })
+        hasRagResults = results.length > 0 || treatise.text.length > 0
         
         if (hasRagResults) {
           // Filter out Chantal McNaught's name from RAG context
@@ -265,17 +291,20 @@ export async function POST(req: Request) {
             chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
           }))
           
-          const contextBlock = [definitionsAndChapters, prepareRagContext(filteredResults, userQuery.length)]
+          const contextBlock = [treatise.text, prepareRagContext(filteredResults, userQuery.length)]
             .filter(Boolean)
             .join('\n\n---\n\n')
             .replace(/Chantal McNaught/gi, 'a PhD candidate')
-          ragContext = `Context:\n${contextBlock}\n\n**STRICT RAG GROUNDING (CRITICAL):**
+          const grounding = treatise.grounded
+            ? DEFINITION_RULE
+            : `**STRICT RAG GROUNDING (CRITICAL):**
 1. Answer based ONLY on the Context above - do not import external definitions.
-2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context. Treatise Definitions from Chapter 2 are authoritative: state and use them when the question turns on that term.
+2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context.
 3. DO NOT conflate AIM terminology with similar terms from other fields.
 4. Quote or closely paraphrase the Context when possible to ensure accuracy.
 5. If the Context does not fully address the question, state what IS covered and what is missing.
 6. DO NOT invent analogies or connections not explicitly present in the Context.`
+          ragContext = `Context:\n${contextBlock}\n\n${grounding}`
         } else {
           ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
         }
@@ -291,8 +320,11 @@ export async function POST(req: Request) {
     if (ragContext) {
       systemContent += `\n\n${ragContext}`
     }
-    if (mode === 'layperson') {
-      systemContent += `\n\n${LAYPERSON_STYLE_OVERRIDE}`
+    const continuing = messages.some((msg: { role?: string }) => msg.role === 'assistant')
+    if (mode === 'academic') {
+      systemContent += `\n\n${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`
+    } else if (mode === 'layperson') {
+      systemContent += `\n\n${continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST}`
     }
 
     // Prepare messages for Claude API

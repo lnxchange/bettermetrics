@@ -89,30 +89,32 @@ export class DocumentProcessor {
         chunk => chunkPrefix + chunk
       )
 
-      // Generate embeddings for each chunk
-      const embeddings = await this.embeddings.embedDocuments(chunks)
-
-      // Store chunks and embeddings in database
-      const insertData = chunks.map((chunk: string, index: number) => ({
-        document_id: documentId,
-        document_type: documentType,
-        chunk_text: chunk,
-        embedding: `[${embeddings[index].join(',')}]`, // Convert array to string format for pgvector
-        chunk_index: index,
-        metadata: {
-          ...metadata,
-          chunkLength: chunk.length,
-          totalChunks: chunks.length
+      // The embeddings endpoint rejects a request above 300,000 tokens.
+      // A whole chapter is larger than that, so each request stays small.
+      const batchSize = 80
+      for (let start = 0; start < chunks.length; start += batchSize) {
+        const batch = chunks.slice(start, start + batchSize)
+        const embeddings = await this.embeddings.embedDocuments(batch)
+        const insertData = batch.map((chunk: string, offset: number) => {
+          const index = start + offset
+          return {
+            document_id: documentId,
+            document_type: documentType,
+            chunk_text: chunk,
+            embedding: `[${embeddings[offset].join(',')}]`,
+            chunk_index: index,
+            metadata: {
+              ...metadata,
+              chunkLength: chunk.length,
+              totalChunks: chunks.length
+            }
+          }
+        })
+        const { error } = await this.supabase.from('document_embeddings').insert(insertData)
+        if (error) {
+          console.error('Error storing embeddings:', error)
+          throw new Error('Failed to store document embeddings')
         }
-      }))
-
-      const { error } = await this.supabase
-        .from('document_embeddings')
-        .insert(insertData)
-
-      if (error) {
-        console.error('Error storing embeddings:', error)
-        throw new Error('Failed to store document embeddings')
       }
 
       console.log(
