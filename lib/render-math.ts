@@ -22,11 +22,15 @@ function normalizeTex(tex: string) {
 function renderTex(tex: string, display: boolean) {
   const source = normalizeTex(tex)
   try {
+    // MathML rather than KaTeX's span-based HTML: roughly a quarter of the
+    // markup (Appendix A alone carried 1.9 MB of spans), rendered natively by
+    // every current browser, and indexable by search engines. Switch back to
+    // 'html' if a page needs KaTeX's exact typesetting.
     return katex.renderToString(source, {
       displayMode: display,
       throwOnError: false,
       strict: 'ignore',
-      output: 'html'
+      output: 'mathml'
     })
   } catch {
     return `<code>${escapeHtml(source)}</code>`

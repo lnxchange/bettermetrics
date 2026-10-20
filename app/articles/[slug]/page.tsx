@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cached } from '@/lib/cached'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
@@ -9,6 +10,7 @@ import Link from 'next/link'
 import { marked } from 'marked'
 import { ArticleContent } from '@/components/article-content'
 import { renderMathInHtml } from '@/lib/render-math'
+import { SITE_LOGO_PATH, SITE_NAME, SITE_URL, metaDescription } from '@/lib/site'
 import '@/styles/print.css'
 
 interface ArticlePageProps {
@@ -17,23 +19,35 @@ interface ArticlePageProps {
   }
 }
 
-async function getArticleBySlug(slug: string) {
-  const cookieStore = cookies()
-  const supabase = createServerComponentClient<Database>({
-    cookies: () => cookieStore
-  })
+// Public article content is read with the anon key and cached for an hour so
+// the Supabase round-trip is not paid on every request. Only published rows are
+// served (checked below), so no private data passes through the cache.
+const getArticleBySlug = cached(
+  async (slug: string) => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) return null
+    const supabase = createClient<Database>(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    })
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('slug', slug)
+      .single()
+    if (error || !data) return null
+    return data
+  },
+  ['article-by-slug'],
+  { revalidate: 3600, tags: ['articles'] }
+)
 
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('slug', slug)
-    .single()
-
-  if (error || !data) {
-    return null
-  }
-
-  return data
+function cleanMetaTitle(article: { meta_title: string | null; title: string }) {
+  const candidate = article.meta_title?.trim()
+  // Imported articles carried filename-style titles ("AIM-privacy-mimetic-paper").
+  // Fall back to the real title until the SEO optimiser has rewritten them.
+  if (!candidate || /^[\w-]+$/.test(candidate)) return article.title
+  return candidate
 }
 
 export async function generateMetadata({ 
@@ -41,32 +55,37 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
   const article = await getArticleBySlug(params.slug)
   
-  if (!article) {
-    return { title: 'Article Not Found' }
+  if (!article || article.status !== 'published') {
+    return { title: 'Article Not Found', robots: { index: false } }
   }
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org'
+  const siteUrl = SITE_URL
   const articleUrl = `${siteUrl}/articles/${params.slug}`
+  const title = cleanMetaTitle(article)
+  // Optimiser-written meta titles are complete (50-60 chars); only the
+  // fallback to the article's own title takes the "| AIM Theory" suffix.
+  const fromOptimiser = title !== article.title
+  const description = article.meta_description ? metaDescription(article.meta_description) : undefined
   
   return {
-    title: article.meta_title || article.title,
-    description: article.meta_description || undefined,
+    title: fromOptimiser ? { absolute: title } : title,
+    description,
     authors: article.author ? [{ name: article.author }] : undefined,
     openGraph: {
-      title: article.meta_title || article.title,
-      description: article.meta_description || undefined,
+      title,
+      description,
       type: 'article',
       url: articleUrl,
-      images: article.featured_image_url ? [article.featured_image_url] : [],
+      images: article.featured_image_url ? [article.featured_image_url] : ['/aim-og.png'],
       publishedTime: (article as any).written_at || article.published_at || article.created_at,
       modifiedTime: article.updated_at,
       authors: article.author ? [article.author] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.meta_title || article.title,
-      description: article.meta_description || undefined,
-      images: article.featured_image_url ? [article.featured_image_url] : [],
+      title,
+      description,
+      images: article.featured_image_url ? [article.featured_image_url] : ['/aim-og.png'],
     },
     alternates: {
       canonical: article.canonical_url || articleUrl,
@@ -89,10 +108,11 @@ export default async function ArticlePage({
 
   const isAdmin = session?.user?.user_metadata?.is_admin === true
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org'
+  const siteUrl = SITE_URL
   
-  // Generate structured data
-  const structuredData = article.structured_data || {
+  // Generate structured data. Stored structured_data (from the SEO optimiser)
+  // takes precedence; the publisher and page identity are always normalised.
+  const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": article.title,
@@ -101,15 +121,18 @@ export default async function ArticlePage({
     "dateModified": article.updated_at,
     "author": {
       "@type": "Person",
+      "@id": `${siteUrl}/#YuleGuttenbeil`,
       "name": article.author || "Yule Guttenbeil"
     },
-    "image": article.featured_image_url,
+    "image": article.featured_image_url || `${siteUrl}/aim-og.png`,
+    ...(typeof article.structured_data === 'object' && article.structured_data ? article.structured_data : {}),
     "publisher": {
       "@type": "Organization",
-      "name": "AIM Framework",
+      "@id": `${siteUrl}/#organization`,
+      "name": SITE_NAME,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/aim-og.png`
+        "url": `${siteUrl}${SITE_LOGO_PATH}`
       }
     },
     "mainEntityOfPage": {
@@ -149,6 +172,13 @@ export default async function ArticlePage({
   const readingTime = Math.ceil(wordCount / 200)
 
   let htmlContent = await marked.parse(article.content ?? '')
+
+  // The page header already renders the article title as the single <h1>.
+  // Imported documents usually repeat their title as a top-level heading, so
+  // demote body <h1>s to <h2> to keep one H1 per page.
+  htmlContent = htmlContent
+    .replace(/<h1(\s[^>]*)?>/gi, '<h2$1>')
+    .replace(/<\/h1>/gi, '</h2>')
 
   // Add external link icon and target="_blank" for links that go off-site
   const PRIVATE_LINK =

@@ -8,16 +8,16 @@ import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { TwoQuestionDiagnostic } from '@/components/two-question-diagnostic'
 
 export const metadata: Metadata = {
-  title: 'AIM Framework | Use Better Metrics',
+  title: { absolute: 'AIM Theory | A General Theory of Human Motivation' },
   description:
-    'A general theory of human motivation. Three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what gets lost in the mixing.',
+    'A general theory of human motivation: three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what mixing hides.',
+  alternates: { canonical: '/' },
   openGraph: {
-    title: 'AIM Framework | Use Better Metrics',
+    title: 'AIM Theory | A General Theory of Human Motivation',
     description:
       'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
-    url: 'https://aimtheory.org',
-    siteName: 'Use Better Metrics',
-    images: [{ url: 'https://aimtheory.org/aim-og.png', width: 1200, height: 630, alt: 'AIM' }],
+    url: '/',
+    images: [{ url: '/aim-og.png', width: 1200, height: 630, alt: 'AIM: Appetites, Intrinsic Motivation, Mimetic Desire' }],
     locale: 'en_US',
     type: 'website'
   }

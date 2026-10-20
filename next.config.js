@@ -12,6 +12,17 @@ module.exports = {
       }
     ]
   },
+  async headers() {
+    return [
+      {
+        // Preview and legacy *.vercel.app hosts serve the same content as
+        // aimtheory.org. Keep them reachable but out of search indexes.
+        source: '/:path*',
+        has: [{ type: 'host', value: '(?<host>.*\\.vercel\\.app)' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+      }
+    ]
+  },
   async redirects() {
     // Pages retired in the site refocus. The theory now lives on /theory, the
     // self-diagnosis on the home page, and the research programme on /about.
@@ -26,6 +37,13 @@ module.exports = {
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'usebettermetrics.com' }],
+        destination: 'https://aimtheory.org/:path*',
+        permanent: true
+      },
+      {
+        // The production alias on vercel.app duplicates the canonical host.
+        source: '/:path*',
+        has: [{ type: 'host', value: 'bettermetrics.vercel.app' }],
         destination: 'https://aimtheory.org/:path*',
         permanent: true
       },

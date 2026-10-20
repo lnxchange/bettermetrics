@@ -1,0 +1,31 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 1,
+      "settings": {
+        "onlyCategories": ["performance", "accessibility", "best-practices", "seo"],
+        "chromeFlags": "--no-sandbox --headless=new"
+      },
+      "url": [
+        "https://aimtheory.org/",
+        "https://aimtheory.org/theory",
+        "https://aimtheory.org/axioms",
+        "https://aimtheory.org/glossary",
+        "https://aimtheory.org/articles/report-7-1-aim-in-essential-services-and-disaster-protocols",
+        "https://aimtheory.org/treatise/1"
+      ]
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.8 }],
+        "categories:seo": ["error", { "minScore": 0.95 }],
+        "categories:accessibility": ["warn", { "minScore": 0.9 }],
+        "categories:best-practices": ["warn", { "minScore": 0.9 }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}

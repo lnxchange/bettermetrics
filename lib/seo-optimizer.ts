@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { SITE_LOGO_PATH, SITE_NAME, SITE_URL } from '@/lib/site'
 
 /**
  * SEO Optimization Module using Claude API.
@@ -20,6 +21,8 @@ interface SEOOptimizationResult {
     headings?: string
     internalLinks?: string[]
   }
+  /** True when Claude produced the result; false when the heuristic fallback did. */
+  generated: boolean
 }
 
 interface OptimizationInput {
@@ -31,64 +34,71 @@ interface OptimizationInput {
   publishedAt?: string
 }
 
+// Model used for metadata generation. Overridable so the scheduled job can be
+// pointed at a newer model without a code change. `temperature` is deliberately
+// not sent: current Anthropic models reject it.
+export const SEO_MODEL = process.env.SEO_CLAUDE_MODEL || 'claude-opus-5-5'
+
+const MAX_CONTENT_CHARS = 6000
+
+function stripMarkdown(text: string) {
+  return text
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[#>*_`~|]/g, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export async function optimizeArticleSEO(
   input: OptimizationInput
 ): Promise<SEOOptimizationResult> {
   const { title, content, slug, author, category, publishedAt } = input
-
-  // Truncate content for API call (first 2000 chars should be sufficient for SEO analysis)
-  const truncatedContent = content.substring(0, 2000)
+  const plain = stripMarkdown(content || '')
+  const excerpt = plain.substring(0, MAX_CONTENT_CHARS)
 
   try {
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY
-    })
-
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error('Missing ANTHROPIC_API_KEY')
     }
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-latest',
+      model: SEO_MODEL,
       max_tokens: 1200,
-      temperature: 0.2,
+      system:
+        `You write search metadata for ${SITE_NAME} (${SITE_URL}), the home of the AIM Framework, a general theory of human motivation with three sources: Appetites (A), Intrinsic Motivation (I) and Mimetic Desire (M). ` +
+        'Write for a reader searching Google, not for the author. Be specific and plain; no hype, no clickbait, no emoji. ' +
+        'Use British English. Return JSON only.',
       messages: [
         {
           role: 'user',
-          content: `Analyze this article and provide SEO optimization in JSON format.
+          content: `Article title: ${title}
+Slug: ${slug}
+Category: ${category || 'General'}
+Content (plain text, may be truncated):
+${excerpt}${plain.length > MAX_CONTENT_CHARS ? ' …' : ''}
 
-Article Title: ${title}
-Article Slug: ${slug}
-Article Category: ${category || 'General'}
-Article Content: ${truncatedContent}${content.length > 2000 ? '... [truncated]' : ''}
-
-Provide a JSON response ONLY (no additional text) with this exact structure:
+Return a JSON object with exactly this shape:
 {
-  "metaTitle": "optimized SEO title 50-60 chars",
-  "metaDescription": "compelling SEO description 150-160 chars",
-  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "metaTitle": "50 to 60 characters. Describe the article's actual subject. Do not append the site name; it is added automatically.",
+  "metaDescription": "140 to 160 characters. One or two sentences stating what the article argues or explains and for whom.",
+  "keywords": ["5 to 8 specific search phrases a reader would type"],
   "structuredData": {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "article headline",
-    "description": "article description",
-    "author": {
-      "@type": "Person",
-      "name": "${author || 'Yule Guttenbeil'}"
-    },
-    "datePublished": "${publishedAt || new Date().toISOString()}",
-    "publisher": {
-      "@type": "Organization",
-      "name": "AIM Framework",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://aimtheory.org/logo.png"
-      }
-    }
+    "headline": "the metaTitle, or a close variant up to 110 characters",
+    "description": "the metaDescription",
+    "keywords": "comma separated keywords",
+    "about": ["2 to 4 schema.org Thing names the article is about"],
+    "author": { "@type": "Person", "name": "${author || 'Yule Guttenbeil'}" },
+    "datePublished": "${publishedAt || new Date().toISOString()}"
   },
   "recommendations": {
-    "headings": "Brief suggestions for H2/H3 structure",
-    "internalLinks": ["topic1", "topic2"]
+    "headings": "one sentence on H2/H3 structure improvements, or an empty string",
+    "internalLinks": ["slugs or topics on this site worth linking to"]
   }
 }`
         }
@@ -96,67 +106,89 @@ Provide a JSON response ONLY (no additional text) with this exact structure:
     })
 
     const contentBlock = response.content.find(block => block.type === 'text')
-    const contentText = contentBlock && contentBlock.type === 'text'
-      ? contentBlock.text
-      : ''
-
+    const contentText = contentBlock && contentBlock.type === 'text' ? contentBlock.text : ''
     if (!contentText) {
       throw new Error('No text content in Claude response')
     }
 
     // Extract JSON from response (handle potential markdown code blocks)
     let jsonText = contentText.trim()
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace(/```json\s*/, '').replace(/```\s*$/, '')
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/```\s*/, '').replace(/```\s*$/, '')
+    const fenced = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/)
+    if (fenced) jsonText = fenced[1].trim()
+    const firstBrace = jsonText.indexOf('{')
+    const lastBrace = jsonText.lastIndexOf('}')
+    if (firstBrace > 0 || lastBrace < jsonText.length - 1) {
+      jsonText = jsonText.slice(firstBrace, lastBrace + 1)
     }
 
     const result = JSON.parse(jsonText)
+    const metaTitle = typeof result.metaTitle === 'string' && result.metaTitle.trim() ? result.metaTitle.trim() : title
+    const metaDescription =
+      typeof result.metaDescription === 'string' && result.metaDescription.trim()
+        ? result.metaDescription.trim()
+        : excerpt.substring(0, 157).trim() + '…'
 
-    // Validate and return
     return {
-      metaTitle: result.metaTitle || title,
-      metaDescription: result.metaDescription || '',
-      keywords: result.keywords || [],
-      structuredData: result.structuredData || generateDefaultStructuredData(input),
-      recommendations: result.recommendations
+      metaTitle: metaTitle.substring(0, 70),
+      metaDescription: metaDescription.substring(0, 180),
+      keywords: Array.isArray(result.keywords) ? result.keywords.filter((k: unknown) => typeof k === 'string') : [],
+      structuredData: withPublisher(result.structuredData || generateDefaultStructuredData(input), input),
+      recommendations: result.recommendations,
+      generated: true
     }
   } catch (error) {
     console.error('SEO optimization error:', error)
-    
-    // Return fallback SEO data
+
+    // Return fallback SEO data. Callers that persist results should check
+    // `generated` and skip fallbacks rather than store them.
     return {
       metaTitle: title.substring(0, 60),
-      metaDescription: truncatedContent.substring(0, 160).replace(/<[^>]*>/g, ''),
+      metaDescription: excerpt.substring(0, 157).trim() + (excerpt.length > 157 ? '…' : ''),
       keywords: [],
       structuredData: generateDefaultStructuredData({ ...input, publishedAt }),
       recommendations: {
         headings: 'Unable to generate recommendations',
         internalLinks: []
-      }
+      },
+      generated: false
     }
+  }
+}
+
+function publisher() {
+  return {
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}${SITE_LOGO_PATH}`
+    }
+  }
+}
+
+function withPublisher(structuredData: any, input: OptimizationInput) {
+  return {
+    ...structuredData,
+    '@context': 'https://schema.org',
+    '@type': structuredData?.['@type'] || 'Article',
+    publisher: publisher(),
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/articles/${input.slug}` }
   }
 }
 
 function generateDefaultStructuredData(input: OptimizationInput) {
   return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": input.title,
-    "author": {
-      "@type": "Person",
-      "name": input.author || "Yule Guttenbeil"
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: input.title,
+    author: {
+      '@type': 'Person',
+      name: input.author || 'Yule Guttenbeil'
     },
-    "datePublished": input.publishedAt || new Date().toISOString(),
-    "publisher": {
-      "@type": "Organization",
-      "name": "AIM Framework",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://aimtheory.org/logo.png"
-      }
-    }
+    datePublished: input.publishedAt || new Date().toISOString(),
+    publisher: publisher(),
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/articles/${input.slug}` }
   }
 }
 
@@ -179,4 +211,3 @@ export async function optimizeBatch(articles: OptimizationInput[], delayMs: numb
   
   return results
 }
-

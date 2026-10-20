@@ -5,15 +5,18 @@ import { AIMDefinitionsShort, AIMIntegrationEquation, MimeticPremium } from '@/c
 import { FrameworkCore } from '@/components/framework-core'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
+import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'The Theory',
+  title: 'The AIM Theory of Human Motivation Explained',
   description:
-    'The AIM architecture in seven short sections: three sources, the Decision Hub, Source Opacity, Confabulation, Object Parasitism, Differential Satiation, and the Knowledge Patch.',
+    'The AIM architecture in seven short sections: three sources of motivation, the Decision Hub, Source Opacity, Confabulation, Object Parasitism and Satiation.',
+  alternates: { canonical: '/theory' },
   openGraph: {
-    title: 'The Theory | AIM Framework',
+    title: 'The AIM Theory of Human Motivation Explained | AIM Theory',
     description: 'The AIM architecture in seven short sections.',
-    url: 'https://aimtheory.org/theory',
+    url: '/theory',
+    images: [SITE_OG_IMAGE],
     type: 'article'
   }
 }

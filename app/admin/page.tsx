@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | Use Better Metrics',
-  description: 'Admin panel for managing research documents and RAG system'
+  title: 'Admin Dashboard',
+  description: 'Admin panel for managing research documents and RAG system',
+  robots: { index: false, follow: false }
 }
 
 export default function AdminDashboard() {

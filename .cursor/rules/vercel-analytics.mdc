@@ -1,0 +1,40 @@
+---
+description: Vercel Web Analytics for aimtheory.org must be read via the Vercel CLI / REST API, never the Vercel MCP
+alwaysApply: true
+---
+
+# Vercel Web Analytics: CLI / REST, not MCP
+
+Web Analytics **is enabled and populated** for this project (`bettermetrics`,
+`prj_xIOsq7oNKYobDGdBEG5L3Q7vsC0A`, team `lnxchanges-projects`,
+`team_T6k1ldIUXFXt6J1HsBksNBzy`, aimtheory.org).
+
+The Vercel MCP tools `aggregate_pageviews`, `count_pageviews`,
+`get_observability_schema` and `create_observability_query` return
+`404 Web Analytics not found` / `Observability Data not found` for it. That is
+a connector-scope problem. **Never conclude analytics is disabled from that
+error, and do not use those MCP tools for this project.** Other Vercel MCP
+tools (projects, domains, env vars, deployments, runtime logs) are fine.
+
+## What to use instead
+
+```sh
+# totals
+vercel api "/v1/query/web-analytics/visits/count?projectId=prj_xIOsq7oNKYobDGdBEG5L3Q7vsC0A&teamId=team_T6k1ldIUXFXt6J1HsBksNBzy&since=2026-10-13T00:00:00.000Z&until=2026-10-20T23:59:59.000Z" --method GET
+
+# breakdowns: by = hour|day|week|month|year|country|deviceType|environment|requestPath|referrerHostname|osName|browserName|route|utm*
+vercel api "/v1/query/web-analytics/visits/aggregate?projectId=prj_xIOsq7oNKYobDGdBEG5L3Q7vsC0A&teamId=team_T6k1ldIUXFXt6J1HsBksNBzy&by=referrerHostname&limit=50&since=...&until=..." --method GET
+
+# OData filter, e.g. search referrers only
+...&by=requestPath&filter=referrerHostname%20in%20('google.com','bing.com')
+```
+
+Response shape: `{ data: [{ <by>: string, visitors: number, pageviews: number }] }`
+(`visits/count` returns `data: { visitors, pageviews }`).
+
+- Locally the `vercel` CLI is logged in as `lnxchange`.
+- In CI, `scripts/seo/traffic.ts` calls `https://api.vercel.com/v1/query/web-analytics/...`
+  with `Authorization: Bearer $VERCEL_TOKEN` (same endpoint as `vercel api`).
+- Speed Insights is loaded via `/_vercel/speed-insights/script.js` in
+  `app/layout.tsx`; the `@vercel/speed-insights` package cannot be installed
+  (Svelte peer-dependency conflict with the pinned `ai` SDK).

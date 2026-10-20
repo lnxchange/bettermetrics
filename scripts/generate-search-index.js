@@ -5,8 +5,19 @@ const APP_DIR = path.join(__dirname, '..', 'app');
 const OUTPUT_FILE = path.join(__dirname, '..', 'public', 'search-index.json');
 
 // Extract text content from JSX/TSX files
-function extractContent(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
+// Pages whose UI lives in a client component (the page.tsx is a thin metadata
+// wrapper). Headings and paragraphs are read from the component instead.
+const CONTENT_SOURCES = {
+  '/contact': path.join(__dirname, '..', 'components', 'contact-page.tsx'),
+  '/diagnostic': path.join(__dirname, '..', 'components', 'diagnostic-page.tsx')
+};
+
+function extractContent(filePath, url) {
+  const pageSource = fs.readFileSync(filePath, 'utf8');
+  const componentPath = CONTENT_SOURCES[url];
+  const content = componentPath && fs.existsSync(componentPath)
+    ? pageSource + '\n' + fs.readFileSync(componentPath, 'utf8')
+    : pageSource;
   
   // Extract metadata title
   const titleMatch = content.match(/title:\s*['"`]([^'"`]+)['"`]/);
@@ -63,7 +74,8 @@ function findPageFiles(dir, fileList = []) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     
-    if (stat.isDirectory() && !file.startsWith('.') && !file.startsWith('_')) {
+    // Dynamic segments ([slug]) are database-driven and cannot be indexed statically.
+    if (stat.isDirectory() && !file.startsWith('.') && !file.startsWith('_') && !file.startsWith('[')) {
       findPageFiles(filePath, fileList);
     } else if (file === 'page.tsx' || file === 'page.ts') {
       fileList.push(filePath);
@@ -93,7 +105,7 @@ function generateSearchIndex() {
   pageFiles.forEach(filePath => {
     try {
       const url = getUrlFromPath(filePath);
-      const { title, h1s, h2s, h3s, paragraphs } = extractContent(filePath);
+      const { title, h1s, h2s, h3s, paragraphs } = extractContent(filePath, url);
       
       // Skip if no meaningful content
       if (!title && h1s.length === 0 && h2s.length === 0) {

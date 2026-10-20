@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { HiArrowRight } from 'react-icons/hi'
 import { axioms, STATUS_DESCRIPTIONS, type Axiom, type EpistemicStatus } from '@/lib/axioms-data'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
+import { SITE_OG_IMAGE } from '@/lib/site'
 
 function AxiomsJsonLd() {
   const structuredData = {
@@ -19,11 +20,7 @@ function AxiomsJsonLd() {
           '@id': 'https://aimtheory.org/#YuleGuttenbeil',
           name: 'Yule Guttenbeil'
         },
-        publisher: {
-          '@type': 'Organization',
-          name: 'Use Better Metrics',
-          url: 'https://aimtheory.org'
-        },
+        publisher: { '@id': 'https://aimtheory.org/#organization' },
         mainEntityOfPage: 'https://aimtheory.org/axioms',
         about: {
           '@type': 'CreativeWork',
@@ -55,14 +52,16 @@ function AxiomsJsonLd() {
 }
 
 export const metadata: Metadata = {
-  title: 'The Nine Axioms',
+  title: 'The Nine Axioms of Human Motivation',
   description:
-    'The nine axioms of the AIM Framework: the premises from which everything else in the theory is derived, each with its epistemic status and foundational citations.',
+    'The nine axioms of the AIM Framework: the premises from which the theory is derived, each with its epistemic status and foundational citations.',
+  alternates: { canonical: '/axioms' },
   openGraph: {
-    title: 'The Nine Axioms | AIM Framework',
+    title: 'The Nine Axioms of Human Motivation | AIM Theory',
     description:
       'The premises from which the AIM Framework is derived, with epistemic status and citations.',
-    url: 'https://aimtheory.org/axioms',
+    url: '/axioms',
+    images: [SITE_OG_IMAGE],
     type: 'article'
   }
 }

@@ -43,3 +43,6 @@ yarn-error.log*
 # Reports (keep private)
 content/reports/*.md
 !content/reports/_template.md
+# SEO monitor output (scripts/seo)
+seo-output/
+.lighthouseci/

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { HiSearch, HiX } from 'react-icons/hi'
 import { useSearch, SearchResult } from '@/lib/hooks/use-search'
 import { SearchResults } from './search-results'
@@ -19,7 +18,10 @@ export function SearchBar({ onClose, className = '', autoFocus = false }: Search
   const [selectedIndex, setSelectedIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
+  // Deliberately not using `useRouter()`: this component is mounted in the
+  // root layout, and in Next 13.4 the layout is rendered without the app
+  // router context when a page calls `notFound()`. `useRouter` then throws
+  // "invariant expected app router to be mounted" and every 404 becomes a 500.
   const { search, loadSearchIndex, isLoaded } = useSearch()
 
   // Load search index on focus
@@ -97,7 +99,7 @@ export function SearchBar({ onClose, className = '', autoFocus = false }: Search
 
   const navigateToResult = (result: SearchResult) => {
     const url = result.page.url + result.section.anchor
-    router.push(url)
+    window.location.assign(url)
     setIsOpen(false)
     setQuery('')
     onClose?.()

@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import { type Session } from '@supabase/auth-helpers-nextjs'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -24,14 +23,15 @@ function getUserInitials(name: string) {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
-  const router = useRouter()
+  // No `useRouter()` here: this renders inside the root layout, which Next 13.4
+  // mounts without the app router context on `notFound()` pages (see search-bar.tsx).
 
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient()
 
   const signOut = async () => {
     await supabase.auth.signOut()
-    router.refresh()
+    window.location.reload()
   }
 
   return (
