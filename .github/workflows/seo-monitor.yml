@@ -30,6 +30,10 @@ on:
         description: 'Run Lighthouse CI'
         type: boolean
         default: true
+      send_email:
+        description: 'Email the report (only the weekly scheduled run emails by default)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -108,7 +112,7 @@ jobs:
         run: npm run seo:lighthouse
 
       - name: Build report and email it
-        run: npm run seo:report -- ${{ github.event_name == 'push' && '--no-email' || '' }}
+        run: npm run seo:report -- ${{ (github.event_name == 'schedule' || inputs.send_email) && '--email' || '--no-email' }}
 
       - name: Upload report and raw output
         if: always()

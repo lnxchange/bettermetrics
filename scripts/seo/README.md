@@ -5,7 +5,8 @@ Weekly, automated SEO health check for **aimtheory.org**, run by
 dispatch). It crawls the live site as Googlebot, checks every page against
 the rules below, fills missing article metadata, tells search engines what
 changed, pulls organic-traffic numbers, and emails a Markdown report. A GitHub
-issue is opened when anything fails or regresses.
+issue is opened when anything fails or regresses. Only the weekly scheduled
+run sends email; tick `send_email` when dispatching manually to get one.
 
 > **Vercel Web Analytics: use the CLI / REST API, never the Vercel MCP.**
 > The MCP tools (`aggregate_pageviews`, `count_pageviews`, observability
