@@ -133,7 +133,7 @@ async function runMigration() {
     
     console.log('\n🎉 Migration complete!');
     console.log('\nNext steps:');
-    console.log('  1. Visit https://usebettermetrics.com/admin/new-article to create articles');
+    console.log('  1. Visit https://aimtheory.org/admin/new-article to create articles');
     console.log('  2. Or use the bulk import script for your 13 reports');
     
   } catch (error) {

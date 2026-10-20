@@ -45,7 +45,7 @@ export async function generateMetadata({
     return { title: 'Article Not Found' }
   }
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://usebettermetrics.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org'
   const articleUrl = `${siteUrl}/articles/${params.slug}`
   
   return {
@@ -89,7 +89,7 @@ export default async function ArticlePage({
 
   const isAdmin = session?.user?.user_metadata?.is_admin === true
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://usebettermetrics.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org'
   
   // Generate structured data
   const structuredData = article.structured_data || {

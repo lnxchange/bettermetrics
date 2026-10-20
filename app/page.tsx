@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     title: 'AIM Framework | Use Better Metrics',
     description:
       'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
-    url: 'https://www.usebettermetrics.com',
+    url: 'https://aimtheory.org',
     siteName: 'Use Better Metrics',
-    images: [{ url: 'https://www.usebettermetrics.com/aim-og.png', width: 1200, height: 630, alt: 'AIM' }],
+    images: [{ url: 'https://aimtheory.org/aim-og.png', width: 1200, height: 630, alt: 'AIM' }],
     locale: 'en_US',
     type: 'website'
   }

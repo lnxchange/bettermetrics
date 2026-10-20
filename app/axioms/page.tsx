@@ -10,30 +10,30 @@ function AxiomsJsonLd() {
     '@graph': [
       {
         '@type': 'ScholarlyArticle',
-        '@id': 'https://www.usebettermetrics.com/axioms#article',
+        '@id': 'https://aimtheory.org/axioms#article',
         headline: 'The Nine Axioms of the AIM Framework',
         description:
           'The nine axioms on which the AIM Framework rests, as stated in the AIM Treatise, Chapter 4, with their epistemic status and foundational citations.',
         author: {
           '@type': 'Person',
-          '@id': 'https://www.usebettermetrics.com/#YuleGuttenbeil',
+          '@id': 'https://aimtheory.org/#YuleGuttenbeil',
           name: 'Yule Guttenbeil'
         },
         publisher: {
           '@type': 'Organization',
           name: 'Use Better Metrics',
-          url: 'https://www.usebettermetrics.com'
+          url: 'https://aimtheory.org'
         },
-        mainEntityOfPage: 'https://www.usebettermetrics.com/axioms',
+        mainEntityOfPage: 'https://aimtheory.org/axioms',
         about: {
           '@type': 'CreativeWork',
-          '@id': 'https://www.usebettermetrics.com/#AIMFramework',
+          '@id': 'https://aimtheory.org/#AIMFramework',
           name: 'AIM Motivation Framework'
         }
       },
       {
         '@type': 'ItemList',
-        '@id': 'https://www.usebettermetrics.com/axioms#axiom-list',
+        '@id': 'https://aimtheory.org/axioms#axiom-list',
         name: 'The Nine Axioms of the AIM Framework',
         numberOfItems: axioms.length,
         itemListElement: axioms.map(a => ({
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     title: 'The Nine Axioms | AIM Framework',
     description:
       'The premises from which the AIM Framework is derived, with epistemic status and citations.',
-    url: 'https://www.usebettermetrics.com/axioms',
+    url: 'https://aimtheory.org/axioms',
     type: 'article'
   }
 }

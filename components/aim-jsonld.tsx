@@ -4,7 +4,7 @@ export function AIMJsonLd() {
     "@graph": [
       {
         "@type": "CreativeWork",
-        "@id": "https://www.usebettermetrics.com/#AIMFramework",
+        "@id": "https://aimtheory.org/#AIMFramework",
         "name": "AIM Motivation Framework",
         "alternateName": "Appetites-Intrinsic-Mimetic Framework",
         "genre": "Theoretical Framework",
@@ -18,32 +18,32 @@ export function AIMJsonLd() {
         ],
         "creator": {
           "@type": "Person",
-          "@id": "https://www.usebettermetrics.com/#YuleGuttenbeil"
+          "@id": "https://aimtheory.org/#YuleGuttenbeil"
         },
         "about": [
           {
             "@type": "DefinedTerm",
-            "@id": "https://www.usebettermetrics.com/#Appetites",
+            "@id": "https://aimtheory.org/#Appetites",
             "name": "Appetites (A)",
             "description": "Cyclical biological drives arising from homeostatic deficits, mediated through hypothalamus → orbitofrontal cortex → ventral striatum pathways. Characterized by terminal satisfiability and predictable recovery cycles.",
-            "inDefinedTermSet": "https://www.usebettermetrics.com/#AIMFramework",
+            "inDefinedTermSet": "https://aimtheory.org/#AIMFramework",
             "termCode": "A"
           },
           {
             "@type": "DefinedTerm",
-            "@id": "https://www.usebettermetrics.com/#IntrinsicMotivation",
+            "@id": "https://aimtheory.org/#IntrinsicMotivation",
             "name": "Intrinsic Motivation (I)",
             "description": "Persistent engagement in activities valued for their own sake, not terminally satisfiable. Mediated through VTA dopamine → hippocampus → prefrontal cortex pathways. Aligns with Self-Determination Theory's autonomy, competence, and relatedness needs.",
-            "inDefinedTermSet": "https://www.usebettermetrics.com/#AIMFramework",
+            "inDefinedTermSet": "https://aimtheory.org/#AIMFramework",
             "termCode": "I",
             "sameAs": "https://selfdeterminationtheory.org/"
           },
           {
             "@type": "DefinedTerm",
-            "@id": "https://www.usebettermetrics.com/#MimeticDesire",
+            "@id": "https://aimtheory.org/#MimeticDesire",
             "name": "Mimetic Desire (M)",
             "description": "Socially transmitted wanting arising from observation of others' goal-directed actions. Mediated through mirror neuron systems (parietal/premotor cortex) → ventral striatum. Amplifies with model status and social visibility, building on Girardian mimetic theory.",
-            "inDefinedTermSet": "https://www.usebettermetrics.com/#AIMFramework",
+            "inDefinedTermSet": "https://aimtheory.org/#AIMFramework",
             "termCode": "M",
             "sameAs": "https://en.wikipedia.org/wiki/Mimetic_theory"
           }
@@ -58,13 +58,13 @@ export function AIMJsonLd() {
       },
       {
         "@type": "Person",
-        "@id": "https://www.usebettermetrics.com/#YuleGuttenbeil",
+        "@id": "https://aimtheory.org/#YuleGuttenbeil",
         "name": "Yule Guttenbeil",
         "jobTitle": "Principal Commercial Lawyer & Behavioral Systems Architect",
         "description": "Creator of the AIM Motivation Framework. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
-        "url": "https://www.usebettermetrics.com",
+        "url": "https://aimtheory.org",
         "sameAs": [
-          "https://www.usebettermetrics.com"
+          "https://aimtheory.org"
         ],
         "knowsAbout": [
           "Commercial Law",
@@ -77,29 +77,29 @@ export function AIMJsonLd() {
       },
       {
         "@type": "WebSite",
-        "@id": "https://www.usebettermetrics.com/#website",
+        "@id": "https://aimtheory.org/#website",
         "name": "Use Better Metrics",
-        "url": "https://www.usebettermetrics.com",
+        "url": "https://aimtheory.org",
         "description": "Research platform for the AIM Motivation Framework: a taxonomic synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology.",
         "publisher": {
-          "@id": "https://www.usebettermetrics.com/#YuleGuttenbeil"
+          "@id": "https://aimtheory.org/#YuleGuttenbeil"
         },
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://www.usebettermetrics.com/chat?query={search_term_string}",
+          "target": "https://aimtheory.org/chat?query={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       },
       {
         "@type": "Book",
-        "@id": "https://www.usebettermetrics.com/#Book",
+        "@id": "https://aimtheory.org/#Book",
         "name": "A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire (AIM)",
         "alternateName": "The AIM Framework Book",
         "author": {
-          "@id": "https://www.usebettermetrics.com/#YuleGuttenbeil"
+          "@id": "https://aimtheory.org/#YuleGuttenbeil"
         },
         "about": {
-          "@id": "https://www.usebettermetrics.com/#AIMFramework"
+          "@id": "https://aimtheory.org/#AIMFramework"
         },
         "description": "A comprehensive theoretical synthesis integrating neuroscience, behavioral economics, Self-Determination Theory, and Girardian mimetic theory to resolve definitional inconsistencies (Code Drift) in motivation science through three neurologically distinct sources.",
         "genre": [
@@ -126,7 +126,7 @@ export function AIMJsonLd() {
             "name": "Chapter 2: General Theory of Motivation",
             "description": "Defines the core constructs, axioms, theorems, and glossary of the AIM Framework.",
             "position": 2,
-            "url": "https://www.usebettermetrics.com/glossary"
+            "url": "https://aimtheory.org/glossary"
           }
         ]
       }

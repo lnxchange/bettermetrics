@@ -82,7 +82,7 @@ Provide a JSON response ONLY (no additional text) with this exact structure:
       "name": "AIM Framework",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://usebettermetrics.com/logo.png"
+        "url": "https://aimtheory.org/logo.png"
       }
     }
   },
@@ -154,7 +154,7 @@ function generateDefaultStructuredData(input: OptimizationInput) {
       "name": "AIM Framework",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://usebettermetrics.com/logo.png"
+        "url": "https://aimtheory.org/logo.png"
       }
     }
   }

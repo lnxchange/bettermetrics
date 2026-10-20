@@ -132,7 +132,7 @@ X_BEARER_TOKEN=your_bearer_token (for API v2)
    ```
    SUPABASE_URL=your_supabase_url
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   SITE_URL=https://usebettermetrics.com
+   SITE_URL=https://aimtheory.org
    ```
 
 #### 2.2 Deploy Edge Function

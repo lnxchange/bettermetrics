@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'The Theory | AIM Framework',
     description: 'The AIM architecture in seven short sections.',
-    url: 'https://www.usebettermetrics.com/theory',
+    url: 'https://aimtheory.org/theory',
     type: 'article'
   }
 }

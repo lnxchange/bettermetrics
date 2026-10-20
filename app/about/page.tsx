@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'About | AIM Framework',
     description: 'The author, the book, its claims, and how to challenge it.',
-    url: 'https://www.usebettermetrics.com/about',
+    url: 'https://aimtheory.org/about',
     type: 'website'
   }
 }
@@ -76,15 +76,14 @@ export default function AboutPage() {
               <h2 className="mb-3 text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
               <p className="text-lg text-gray-700">
                 I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the AIM
-                Motivation Framework (&quot;AIM Framework&quot;) and creator of the website Use
-                Better Metrics (www.usebettermetrics.com).
+                Motivation Framework (&quot;AIM Framework&quot;) and creator of aimtheory.org.
               </p>
             </div>
           </div>
 
           <div className="space-y-6 text-lg text-gray-700">
             <p>
-              The purpose of Use Better Metrics and the AIM Framework is to explain how recent
+              The purpose of this website and the AIM Framework is to explain how recent
               neuroscientific discoveries shed light on where our motivations come from in the
               brain. These discoveries make it easier to understand ourselves, our relationships
               with others, and how society is arranged as a whole. The flow-on effects from how

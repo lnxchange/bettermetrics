@@ -8,7 +8,7 @@ echo "================================="
 echo ""
 
 # Use production URL by default
-BASE_URL="https://usebettermetrics.com"
+BASE_URL="https://aimtheory.org"
 if [ ! -z "$1" ]; then
     BASE_URL="$1"
 fi

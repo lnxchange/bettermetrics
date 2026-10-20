@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Notify by email. The sending domain is Lex Nova; the subject and body
-    // name usebettermetrics.com so the message is identifiable.
+    // name aimtheory.org so the message is identifiable.
     let emailSent = false
     if (process.env.RESEND_API_KEY) {
       try {
@@ -96,10 +96,10 @@ export async function POST(req: NextRequest) {
           'general': 'General Inquiry'
         }
         const topic = subject || interestMap[interest] || 'Contact Form'
-        const emailSubject = `usebettermetrics.com: ${topic}`
+        const emailSubject = `aimtheory.org: ${topic}`
         const safe = (value?: string) => escapeHtml(value || '')
         const htmlContent = interest === 'research-paper' ? `
-          <p><strong>From the contact form on usebettermetrics.com</strong></p>
+          <p><strong>From the contact form on aimtheory.org</strong></p>
           <h2>Research Paper Request</h2>
           <p><strong>Name:</strong> ${safe(name)}</p>
           <p><strong>Email:</strong> ${safe(email)}</p>
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
           <h3>Specific Questions to Address</h3>
           <p>${safe(paperQuestions).replace(/\n/g, '<br>')}</p>
         ` : `
-          <p><strong>From the contact form on usebettermetrics.com</strong></p>
+          <p><strong>From the contact form on aimtheory.org</strong></p>
           <h2>New Contact Form Submission</h2>
           <p><strong>Name:</strong> ${safe(name)}</p>
           <p><strong>Email:</strong> ${safe(email)}</p>
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
         `
         const textContent = interest === 'research-paper'
           ? [
-              'From the contact form on usebettermetrics.com',
+              'From the contact form on aimtheory.org',
               '',
               'Research Paper Request',
               `Name: ${name}`,
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
               paperQuestions
             ].filter(line => line !== '').join('\n')
           : [
-              'From the contact form on usebettermetrics.com',
+              'From the contact form on aimtheory.org',
               '',
               'New Contact Form Submission',
               `Name: ${name}`,

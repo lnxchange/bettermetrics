@@ -52,7 +52,7 @@ export interface TreatiseSectionTarget {
  */
 export function treatiseSectionTarget(href: string): TreatiseSectionTarget | null {
   try {
-    const url = new URL(href, 'https://www.usebettermetrics.com')
+    const url = new URL(href, 'https://aimtheory.org')
     const match = url.pathname.match(/^\/treatise\/([^/]+)$/)
     if (!match || match[1] === '2') return null
     const section = decodeURIComponent(url.hash.replace(/^#/, '')).toLowerCase()

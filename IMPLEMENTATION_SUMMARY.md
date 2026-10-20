@@ -158,7 +158,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_key
 PERPLEXITY_API_KEY=your_perplexity_key
 
 # For SEO optimization script
-NEXT_PUBLIC_SITE_URL=https://usebettermetrics.com
+NEXT_PUBLIC_SITE_URL=https://aimtheory.org
 
 # For Phase 2 - Social Media Distribution (obtain these later)
 LINKEDIN_CLIENT_ID=

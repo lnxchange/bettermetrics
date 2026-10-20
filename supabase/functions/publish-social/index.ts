@@ -63,7 +63,7 @@ serve(async (req) => {
       throw new Error('Article not found')
     }
     
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://usebettermetrics.com'
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://aimtheory.org'
     const articleUrl = `${siteUrl}/articles/${article.slug}`
     
     // Fetch pending social posts

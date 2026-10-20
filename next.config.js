@@ -17,6 +17,18 @@ module.exports = {
     // self-diagnosis on the home page, and the research programme on /about.
     // Domain-specific questions are answered by the chat.
     return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.usebettermetrics.com' }],
+        destination: 'https://aimtheory.org/:path*',
+        permanent: true
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'usebettermetrics.com' }],
+        destination: 'https://aimtheory.org/:path*',
+        permanent: true
+      },
       { source: '/research', destination: '/theory#applications', permanent: true },
       { source: '/research/definitions', destination: '/theory', permanent: true },
       { source: '/research/theories', destination: '/theory', permanent: true },

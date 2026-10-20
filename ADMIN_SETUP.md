@@ -199,8 +199,8 @@ Then log out and back in.
 
 ## Step 3: Verify Admin Access
 
-1. Log into your website: https://usebettermetrics.com
-2. Go to: https://usebettermetrics.com/admin
+1. Log into your website: https://aimtheory.org
+2. Go to: https://aimtheory.org/admin
 3. You should see the **Articles** card
 4. Click **"Manage Articles"**
 5. You should now see all 16 draft articles!
@@ -320,7 +320,7 @@ For production, consider:
 2. ✅ Run migration 2 (other tables RLS)
 3. ✅ Set your user metadata: `{"is_admin": true}`
 4. ✅ Log out and log back in
-5. ✅ Access https://usebettermetrics.com/admin/articles
+5. ✅ Access https://aimtheory.org/admin/articles
 
 **Result:** Full access to all admin features! 🎉
 

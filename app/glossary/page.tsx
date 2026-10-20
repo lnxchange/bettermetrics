@@ -38,29 +38,29 @@ function GlossaryJsonLd({ entries }: { entries: GlossaryEntryView[] }) {
     '@graph': [
       {
         '@type': 'DefinedTermSet',
-        '@id': 'https://www.usebettermetrics.com/glossary#termset',
+        '@id': 'https://aimtheory.org/glossary#termset',
         name: 'AIM Framework Glossary',
         description:
           'Definitions for the AIM Motivation Framework, taken from Chapter 2 of the AIM Treatise.',
-        url: 'https://www.usebettermetrics.com/glossary',
+        url: 'https://aimtheory.org/glossary',
         inLanguage: 'en',
         hasDefinedTerm: entries.map(entry => ({
           '@type': 'DefinedTerm',
           name: entry.term,
           inDefinedTermSet: {
             '@type': 'DefinedTermSet',
-            '@id': 'https://www.usebettermetrics.com/glossary#termset',
+            '@id': 'https://aimtheory.org/glossary#termset',
             name: 'AIM Framework Glossary'
           }
         }))
       },
       {
         '@type': 'WebPage',
-        '@id': 'https://www.usebettermetrics.com/glossary',
+        '@id': 'https://aimtheory.org/glossary',
         name: 'AIM Framework Glossary',
         description: `${entries.length} terms from Chapter 2 of the AIM Treatise.`,
         mainEntity: {
-          '@id': 'https://www.usebettermetrics.com/glossary#termset'
+          '@id': 'https://aimtheory.org/glossary#termset'
         }
       }
     ]

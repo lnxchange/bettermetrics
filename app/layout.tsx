@@ -18,7 +18,7 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.usebettermetrics.com'),
+  metadataBase: new URL('https://aimtheory.org'),
   title: {
     default: 'Use Better Metrics | AIM Motivation Framework',
     template: '%s | Use Better Metrics'
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     'construct validity',
     'falsifiable predictions'
   ],
-  authors: [{ name: 'Yule Guttenbeil', url: 'https://www.usebettermetrics.com' }],
+  authors: [{ name: 'Yule Guttenbeil', url: 'https://aimtheory.org' }],
   creator: 'Yule Guttenbeil',
   publisher: 'Use Better Metrics',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://www.usebettermetrics.com',
+    url: 'https://aimtheory.org',
     siteName: 'Use Better Metrics',
     title: 'AIM Framework | A Unifying General Theory of Human Motivation',
     description:
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     google: process.env.GOOGLE_SITE_VERIFICATION
   },
   alternates: {
-    canonical: 'https://www.usebettermetrics.com'
+    canonical: 'https://aimtheory.org'
   }
 }
 
