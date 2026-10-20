@@ -47,13 +47,6 @@ module.exports = {
         destination: 'https://aimtheory.org/:path*',
         permanent: true
       },
-      {
-        // Second Vercel project ("bettermetrics-2sbc") that also deploys main.
-        source: '/:path*',
-        has: [{ type: 'host', value: 'bettermetrics-2sbc.vercel.app' }],
-        destination: 'https://aimtheory.org/:path*',
-        permanent: true
-      },
       { source: '/research', destination: '/theory#applications', permanent: true },
       { source: '/research/definitions', destination: '/theory', permanent: true },
       { source: '/research/theories', destination: '/theory', permanent: true },

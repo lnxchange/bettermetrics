@@ -206,7 +206,7 @@ async function hostChecks(crawl: CrawlOutput): Promise<HostCheck[]> {
 
   // Only check the duplicate/legacy hosts when auditing production.
   if (SITE_HOST === PRODUCTION_HOST) {
-    for (const host of ['bettermetrics.vercel.app', 'bettermetrics-2sbc.vercel.app']) {
+    for (const host of ['bettermetrics.vercel.app']) {
       const response = await safeFetch(`https://${host}/theory`, { redirect: 'manual', headers: { 'user-agent': GOOGLEBOT_UA } })
       if (!response) {
         results.push({ name: `${host} resolves`, ok: true, detail: 'host not reachable (deleted or no DNS) - fine' })
