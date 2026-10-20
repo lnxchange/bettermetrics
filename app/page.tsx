@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { HiArrowRight } from 'react-icons/hi'
 import { AIMDefinitionsShort } from '@/components/aim-definitions'
+import { FrameworkCore } from '@/components/framework-core'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { TwoQuestionDiagnostic } from '@/components/two-question-diagnostic'
 
@@ -121,8 +122,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Where to go next */}
+      {/* The framework */}
       <section className="bg-gray-50 py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">The framework itself</h2>
+          <FrameworkCore />
+        </div>
+      </section>
+
+      {/* Where to go next */}
+      <section className="py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-8 text-3xl font-bold text-gray-900">Where to go next</h2>
           <div className="grid gap-6 md:grid-cols-3">

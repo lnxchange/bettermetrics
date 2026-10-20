@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { HiArrowRight } from 'react-icons/hi'
 import { AIMDefinitionsShort, AIMIntegrationEquation, MimeticPremium } from '@/components/aim-definitions'
+import { FrameworkCore } from '@/components/framework-core'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 
@@ -77,8 +78,10 @@ export default function TheoryPage() {
           </h1>
           <p className="text-lg text-gray-700">
             Enough of the architecture to know what question you want to ask. Each part ends
-            with questions the chat can answer from the Treatise itself.
+            with questions the chat can answer from the Treatise itself. The framework these
+            pages summarise is stated in full in Chapter 4 and Appendix A.
           </p>
+          <FrameworkCore className="mt-8" />
           <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label="Sections">
             {sections.map(s => (
               <a

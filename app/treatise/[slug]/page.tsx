@@ -35,6 +35,20 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
   const previous = index > 0 ? chapters[index - 1] : null
   const next = index >= 0 && index < chapters.length - 1 ? chapters[index + 1] : null
   const dated = chapter.source_date ? formatSourceDate(chapter.source_date) : null
+  const frameworkNote =
+    chapter.slug === '4'
+      ? {
+          text: 'With Appendix A, this chapter is the framework. The rest of the treatise explains it and follows it into practice.',
+          href: '/treatise/appendix-a',
+          label: 'Appendix A'
+        }
+      : chapter.slug === 'appendix-a'
+        ? {
+            text: 'With Chapter 4, this appendix is the framework. Chapter 4 states it; this is its mathematics.',
+            href: '/treatise/4',
+            label: 'Chapter 4'
+          }
+        : null
   const requested = searchParams?.section?.trim()
   const missingSection =
     requested && !chapter.headings.some(heading => heading.id === requested.toLowerCase())
@@ -47,6 +61,7 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
       title={chapter.title}
       updatedOn={dated}
       sourceNote="This is the current working text. The treatise is unfinished, and this page changes when the chapter changes."
+      frameworkNote={frameworkNote}
       headings={chapter.headings}
       html={chapter.html}
       missingSection={missingSection}

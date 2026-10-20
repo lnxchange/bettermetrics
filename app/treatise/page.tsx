@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FrameworkCore } from '@/components/framework-core'
 import {
   formatSourceDate,
   loadTreatiseChapters,
@@ -12,15 +13,22 @@ export const dynamic = 'force-dynamic'
 export const metadata = {
   title: 'A Unifying General Theory of Human Motivation',
   description:
-    'A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire. The book, chapter by chapter, in the current working text.'
+    'A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire. The framework itself is Chapter 4 and Appendix A. The rest of the book explains it and follows it into practice.'
 }
+
+const frameworkSlugs = new Set(['4', 'appendix-a'])
 
 function ChapterList({ chapters }: { chapters: TreatiseChapterSummary[] }) {
   return (
     <ol className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
       {chapters.map(chapter => (
         <li key={chapter.slug}>
-          <Link href={chapter.href} className="flex items-baseline gap-4 px-5 py-4 hover:bg-gray-50">
+          <Link
+            href={chapter.href}
+            className={`flex items-baseline gap-4 px-5 py-4 hover:bg-gray-50 ${
+              frameworkSlugs.has(chapter.slug) ? 'bg-blue-50/70' : ''
+            }`}
+          >
             <span className="w-28 shrink-0 text-sm font-semibold text-blue-700">{chapter.label}</span>
             <span className="min-w-0 flex-1 text-gray-900">{chapter.title}</span>
             {chapter.source_date && (
@@ -58,13 +66,14 @@ export default async function TreatiseIndexPage() {
             </span>
           </h1>
           <p className="mt-5 text-lg text-gray-700">
-            The book, chapter by chapter, in the current working text. A glossary entry that
-            names a chapter and section opens that place.
+            The book, in the current working text. A glossary entry that names a chapter and
+            section opens that place.
           </p>
           <p className="mt-3 text-sm text-gray-500">
             {latest ? `Latest text ${formatSourceDate(latest)}. ` : ''}
             The book is unfinished. These pages change when the source text changes.
           </p>
+          <FrameworkCore chapters={chapters} className="mt-8" />
           {draft && (
             <div className="mt-6">
               <a
@@ -95,6 +104,12 @@ export default async function TreatiseIndexPage() {
             return (
               <div key={part.id}>
                 <h2 className="mb-4 text-2xl font-bold text-gray-900">{part.title}</h2>
+                {part.id === 'appendix' && (
+                  <p className="-mt-2 mb-4 text-gray-600">
+                    Appendix A belongs with Chapter 4: together they are the framework. The
+                    appendices after it test that framework or follow it into a particular case.
+                  </p>
+                )}
                 <ChapterList chapters={items} />
               </div>
             )

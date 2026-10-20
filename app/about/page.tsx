@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { HiArrowRight } from 'react-icons/hi'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
+import { FrameworkCore } from '@/components/framework-core'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -194,10 +195,14 @@ export default function AboutPage() {
             A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and
             Mimetic Desire
           </p>
+          <div className="mb-8">
+            <FrameworkCore />
+          </div>
           <p className="mb-6 text-gray-600">
-            Twenty chapters and appendices, stated axiomatically so that each step can be
-            checked and each prediction tested. In active revision; the chat is always
-            answering from the current text.
+            Twenty chapters and further appendices follow that pair. They explain the
+            framework and show how it plays out, so that each step can be checked and each
+            prediction tested. In active revision; the chat is always answering from the
+            current text.
           </p>
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
@@ -216,8 +221,8 @@ export default function AboutPage() {
                 {partTwo.map(c => <li key={c}>{c}</li>)}
               </ol>
               <p className="mt-3 text-sm text-gray-600">
-                Appendices: the mathematical structure of the AIM system, a proposed validation
-                roadmap, and the architecture applied to artificial intelligence.
+                The other appendices propose a validation roadmap and follow the architecture
+                into particular cases, including artificial intelligence.
               </p>
             </div>
           </div>

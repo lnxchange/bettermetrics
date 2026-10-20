@@ -11,6 +11,7 @@ export function TreatiseChapterView({
   title,
   updatedOn,
   sourceNote,
+  frameworkNote,
   headings,
   html,
   missingSection,
@@ -21,6 +22,7 @@ export function TreatiseChapterView({
   title: string
   updatedOn: string | null
   sourceNote: string
+  frameworkNote?: { text: string; href: string; label: string } | null
   headings: TreatiseHeading[]
   html: string
   missingSection: string | null
@@ -100,6 +102,14 @@ export function TreatiseChapterView({
           <p className={`${updatedOn ? 'mt-2' : 'mt-4'} text-sm leading-relaxed text-gray-600`}>
             {sourceNote}
           </p>
+          {frameworkNote && (
+            <p className="mt-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm leading-relaxed text-gray-800">
+              {frameworkNote.text}{' '}
+              <Link href={frameworkNote.href} className="font-semibold text-blue-800 hover:underline">
+                {frameworkNote.label}
+              </Link>
+            </p>
+          )}
           {absent && (
             <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
               Section {absent} is not in the current text. The rest of this {label.toLowerCase()}{' '}
