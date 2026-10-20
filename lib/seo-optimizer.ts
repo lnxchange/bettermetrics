@@ -65,9 +65,12 @@ export async function optimizeArticleSEO(
     }
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
+    // The response is ~500 tokens of JSON, but current models may spend part
+    // of the budget before the text block, and a truncated object is useless.
+    // 1200 cut off 13 of 15 articles in the first production run.
     const response = await anthropic.messages.create({
       model: SEO_MODEL,
-      max_tokens: 1200,
+      max_tokens: 4000,
       system:
         `You write search metadata for ${SITE_NAME} (${SITE_URL}), the home of the AIM Framework, a general theory of human motivation with three sources: Appetites (A), Intrinsic Motivation (I) and Mimetic Desire (M). ` +
         'Write for a reader searching Google, not for the author. Be specific and plain; no hype, no clickbait, no emoji. ' +
@@ -108,7 +111,10 @@ Return a JSON object with exactly this shape:
     const contentBlock = response.content.find(block => block.type === 'text')
     const contentText = contentBlock && contentBlock.type === 'text' ? contentBlock.text : ''
     if (!contentText) {
-      throw new Error('No text content in Claude response')
+      throw new Error(`No text content in Claude response (stop_reason ${response.stop_reason}, blocks ${response.content.map(b => b.type).join(',')})`)
+    }
+    if (response.stop_reason === 'max_tokens') {
+      throw new Error(`Claude response truncated at ${response.usage.output_tokens} output tokens; raise max_tokens`)
     }
 
     // Extract JSON from response (handle potential markdown code blocks)
