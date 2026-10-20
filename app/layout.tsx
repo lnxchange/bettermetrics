@@ -55,10 +55,10 @@ export const metadata: Metadata = {
       'Taxonomic synthesis resolving definitional inconsistencies in motivation science through three neurologically distinct sources: Appetites, Intrinsic Motivation, and Mimetic Desire.',
     images: [
       {
-        url: '/AIM Logo.png',
+        url: '/aim-og.png',
         width: 1200,
         height: 630,
-        alt: 'AIM Framework - Appetites, Intrinsic Motivation, Mimetic Desire'
+        alt: 'AIM — Appetites, Intrinsic Motivation, Mimetic Desire'
       }
     ]
   },
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     title: 'AIM Framework | A Unifying General Theory of Human Motivation',
     description:
       'Taxonomic synthesis resolving Code Drift in motivation science. Three neurologically distinct sources: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M).',
-    images: ['/AIM Logo.png'],
+    images: ['/aim-og.png'],
     creator: '@usebettermetrics'
   },
   robots: {

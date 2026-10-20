@@ -118,9 +118,9 @@ export default function DiagnosticPage() {
     (Object.entries(results).sort(([,a], [,b]) => b - a)[0][0] as 'A' | 'I' | 'M') : null
 
   const sourceColors = {
-    A: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-600' },
-    I: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', badge: 'bg-blue-600' },
-    M: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', badge: 'bg-red-600' }
+    A: { bg: 'bg-appetites-soft', border: 'border-appetites/40', text: 'text-appetites', badge: 'bg-appetites' },
+    I: { bg: 'bg-intrinsic-soft', border: 'border-intrinsic/40', text: 'text-intrinsic', badge: 'bg-intrinsic' },
+    M: { bg: 'bg-mimetic-soft', border: 'border-mimetic/40', text: 'text-mimetic', badge: 'bg-mimetic' }
   }
 
   const sourceDescriptions = {
@@ -229,7 +229,7 @@ export default function DiagnosticPage() {
         ) : (
           <>
             {/* Results Display */}
-            <div className="mb-8 rounded-xl border-2 border-green-200 bg-green-50 p-8">
+            <div className="mb-8 rounded-xl border-2 border-gray-200 bg-gray-50 p-8">
               <h2 className="mb-4 text-3xl font-bold text-gray-900">Your Results</h2>
               <div className="mb-6 flex items-center justify-center gap-6">
                 {Object.entries(results!).map(([source, count]) => {

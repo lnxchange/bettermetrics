@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -12,6 +11,7 @@ import { IconSeparator } from '@/components/ui/icons'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { UserMenu } from '@/components/user-menu'
 import { SearchBar } from '@/components/search-bar'
+import { AimMark } from '@/components/aim-mark'
 
 interface HeaderProps {
   session?: any
@@ -47,9 +47,8 @@ export function Header({ session }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 px-4 backdrop-blur-xl md:px-6 lg:px-8">
       <div className="flex items-center">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/AIM Logo.png" alt="AIM Framework" width={24} height={24} />
-          <span className="hidden text-sm font-semibold text-gray-900 sm:inline">AIM</span>
+        <Link href="/" className="flex items-center" aria-label="AIM home">
+          <AimMark className="h-6 w-auto sm:h-7" />
         </Link>
         <div className="ml-2 flex items-center">
           <IconSeparator className="h-6 w-6 text-muted-foreground/50" />

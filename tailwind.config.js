@@ -33,9 +33,18 @@ module.exports = {
           700: '#1e40af',
           900: '#1e3a8a',
         },
-        appetites: '#F59E0B', // Amber for A
-        intrinsic: '#0D9488',  // Teal for I
-        mimetic: '#A855F7',    // Purple for M
+        appetites: {
+          DEFAULT: '#C62828',
+          soft: '#FCECEC'
+        },
+        intrinsic: {
+          DEFAULT: '#2E7D32',
+          soft: '#EAF3EA'
+        },
+        mimetic: {
+          DEFAULT: '#1565C0',
+          soft: '#E9F0FA'
+        },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))'

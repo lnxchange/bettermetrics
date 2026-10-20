@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
     url: 'https://www.usebettermetrics.com',
     siteName: 'Use Better Metrics',
-    images: [{ url: 'https://www.usebettermetrics.com/AIM Logo.png', width: 1200, height: 630, alt: 'AIM Framework' }],
+    images: [{ url: 'https://www.usebettermetrics.com/aim-og.png', width: 1200, height: 630, alt: 'AIM' }],
     locale: 'en_US',
     type: 'website'
   }
@@ -181,10 +181,9 @@ export default function HomePage() {
           />
           <div>
             <p className="text-lg text-gray-800">
-              AIM is the work of <strong>Yule Guttenbeil</strong>, a commercial lawyer whose
-              training in definitional precision led him to the drift in how psychology,
-              economics and neuroscience each define wanting, and to a question his therapist
-              set him in 2010 that the framework is an attempt to answer.
+              AIM is the work of <strong>Yule Guttenbeil</strong>, a technology lawyer with a
+              commerce degree in management. The framework is his account of wanting, written
+              so psychology, economics and neuroscience can share one set of definitions.
             </p>
             <Link
               href="/about"

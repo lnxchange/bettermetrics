@@ -6,19 +6,19 @@ import { MathText } from '@/components/math-text'
  * Definitions follow the AIM Treatise, Chapter 4, Section 4.3.1 (Axiom 1).
  * Keep this the single place the three sources are described on the site.
  *
- * COLOR SCHEME (RGB Analogy - Black & White to Full Color):
- * - Appetites (A) = Green (biological/natural)
- * - Intrinsic Motivation (I) = Blue (process/flow)
- * - Mimetic Desire (M) = Red (social/rivalry)
+ * COLOUR SCHEME, one colour per letter:
+ * - Appetites (A) = red
+ * - Intrinsic Motivation (I) = green
+ * - Mimetic Desire (M) = blue
  */
 
 export function AIMDefinitionsShort() {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border-2 border-green-200 bg-gradient-to-br from-green-50 to-white p-6">
+        <div className="rounded-lg border-2 border-appetites/30 bg-gradient-to-br from-appetites-soft to-white p-6">
           <h3 className="mb-2 text-xl font-bold text-gray-900">
-            Appetites <span className="text-green-600">(A)</span>
+            Appetites <span className="text-appetites">(A)</span>
           </h3>
           <p className="text-sm text-gray-700">
             What the body and basic security need: food, rest, warmth, safety, shelter, a
@@ -28,9 +28,9 @@ export function AIMDefinitionsShort() {
           <p className="mt-2 text-xs italic text-gray-600">Signature: satiates, then recurs.</p>
         </div>
 
-        <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6">
+        <div className="rounded-lg border-2 border-intrinsic/30 bg-gradient-to-br from-intrinsic-soft to-white p-6">
           <h3 className="mb-2 text-xl font-bold text-gray-900">
-            Intrinsic Motivation <span className="text-blue-600">(I)</span>
+            Intrinsic Motivation <span className="text-intrinsic">(I)</span>
           </h3>
           <p className="text-sm text-gray-700">
             What is rewarding in the doing: curiosity, mastery, play, care, creative work,
@@ -40,9 +40,9 @@ export function AIMDefinitionsShort() {
           <p className="mt-2 text-xs italic text-gray-600">Signature: persists in private.</p>
         </div>
 
-        <div className="rounded-lg border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-6">
+        <div className="rounded-lg border-2 border-mimetic/30 bg-gradient-to-br from-mimetic-soft to-white p-6">
           <h3 className="mb-2 text-xl font-bold text-gray-900">
-            Mimetic Desire <span className="text-red-600">(M)</span>
+            Mimetic Desire <span className="text-mimetic">(M)</span>
           </h3>
           <p className="text-sm text-gray-700">
             Wanting caught from watching others want. Shaped by what is visible, who is
@@ -87,17 +87,17 @@ export function NeuralCircuits() {
         Each motivational source has distinct neural pathways that converge in the brain&apos;s common-currency valuation system:
       </p>
       <div className="space-y-4">
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-          <p className="font-semibold text-green-900">Appetites (A):</p>
-          <p className="text-sm text-green-800">Hypothalamus → Orbitofrontal Cortex → Ventral Striatum</p>
+        <div className="rounded-lg border border-appetites/30 bg-appetites-soft p-4">
+          <p className="font-semibold text-appetites">Appetites (A):</p>
+          <p className="text-sm text-appetites/90">Hypothalamus → Orbitofrontal Cortex → Ventral Striatum</p>
         </div>
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p className="font-semibold text-blue-900">Intrinsic Motivation (I):</p>
-          <p className="text-sm text-blue-800">VTA Dopamine → Hippocampus → Prefrontal Cortex</p>
+        <div className="rounded-lg border border-intrinsic/30 bg-intrinsic-soft p-4">
+          <p className="font-semibold text-intrinsic">Intrinsic Motivation (I):</p>
+          <p className="text-sm text-intrinsic/90">VTA Dopamine → Hippocampus → Prefrontal Cortex</p>
         </div>
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-          <p className="font-semibold text-red-900">Mimetic Desire (M):</p>
-          <p className="text-sm text-red-800">Mirror Neurons (Parietal/Premotor) → Ventral Striatum</p>
+        <div className="rounded-lg border border-mimetic/30 bg-mimetic-soft p-4">
+          <p className="font-semibold text-mimetic">Mimetic Desire (M):</p>
+          <p className="text-sm text-mimetic/90">Mirror Neurons (Parietal/Premotor) → Ventral Striatum</p>
         </div>
         <div className="rounded-lg border-2 border-indigo-300 bg-indigo-100 p-4">
           <p className="font-semibold text-indigo-900">Integration Hub:</p>
@@ -179,19 +179,19 @@ export function DescriptiveVsNormative() {
 
 export function MimeticPremium() {
   return (
-    <div className="rounded-lg border-2 border-red-200 bg-gradient-to-br from-red-50 to-white p-6">
+    <div className="rounded-lg border-2 border-mimetic/30 bg-gradient-to-br from-mimetic-soft to-white p-6">
       <h3 className="mb-3 text-xl font-bold text-gray-900">Price Decomposition and the Mimetic Premium (P<sub>M</sub>)</h3>
       <p className="mb-4 text-gray-700">
         Any price separates into three parts: what the object would cost bought purely to
         correct a deficit, the extra for quality sufficient to support genuine engagement, and
         the residual paid for what owning it signals.
       </p>
-      <div className="rounded-lg border border-red-200 bg-white p-4">
+      <div className="rounded-lg border border-mimetic/20 bg-white p-4">
         <p className="mb-2 text-sm font-semibold text-gray-900">Example: a $5 bottle of water</p>
         <ul className="space-y-2 text-sm text-gray-700">
-          <li className="ml-4"><span className="font-medium text-green-700">A-Functional Price:</span> about $0.50 for hydration</li>
-          <li className="ml-4"><span className="font-medium text-blue-700">I-Adequate Price:</span> close to nothing; there is no process to support</li>
-          <li className="ml-4"><span className="font-medium text-red-700">Mimetic Premium:</span> the remaining $4.50, paid for the brand and the bottle being seen</li>
+          <li className="ml-4"><span className="font-medium text-appetites">A-Functional Price:</span> about $0.50 for hydration</li>
+          <li className="ml-4"><span className="font-medium text-intrinsic">I-Adequate Price:</span> close to nothing; there is no process to support</li>
+          <li className="ml-4"><span className="font-medium text-mimetic">Mimetic Premium:</span> the remaining $4.50, paid for the brand and the bottle being seen</li>
         </ul>
       </div>
       <p className="mt-4 text-xs text-gray-600">

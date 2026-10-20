@@ -10,9 +10,9 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'The Treatise',
+  title: 'A Unifying General Theory of Human Motivation',
   description:
-    'The AIM Treatise, chapter by chapter. Each page is the current working text, and a glossary derivation opens the section that establishes the term.'
+    'A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire. The book, chapter by chapter, in the current working text.'
 }
 
 function ChapterList({ chapters }: { chapters: TreatiseChapterSummary[] }) {
@@ -48,12 +48,18 @@ export default async function TreatiseIndexPage() {
     <div className="bg-white">
       <section className="border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-gray-50 py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
             The treatise
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <span className="block">A Unifying General Theory of Human Motivation</span>
+            <span className="mt-2 block text-xl font-medium text-gray-700 sm:text-2xl">
+              Appetites, Intrinsic Motivation and Mimetic Desire
+            </span>
           </h1>
-          <p className="text-lg text-gray-700">
-            Twenty chapters and the appendices, in the current working text. A glossary entry
-            that names a chapter and section opens that place.
+          <p className="mt-5 text-lg text-gray-700">
+            The book, chapter by chapter, in the current working text. A glossary entry that
+            names a chapter and section opens that place.
           </p>
           <p className="mt-3 text-sm text-gray-500">
             {latest ? `Latest text ${formatSourceDate(latest)}. ` : ''}

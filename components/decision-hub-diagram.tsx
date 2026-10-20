@@ -2,13 +2,14 @@
 
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { AIM_SOURCE_COLORS } from '@/lib/aim-colors'
 
 const WIDTH = 1040
 const HEIGHT = 800
 
-const A = { fill: '#FCECEC', stroke: '#C62828' }
-const I = { fill: '#EAF3EA', stroke: '#2E7D32' }
-const M = { fill: '#E9F0FA', stroke: '#1565C0' }
+const A = { fill: AIM_SOURCE_COLORS.appetitesSoft, stroke: AIM_SOURCE_COLORS.appetites }
+const I = { fill: AIM_SOURCE_COLORS.intrinsicSoft, stroke: AIM_SOURCE_COLORS.intrinsic }
+const M = { fill: AIM_SOURCE_COLORS.mimeticSoft, stroke: AIM_SOURCE_COLORS.mimetic }
 const PLAIN = { fill: '#ffffff', stroke: '#6b6660' }
 const INK = '#201c19'
 const LINE = '#3a3733'

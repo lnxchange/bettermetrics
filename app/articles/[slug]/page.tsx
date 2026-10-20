@@ -109,7 +109,7 @@ export default async function ArticlePage({
       "name": "AIM Framework",
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/AIM Logo.png`
+        "url": `${siteUrl}/aim-og.png`
       }
     },
     "mainEntityOfPage": {
