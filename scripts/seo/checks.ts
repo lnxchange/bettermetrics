@@ -69,7 +69,10 @@ function pageFindings(crawl: CrawlOutput): Finding[] {
       continue
     }
 
-    const robots = `${page.robotsMeta ?? ''} ${page.xRobotsTag ?? ''}`.toLowerCase()
+    // Preview hosts (*.vercel.app) are noindexed by header on purpose; only
+    // the in-page robots meta counts there.
+    const isPreviewHost = /\.vercel\.app$/.test(SITE_HOST)
+    const robots = `${page.robotsMeta ?? ''} ${isPreviewHost ? '' : page.xRobotsTag ?? ''}`.toLowerCase()
     if (robots.includes('noindex')) {
       add(page.url, 'noindex', 'fail', `robots="${page.robotsMeta ?? ''}" x-robots-tag="${page.xRobotsTag ?? ''}"`)
     }
