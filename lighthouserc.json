@@ -3,7 +3,6 @@
     "collect": {
       "numberOfRuns": 1,
       "settings": {
-        "preset": "mobile",
         "onlyCategories": ["performance", "accessibility", "best-practices", "seo"],
         "chromeFlags": "--no-sandbox --headless=new"
       },
