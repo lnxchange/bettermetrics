@@ -8,6 +8,10 @@ import { AskAI } from '@/components/ask-ai'
  * Eliminative: test for A, then for I; if both fail, M is identified by
  * exclusion. The page does not try to explain the result in depth; it hands
  * the reader to the chat with their own case pre-loaded.
+ *
+ * The M result and the I-Test hint are verbatim Treatise text (§18.6.1, and
+ * "M is the Salience signal" from the Chapter 2 entry for Mimetic Desire).
+ * Keep them canonical rather than paraphrasing.
  */
 
 type Step = 'object' | 'q1' | 'q2' | 'result'
@@ -32,9 +36,9 @@ const results: Record<
       `I used the Two-Question Diagnostic on "${obj}" and it looks Intrinsically motivated. How can I protect that from being crowded out, and how would I notice if a Mimetic Premium was creeping in?`
   },
   M: {
-    title: 'Mimetic Desire, by elimination',
+    title: 'M is likely the primary driver',
     body:
-      'It is not a bodily need and it would not survive the removal of an audience. AIM identifies this as socially transmitted wanting. It will not satiate; acquiring it resets the target.',
+      'If both tests fail, the desire is not bodily-need-driven and would not persist in private, M is identified by exclusion. M is the Salience signal. The Mimetic contribution arrives in the form of the very thing an introspective test would be looking for, a felt lack, and introspection asked to distinguish a Salience reading from a deficit is asked to read a distinction the integrated Scalar does not carry.',
     question: obj =>
       `I used the Two-Question Diagnostic on "${obj}" and it came out as Mimetic Desire by elimination. What does AIM say I should do with that, given Source Opacity and the Knowledge Patch?`
   }
@@ -104,7 +108,7 @@ export function TwoQuestionDiagnostic() {
           number={2}
           tag="I-Test"
           text={`Would you still want ${label} if no one could ever see you having or doing it?`}
-          hint="Tests whether the want survives the removal of every audience."
+          hint="Tests whether the desire persists without social observation."
           onYes={() => {
             setResult('I')
             setStep('result')
