@@ -87,7 +87,7 @@ export default function HomePage() {
             The brain cannot act on three signals at once, so it integrates them into one value
             per option. That output records <em>how much</em> you want something but not{' '}
             <em>why</em>. The source tags are not hidden; they are gone, the way red, green and
-            blue paint stirred together cannot be separated by staring at the result.
+            blue paint stirred together cannot be separated by unmixing them.
           </p>
           <p className="mb-4 text-lg text-gray-700">
             Asked why you chose, the brain does not answer &ldquo;I don&apos;t know.&rdquo; It
