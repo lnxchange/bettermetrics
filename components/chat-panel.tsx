@@ -5,6 +5,8 @@ import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { IconRefresh, IconStop } from '@/components/ui/icons'
 import { ChatModeToggle } from '@/components/chat-mode-toggle'
+import { cn } from '@/lib/utils'
+import { treatisePanelRight } from '@/components/treatise-section-panel'
 
 export interface ChatPanelProps
   extends Pick<
@@ -25,6 +27,9 @@ export interface ChatPanelProps
   /** null for signed-in users; a number for guests */
   guestRemaining?: number | null
   disabled?: boolean
+  mode: 'academic' | 'layperson'
+  onModeChange: (mode: 'academic' | 'layperson') => void
+  panelOpen?: boolean
 }
 
 export function ChatPanel({
@@ -39,10 +44,18 @@ export function ChatPanel({
   lastFailedMessage,
   onRetry,
   guestRemaining,
-  disabled = false
+  disabled = false,
+  mode,
+  onModeChange,
+  panelOpen = false
 }: ChatPanelProps) {
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
+    <div
+      className={cn(
+        'fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%',
+        panelOpen && treatisePanelRight
+      )}
+    >
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         {errorMessage && (
@@ -88,7 +101,7 @@ export function ChatPanel({
                 </>
               )}
             </span>
-            <ChatModeToggle />
+            <ChatModeToggle mode={mode} onChange={onModeChange} />
           </div>
         </div>
       </div>

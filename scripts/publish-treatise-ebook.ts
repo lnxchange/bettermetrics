@@ -81,16 +81,17 @@ async function main() {
     const { error: uploadError } = await supabase.storage.from(BUCKET).upload(built.filename, bytes, {
       contentType: 'application/epub+zip',
       upsert: true,
-      cacheControl: '3600'
+      cacheControl: '60'
     })
     if (uploadError) throw new Error(`ebook upload: ${uploadError.message}`)
 
     const { data: publicFile } = supabase.storage.from(BUCKET).getPublicUrl(built.filename)
+    const builtAt = new Date().toISOString()
     const current = {
       sourceDate: built.sourceDate,
       filename: built.filename,
-      url: publicFile.publicUrl,
-      builtAt: new Date().toISOString()
+      url: `${publicFile.publicUrl}?v=${encodeURIComponent(builtAt)}`,
+      builtAt
     }
     const { error: pointerError } = await supabase.storage.from(BUCKET).upload(
       'current.json',

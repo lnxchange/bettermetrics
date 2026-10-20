@@ -34,6 +34,24 @@ export function citationHref(chapter: string | undefined, appendix: string | und
   return `${path}#${anchor}`
 }
 
+export interface TreatiseSectionTarget {
+  slug: string
+  section: string
+}
+
+/** A chapter or appendix link with a section anchor, such as /treatise/12#12.2. */
+export function treatiseSectionTarget(href: string): TreatiseSectionTarget | null {
+  try {
+    const url = new URL(href, 'https://www.usebettermetrics.com')
+    const match = url.pathname.match(/^\/treatise\/([^/]+)$/)
+    const section = decodeURIComponent(url.hash.replace(/^#/, '')).toLowerCase()
+    if (!match || !section || match[1] === '2') return null
+    return { slug: match[1], section }
+  } catch {
+    return null
+  }
+}
+
 /** Chapter or appendix slug plus section id, in the order the derivation names them. */
 export function citationTargets(input: string): { slug: string; section: string }[] {
   if (!input) return []

@@ -9,12 +9,18 @@ import { Mermaid } from '@/components/ui/mermaid'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconPerplexity, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
+import { linkifyTreatiseMarkdown, treatiseSectionTarget, TreatiseSectionTarget } from '@/lib/treatise-citations'
 
 export interface ChatMessageProps {
   message: Message
+  onOpenSection?: (target: TreatiseSectionTarget) => void
 }
 
-export function ChatMessage({ message, ...props }: ChatMessageProps) {
+export function ChatMessage({ message, onOpenSection, ...props }: ChatMessageProps) {
+  const content =
+    message.role === 'assistant'
+      ? linkifyTreatiseMarkdown(message.content.replace(/\*\[Treatise,\s*([^\]]+)\]\*/g, '$1'))
+      : message.content
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -40,10 +46,26 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
               return <p className="mb-2 last:mb-0">{children}</p>
             },
             a({ href, children, ...props }) {
+              const section = href ? treatiseSectionTarget(href) : null
+              if (section && onOpenSection) {
+                return (
+                  <a
+                    href={href}
+                    className="text-blue-600 hover:underline dark:text-blue-400"
+                    onClick={event => {
+                      event.preventDefault()
+                      onOpenSection(section)
+                    }}
+                  >
+                    {children}
+                  </a>
+                )
+              }
+
               // Style citation links as buttons
               // Citations are typically [1], [2], etc.
               const isCitation = /^\[\d+\]$/.test(children?.toString() || '')
-              
+
               if (isCitation) {
                 return (
                   <a
@@ -114,7 +136,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             }
           }}
         >
-          {message.content}
+          {content}
         </MemoizedReactMarkdown>
         <ChatMessageActions message={message} />
       </div>

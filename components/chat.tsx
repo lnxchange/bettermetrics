@@ -10,7 +10,12 @@ import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
 import { EmptyScreen } from '@/components/empty-screen'
 import { ChatScrollAnchor } from '@/components/chat-scroll-anchor'
+import {
+  TreatiseSectionPanel,
+  treatisePanelOffset
+} from '@/components/treatise-section-panel'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+import { TreatiseSectionTarget } from '@/lib/treatise-citations'
 import { GUEST_LIMIT, GUEST_REMAINING_HEADER } from '@/lib/guest-quota'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from './ui/button'
@@ -34,10 +39,11 @@ export function Chat({
   initialQuestion
 }: ChatProps) {
   const router = useRouter()
-  const [chatMode] = useLocalStorage<'academic' | 'layperson'>(
+  const [chatMode, setChatMode] = useLocalStorage<'academic' | 'layperson'>(
     'aim-chat-mode',
     'layperson'
   )
+  const [section, setSection] = useState<TreatiseSectionTarget | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
   const [hasNavigated, setHasNavigated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -178,10 +184,13 @@ export function Chat({
 
   return (
     <>
-      <div className={cn('pb-[200px] pt-4 md:pt-10', className)} suppressHydrationWarning>
+      <div
+        className={cn('pb-[200px] pt-4 md:pt-10', section && treatisePanelOffset, className)}
+        suppressHydrationWarning
+      >
         {messages.length ? (
           <>
-            <ChatList messages={messages} />
+            <ChatList messages={messages} onOpenSection={setSection} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
         ) : (
@@ -223,7 +232,17 @@ export function Chat({
         onRetry={handleRetry}
         guestRemaining={guestRemaining}
         disabled={quotaExceeded}
+        mode={chatMode}
+        onModeChange={setChatMode}
+        panelOpen={section !== null}
       />
+      {section && (
+        <TreatiseSectionPanel
+          target={section}
+          onOpen={setSection}
+          onClose={() => setSection(null)}
+        />
+      )}
     </>
   )
 }

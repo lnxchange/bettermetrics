@@ -157,7 +157,7 @@ Write the argument in the Treatise's own vocabulary.
 - When a named term is supplied under Treatise Definitions, state the formal definition and, where the entry has one, its plain-English explanation. Both belong to the glossary. Do not replace either with a paraphrase of your own, and do not add analogies unless the supplied chapter uses them.
 - Give the epistemic status with the definition, so a framework-specific construct is not presented as an established finding.
 - Name the axioms and the architectural components the conclusion depends on, and say how the conclusion follows.
-- Cite each load-bearing claim at the section it comes from, as *[Treatise, Chapter 12, Section 12.2]* or *[Treatise, Appendix A, Section A.2]*.
+- Cite each load-bearing claim at the section it comes from, as plain words in exactly this shape: Chapter 12, Section 12.2 or Appendix A, Section A.2. Cite only a section that appears in the supplied text. Do not invent a section, and do not wrap the citation in italics, brackets, or a link.
 - When the supplied text gives a URL for a reference the answer relies on, include that reference as a markdown link. A reference with no URL is named without a link. Do not invent a URL, and do not add a source that is not in the supplied text.
 - Answer the question asked. Give a recommendation only when one was asked for, and then state it as the framework's derived result.`
 
@@ -170,13 +170,7 @@ This conversation has already begun. Continue from what has been said. Do not de
 const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
 A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
-// REASONING MODEL IMPLEMENTATION
-// Using Claude Opus (claude-opus-4-6) - current model naming convention
-// Provides:
-// 1. Best-in-class reasoning capabilities for applying AIM framework
-// 2. 200K context window for comprehensive RAG context
-// 3. No web search - relies exclusively on provided RAG documents
-// 4. Excellent at following nuanced instructions without rigid formatting
+const CHAT_MODEL = 'claude-opus-5-5'
 // 5. Natural, conversational responses without forced structures
 // 6. Superior at avoiding unnecessary disclaimers and meta-commentary
 // 7. 8K output tokens for complete answers
@@ -340,7 +334,7 @@ export async function POST(req: Request) {
     })
 
     console.log('Making Claude API request:', {
-      model: 'claude-opus-4-6',
+      model: CHAT_MODEL,
       messageCount: claudeMessages.length,
       hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
       timestamp: new Date().toISOString()
@@ -350,7 +344,7 @@ export async function POST(req: Request) {
     let stream
     try {
       stream = await anthropic.messages.stream({
-        model: 'claude-opus-4-6',
+        model: CHAT_MODEL,
         max_tokens: 8192,  // Claude Opus supports 8K output tokens
         temperature: 0.3,
         system: systemContent,  // System prompt separate from messages
@@ -364,7 +358,7 @@ export async function POST(req: Request) {
         chatId: json.id,
         messageCount: messages.length,
         hasApiKey: !!process.env.ANTHROPIC_API_KEY,
-        model: 'claude-opus-4-6',
+        model: CHAT_MODEL,
         timestamp: new Date().toISOString()
       })
       console.error('===========================')
@@ -403,7 +397,7 @@ export async function POST(req: Request) {
 
     console.log(`Claude response received: ${fullContent.length} characters`)
 
-    // No citation processing needed - Claude doesn't provide citations like Perplexity
+    // Section citations are turned into treatise links when the reply is shown.
 
     // Save chat to database (signed-in users only; guest chats are ephemeral)
     if (userId) {
