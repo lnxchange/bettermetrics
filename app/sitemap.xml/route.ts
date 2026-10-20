@@ -83,6 +83,8 @@ async function collectSitemapEntries(): Promise<Entry[]> {
   ])
 
   for (const article of articles.data ?? []) {
+    // Redirected to /glossary in next.config.js.
+    if (article.slug === '260106-chapter-2') continue
     entries.push({
       url: `${SITE_URL}/articles/${article.slug}`,
       lastModified: article.updated_at || article.published_at || now

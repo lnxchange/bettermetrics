@@ -47,6 +47,9 @@ module.exports = {
         destination: 'https://aimtheory.org/:path*',
         permanent: true
       },
+      // An old article copy of Treatise Chapter 2, which is served at /glossary.
+      // Also skipped in app/sitemap.xml/route.ts.
+      { source: '/articles/260106-chapter-2', destination: '/glossary', permanent: true },
       { source: '/research', destination: '/theory#applications', permanent: true },
       { source: '/research/definitions', destination: '/theory', permanent: true },
       { source: '/research/theories', destination: '/theory', permanent: true },
