@@ -1,49 +1,38 @@
 {
   "pages": [
     {
-      "title": "About",
+      "title": "About the Author and the AIM Framework",
       "url": "/about",
       "sections": [
         {
-          "heading": "About",
+          "heading": "About the Author and the AIM Framework",
           "anchor": "",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. Principal commercial lawyer and the author of the AIM Framework. Contract work is definitional work: a system fails when two parties are using slightly different meanings of the same word. Reading across psychol"
+          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of aimtheory.org. The purpose of this website and the AIM Framework is to explain how recent neuroscienti"
         },
         {
           "heading": "Yule Guttenbeil",
           "anchor": "#yule-guttenbeil",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. Principal commercial lawyer and the author of the AIM Framework. Contract work is definitional work: a system f"
+          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of ai"
         },
         {
           "heading": "The book",
           "anchor": "#the-book",
-          "content": "The personal version is shorter. In 2010 I told a therapist I could not tell whether I wanted things because I wanted them or because my father wanted them for me. She said: then that is where your wo"
+          "content": "The purpose of this website and the AIM Framework is to explain how recent neuroscientific discoveries shed light on where our motivations come from in the brain. These discoveries make it easier to u"
         },
         {
           "heading": "What AIM claims, and does not",
           "anchor": "#what-aim-claims-and-does-not",
-          "content": "Twenty chapters and appendices, stated axiomatically so that each step can be checked and each prediction tested. In active revision; the chat is always answering from the current text. Appendices: th"
+          "content": "While it might seem unusual for a lawyer to develop a framework of human motivation, my professional background, particularly in writing and analysing contracts, has given me a unique ability when ass"
         },
         {
           "heading": "How to challenge it",
           "anchor": "#how-to-challenge-it",
-          "content": "From the Treatise, Chapter 1, Section 1.4. The framework is stated axiomatically to maximise the number of ways it can be shown wrong, and to make each cheap to test. Most of its components are inheri"
+          "content": "Contracts exist to manage rivalry; they make implicit expectations explicit and help prevent conflict by clearly defining boundaries and roles. Without them, confusion and disputes arise because compe"
         },
         {
           "heading": "Get in touch",
           "anchor": "#get-in-touch",
-          "content": "Everything downstream, from Source Opacity to the scapegoat mechanism to the Knowledge Patch, is derived from those two plus the inherited architecture. Each derivation is stated so the step can be ch"
-        }
-      ]
-    },
-    {
-      "title": "Edit Article",
-      "url": "/admin/articles/[id]/edit",
-      "sections": [
-        {
-          "heading": "Edit Article",
-          "anchor": "",
-          "content": "Status: URL: /articles/ The date the article was originally written (shown to readers)"
+          "content": "The AIM Motivation Framework is a synthetic theory. It provides a basis for hypothesising predictions and tightly boundered tests in order to validate its premise. I am not a professional psychologist"
         }
       ]
     },
@@ -76,7 +65,7 @@
         {
           "heading": "Inbox",
           "anchor": "",
-          "content": "unread message$` : 'No unread messages'}  Make sure the contact_messages table exists in Supabase. See setup instructions below."
+          "content": "unread message$` : messages.length > 0 ? 'No unread messages' : 'No messages yet'}  "
         }
       ]
     },
@@ -92,11 +81,11 @@
       ]
     },
     {
-      "title": "Admin Dashboard | Use Better Metrics",
+      "title": "Admin Dashboard",
       "url": "/admin",
       "sections": [
         {
-          "heading": "Admin Dashboard | Use Better Metrics",
+          "heading": "Admin Dashboard",
           "anchor": "",
           "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page. Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and"
         },
@@ -141,22 +130,11 @@
       ]
     },
     {
-      "title": "Article Not Found",
-      "url": "/articles/[slug]",
-      "sections": [
-        {
-          "heading": "Article Not Found",
-          "anchor": "",
-          "content": ""
-        }
-      ]
-    },
-    {
-      "title": "Articles | AIM Framework",
+      "title": "Articles Applying the AIM Framework",
       "url": "/articles",
       "sections": [
         {
-          "heading": "Articles | AIM Framework",
+          "heading": "Articles Applying the AIM Framework",
           "anchor": "",
           "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet. "
         },
@@ -168,11 +146,11 @@
       ]
     },
     {
-      "title": "The Nine Axioms",
+      "title": "The Nine Axioms of Human Motivation",
       "url": "/axioms",
       "sections": [
         {
-          "heading": "The Nine Axioms",
+          "heading": "The Nine Axioms of Human Motivation",
           "anchor": "",
           "content": "  "
         },
@@ -189,22 +167,11 @@
       ]
     },
     {
-      "title": "Ask the AI",
-      "url": "/chat/[id]",
-      "sections": [
-        {
-          "heading": "Ask the AI",
-          "anchor": "",
-          "content": ""
-        }
-      ]
-    },
-    {
-      "title": "Get in Touch",
+      "title": "Contact Yule Guttenbeil",
       "url": "/contact",
       "sections": [
         {
-          "heading": "Get in Touch",
+          "heading": "Contact Yule Guttenbeil",
           "anchor": "",
           "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage you to try our AIM Chat AI assistant first. It has access to the latest versions of our research docu"
         },
@@ -268,44 +235,49 @@
       ]
     },
     {
-      "title": "Glossary",
+      "title": "Glossary of the AIM Framework",
       "url": "/glossary",
       "sections": [
         {
-          "heading": "Glossary",
+          "heading": "Glossary of the AIM Framework",
           "anchor": "",
-          "content": "Capitalised terms in AIM have the bounded meanings defined here. For anything not listed, or for how a term is used in a particular chapter, ask the AI. )} className=`} > ))} Showing of terms "
+          "content": ""
         }
       ]
     },
     {
-      "title": "AIM Framework | Use Better Metrics",
+      "title": "AIM Theory | A General Theory of Human Motivation",
       "url": "/",
       "sections": [
         {
-          "heading": "AIM Framework | Use Better Metrics",
+          "heading": "AIM Theory | A General Theory of Human Motivation",
           "anchor": "",
-          "content": "A general theory of human motivation Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea. AIM proposes the equivalent for wanting: motivation comes from three distinct sources that the brain mixes into a"
+          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea: disease has a cause you can name. The AIM Framework is that idea for wanting. It is bas"
         },
         {
           "heading": "Three sources of wanting",
           "anchor": "#three-sources-of-wanting",
-          "content": "A general theory of human motivation Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea. AIM proposes "
+          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that wi"
         },
         {
           "heading": "What gets lost in the mix",
           "anchor": "#what-gets-lost-in-the-mix",
-          "content": "Not categories invented for convenience. Each has its own neural pathway, its own satiation pattern, and its own tell. The brain cannot act on three signals at once, so it integrates them into one val"
+          "content": "The brain cannot act on three signals at once, so it integrates them into one value per option. That output records how much you want something but not why. The source tags are not hidden; they are go"
         },
         {
           "heading": "Try the Two-Question Diagnostic",
           "anchor": "#try-the-two-question-diagnostic",
-          "content": "Asked why you chose, the brain does not answer &ldquo;I don't know.&rdquo; It builds a plausible story and believes it. Socially caught wants are the most likely to be misfiled as your own, because th"
+          "content": "This is why asking people what they want, the foundation of consumer research, welfare economics and much of therapy, asks a question the architecture cannot reliably answer. Introspection cannot read"
+        },
+        {
+          "heading": "The framework itself",
+          "anchor": "#the-framework-itself",
+          "content": "The architecture in seven short sections: sources, integration, opacity, confabulation, parasitism, satiation, and the patch. The premises everything is derived from, with what each one rests on and w"
         },
         {
           "heading": "Where to go next",
           "anchor": "#where-to-go-next",
-          "content": "Introspection cannot read the source, but behaviour can be tested for it. Two questions, by elimination. The architecture in seven short sections: sources, integration, opacity, confabulation, parasit"
+          "content": "The corpus behind the chat is the full Treatise and research archive, kept current. Specific questions get specific answers. AIM is the work of Yule Guttenbeil, a technology lawyer with a commerce deg"
         }
       ]
     },
@@ -321,29 +293,13 @@
       ]
     },
     {
-      "title": "Untitled Page",
+      "title": "Service temporarily unavailable",
       "url": "/service-unavailable",
       "sections": [
         {
-          "heading": "Untitled Page",
+          "heading": "Service temporarily unavailable",
           "anchor": "",
           "content": "Service Temporarily Unavailable The authentication service is currently being configured. This affects the chat feature, admin panel, and research document downloads. All research content and framework documentation remains accessible for reading."
-        },
-        {
-          "heading": "Service Temporarily Unavailable",
-          "anchor": "#service-temporarily-unavailable",
-          "content": "Service Temporarily Unavailable The authentication service is currently being configured. This affects the chat feature, admin panel, and research document downloads. All research content and framewor"
-        }
-      ]
-    },
-    {
-      "title": "Untitled Page",
-      "url": "/share/[id]",
-      "sections": [
-        {
-          "heading": "Untitled Page",
-          "anchor": "",
-          "content": ""
         }
       ]
     },
@@ -370,18 +326,34 @@
       ]
     },
     {
-      "title": "The Theory",
+      "title": "The AIM Theory of Human Motivation Explained",
       "url": "/theory",
       "sections": [
         {
-          "heading": "The Theory",
+          "heading": "The AIM Theory of Human Motivation Explained",
           "anchor": "",
-          "content": "Part  Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself."
+          "content": "Part  Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself. The framework these pages summarise is stated in full in Chapter 4 and Appendix A."
         },
         {
           "heading": "",
           "anchor": "#",
           "content": "Part "
+        }
+      ]
+    },
+    {
+      "title": "The AIM Treatise: A General Theory of Human Motivation",
+      "url": "/treatise",
+      "sections": [
+        {
+          "heading": "The AIM Treatise: A General Theory of Human Motivation",
+          "anchor": "",
+          "content": "The treatise The book, in the current working text. A glossary entry that names a chapter and section opens that place. . ` : ''} The book is unfinished. These pages change when the source text changes."
+        },
+        {
+          "heading": "",
+          "anchor": "#",
+          "content": "The treatise The book, in the current working text. A glossary entry that names a chapter and section opens that place."
         }
       ]
     },

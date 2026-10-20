@@ -1,5 +1,7 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { FrameworkCore } from '@/components/framework-core'
+import { SITE_OG_IMAGE } from '@/lib/site'
 import {
   formatSourceDate,
   loadTreatiseChapters,
@@ -10,10 +12,18 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'A Unifying General Theory of Human Motivation',
+export const metadata: Metadata = {
+  title: { absolute: 'The AIM Treatise: A General Theory of Human Motivation' },
   description:
-    'A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire. The framework itself is Chapter 4 and Appendix A. The rest of the book explains it and follows it into practice.'
+    'The AIM Treatise: a general theory of human motivation built on Appetites, Intrinsic Motivation and Mimetic Desire. The working text, chapter by chapter.',
+  alternates: { canonical: '/treatise' },
+  openGraph: {
+    title: 'The AIM Treatise: A General Theory of Human Motivation',
+    description: 'The current working text of the book, chapter by chapter.',
+    url: '/treatise',
+    images: [SITE_OG_IMAGE],
+    type: 'book'
+  }
 }
 
 const frameworkSlugs = new Set(['4', 'appendix-a'])

@@ -20,7 +20,15 @@
     "process-rag-embeddings": "node scripts/process-rag-embeddings.js",
     "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts",
     "sync-treatise": "tsx scripts/sync-treatise-chapters.ts && tsx scripts/publish-treatise-ebook.ts",
-    "audit-treatise-citations": "tsx scripts/audit-treatise-citations.ts"
+    "audit-treatise-citations": "tsx scripts/audit-treatise-citations.ts",
+    "seo:crawl": "tsx scripts/seo/crawl.ts",
+    "seo:checks": "tsx scripts/seo/checks.ts",
+    "seo:fix": "tsx scripts/seo/fix-articles.ts",
+    "seo:ping": "tsx scripts/seo/ping.ts",
+    "seo:traffic": "tsx scripts/seo/traffic.ts",
+    "seo:report": "tsx scripts/seo/report.ts",
+    "seo:lighthouse": "npx --yes @lhci/cli@0.15 autorun --config=lighthouserc.json",
+    "seo:monitor": "npm run seo:crawl && npm run seo:checks && npm run seo:fix && npm run seo:ping -- --dry-run && npm run seo:traffic && npm run seo:report"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { GAListener } from '@/components/ga-listener'
+import { SITE_AUTHOR, SITE_NAME, SITE_URL } from '@/lib/site'
 
 import { ToasterWrapper } from '@/components/toaster-wrapper'
 
@@ -18,10 +19,10 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://aimtheory.org'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Use Better Metrics | AIM Motivation Framework',
-    template: '%s | Use Better Metrics'
+    default: `${SITE_NAME} | A General Theory of Human Motivation`,
+    template: `%s | ${SITE_NAME}`
   },
   description:
     'A Unifying General Theory of Human Motivation: Taxonomic synthesis integrating neuroscience, behavioral economics, Self-Determination Theory, and Girardian mimetic theory. Resolves Code Drift through three neurologically distinct sources—Appetites (A), Intrinsic Motivation (I), and Mimetic Desire (M).',
@@ -42,14 +43,14 @@ export const metadata: Metadata = {
     'construct validity',
     'falsifiable predictions'
   ],
-  authors: [{ name: 'Yule Guttenbeil', url: 'https://aimtheory.org' }],
-  creator: 'Yule Guttenbeil',
-  publisher: 'Use Better Metrics',
+  authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
+  creator: SITE_AUTHOR,
+  publisher: SITE_NAME,
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://aimtheory.org',
-    siteName: 'Use Better Metrics',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: 'AIM Framework | A Unifying General Theory of Human Motivation',
     description:
       'Taxonomic synthesis resolving definitional inconsistencies in motivation science through three neurologically distinct sources: Appetites, Intrinsic Motivation, and Mimetic Desire.',
@@ -67,8 +68,7 @@ export const metadata: Metadata = {
     title: 'AIM Framework | A Unifying General Theory of Human Motivation',
     description:
       'Taxonomic synthesis resolving Code Drift in motivation science. Three neurologically distinct sources: Appetites (A), Intrinsic Motivation (I), Mimetic Desire (M).',
-    images: ['/aim-og.png'],
-    creator: '@usebettermetrics'
+    images: ['/aim-og.png']
   },
   robots: {
     index: true,
@@ -92,10 +92,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION
-  },
-  alternates: {
-    canonical: 'https://aimtheory.org'
   }
+  // No site-wide canonical here: an inherited canonical would mark every page
+  // as a duplicate of the homepage. Each page declares its own.
 }
 
 interface RootLayoutProps {
@@ -122,9 +121,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="ga-init" strategy="afterInteractive">
+            <Script id="ga-init" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);} 
@@ -145,6 +144,17 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           {gaId ? <GAListener measurementId={gaId} /> : null}
         </Providers>
         <Analytics />
+        {/*
+          Vercel Speed Insights, loaded as the plain script rather than the
+          @vercel/speed-insights package: the package's optional Svelte peer
+          range conflicts with the `ai` SDK pin and cannot be installed without
+          rewriting the lockfile. The script records the same Core Web Vitals.
+          Enable Speed Insights on the project in the Vercel dashboard once.
+        */}
+        <Script id="vercel-speed-insights-init" strategy="afterInteractive">
+          {`window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };`}
+        </Script>
+        <Script src="/_vercel/speed-insights/script.js" strategy="afterInteractive" />
       </body>
     </html>
   )

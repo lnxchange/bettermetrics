@@ -1,7 +1,22 @@
+import { SITE_LOGO_PATH, SITE_NAME, SITE_URL } from '@/lib/site'
+
 export function AIMJsonLd() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        "name": SITE_NAME,
+        "url": SITE_URL,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${SITE_URL}${SITE_LOGO_PATH}`,
+          "width": 628,
+          "height": 628
+        },
+        "founder": { "@id": `${SITE_URL}/#YuleGuttenbeil` }
+      },
       {
         "@type": "CreativeWork",
         "@id": "https://aimtheory.org/#AIMFramework",
@@ -78,11 +93,12 @@ export function AIMJsonLd() {
       {
         "@type": "WebSite",
         "@id": "https://aimtheory.org/#website",
-        "name": "Use Better Metrics",
+        "name": SITE_NAME,
+        "alternateName": "AIM Framework",
         "url": "https://aimtheory.org",
         "description": "Research platform for the AIM Motivation Framework: a taxonomic synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology.",
         "publisher": {
-          "@id": "https://aimtheory.org/#YuleGuttenbeil"
+          "@id": "https://aimtheory.org/#organization"
         },
         "potentialAction": {
           "@type": "SearchAction",
@@ -98,6 +114,10 @@ export function AIMJsonLd() {
         "author": {
           "@id": "https://aimtheory.org/#YuleGuttenbeil"
         },
+        "publisher": {
+          "@id": "https://aimtheory.org/#organization"
+        },
+        "url": "https://aimtheory.org/treatise",
         "about": {
           "@id": "https://aimtheory.org/#AIMFramework"
         },

@@ -4,15 +4,18 @@ import Image from 'next/image'
 import { HiArrowRight } from 'react-icons/hi'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { FrameworkCore } from '@/components/framework-core'
+import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'About',
+  title: 'About the Author and the AIM Framework',
   description:
     'Who is behind the AIM Framework, what the Treatise claims and does not claim, and how to challenge it.',
+  alternates: { canonical: '/about' },
   openGraph: {
-    title: 'About | AIM Framework',
+    title: 'About the Author and the AIM Framework | AIM Theory',
     description: 'The author, the book, its claims, and how to challenge it.',
-    url: 'https://aimtheory.org/about',
+    url: '/about',
+    images: [SITE_OG_IMAGE],
     type: 'website'
   }
 }

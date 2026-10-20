@@ -3,10 +3,19 @@ import Link from 'next/link'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
+import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Articles | AIM Framework',
+  title: 'Articles Applying the AIM Framework',
   description: 'Insights and analysis applying the AIM Motivation Framework to economics, psychology, law, organisations, and more.',
+  alternates: { canonical: '/articles' },
+  openGraph: {
+    title: 'Articles Applying the AIM Framework | AIM Theory',
+    description: 'Applying the AIM Framework to economics, psychology, law, organisations, and everyday life.',
+    url: '/articles',
+    images: [SITE_OG_IMAGE],
+    type: 'website'
+  }
 }
 
 async function getPublishedArticles() {

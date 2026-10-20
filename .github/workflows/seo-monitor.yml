@@ -1,0 +1,155 @@
+name: SEO monitor
+
+# Weekly SEO health check for aimtheory.org. See scripts/seo/README.md.
+#
+# Vercel Web Analytics is read through the REST API with VERCEL_TOKEN
+# (scripts/seo/traffic.ts), never through the Vercel MCP.
+
+on:
+  schedule:
+    # Sunday 20:00 UTC = Monday 07:00 Sydney (AEDT)
+    - cron: '0 20 * * 0'
+  workflow_dispatch:
+    inputs:
+      apply_fixes:
+        description: 'Write missing article metadata to Supabase (otherwise dry run)'
+        type: boolean
+        default: true
+      site_url:
+        description: 'Site to audit'
+        type: string
+        default: 'https://aimtheory.org'
+      run_lighthouse:
+        description: 'Run Lighthouse CI'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+concurrency:
+  group: seo-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Crawl, check, fix, report
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      SEO_SITE_URL: ${{ inputs.site_url || 'https://aimtheory.org' }}
+      NEXT_PUBLIC_SITE_URL: https://aimtheory.org
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      SEO_REPORT_TO: ${{ secrets.SEO_REPORT_TO }}
+      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+      GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+      PAGESPEED_API_KEY: ${{ secrets.PAGESPEED_API_KEY }}
+      # Scheduled runs apply fixes; manual runs follow the input.
+      SEO_FIX_APPLY: ${{ github.event_name == 'schedule' && 'true' || (inputs.apply_fixes && 'true' || 'false') }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund --legacy-peer-deps
+
+      - name: Restore previous run for regression diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          RUN_ID=$(gh run list --workflow "${{ github.workflow }}" --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          if [ -n "$RUN_ID" ] && [ "$RUN_ID" != "null" ]; then
+            echo "Previous successful run: $RUN_ID"
+            gh run download "$RUN_ID" --name seo-output --dir seo-output/previous && ls seo-output/previous
+          else
+            echo "No previous run; regressions will not be computed."
+          fi
+          exit 0
+
+      - name: Crawl sitemap as Googlebot
+        run: npm run seo:crawl
+
+      - name: Run on-page and host checks
+        run: npm run seo:checks
+
+      - name: Fill missing article metadata
+        run: npm run seo:fix
+
+      - name: Notify search engines (IndexNow, Search Console)
+        run: npm run seo:ping
+
+      - name: Organic traffic (Vercel REST, Search Console, GA4)
+        run: npm run seo:traffic
+
+      - name: Lighthouse CI
+        if: ${{ github.event_name == 'schedule' || inputs.run_lighthouse }}
+        continue-on-error: true
+        run: npm run seo:lighthouse
+
+      - name: Build report and email it
+        run: npm run seo:report
+
+      - name: Upload report and raw output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-output
+          path: |
+            seo-output/
+            !seo-output/previous/
+          retention-days: 120
+          if-no-files-found: warn
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci/
+          retention-days: 60
+          if-no-files-found: ignore
+
+      - name: Open or update GitHub issue on failure or regression
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          if [ ! -f seo-output/summary.json ]; then
+            TITLE="SEO report $(date -u +%F): monitor did not complete"
+            BODY="The SEO monitor failed before producing a report. See the run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            OPEN=true
+          else
+            OPEN=$(jq -r '.shouldOpenIssue' seo-output/summary.json)
+            TITLE=$(jq -r '.title' seo-output/summary.json)
+            BODY="$(cat seo-output/report.md)
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi
+          if [ "$OPEN" != "true" ]; then
+            echo "Status OK, no regressions; no issue needed."
+            exit 0
+          fi
+          gh label create seo-report --description "Weekly SEO monitor output" --color 1D76DB --force >/dev/null 2>&1 || true
+          DATE=$(date -u +%F)
+          EXISTING=$(gh issue list --label seo-report --state open --search "SEO report $DATE in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh issue edit "$EXISTING" --title "$TITLE" --body "$BODY"
+            echo "Updated issue #$EXISTING"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" --label seo-report
+          fi

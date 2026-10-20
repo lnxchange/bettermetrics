@@ -1,3 +1,4 @@
+import { cached } from '@/lib/cached'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
@@ -118,34 +119,47 @@ export function withChapterTwo(chapters: TreatiseChapterSummary[]) {
   return [...chapters, CHAPTER_TWO].sort((a, b) => a.position - b.position || a.label.localeCompare(b.label))
 }
 
-export async function loadTreatiseChapters(): Promise<TreatiseChapterSummary[]> {
-  const supabase = anonClient()
-  if (!supabase) return withChapterTwo([])
-  const { data, error } = await supabase
-    .from('treatise_chapters')
-    .select('slug, title, label, part, source_date, position')
-    .order('position', { ascending: true })
-  if (error) throw new Error(`Treatise query failed: ${error.message}`)
-  return withChapterTwo((data ?? []).map(summaryFromRow))
-}
+// Chapter reads (and the markdown render, which is the expensive part) are
+// cached briefly. The twice-daily sync writes land within this window, so the
+// "next visit" promise in scripts/sync-treatise.sh holds to within five minutes.
+const TREATISE_REVALIDATE = 300
 
-export async function loadTreatiseChapter(slug: string): Promise<TreatiseChapter | null> {
-  const supabase = anonClient()
-  if (!supabase) return null
-  const { data, error } = await supabase
-    .from('treatise_chapters')
-    .select('slug, title, label, part, markdown, headings, source_sha, source_date, position, updated_at')
-    .eq('slug', slug)
-    .maybeSingle()
-  if (error) throw new Error(`Treatise query failed: ${error.message}`)
-  if (!data) return null
-  const prepared = prepareTreatiseMarkdown(data.markdown)
-  return {
-    ...summaryFromRow(data),
-    markdown: data.markdown,
-    headings: prepared.headings,
-    html: prepared.html,
-    source_sha: data.source_sha,
-    updated_at: data.updated_at
-  }
-}
+export const loadTreatiseChapters = cached(
+  async (): Promise<TreatiseChapterSummary[]> => {
+    const supabase = anonClient()
+    if (!supabase) return withChapterTwo([])
+    const { data, error } = await supabase
+      .from('treatise_chapters')
+      .select('slug, title, label, part, source_date, position')
+      .order('position', { ascending: true })
+    if (error) throw new Error(`Treatise query failed: ${error.message}`)
+    return withChapterTwo((data ?? []).map(summaryFromRow))
+  },
+  ['treatise-chapters'],
+  { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
+)
+
+export const loadTreatiseChapter = cached(
+  async (slug: string): Promise<TreatiseChapter | null> => {
+    const supabase = anonClient()
+    if (!supabase) return null
+    const { data, error } = await supabase
+      .from('treatise_chapters')
+      .select('slug, title, label, part, markdown, headings, source_sha, source_date, position, updated_at')
+      .eq('slug', slug)
+      .maybeSingle()
+    if (error) throw new Error(`Treatise query failed: ${error.message}`)
+    if (!data) return null
+    const prepared = prepareTreatiseMarkdown(data.markdown)
+    return {
+      ...summaryFromRow(data),
+      markdown: data.markdown,
+      headings: prepared.headings,
+      html: prepared.html,
+      source_sha: data.source_sha,
+      updated_at: data.updated_at
+    }
+  },
+  ['treatise-chapter'],
+  { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
+)

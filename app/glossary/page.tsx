@@ -1,67 +1,44 @@
-import { createClient } from '@supabase/supabase-js'
-import { Database } from '@/lib/db_types'
-import { GlossaryBrowser, GlossaryEntryView } from '@/components/glossary-browser'
+import { Metadata } from 'next'
+import { GlossaryIndex } from '@/components/glossary-index'
+import { loadGlossaryIndex } from '@/lib/glossary'
+import { SITE_OG_IMAGE, SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-dynamic'
-
-export const metadata = {
-  title: 'Glossary',
+export const metadata: Metadata = {
+  title: 'Glossary of the AIM Framework',
   description:
-    'Every defined term in Chapter 2 of the AIM Treatise, refreshed when that chapter changes.'
-}
-
-async function loadGlossary(): Promise<GlossaryEntryView[]> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) return []
-
-  const supabase = createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  })
-  const { data, error } = await supabase
-    .from('glossary_entries')
-    .select(
-      'slug, term, letter, definition, explanation, derivation, epistemic_status, cross_references, notes'
-    )
-    .order('position', { ascending: true })
-    .limit(1000)
-
-  if (error) {
-    throw new Error(`Glossary query failed: ${error.message}`)
+    'Every defined term in Chapter 2 of the AIM Treatise, refreshed when that chapter changes.',
+  alternates: { canonical: '/glossary' },
+  openGraph: {
+    title: 'Glossary | AIM Theory',
+    description: 'Every defined term in Chapter 2 of the AIM Treatise.',
+    url: '/glossary',
+    images: [SITE_OG_IMAGE],
+    type: 'article'
   }
-  return data ?? []
 }
 
-function GlossaryJsonLd({ entries }: { entries: GlossaryEntryView[] }) {
+function GlossaryJsonLd({ count }: { count: number }) {
+  // Individual terms are described on their own pages (/glossary/[slug]) as
+  // DefinedTerm nodes pointing back at this set.
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'DefinedTermSet',
-        '@id': 'https://aimtheory.org/glossary#termset',
+        '@id': `${SITE_URL}/glossary#termset`,
         name: 'AIM Framework Glossary',
         description:
           'Definitions for the AIM Motivation Framework, taken from Chapter 2 of the AIM Treatise.',
-        url: 'https://aimtheory.org/glossary',
-        inLanguage: 'en',
-        hasDefinedTerm: entries.map(entry => ({
-          '@type': 'DefinedTerm',
-          name: entry.term,
-          inDefinedTermSet: {
-            '@type': 'DefinedTermSet',
-            '@id': 'https://aimtheory.org/glossary#termset',
-            name: 'AIM Framework Glossary'
-          }
-        }))
+        url: `${SITE_URL}/glossary`,
+        inLanguage: 'en'
       },
       {
-        '@type': 'WebPage',
-        '@id': 'https://aimtheory.org/glossary',
+        '@type': 'CollectionPage',
+        '@id': `${SITE_URL}/glossary`,
         name: 'AIM Framework Glossary',
-        description: `${entries.length} terms from Chapter 2 of the AIM Treatise.`,
-        mainEntity: {
-          '@id': 'https://aimtheory.org/glossary#termset'
-        }
+        description: `${count} terms from Chapter 2 of the AIM Treatise.`,
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        mainEntity: { '@id': `${SITE_URL}/glossary#termset` }
       }
     ]
   }
@@ -75,11 +52,11 @@ function GlossaryJsonLd({ entries }: { entries: GlossaryEntryView[] }) {
 }
 
 export default async function GlossaryPage() {
-  const entries = await loadGlossary()
+  const entries = await loadGlossaryIndex()
   return (
     <>
-      <GlossaryJsonLd entries={entries} />
-      <GlossaryBrowser entries={entries} />
+      <GlossaryJsonLd count={entries.length} />
+      <GlossaryIndex entries={entries} />
     </>
   )
 }

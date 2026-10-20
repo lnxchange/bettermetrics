@@ -38,10 +38,13 @@ export function prepareTreatiseMarkdown(markdown: string): {
         const text = restoreShieldedMath(this.parser.parseInline(tokens), shielded.slots)
         const plain = plainHeading(text)
         const id = uniqueAnchor(anchorForHeading(plain), used)
-        if (depth >= 2 && depth <= 4) {
-          headings.push({ id, text: plain, level: depth })
+        // The page title is the only <h1>. Any further top-level headings in
+        // the source (part titles, repeated chapter headings) render as <h2>.
+        const level = Math.max(depth, 2)
+        if (level >= 2 && level <= 4) {
+          headings.push({ id, text: plain, level })
         }
-        return `<h${depth} id="${id}" class="scroll-mt-24">${text}</h${depth}>\n`
+        return `<h${level} id="${id}" class="scroll-mt-24">${text}</h${level}>\n`
       }
     }
   })
