@@ -9,6 +9,13 @@ on:
   schedule:
     # Sunday 20:00 UTC = Monday 07:00 Sydney (AEDT)
     - cron: '0 20 * * 0'
+  # Self-test: changes to the monitor itself run it in dry-run mode against
+  # production, with no email, no Supabase writes and no issue.
+  push:
+    paths:
+      - '.github/workflows/seo-monitor.yml'
+      - 'scripts/seo/**'
+      - 'lighthouserc.json'
   workflow_dispatch:
     inputs:
       apply_fixes:
@@ -96,12 +103,12 @@ jobs:
         run: npm run seo:traffic
 
       - name: Lighthouse CI
-        if: ${{ github.event_name == 'schedule' || inputs.run_lighthouse }}
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_lighthouse }}
         continue-on-error: true
         run: npm run seo:lighthouse
 
       - name: Build report and email it
-        run: npm run seo:report
+        run: npm run seo:report -- ${{ github.event_name == 'push' && '--no-email' || '' }}
 
       - name: Upload report and raw output
         if: always()
@@ -124,7 +131,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Open or update GitHub issue on failure or regression
-        if: always()
+        if: always() && github.event_name != 'push'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
