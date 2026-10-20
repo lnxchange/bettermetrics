@@ -14,6 +14,7 @@ import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { prepareTreatiseMarkdown } from '../lib/treatise-render'
 import { indexTreatise } from '../lib/rag/treatise-index'
+import { auditTreatiseDirectory } from './audit-treatise-citations'
 import { Database, Json } from '../lib/db_types'
 
 config({ path: path.join(process.cwd(), '.env.local') })
@@ -336,6 +337,7 @@ async function main() {
     console.log('removed', stale.join(', '))
   }
   console.log(`synced ${slugs.length} chapters`)
+  await auditTreatiseDirectory(directory)
 
   if (!process.env.OPENAI_API_KEY) {
     console.log('chat index: OPENAI_API_KEY not set, skipped')

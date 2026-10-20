@@ -19,7 +19,8 @@
     "import-reports": "node scripts/clean-report-titles.js && node scripts/import-reports.js",
     "process-rag-embeddings": "node scripts/process-rag-embeddings.js",
     "clean-articles": "ts-node --project tsconfig.json scripts/clean-all-articles.ts",
-    "sync-treatise": "tsx scripts/sync-treatise-chapters.ts && tsx scripts/publish-treatise-ebook.ts"
+    "sync-treatise": "tsx scripts/sync-treatise-chapters.ts && tsx scripts/publish-treatise-ebook.ts",
+    "audit-treatise-citations": "tsx scripts/audit-treatise-citations.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

@@ -270,7 +270,7 @@ function chapterMaterial(definitions: GlossaryRow[], loaded: ChapterText[]) {
   if (!home) return []
 
   const targets = definitions.flatMap(row => citationTargets(row.derivation ?? ''))
-  const elsewhere = targets.filter(target => target.slug !== home.slug)
+  const elsewhere = targets.filter(target => target.slug !== home.slug && target.section)
   const otherBlocks: string[] = []
   for (const target of elsewhere) {
     const chapter = bySlug.get(target.slug)
@@ -289,7 +289,9 @@ function chapterMaterial(definitions: GlossaryRow[], loaded: ChapterText[]) {
     return blocks
   }
 
-  const homeSections = targets.filter(target => target.slug === home.slug).map(target => target.section)
+  const homeSections = targets
+    .filter(target => target.slug === home.slug && target.section)
+    .map(target => target.section)
   const homeBlocks = neighbourSections(home, homeSections, CHAPTER_BUDGET)
   const blocks = [...homeBlocks]
   let used = homeBlocks.reduce((sum, block) => sum + block.length, 0)

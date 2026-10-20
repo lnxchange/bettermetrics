@@ -25,3 +25,33 @@ export function extractTreatiseSection(
     html: html.slice(start, end < 0 ? html.length : end)
   }
 }
+
+export interface AdjacentSection {
+  section: string
+  heading: string
+}
+
+/**
+ * The previous and next section at the same level or higher.
+ * A child heading already sits inside its parent's slice, so it is not a separate stop.
+ */
+export function adjacentSections(
+  headings: TreatiseHeading[],
+  sectionId: string
+): { previous: AdjacentSection | null; next: AdjacentSection | null } {
+  const index = headings.findIndex(heading => heading.id === sectionId.toLowerCase())
+  if (index < 0) return { previous: null, next: null }
+  const level = headings[index].level
+  let previous: TreatiseHeading | null = null
+  for (let i = index - 1; i >= 0; i--) {
+    if (headings[i].level <= level) {
+      previous = headings[i]
+      break
+    }
+  }
+  const next = headings.slice(index + 1).find(heading => heading.level <= level) ?? null
+  return {
+    previous: previous ? { section: previous.id, heading: previous.text } : null,
+    next: next ? { section: next.id, heading: next.text } : null
+  }
+}
