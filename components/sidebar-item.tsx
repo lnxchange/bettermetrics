@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 
 import { type Chat } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { useChatHistoryNavigation } from '@/components/chat-history-navigation'
 import { buttonVariants } from '@/components/ui/button'
-import { IconMessage, IconUsers } from '@/components/ui/icons'
+import { IconMessage, IconSpinner, IconUsers } from '@/components/ui/icons'
 import {
   Tooltip,
   TooltipContent,
@@ -20,14 +21,18 @@ interface SidebarItemProps {
 
 export function SidebarItem({ chat, children }: SidebarItemProps) {
   const pathname = usePathname()
+  const { pendingHref, selectChat } = useChatHistoryNavigation()
   const isActive = pathname === chat.path
+  const isPending = pendingHref === chat.path
 
   if (!chat?.id) return null
 
   return (
     <div className="relative">
       <div className="absolute left-2 top-1 flex h-6 w-6 items-center justify-center">
-        {chat.sharePath ? (
+        {isPending ? (
+          <IconSpinner className="mr-2" />
+        ) : chat.sharePath ? (
           <Tooltip delayDuration={1000}>
             <TooltipTrigger
               tabIndex={-1}
@@ -43,10 +48,25 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
       </div>
       <Link
         href={chat.path}
+        aria-busy={isPending}
+        onClick={event => {
+          if (
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            event.button !== 0 ||
+            pathname === chat.path
+          ) {
+            return
+          }
+          selectChat(chat.path)
+        }}
         className={cn(
           buttonVariants({ variant: 'ghost' }),
           'group w-full pl-8 pr-16',
-          isActive && 'bg-accent'
+          isActive && 'bg-accent',
+          isPending && 'bg-accent'
         )}
       >
         <div

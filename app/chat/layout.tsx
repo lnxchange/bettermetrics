@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+import { ChatHistoryNavigation } from '@/components/chat-history-navigation'
+
 export const metadata: Metadata = {
   title: 'AIM Framework Chat',
   description: 'Chat with the AIM Framework AI Assistant'
@@ -12,7 +14,7 @@ interface ChatLayoutProps {
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
     <div className="fixed inset-x-0 top-16 bottom-0 z-10 flex flex-col bg-background">
-      {children}
+      <ChatHistoryNavigation>{children}</ChatHistoryNavigation>
     </div>
   )
 }
