@@ -346,7 +346,6 @@ export async function POST(req: Request) {
       stream = await anthropic.messages.stream({
         model: CHAT_MODEL,
         max_tokens: 8192,  // Claude Opus supports 8K output tokens
-        temperature: 0.3,
         system: systemContent,  // System prompt separate from messages
         messages: claudeMessages,
       })
