@@ -10,6 +10,7 @@ export function AimMark({ className }: { className?: string }) {
       role="img"
       aria-label="AIM"
     >
+      <rect x="-18" y="249" width="1738" height="738" fill="#ffffff" />
       <path
         fill={AIM_SOURCE_COLORS.appetites}
         d="M249 699 342 437H344L434 699ZM264 261 -6 975H152L208 816H475L529 975H692L425 261Z"

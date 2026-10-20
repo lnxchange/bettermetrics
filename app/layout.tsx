@@ -84,10 +84,10 @@ export const metadata: Metadata = {
   themeColor: '#ffffff',
   icons: {
     icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }
+      { url: '/aim-icon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/aim-icon-32.png', sizes: '32x32', type: 'image/png' }
     ],
-    shortcut: '/favicon-16x16.png',
+    shortcut: '/aim-icon-32.png',
     apple: '/apple-touch-icon.png'
   },
   verification: {
