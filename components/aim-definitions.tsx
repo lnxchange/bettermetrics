@@ -45,7 +45,7 @@ export function AIMDefinitionsShort() {
             Mimetic Desire <span className="text-mimetic">(M)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            A salience signal: what stands out as valuable in the surroundings. What other
+            A Salience signal: what stands out as valuable in the surroundings. What other
             people visibly want is the strongest cue, but novelty, scarcity and display register
             the same way. Prone to rivalry when people converge on the same targets.
           </p>

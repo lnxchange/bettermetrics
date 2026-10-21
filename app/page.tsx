@@ -83,23 +83,23 @@ export default function HomePage() {
           <DecisionHubDiagram />
 
           <h3 className="mb-3 mt-10 text-2xl font-bold text-gray-900">
-            The asymmetry: two gaps and one pointer
+            The asymmetry: two deficits and one Salience signal
           </h3>
           <p className="mb-4 text-lg text-gray-700">
             The three signals are not the same kind of report. Appetites and Intrinsic
-            Motivation each report a gap: something is missing, and the right object or
+            Motivation each report a deficit: something is missing, and the right object or
             activity would close it. Hunger ends when you eat. The Observer reports something
-            else, which is where value appears to be. It has no gap to close, so it has no off
-            switch.
+            else, which is Salience: where value appears to be. It reports no deficit, so
+            there is nothing to close and it has no off switch.
           </p>
 
-          <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">M is a salience signal</h3>
+          <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">M is a Salience signal</h3>
           <p className="mb-4 text-lg text-gray-700">
             Mimetic Desire is named after its strongest cue, which is what other people
-            visibly want. The signal itself is simply salience: <em>this stands out as worth
+            visibly want. The signal itself is simply Salience: <em>this stands out as worth
             having</em>. It works the same way for a limited edition, a new phone in a shop
             window or a queue outside a door as it does for a friend&apos;s new car. Valuing
-            what others value is one case of salience, not a separate mechanism.
+            what others value is one case of Salience, not a separate mechanism.
           </p>
 
           <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">What the merge loses</h3>
@@ -107,8 +107,8 @@ export default function HomePage() {
             The Hub adds the three signals into one value. A want of strength 6 could be
             2&nbsp;+&nbsp;1&nbsp;+&nbsp;3 or 0&nbsp;+&nbsp;0&nbsp;+&nbsp;6, and nothing that sees
             only the 6 can tell which. Because the Hub has only one category to receive them
-            in, a salience reading arrives feeling like a gap. That is why getting something
-            you caught from others so often satisfies nothing: there was no gap to close.
+            in, a Salience reading is felt as a deficit. That is why getting something you
+            caught from others so often satisfies nothing: there was no deficit to close.
           </p>
           <p className="mb-8 text-lg text-gray-700">
             Because what one person&apos;s Observer reads is what other people are pursuing,
@@ -129,7 +129,7 @@ export default function HomePage() {
               <h4 className="mb-2 font-bold text-gray-900">What the AIM Framework adds</h4>
               <p className="text-sm text-gray-700">
                 The split into three sources with different satiation patterns. The asymmetry
-                between the two gap signals and the salience signal. What follows, by
+                between the two deficit signals and the Salience signal. What follows, by
                 derivation, once they are merged.
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function HomePage() {
           <AskAIGroup
             questions={[
               'Why does merging three signals into one make the source unrecoverable?',
-              'How can M be a salience signal when it feels like a need?',
+              'How can M be a Salience signal when it is felt as a deficit?',
               'Which parts of the AIM Framework are established science and which are new?'
             ]}
           />
