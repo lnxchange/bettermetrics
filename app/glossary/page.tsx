@@ -4,7 +4,7 @@ import { loadGlossaryIndex } from '@/lib/glossary'
 import { SITE_OG_IMAGE, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Glossary of the AIM Framework',
+  title: { absolute: 'Glossary of the AIM Framework' },
   description:
     'Every defined term in Chapter 2 of the AIM Treatise, refreshed when that chapter changes.',
   alternates: { canonical: '/glossary' },
