@@ -35,12 +35,11 @@ export default function HomePage() {
             A General Theory of Human Motivation
           </h1>
           <p className="mb-5 max-w-3xl text-xl text-blue-100">
-            The AIM Framework is a model of the system that produces wanting. Three systems in the brain
-            each send a signal to one decision centre. One tracks what the body needs
-            (Appetites). One tracks what is rewarding to do for its own sake (Intrinsic
-            Motivation). One tracks what stands out as valuable around you (Mimetic Desire).
-            The decision centre merges them into a single sense of how much you want
-            something, and acts on it.
+            The AIM Framework is a model of the system that produces wanting. Three systems in
+            the brain each produce a signal. One tracks what the body needs (Appetites). One
+            tracks what is rewarding to do for its own sake (Intrinsic Motivation). One tracks
+            what stands out as valuable around you (Mimetic Desire). A Decision Hub merges them
+            into a single sense of how much you want something, and acts on it.
           </p>
           <p className="max-w-3xl text-lg text-blue-200">
             The framework is derived, not asserted. It starts from{' '}
