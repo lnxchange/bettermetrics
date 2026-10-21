@@ -47,8 +47,8 @@ export default function HomePage() {
               nine stated axioms
             </Link>
             . Five are taken from established research, one follows mathematically, and three
-            are the framework&apos;s own claims, which it has to defend. The architecture and
-            its consequences are worked out from them.
+            are the framework&apos;s own claims. The architecture and its consequences are
+            worked out from them, and the framework is falsifiable.
           </p>
           <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
             <AskAI
@@ -255,8 +255,7 @@ export default function HomePage() {
             >
               <h3 className="mb-2 text-lg font-bold text-gray-900">The nine axioms</h3>
               <p className="mb-3 text-sm text-gray-600">
-                The premises everything is derived from, what each one rests on, and what
-                challenging it would take.
+                The premises everything is derived from, and what each one rests on.
               </p>
               <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
                 Read <HiArrowRight className="ml-1 h-4 w-4" />

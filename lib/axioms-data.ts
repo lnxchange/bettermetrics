@@ -37,11 +37,11 @@ export interface Axiom {
 
 export const STATUS_DESCRIPTIONS: Record<EpistemicStatus, string> = {
   Inherited:
-    'Taken from established, replicated scholarship. Challenging it means challenging the cited literature, not the AIM Framework.',
+    'Taken from established, replicated scholarship.',
   'Mathematically entailed':
-    'Follows from other axioms by a formal result (here, the Data Processing Inequality). Challenging it means refuting the mathematics.',
+    'Follows from other axioms by a formal result (here, the Data Processing Inequality).',
   'Novel synthesis':
-    'Specific to the AIM Framework. These are the claims the framework itself must defend.'
+    'Specific to the AIM Framework.'
 }
 
 export const axioms: Axiom[] = [
@@ -212,7 +212,7 @@ export const axioms: Axiom[] = [
       'Human causal cognition is architecturally optimised for detecting and modelling agents (predators, prey, rivals, collaborators) and defaults to agent-based explanations when causal demands arise, because the brain\u2019s threat-detection systems, social-reasoning circuits, and theory-of-mind architecture converge on agentive causation as the computationally tractable mode of explanation. Systemic, emergent, or distributed causes exceed the computational capacity of these systems and are therefore structurally unavailable as default explanatory completions, ensuring that Confabulation (Axiom 4) characteristically takes agent-based form.',
     status: 'Inherited',
     statusNote:
-      'Axiom 9 is not load-bearing for the architecture or its mathematics; Axioms 1 to 8 are. It is load-bearing for the account of the form the architecture\u2019s failures take. Refuting it would remove the AIM Framework\u2019s explanation of why confabulation is agent-shaped and why collective distress converges on scapegoats, and would leave the rest standing.',
+      'Axiom 9 is not load-bearing for the architecture or its mathematics; Axioms 1 to 8 are. It is load-bearing for the account of the form the architecture\u2019s failures take: why confabulation is agent-shaped and why collective distress converges on scapegoats.',
     citations: [
       { text: 'Barrett, J. L. Why Would Anyone Believe in God?', source: 'AltaMira Press', year: '2004' },
       { text: 'Heider, F. & Simmel, M. "An experimental study of apparent behavior"', source: 'American Journal of Psychology, 57(2)', year: '1944' },

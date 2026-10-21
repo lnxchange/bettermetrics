@@ -138,8 +138,7 @@ export default function AxiomsPage() {
           <p className="text-lg text-gray-700">
             Everything in the AIM Framework is derived from these nine premises. Most are inherited from
             established science; one follows mathematically from another; three are the AIM Framework&apos;s
-            own and are what the theory must defend. Any finding that contradicts one of them
-            is evidence against the framework.
+            own. The framework is falsifiable.
           </p>
           <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label="Jump to axiom">
             {axioms.map(a => (

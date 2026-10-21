@@ -5,11 +5,11 @@ import { SITE_OG_IMAGE } from '@/lib/site'
 export const metadata: Metadata = {
   title: 'Contact Yule Guttenbeil',
   description:
-    'Get in touch about the AIM Framework: research collaboration, speaking, challenges to the theory, or questions about applying it.',
+    'Get in touch about the AIM Framework: research collaboration, speaking, or questions about applying it.',
   alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contact Yule Guttenbeil | The AIM Framework',
-    description: 'Research collaboration, speaking, challenges to the theory, or questions about applying it.',
+    description: 'Research collaboration, speaking, or questions about applying it.',
     url: '/contact',
     images: [SITE_OG_IMAGE],
     type: 'website'

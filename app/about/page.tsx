@@ -9,11 +9,11 @@ import { SITE_OG_IMAGE } from '@/lib/site'
 export const metadata: Metadata = {
   title: { absolute: 'About the Author and the AIM Framework' },
   description:
-    'Who is behind the AIM Framework, what the Treatise claims and does not claim, and how to challenge it.',
+    'Who is behind the AIM Framework, the Treatise, and what the framework claims and does not claim.',
   alternates: { canonical: '/about' },
   openGraph: {
     title: 'About the Author and the AIM Framework',
-    description: 'The author, the book, its claims, and how to challenge it.',
+    description: 'The author, the book, and its claims.',
     url: '/about',
     images: [SITE_OG_IMAGE],
     type: 'website'
@@ -59,8 +59,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">About</h1>
           <p className="text-lg text-gray-700">
-            The author, the book, what it claims and does not claim, and where it can be
-            challenged.
+            The author, the book, and what it claims and does not claim.
           </p>
         </div>
       </section>
@@ -258,52 +257,11 @@ export default function AboutPage() {
           <p className="mt-4 text-xs text-gray-500">From the Treatise, Chapter 1, Section 1.4.</p>
         </section>
 
-        {/* How to challenge */}
-        <section id="research" className="scroll-mt-24 border-t border-gray-100 py-12">
-          <h2 className="mb-4 text-3xl font-bold text-gray-900">How to challenge it</h2>
-          <p className="mb-4 text-lg text-gray-700">
-            The framework is stated axiomatically to maximise the number of ways it can be
-            shown wrong, and to make each cheap to test. Most of its components are inherited
-            from established literatures; one is mathematically entailed; the contestable part
-            reduces to two assertions:
-          </p>
-          <ol className="mb-6 list-decimal space-y-3 pl-5 text-gray-700">
-            <li>
-              That A, I and M are the correct decomposition, exactly these three and not two or
-              four. Defended by the bidirectional consilience argument in Chapter 4 and the
-              Fourth-Source Objection analysis there. A critic proposing a fourth source must
-              identify its distinct neural substrate, its satiation dynamics, and behavioural
-              signatures that cannot be decomposed into A, I or M.
-            </li>
-            <li>
-              That M operates through the specific mechanisms claimed: preconscious social
-              observation circuits, Object Parasitism, and non-satiation.
-            </li>
-          </ol>
-          <p className="mb-6 text-lg text-gray-700">
-            Everything downstream, from Source Opacity to the scapegoat mechanism to the
-            Knowledge Patch, is derived from those two plus the inherited architecture. Each
-            derivation is stated so the step can be checked. Rejecting a derivation means
-            identifying the step that fails; rejecting an inherited premise means engaging the
-            literature it comes from; a replacement theory must account for the same record
-            with equal or greater parsimony.
-          </p>
-          <AskAIGroup
-            questions={[
-              'What would falsify the AIM Framework?',
-              'What is the Fourth-Source Objection and how does Chapter 4 answer it?',
-              'What is the bidirectional consilience argument?',
-              'What is the Replacement Requirement in Chapter 3?'
-            ]}
-          />
-        </section>
-
         {/* Contact */}
         <section id="contact" className="scroll-mt-24 border-t border-gray-100 py-12">
           <h2 className="mb-3 text-3xl font-bold text-gray-900">Get in touch</h2>
           <p className="mb-6 text-lg text-gray-700">
-            Peer review, falsification attempts, research collaboration and corrections are all
-            welcome. For questions about the theory itself, the chat will usually be faster and
+            Peer review, research collaboration and corrections are all welcome. For questions about the theory itself, the chat will usually be faster and
             more precise than I can be by email.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -316,8 +274,8 @@ export default function AboutPage() {
             </Link>
             <AskAI
               variant="button"
-              question="I'm a researcher. Which predictions of the AIM Framework are most tractable to test first, and what does the validation roadmap recommend?"
-              label="Ask about testing the AIM Framework"
+              question="I'm a researcher. Where should I start with the AIM Framework and the Treatise?"
+              label="Ask where to start"
               className="border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
             />
           </div>
