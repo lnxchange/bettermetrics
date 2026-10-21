@@ -45,9 +45,9 @@ export function AIMDefinitionsShort() {
             Mimetic Desire <span className="text-mimetic">(M)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            Wanting caught from watching others want. Shaped by what is visible, who is
-            prestigious, and what is scarce; prone to rivalry when people converge on the same
-            targets.
+            A salience signal: what stands out as valuable in the surroundings. What other
+            people visibly want is the strongest cue, but novelty, scarcity and display register
+            the same way. Prone to rivalry when people converge on the same targets.
           </p>
           <p className="mt-2 text-xs italic text-gray-600">Signature: interest evaporates once novelty is worn off.</p>
         </div>
