@@ -35,7 +35,7 @@ export default function HomePage() {
             A General Theory of Human Motivation
           </h1>
           <p className="mb-5 max-w-3xl text-xl text-blue-100">
-            AIM is a model of the system that produces wanting. Three systems in the brain
+            The AIM Framework is a model of the system that produces wanting. Three systems in the brain
             each send a signal to one decision centre. One tracks what the body needs
             (Appetites). One tracks what is rewarding to do for its own sake (Intrinsic
             Motivation). One tracks what stands out as valuable around you (Mimetic Desire).
@@ -73,9 +73,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-4 text-3xl font-bold text-gray-900">How the system works</h2>
           <p className="mb-6 text-lg text-gray-700">
-            A Body Manager reports bodily deficit, a Thinker pursues what is rewarding in the
-            doing, and an Observer continuously reads which objects in the surrounding field
-            stand out as valuable. All three feed a Decision Hub (the ventromedial prefrontal
+            A Body Manager (the homeostatic-deficit system) reports bodily deficit, a Thinker
+            (the dopaminergic system) pursues what is rewarding in the doing, and an Observer
+            (the mirror neuron system) continuously reads which objects in the surrounding
+            field stand out as valuable. All three feed a Decision Hub (the ventromedial prefrontal
             cortex and ventral striatum), which converts them into one value per option and
             selects an action.
           </p>
@@ -125,7 +126,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
-              <h4 className="mb-2 font-bold text-gray-900">What AIM adds</h4>
+              <h4 className="mb-2 font-bold text-gray-900">What the AIM Framework adds</h4>
               <p className="text-sm text-gray-700">
                 The split into three sources with different satiation patterns. The asymmetry
                 between the two gap signals and the salience signal. What follows, by
@@ -134,7 +135,7 @@ export default function HomePage() {
             </div>
           </div>
           <p className="mt-4 text-sm text-gray-600">
-            AIM is a theory of motivation, not of all cognition, and it builds on
+            The AIM Framework is a theory of motivation, not of all cognition, and it builds on
             Self-Determination Theory, behavioural economics and mimetic theory rather than
             replacing them.{' '}
             <Link href="/about#claims" className="text-blue-600 hover:underline">
@@ -145,7 +146,7 @@ export default function HomePage() {
             questions={[
               'Why does merging three signals into one make the source unrecoverable?',
               'How can M be a salience signal when it feels like a need?',
-              'Which parts of AIM are established science and which are new?'
+              'Which parts of the AIM Framework are established science and which are new?'
             ]}
           />
         </div>
@@ -188,13 +189,13 @@ export default function HomePage() {
           <p className="text-lg text-gray-700">
             If that is right, the human sciences stand roughly where medicine stood in 1850.
             Doctors could describe diseases in detail but could not say why they occurred or
-            which treatments would work. Germ theory changed that by naming a cause. AIM aims
-            to do the same for wanting.
+            which treatments would work. Germ theory changed that by naming a cause. The AIM
+            Framework aims to do the same for wanting.
           </p>
           <AskAIGroup
             questions={[
               'How can anything be done about a want I cannot see the source of?',
-              'What does AIM mean by the Romantic Lie?'
+              'What does the AIM Framework mean by the Romantic Lie?'
             ]}
           />
         </div>
@@ -280,7 +281,7 @@ export default function HomePage() {
           />
           <div>
             <p className="text-lg text-gray-800">
-              AIM is the work of <strong>Yule Guttenbeil</strong>, a technology lawyer with a
+              The AIM Framework is the work of <strong>Yule Guttenbeil</strong>, a technology lawyer with a
               commerce degree in management. The framework is his account of wanting, written
               so psychology, economics and neuroscience can share one set of definitions.
             </p>
