@@ -108,7 +108,7 @@ export function NeuralCircuits() {
         </div>
       </div>
       <p className="mt-4 text-xs text-gray-600 italic">
-        Note: AIM is primarily a taxonomy and weighting system for existing neural processes,
+        Note: the AIM Framework is primarily a taxonomy and weighting system for existing neural processes,
         not a claim about new brain regions.
       </p>
     </div>
@@ -119,7 +119,7 @@ export function DescriptiveVsNormative() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-3 text-2xl font-bold text-gray-900">What AIM Describes</h3>
+        <h3 className="mb-3 text-2xl font-bold text-gray-900">What the AIM Framework Describes</h3>
         <div className="rounded-lg border-2 border-gray-200 bg-gray-50 p-6">
           <ul className="space-y-2 text-gray-700">
             <li className="flex items-start">
@@ -147,7 +147,7 @@ export function DescriptiveVsNormative() {
       </div>
 
       <div>
-        <h3 className="mb-3 text-2xl font-bold text-gray-900">What AIM Recommends</h3>
+        <h3 className="mb-3 text-2xl font-bold text-gray-900">What the AIM Framework Recommends</h3>
         <div className="rounded-lg border-2 border-green-200 bg-green-50 p-6">
           <p className="mb-4 text-gray-700">
             The normative proposals flow directly from the descriptive clarity. When we can distinguish 

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     'Every defined term in Chapter 2 of the AIM Treatise, refreshed when that chapter changes.',
   alternates: { canonical: '/glossary' },
   openGraph: {
-    title: 'Glossary | AIM Theory',
+    title: 'Glossary | The AIM Framework',
     description: 'Every defined term in Chapter 2 of the AIM Treatise.',
     url: '/glossary',
     images: [SITE_OG_IMAGE],
@@ -28,7 +28,7 @@ function GlossaryJsonLd({ count }: { count: number }) {
         '@id': `${SITE_URL}/glossary#termset`,
         name: 'AIM Framework Glossary',
         description:
-          'Definitions for the AIM Motivation Framework, taken from Chapter 2 of the AIM Treatise.',
+          'Definitions for the AIM Framework, taken from Chapter 2 of the AIM Treatise.',
         url: `${SITE_URL}/glossary`,
         inLanguage: 'en'
       },

@@ -43,7 +43,7 @@ export function Footer() {
             </Link>
           </nav>
           <p className="max-w-md text-xs text-gray-500">
-            AIM is a theoretical synthesis awaiting peer-reviewed validation. Its claims are
+            The AIM Framework is a theoretical synthesis awaiting peer-reviewed validation. Its claims are
             stated so they can be tested; critical evaluation and research collaboration are
             welcome.
           </p>

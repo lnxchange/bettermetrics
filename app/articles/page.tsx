@@ -7,10 +7,10 @@ import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Articles Applying the AIM Framework',
-  description: 'Insights and analysis applying the AIM Motivation Framework to economics, psychology, law, organisations, and more.',
+  description: 'Insights and analysis applying the AIM Framework to economics, psychology, law, organisations, and more.',
   alternates: { canonical: '/articles' },
   openGraph: {
-    title: 'Articles Applying the AIM Framework | AIM Theory',
+    title: 'Articles Applying the AIM Framework',
     description: 'Applying the AIM Framework to economics, psychology, law, organisations, and everyday life.',
     url: '/articles',
     images: [SITE_OG_IMAGE],

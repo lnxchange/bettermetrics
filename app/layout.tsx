@@ -59,7 +59,7 @@ export const metadata: Metadata = {
         url: '/aim-og.png',
         width: 1200,
         height: 630,
-        alt: 'AIM — Appetites, Intrinsic Motivation, Mimetic Desire'
+        alt: 'The AIM Framework: Appetites, Intrinsic Motivation, Mimetic Desire'
       }
     ]
   },

@@ -71,7 +71,7 @@ export function PromptForm({
           rows={1}
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder={disabled ? 'Sign in to keep asking' : 'Ask a question about AIM'}
+          placeholder={disabled ? 'Sign in to keep asking' : 'Ask a question about the AIM Framework'}
           spellCheck={false}
           disabled={disabled}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"

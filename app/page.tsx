@@ -9,16 +9,16 @@ import { TwoQuestionDiagnostic } from '@/components/two-question-diagnostic'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 
 export const metadata: Metadata = {
-  title: { absolute: 'AIM Theory | A General Theory of Human Motivation' },
+  title: { absolute: 'The AIM Framework | A General Theory of Human Motivation' },
   description:
     'A general theory of human motivation: three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what mixing hides.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'AIM Theory | A General Theory of Human Motivation',
+    title: 'The AIM Framework | A General Theory of Human Motivation',
     description:
       'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
     url: '/',
-    images: [{ url: '/aim-og.png', width: 1200, height: 630, alt: 'AIM: Appetites, Intrinsic Motivation, Mimetic Desire' }],
+    images: [{ url: '/aim-og.png', width: 1200, height: 630, alt: 'The AIM Framework: Appetites, Intrinsic Motivation, Mimetic Desire' }],
     locale: 'en_US',
     type: 'website'
   }

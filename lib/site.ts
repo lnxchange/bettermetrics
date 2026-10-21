@@ -3,7 +3,7 @@
  * read from here so the brand and origin are defined once.
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org').replace(/\/$/, '')
-export const SITE_NAME = 'AIM Theory'
+export const SITE_NAME = 'The AIM Framework'
 export const SITE_AUTHOR = 'Yule Guttenbeil'
 export const SITE_LOGO_PATH = '/aim-logo.png'
 export const SITE_OG_IMAGE_PATH = '/aim-og.png'
@@ -16,7 +16,7 @@ export const SITE_OG_IMAGE = {
   url: SITE_OG_IMAGE_PATH,
   width: 1200,
   height: 630,
-  alt: 'AIM: Appetites, Intrinsic Motivation, Mimetic Desire'
+  alt: 'The AIM Framework: Appetites, Intrinsic Motivation, Mimetic Desire'
 }
 
 /** Keep meta descriptions inside the 70-160 character window search engines show. */

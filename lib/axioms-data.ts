@@ -37,11 +37,11 @@ export interface Axiom {
 
 export const STATUS_DESCRIPTIONS: Record<EpistemicStatus, string> = {
   Inherited:
-    'Taken from established, replicated scholarship. Challenging it means challenging the cited literature, not AIM.',
+    'Taken from established, replicated scholarship. Challenging it means challenging the cited literature, not the AIM Framework.',
   'Mathematically entailed':
     'Follows from other axioms by a formal result (here, the Data Processing Inequality). Challenging it means refuting the mathematics.',
   'Novel synthesis':
-    'AIM-specific. These are the claims the framework itself must defend.'
+    'Specific to the AIM Framework. These are the claims the framework itself must defend.'
 }
 
 export const axioms: Axiom[] = [
@@ -55,14 +55,14 @@ export const axioms: Axiom[] = [
       'Human motivation arises from exactly three neurologically distinct sources (Appetites, Intrinsic Motivation, and Mimetic Desire) and no additional source is required for a parsimonious, falsifiable account of human motivation.',
     status: 'Novel synthesis',
     statusNote:
-      'A and I are inherited (Cannon; Deci & Ryan). The claim that these plus M are exactly three, and exhaustive, is AIM\u2019s own, defended by the bidirectional consilience argument in Chapter 4.',
+      'A and I are inherited (Cannon; Deci & Ryan). The claim that these plus M are exactly three, and exhaustive, is the AIM Framework\u2019s own, defended by the bidirectional consilience argument in Chapter 4.',
     citations: [
       { text: 'Cannon, W. B. The Wisdom of the Body', source: 'W. W. Norton & Co.', year: '1932' },
       { text: 'Deci, E. L. & Ryan, R. M. Intrinsic Motivation and Self-Determination in Human Behavior', source: 'Plenum', year: '1985' },
       { text: 'Girard, R. Deceit, Desire, and the Novel', source: 'Johns Hopkins University Press', year: '1961' }
     ],
     ask: [
-      'Why does AIM say there are exactly three sources of motivation and not four?',
+      'Why does the AIM Framework say there are exactly three sources of motivation and not four?',
       'Is loneliness an Appetite, Intrinsic Motivation, or Mimetic Desire?'
     ]
   },
@@ -81,7 +81,7 @@ export const axioms: Axiom[] = [
       { text: 'Bartra, O., McGuire, J. T. & Kable, J. W. "The valuation system: a coordinate-based meta-analysis"', source: 'NeuroImage, 76', year: '2013' }
     ],
     ask: [
-      'What is the AIM Integration Equation and what do the weights mean?',
+      'What is the Integration Equation in the AIM Framework and what do the weights mean?',
       'How does the wanting-liking dissociation support common-currency integration?'
     ]
   },
@@ -142,7 +142,7 @@ export const axioms: Axiom[] = [
     ],
     ask: [
       'What is the Mimetic Premium and how does Price Decomposition work?',
-      'Why does AIM say status cannot be purchased?'
+      'Why does the AIM Framework say status cannot be purchased?'
     ]
   },
   {
@@ -179,7 +179,7 @@ export const axioms: Axiom[] = [
       { text: 'Chartrand, T. L. & Bargh, J. A. "The chameleon effect"', source: 'Journal of Personality and Social Psychology, 76(6)', year: '1999' }
     ],
     ask: [
-      'Why do wisdom traditions\u2019 prohibitions on coveting have limited effect under AIM?',
+      'Why do wisdom traditions\u2019 prohibitions on coveting have limited effect under the AIM Framework?',
       'What is the Transmission Window and the Libet Window?'
     ]
   },
@@ -199,7 +199,7 @@ export const axioms: Axiom[] = [
     ],
     ask: [
       'What is a Confabulation Cascade and when does it become self-sustaining?',
-      'What are the Crisis State Phases in AIM?'
+      'What are the Crisis State Phases in the AIM Framework?'
     ]
   },
   {
@@ -212,7 +212,7 @@ export const axioms: Axiom[] = [
       'Human causal cognition is architecturally optimised for detecting and modelling agents (predators, prey, rivals, collaborators) and defaults to agent-based explanations when causal demands arise, because the brain\u2019s threat-detection systems, social-reasoning circuits, and theory-of-mind architecture converge on agentive causation as the computationally tractable mode of explanation. Systemic, emergent, or distributed causes exceed the computational capacity of these systems and are therefore structurally unavailable as default explanatory completions, ensuring that Confabulation (Axiom 4) characteristically takes agent-based form.',
     status: 'Inherited',
     statusNote:
-      'Axiom 9 is not load-bearing for the architecture or its mathematics; Axioms 1 to 8 are. It is load-bearing for the account of the form the architecture\u2019s failures take. Refuting it would remove AIM\u2019s explanation of why confabulation is agent-shaped and why collective distress converges on scapegoats, and would leave the rest standing.',
+      'Axiom 9 is not load-bearing for the architecture or its mathematics; Axioms 1 to 8 are. It is load-bearing for the account of the form the architecture\u2019s failures take. Refuting it would remove the AIM Framework\u2019s explanation of why confabulation is agent-shaped and why collective distress converges on scapegoats, and would leave the rest standing.',
     citations: [
       { text: 'Barrett, J. L. Why Would Anyone Believe in God?', source: 'AltaMira Press', year: '2004' },
       { text: 'Heider, F. & Simmel, M. "An experimental study of apparent behavior"', source: 'American Journal of Psychology, 57(2)', year: '1944' },

@@ -67,11 +67,11 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
 export const runtime = 'nodejs'
 export const maxDuration = 300 // 5 minutes in seconds
 
-const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant, an expert analytical partner trained on Yule Guttenbeil's AIM Motivation Framework and the AIM Treatise ("A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire").
+const AIM_SYSTEM_PROMPT = `You are the AIM Framework Research Assistant, an expert analytical partner trained on Yule Guttenbeil's AIM Framework and the AIM Treatise ("A Unifying General Theory of Human Motivation: Appetites, Intrinsic Motivation and Mimetic Desire").
 
 **CRITICAL INSTRUCTIONS:**
 1. IGNORE anything about "RE-AIM Framework", "Triple Aim", or other healthcare frameworks
-2. "AIM" ALWAYS means the AIM Motivation Framework (Appetites / Intrinsic Motivation / Mimetic Desire)
+2. "AIM" ALWAYS means the AIM Framework (Appetites / Intrinsic Motivation / Mimetic Desire). In your answers, call it "the AIM Framework", never just "AIM"
 3. Base your answers on the Context Documents provided below; where they are silent, reason from the nine axioms and the architecture stated here
 4. If a term appears in the Context (e.g., "Quantum Epistemology", "Salience", "Observer"), use ONLY the AIM-specific definition from the Context. Do not import definitions from other fields
 5. Do NOT use rigid section headers like "Short Answer", "Analysis", "Conclusion"
