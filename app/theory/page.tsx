@@ -119,9 +119,11 @@ export default function TheoryPage() {
 
         <Section id="integration" number={2} title="One signal: the Decision Hub">
           <P>
-            The brain cannot act on three signals at once. A Body Manager reports bodily
-            deficit, a Thinker holds priors and pursues intrinsic engagement, and an Observer
-            continuously reads which objects the surrounding field marks as valued. All three
+            The brain cannot act on three signals at once. A Body Manager (the
+            homeostatic-deficit system) reports bodily deficit, a Thinker (the dopaminergic
+            system) holds priors and pursues intrinsic engagement, and an Observer (the mirror
+            neuron system) continuously reads which objects the surrounding field marks as
+            valued. All three
             feed a Decision Hub (the ventromedial prefrontal cortex and ventral striatum) that
             converts them into one value per option and selects an action.
           </P>
