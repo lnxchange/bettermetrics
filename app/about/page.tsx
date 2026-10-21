@@ -7,7 +7,7 @@ import { FrameworkCore } from '@/components/framework-core'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'About the Author and the AIM Framework',
+  title: { absolute: 'About the Author and the AIM Framework' },
   description:
     'Who is behind the AIM Framework, what the Treatise claims and does not claim, and how to challenge it.',
   alternates: { canonical: '/about' },

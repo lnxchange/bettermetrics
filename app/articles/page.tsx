@@ -6,7 +6,7 @@ import { Database } from '@/lib/db_types'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Articles Applying the AIM Framework',
+  title: { absolute: 'Articles Applying the AIM Framework' },
   description: 'Insights and analysis applying the AIM Framework to economics, psychology, law, organisations, and more.',
   alternates: { canonical: '/articles' },
   openGraph: {

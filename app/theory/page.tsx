@@ -8,7 +8,7 @@ import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'The AIM Framework of Human Motivation Explained',
+  title: { absolute: 'The AIM Framework of Human Motivation Explained' },
   description:
     'The architecture of the AIM Framework in seven short sections: three sources of motivation, the Decision Hub, Source Opacity, Confabulation, Object Parasitism and Satiation.',
   alternates: { canonical: '/theory' },
