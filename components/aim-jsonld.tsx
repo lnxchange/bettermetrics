@@ -20,7 +20,7 @@ export function AIMJsonLd() {
       {
         "@type": "CreativeWork",
         "@id": "https://aimtheory.org/#AIMFramework",
-        "name": "AIM Motivation Framework",
+        "name": "AIM Framework",
         "alternateName": "Appetites-Intrinsic-Mimetic Framework",
         "genre": "Theoretical Framework",
         "description": "A taxonomic synthesis integrating neuroscience, behavioral economics, and legal systems analysis to resolve definitional inconsistencies in motivation science through three neurologically distinct sources.",
@@ -76,7 +76,7 @@ export function AIMJsonLd() {
         "@id": "https://aimtheory.org/#YuleGuttenbeil",
         "name": "Yule Guttenbeil",
         "jobTitle": "Principal Commercial Lawyer & Behavioral Systems Architect",
-        "description": "Creator of the AIM Motivation Framework. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
+        "description": "Creator of the AIM Framework. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
         "url": "https://aimtheory.org",
         "sameAs": [
           "https://aimtheory.org"
@@ -96,7 +96,7 @@ export function AIMJsonLd() {
         "name": SITE_NAME,
         "alternateName": "AIM Framework",
         "url": "https://aimtheory.org",
-        "description": "Research platform for the AIM Motivation Framework: a taxonomic synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology.",
+        "description": "Research platform for the AIM Framework: a taxonomic synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology.",
         "publisher": {
           "@id": "https://aimtheory.org/#organization"
         },

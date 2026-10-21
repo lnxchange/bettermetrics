@@ -71,10 +71,10 @@ export function ContactPage() {
           
           {/* AIM Chat Recommendation */}
           <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-8">
-            <h2 className="text-2xl font-bold text-blue-900 mb-3">Have Questions About AIM?</h2>
+            <h2 className="text-2xl font-bold text-blue-900 mb-3">Have Questions About the AIM Framework?</h2>
             <p className="text-blue-800 mb-4">
               For questions about the AIM Framework, testable predictions, or research applications, 
-              we encourage you to try our <strong>AIM Chat</strong> AI assistant first. It has access 
+              we encourage you to try the <strong>AIM Framework</strong> AI assistant first. It has access 
               to the latest versions of our research documentation and can provide detailed answers 
               about the framework&apos;s theoretical foundations and practical applications.
             </p>
@@ -82,7 +82,7 @@ export function ContactPage() {
               href="/chat"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
             >
-              Try AIM Chat →
+              Ask the AI →
             </Link>
           </div>
         </div>
@@ -242,11 +242,11 @@ export function ContactPage() {
         </div>
       </section>
 
-      {/* Why Collaborate on AIM */}
+      {/* Why Collaborate on the AIM Framework */}
       <section className="bg-primary-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-6">Why Collaborate on AIM?</h2>
+            <h2 className="text-4xl font-bold mb-6">Why Collaborate on the AIM Framework?</h2>
             <p className="text-xl max-w-4xl mx-auto">
               This isn&apos;t an incremental improvement—it&apos;s a fundamental reorganization of how we understand human motivation, 
               with implications for every field of human behavior.
@@ -257,7 +257,7 @@ export function ContactPage() {
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Not Incremental—Revolutionary</h3>
               <p className="text-gray-100">
-                Most theories propose new mechanisms. AIM proposes new <strong>categories</strong>.
+                Most theories propose new mechanisms. The AIM Framework proposes new <strong>categories</strong>.
                 It provides the first neuroscientific basis for cross-disciplinary definitions of
                 fundamental human concepts, organizing existing evidence into a coherent taxonomic framework.
               </p>
@@ -266,7 +266,7 @@ export function ContactPage() {
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Unique Cross-Disciplinary Applications</h3>
               <p className="text-gray-100">
-                AIM enables scientific definitions of freedom, respect, fairness, and privacy that 
+                The AIM Framework enables scientific definitions of freedom, respect, fairness, and privacy that 
                 apply uniformly across economics, law, psychology, and policy—resolving conflicts 
                 between different fields&apos; approaches to human behavior.
               </p>
@@ -275,7 +275,7 @@ export function ContactPage() {
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Testable Predictions Existing Frameworks Cannot Make</h3>
               <p className="text-gray-100">
-                AIM&apos;s tri-source model enables predictions about market failures, intervention backfires, 
+                The AIM Framework&apos;s tri-source model enables predictions about market failures, intervention backfires, 
                 and social dynamics escalation that no existing theory can make—providing a competitive 
                 advantage in research and practice.
               </p>
@@ -285,7 +285,7 @@ export function ContactPage() {
           <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center">
             <h3 className="text-2xl font-bold mb-4">The Opportunity</h3>
             <p className="text-lg text-gray-100 max-w-3xl mx-auto">
-              AIM represents the first time in history that concepts like &quot;freedom,&quot;
+              The AIM Framework represents the first time in history that concepts like &quot;freedom,&quot;
               &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; can be defined scientifically rather than philosophically,
               with testable predictions about when they are violated and how to restore them.
             </p>
@@ -305,7 +305,7 @@ export function ContactPage() {
             <div className="bg-white p-6 rounded-xl border border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-3">For Researchers</h3>
               <ul className="space-y-2 text-gray-600">
-                <li>• Test AIM predictions across disciplines</li>
+                <li>• Test the AIM Framework&apos;s predictions across disciplines</li>
                 <li>• Co-author publications</li>
                 <li>• Access framework materials and datasets</li>
               </ul>
@@ -325,7 +325,7 @@ export function ContactPage() {
             <div className="bg-white p-6 rounded-xl border border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-3">For Organizations</h3>
               <ul className="space-y-2 text-gray-600">
-                <li>• Pilot AIM-based interventions</li>
+                <li>• Pilot interventions based on the AIM Framework</li>
                 <li>• System redesign projects</li>
                 <li>• Research partnerships</li>
               </ul>

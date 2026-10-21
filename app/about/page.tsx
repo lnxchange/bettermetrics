@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     'Who is behind the AIM Framework, what the Treatise claims and does not claim, and how to challenge it.',
   alternates: { canonical: '/about' },
   openGraph: {
-    title: 'About the Author and the AIM Framework | AIM Theory',
+    title: 'About the Author and the AIM Framework',
     description: 'The author, the book, its claims, and how to challenge it.',
     url: '/about',
     images: [SITE_OG_IMAGE],
@@ -34,11 +34,11 @@ const claims = [
 
 const nonClaims = [
   'That only three categories can ever exist. Three is the most parsimonious decomposition consistent with current evidence; a fourth would require revision.',
-  'That AIM is already validated. It is a coherent synthesis that generates testable predictions and awaits peer-reviewed validation. A validation roadmap is in the appendices.',
-  'That AIM explains all of cognition, emotion or behaviour. It is a theory of motivation: how wanting arises, forms beliefs, and drives action.',
-  'That AIM replaces other frameworks. Self-Determination Theory, behavioural economics, mimetic theory and drive theories remain valuable; AIM integrates and clarifies them.',
+  'That the AIM Framework is already validated. It is a coherent synthesis that generates testable predictions and awaits peer-reviewed validation. A validation roadmap is in the appendices.',
+  'That the AIM Framework explains all of cognition, emotion or behaviour. It is a theory of motivation: how wanting arises, forms beliefs, and drives action.',
+  'That the AIM Framework replaces other frameworks. Self-Determination Theory, behavioural economics, mimetic theory and drive theories remain valuable; the AIM Framework integrates and clarifies them.',
   'That applying it is simple. Identifying the dominant source and designing an intervention takes skill and judgement. The framework supplies diagnostics, not automatic answers.',
-  'That AIM-aligned interventions always succeed. Correct diagnosis does not guarantee effective treatment.'
+  'That interventions aligned with the AIM Framework always succeed. Correct diagnosis does not guarantee effective treatment.'
 ]
 
 const partOne = [
@@ -80,7 +80,7 @@ export default function AboutPage() {
               <h2 className="mb-3 text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
               <p className="text-lg text-gray-700">
                 I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the AIM
-                Motivation Framework (&quot;AIM Framework&quot;) and creator of aimtheory.org.
+                Framework and creator of aimtheory.org.
               </p>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function AboutPage() {
             </p>
             <div className="border-l-4 border-amber-400 bg-amber-50 p-6">
               <p>
-                The AIM Motivation Framework is a synthetic theory. It provides a basis for
+                The AIM Framework is a synthetic theory. It provides a basis for
                 hypothesising predictions and tightly boundered tests in order to validate its
                 premise. I am not a professional psychologist, economist, philosopher or
                 neuro-scientist. Though I have read broadly across those fields. Therefore, I am
@@ -240,7 +240,7 @@ export default function AboutPage() {
 
         {/* Claims */}
         <section id="claims" className="scroll-mt-24 border-t border-gray-100 py-12">
-          <h2 className="mb-6 text-3xl font-bold text-gray-900">What AIM claims, and does not</h2>
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">What the AIM Framework claims, and does not</h2>
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <h3 className="mb-3 text-lg font-semibold text-gray-900">Claims</h3>
@@ -316,8 +316,8 @@ export default function AboutPage() {
             </Link>
             <AskAI
               variant="button"
-              question="I'm a researcher. Which AIM predictions are most tractable to test first, and what does the validation roadmap recommend?"
-              label="Ask about testing AIM"
+              question="I'm a researcher. Which predictions of the AIM Framework are most tractable to test first, and what does the validation roadmap recommend?"
+              label="Ask about testing the AIM Framework"
               className="border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
             />
           </div>

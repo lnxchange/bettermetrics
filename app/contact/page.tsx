@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     'Get in touch about the AIM Framework: research collaboration, speaking, challenges to the theory, or questions about applying it.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact Yule Guttenbeil | AIM Theory',
+    title: 'Contact Yule Guttenbeil | The AIM Framework',
     description: 'Research collaboration, speaking, challenges to the theory, or questions about applying it.',
     url: '/contact',
     images: [SITE_OG_IMAGE],

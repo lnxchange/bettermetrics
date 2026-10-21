@@ -47,7 +47,7 @@ export function Header({ session }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 px-4 backdrop-blur-xl md:px-6 lg:px-8">
       <div className="flex items-center">
-        <Link href="/" className="flex items-center" aria-label="AIM home">
+        <Link href="/" className="flex items-center" aria-label="The AIM Framework home">
           <AimMark className="h-6 w-auto sm:h-7" />
         </Link>
         <div className="ml-2 flex items-center">

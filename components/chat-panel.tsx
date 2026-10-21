@@ -93,7 +93,7 @@ export function ChatPanel({
           />
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1 text-xs text-muted-foreground">
             <span>
-              Answers are drawn from the AIM corpus. Verify, and use your own judgement.
+              Answers are drawn from the AIM Framework corpus. Verify, and use your own judgement.
               {typeof guestRemaining === 'number' && (
                 <>
                   {' '}

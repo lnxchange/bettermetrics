@@ -8,13 +8,13 @@ import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'The AIM Theory of Human Motivation Explained',
+  title: 'The AIM Framework of Human Motivation Explained',
   description:
-    'The AIM architecture in seven short sections: three sources of motivation, the Decision Hub, Source Opacity, Confabulation, Object Parasitism and Satiation.',
+    'The architecture of the AIM Framework in seven short sections: three sources of motivation, the Decision Hub, Source Opacity, Confabulation, Object Parasitism and Satiation.',
   alternates: { canonical: '/theory' },
   openGraph: {
-    title: 'The AIM Theory of Human Motivation Explained | AIM Theory',
-    description: 'The AIM architecture in seven short sections.',
+    title: 'The AIM Framework of Human Motivation Explained',
+    description: 'The architecture of the AIM Framework in seven short sections.',
     url: '/theory',
     images: [SITE_OG_IMAGE],
     type: 'article'
@@ -33,18 +33,18 @@ const sections = [
 ]
 
 const applications: { domain: string; question: string }[] = [
-  { domain: 'Economics', question: 'How does AIM explain the Easterlin Paradox and Veblen goods?' },
+  { domain: 'Economics', question: 'How does the AIM Framework explain the Easterlin Paradox and Veblen goods?' },
   { domain: 'Money and debt', question: 'Why does the AIM Treatise describe interest as a pure Mimetic Premium?' },
-  { domain: 'Law and justice', question: 'How does AIM define freedom, coercion and justice without importing moral premises?' },
-  { domain: 'Psychology', question: 'How does AIM relate to Self-Determination Theory, and where do they differ?' },
-  { domain: 'Organisations', question: 'What does AIM say about status tournaments at work and how to protect intrinsic motivation?' },
-  { domain: 'Health and policy', question: 'How would AIM separate need from socially amplified demand in health policy?' },
-  { domain: 'Marketing', question: 'What is the AIM account of why some products go viral and others do not?' },
-  { domain: 'Education', question: 'How does AIM explain the crowding-out of curiosity by grades and status?' },
-  { domain: 'Social media', question: 'What does AIM predict about high-visibility platforms and mimetic crisis?' },
-  { domain: 'Artificial intelligence', question: 'What does Appendix C of the Treatise say about applying the AIM architecture to AI?' },
-  { domain: 'Violence and crisis', question: 'How does AIM derive violence and scapegoating as architectural outputs?' },
-  { domain: 'Governance', question: 'What is the AIM governance architecture and what does it try to secure?' }
+  { domain: 'Law and justice', question: 'How does the AIM Framework define freedom, coercion and justice without importing moral premises?' },
+  { domain: 'Psychology', question: 'How does the AIM Framework relate to Self-Determination Theory, and where do they differ?' },
+  { domain: 'Organisations', question: 'What does the AIM Framework say about status tournaments at work and how to protect intrinsic motivation?' },
+  { domain: 'Health and policy', question: 'How would the AIM Framework separate need from socially amplified demand in health policy?' },
+  { domain: 'Marketing', question: 'How does the AIM Framework account for why some products go viral and others do not?' },
+  { domain: 'Education', question: 'How does the AIM Framework explain the crowding-out of curiosity by grades and status?' },
+  { domain: 'Social media', question: 'What does the AIM Framework predict about high-visibility platforms and mimetic crisis?' },
+  { domain: 'Artificial intelligence', question: 'What does Appendix C of the Treatise say about applying the architecture of the AIM Framework to AI?' },
+  { domain: 'Violence and crisis', question: 'How does the AIM Framework derive violence and scapegoating as architectural outputs?' },
+  { domain: 'Governance', question: 'What is the governance architecture in the AIM Framework and what does it try to secure?' }
 ]
 
 function Section({
@@ -111,7 +111,7 @@ export default function TheoryPage() {
           <AIMDefinitionsShort />
           <AskAIGroup
             questions={[
-              'Why does AIM say loneliness and the desire to connect are Intrinsic, not Mimetic?',
+              'Why does the AIM Framework say loneliness and the desire to connect are Intrinsic, not Mimetic?',
               'What would a fourth source of motivation have to show to be admitted?'
             ]}
           />
@@ -131,7 +131,7 @@ export default function TheoryPage() {
           <AIMIntegrationEquation />
           <AskAIGroup
             questions={[
-              'What are the four components of the AIM architecture and what does each do?',
+              'What are the four components of the AIM Framework architecture and what does each do?',
               'What is the Belief Register and how does it condition the Observer?'
             ]}
           />

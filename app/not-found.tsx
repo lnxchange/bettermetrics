@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 }
 
 const destinations = [
-  { href: '/theory', label: 'The Theory', note: 'The AIM architecture in seven short sections.' },
+  { href: '/theory', label: 'The Theory', note: 'The architecture of the AIM Framework in seven short sections.' },
   { href: '/articles', label: 'Articles', note: 'The framework applied to economics, law, psychology and more.' },
   { href: '/treatise', label: 'The Treatise', note: 'The current working text of the book.' },
   { href: '/glossary', label: 'Glossary', note: 'Every defined term in the framework.' }

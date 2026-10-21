@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     'A short set of scenarios showing which source of motivation, Appetite, Intrinsic Motivation or Mimetic Desire, is driving a decision, using the AIM Framework.',
   alternates: { canonical: '/diagnostic' },
   openGraph: {
-    title: 'Motivational Self-Diagnosis | AIM Theory',
+    title: 'Motivational Self-Diagnosis | The AIM Framework',
     description: 'Which source of motivation is driving your decision? A short diagnostic built on the AIM Framework.',
     url: '/diagnostic',
     images: [SITE_OG_IMAGE],

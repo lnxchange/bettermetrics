@@ -63,7 +63,7 @@ export async function generateMetadata({
   const articleUrl = `${siteUrl}/articles/${params.slug}`
   const title = cleanMetaTitle(article)
   // Optimiser-written meta titles are complete (50-60 chars); only the
-  // fallback to the article's own title takes the "| AIM Theory" suffix.
+  // fallback to the article's own title takes the "| The AIM Framework" suffix.
   const fromOptimiser = title !== article.title
   const description = article.meta_description ? metaDescription(article.meta_description) : undefined
   

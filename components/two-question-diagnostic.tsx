@@ -26,7 +26,7 @@ const results: Record<
     body:
       'This want is addressing a real need of the body or basic security. Expect it to subside once the need is met and to return when it recurs.',
     question: obj =>
-      `I used the Two-Question Diagnostic on "${obj}" and it looks Appetite-led. What does AIM say about how Appetites behave, and could Mimetic Desire still be inflating how much of this I think I need?`
+      `I used the Two-Question Diagnostic on "${obj}" and it looks Appetite-led. What does the AIM Framework say about how Appetites behave, and could Mimetic Desire still be inflating how much of this I think I need?`
   },
   I: {
     title: 'Intrinsic Motivation is present',
@@ -40,7 +40,7 @@ const results: Record<
     body:
       'If both tests fail, the desire is not bodily-need-driven and would not persist in private, M is identified by exclusion. M is the Salience signal. The Mimetic contribution arrives in the form of the very thing an introspective test would be looking for, a felt lack, and introspection asked to distinguish a Salience reading from a deficit is asked to read a distinction the integrated Scalar does not carry.',
     question: obj =>
-      `I used the Two-Question Diagnostic on "${obj}" and it came out as Mimetic Desire by elimination. What does AIM say I should do with that, given Source Opacity and the Knowledge Patch?`
+      `I used the Two-Question Diagnostic on "${obj}" and it came out as Mimetic Desire by elimination. What does the AIM Framework say I should do with that, given Source Opacity and the Knowledge Patch?`
   }
 }
 

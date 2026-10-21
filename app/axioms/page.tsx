@@ -25,7 +25,7 @@ function AxiomsJsonLd() {
         about: {
           '@type': 'CreativeWork',
           '@id': 'https://aimtheory.org/#AIMFramework',
-          name: 'AIM Motivation Framework'
+          name: 'AIM Framework'
         }
       },
       {
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     'The nine axioms of the AIM Framework: the premises from which the theory is derived, each with its epistemic status and foundational citations.',
   alternates: { canonical: '/axioms' },
   openGraph: {
-    title: 'The Nine Axioms of Human Motivation | AIM Theory',
+    title: 'The Nine Axioms of Human Motivation | The AIM Framework',
     description:
       'The premises from which the AIM Framework is derived, with epistemic status and citations.',
     url: '/axioms',
@@ -136,8 +136,8 @@ export default function AxiomsPage() {
             The Nine Axioms
           </h1>
           <p className="text-lg text-gray-700">
-            Everything in AIM is derived from these nine premises. Most are inherited from
-            established science; one follows mathematically from another; three are AIM&apos;s
+            Everything in the AIM Framework is derived from these nine premises. Most are inherited from
+            established science; one follows mathematically from another; three are the AIM Framework&apos;s
             own and are what the theory must defend. Any finding that contradicts one of them
             is evidence against the framework.
           </p>
@@ -178,7 +178,7 @@ export default function AxiomsPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <AskAI
               variant="button"
-              question="Walk me through how the nine AIM axioms depend on each other and what each one is load-bearing for."
+              question="Walk me through how the nine axioms of the AIM Framework depend on each other and what each one is load-bearing for."
               label="Ask how the axioms interlock"
             />
             <Link

@@ -72,7 +72,7 @@ export async function optimizeArticleSEO(
       model: SEO_MODEL,
       max_tokens: 4000,
       system:
-        `You write search metadata for ${SITE_NAME} (${SITE_URL}), the home of the AIM Framework, a general theory of human motivation with three sources: Appetites (A), Intrinsic Motivation (I) and Mimetic Desire (M). ` +
+        `You write search metadata for ${SITE_URL}, the home of the AIM Framework, a general theory of human motivation with three sources: Appetites (A), Intrinsic Motivation (I) and Mimetic Desire (M). ` +
         'Write for a reader searching Google, not for the author. Be specific and plain; no hype, no clickbait, no emoji. ' +
         'Use British English. Return JSON only.',
       messages: [

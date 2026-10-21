@@ -13,9 +13,9 @@ interface GlossaryTermPageProps {
 }
 
 function glossaryTitle(term: string) {
-  const plain = `${term} | AIM Theory Glossary`
+  const plain = `${term} | AIM Framework Glossary`
   // Short terms ("Art", "Action") get a descriptor so the title says what the page is.
-  return plain.length >= 30 ? plain : `${term} (AIM Framework term) | AIM Theory Glossary`
+  return plain.length >= 30 ? plain : `${term} (AIM Framework term) | AIM Framework Glossary`
 }
 
 export async function generateMetadata({ params }: GlossaryTermPageProps): Promise<Metadata> {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: GlossaryTermPageProps): Promi
     description,
     alternates: { canonical: path },
     openGraph: {
-      title: `${entry.term} | AIM Theory Glossary`,
+      title: `${entry.term} | AIM Framework Glossary`,
       description,
       url: path,
       type: 'article',
