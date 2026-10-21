@@ -42,12 +42,13 @@ export default function HomePage() {
             into a single sense of how much you want something, and acts on it.
           </p>
           <p className="max-w-3xl text-lg text-blue-200">
-            The framework is derived, not asserted. It starts from{' '}
+            The framework is built from{' '}
             <Link href="/axioms" className="font-semibold text-white underline hover:text-blue-100">
-              nine stated premises
+              nine stated axioms
             </Link>
-            , each tied to established neuroscience and each with a stated way it could be
-            proved wrong, and the rest follows from them.
+            . Five are taken from established research, one follows mathematically, and three
+            are the framework&apos;s own claims, which it has to defend. The architecture and
+            its consequences are worked out from them.
           </p>
           <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
             <AskAI
@@ -73,7 +74,8 @@ export default function HomePage() {
           <h2 className="mb-4 text-3xl font-bold text-gray-900">How the system works</h2>
           <p className="mb-6 text-lg text-gray-700">
             A Body Manager (the homeostatic-deficit system) reports bodily deficit, a Thinker
-            (the dopaminergic system) pursues what is rewarding in the doing, and an Observer
+            (the dopaminergic system) holds beliefs and pursues what is rewarding in the doing,
+            and an Observer
             (the mirror neuron system) continuously reads which objects in the surrounding
             field stand out as valuable. All three feed a Decision Hub (the ventromedial prefrontal
             cortex and ventral striatum), which converts them into one value per option and
@@ -86,16 +88,16 @@ export default function HomePage() {
           </h3>
           <p className="mb-4 text-lg text-gray-700">
             The three signals are not the same kind of report. Appetites and Intrinsic
-            Motivation each report a deficit: something is missing, and the right object or
-            activity would close it. Hunger ends when you eat. The Observer reports something
+            Motivation each report a deficit: something is missing, and the right object would
+            close it. Hunger ends when you eat. The Observer reports something
             else, which is Salience: where value appears to be. It reports no deficit, so
             there is nothing to close and it has no off switch.
           </p>
 
           <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">M is a Salience signal</h3>
           <p className="mb-4 text-lg text-gray-700">
-            Mimetic Desire is named after its strongest cue, which is what other people
-            visibly want. The signal itself is simply Salience: <em>this stands out as worth
+            The name Mimetic Desire points to its most familiar case, wanting what other
+            people visibly want. The signal itself is simply Salience: <em>this stands out as worth
             having</em>. It works the same way for a limited edition, a new phone in a shop
             window or a queue outside a door as it does for a friend&apos;s new car. Valuing
             what others value is one case of Salience, not a separate mechanism.
@@ -103,33 +105,42 @@ export default function HomePage() {
 
           <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">What the merge loses</h3>
           <p className="mb-4 text-lg text-gray-700">
-            The Hub adds the three signals into one value. A want of strength 6 could be
+            The Hub weighs the three signals and adds them into one value. A want of strength 6 could be
             2&nbsp;+&nbsp;1&nbsp;+&nbsp;3 or 0&nbsp;+&nbsp;0&nbsp;+&nbsp;6, and nothing that sees
             only the 6 can tell which. Because the Hub has only one category to receive them
-            in, a Salience reading is felt as a deficit. That is why getting something you
-            caught from others so often satisfies nothing: there was no deficit to close.
+            in, a Salience reading is felt as a deficit. That is why the part of a want that
+            came from Salience is not satisfied by getting the thing: there was no deficit to
+            close.
           </p>
           <p className="mb-8 text-lg text-gray-700">
-            Because what one person&apos;s Observer reads is what other people are pursuing,
-            the same loop also runs between people. The framework builds outward from there
+            Among everything else in the field, each person&apos;s Observer reads what the
+            people around them are pursuing, so the same loop also runs between people. The framework builds outward from there
             without adding new parts.
           </p>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
               <h4 className="mb-2 font-bold text-gray-900">Taken from established research</h4>
               <p className="text-sm text-gray-700">
                 The brain converts different kinds of value into one common currency before
                 choosing. People sincerely invent reasons for choices they cannot introspect.
-                Much of what people value is learned from others.
+                Other people&apos;s valuations register faster than awareness. Beliefs update
+                from prior belief and new evidence. Causes are sought in agents first.
+              </p>
+            </div>
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+              <h4 className="mb-2 font-bold text-gray-900">Follows mathematically</h4>
+              <p className="text-sm text-gray-700">
+                Once the signals are merged, which source produced which part cannot be
+                recovered.
               </p>
             </div>
             <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
-              <h4 className="mb-2 font-bold text-gray-900">What the AIM Framework adds</h4>
+              <h4 className="mb-2 font-bold text-gray-900">The AIM Framework&apos;s own claims</h4>
               <p className="text-sm text-gray-700">
-                The split into three sources with different satiation patterns. The asymmetry
-                between the two deficit signals and the Salience signal. What follows, by
-                derivation, once they are merged.
+                There are exactly three sources, each with its own satiation pattern; M, as
+                Salience, never satiates. M adds value to objects that already serve A or I
+                rather than creating wants of its own.
               </p>
             </div>
           </div>
@@ -176,14 +187,14 @@ export default function HomePage() {
           <p className="mb-4 text-lg text-gray-700">
             The merged value records <em>how much</em> you want something but not{' '}
             <em>why</em>. Asked why you chose, the brain does not answer &ldquo;I don&apos;t
-            know.&rdquo; It builds a plausible story and believes it. Salience-driven wants are
-            the most likely to be misfiled as your own, because they arrive before awareness
-            and leave nothing behind to check.
+            know.&rdquo; It builds a plausible story and believes it. Wants that came from
+            Salience are the most likely to be misread, because they are felt as a deficit,
+            arrive before awareness, and leave nothing behind to check.
           </p>
           <p className="mb-4 text-lg text-gray-700">
-            So asking people what they want, which is the foundation of consumer research,
-            welfare economics and much of therapy, asks a question the architecture cannot
-            reliably answer.
+            So asking people what they want, or watching what they choose, tells you how much
+            they want something but not why. Consumer research, welfare economics and much of
+            therapy rely on one or the other as if it told them both.
           </p>
           <p className="text-lg text-gray-700">
             If that is right, the human sciences stand roughly where medicine stood in 1850.
@@ -205,8 +216,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-2 text-3xl font-bold text-gray-900">Try the Two-Question Diagnostic</h2>
           <p className="mb-6 text-lg text-gray-600">
-            Introspection cannot read the source, but behaviour can be tested for it. Two
-            questions, by elimination.
+            Introspection cannot read the source directly, but you can test which conditions
+            a want depends on. Two questions, by elimination.
           </p>
           <TwoQuestionDiagnostic />
         </div>
@@ -244,8 +255,8 @@ export default function HomePage() {
             >
               <h3 className="mb-2 text-lg font-bold text-gray-900">The nine axioms</h3>
               <p className="mb-3 text-sm text-gray-600">
-                The premises everything is derived from, with what each one rests on and what
-                would falsify it.
+                The premises everything is derived from, what each one rests on, and what
+                challenging it would take.
               </p>
               <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
                 Read <HiArrowRight className="ml-1 h-4 w-4" />
