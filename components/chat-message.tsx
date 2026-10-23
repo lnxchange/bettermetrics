@@ -9,17 +9,29 @@ import { Mermaid } from '@/components/ui/mermaid'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconPerplexity, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
-import { linkifyTreatiseMarkdown, treatiseSectionTarget, TreatiseSectionTarget } from '@/lib/treatise-citations'
+import {
+  CorpusIndex,
+  linkifyTreatiseMarkdown,
+  treatiseSectionTarget,
+  TreatiseSectionTarget
+} from '@/lib/treatise-citations'
 
 export interface ChatMessageProps {
   message: Message
   onOpenSection?: (target: TreatiseSectionTarget) => void
+  targets?: {
+    index: CorpusIndex
+    redirects: Record<string, { slug: string; section: string | null }>
+  } | null
 }
 
-export function ChatMessage({ message, onOpenSection, ...props }: ChatMessageProps) {
+export function ChatMessage({ message, onOpenSection, targets, ...props }: ChatMessageProps) {
   const content =
     message.role === 'assistant'
-      ? linkifyTreatiseMarkdown(message.content.replace(/\*\[Treatise,\s*([^\]]+)\]\*/g, '$1'))
+      ? linkifyTreatiseMarkdown(
+          message.content.replace(/\*\[Treatise,\s*([^\]]+)\]\*/g, '$1'),
+          targets ? { index: targets.index, history: targets.redirects } : { pending: true }
+        )
       : message.content
   return (
     <div
@@ -47,7 +59,7 @@ export function ChatMessage({ message, onOpenSection, ...props }: ChatMessagePro
             },
             a({ href, children, ...props }) {
               const section = href ? treatiseSectionTarget(href) : null
-              if (section && onOpenSection) {
+              if (section?.section && onOpenSection) {
                 return (
                   <a
                     href={href}
@@ -80,6 +92,15 @@ export function ChatMessage({ message, onOpenSection, ...props }: ChatMessagePro
                 )
               }
               
+              // A chapter link from a removed section stays in this tab.
+              if (section && !section.section) {
+                return (
+                  <a href={href} className="text-blue-600 hover:underline dark:text-blue-400">
+                    {children}
+                  </a>
+                )
+              }
+
               // Regular links
               return (
                 <a

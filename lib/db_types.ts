@@ -176,6 +176,33 @@ export interface Database {
         }
         Relationships: []
       }
+      treatise_section_moves: {
+        Row: {
+          id: number
+          from_section: string
+          from_slug: string
+          to_section: string | null
+          to_slug: string
+          published_at: string
+        }
+        Insert: {
+          id?: number
+          from_section: string
+          from_slug: string
+          to_section?: string | null
+          to_slug: string
+          published_at?: string
+        }
+        Update: {
+          id?: number
+          from_section?: string
+          from_slug?: string
+          to_section?: string | null
+          to_slug?: string
+          published_at?: string
+        }
+        Relationships: []
+      }
       rag_documents: {
         Row: {
           id: string

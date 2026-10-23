@@ -15,7 +15,7 @@ import {
   treatisePanelOffset
 } from '@/components/treatise-section-panel'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
-import { TreatiseSectionTarget } from '@/lib/treatise-citations'
+import { CorpusIndex, TreatiseSectionTarget } from '@/lib/treatise-citations'
 import { GUEST_LIMIT, GUEST_REMAINING_HEADER } from '@/lib/guest-quota'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from './ui/button'
@@ -44,11 +44,34 @@ export function Chat({
     'layperson'
   )
   const [section, setSection] = useState<TreatiseSectionTarget | null>(null)
+  const [targets, setTargets] = useState<{
+    index: CorpusIndex
+    redirects: Record<string, { slug: string; section: string | null }>
+  } | null>(null)
   const [hasMounted, setHasMounted] = useState(false)
   const [hasNavigated, setHasNavigated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null)
   const [quotaExceeded, setQuotaExceeded] = useState(false)
+  useEffect(() => {
+    let cancel = false
+    fetch('/api/treatise/targets')
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (cancel || !data?.sections || !data?.owners || !Array.isArray(data?.chapters)) return
+        setTargets({
+          index: { sections: data.sections, owners: data.owners, chapters: data.chapters },
+          redirects: data.redirects || {}
+        })
+      })
+      .catch(() => {
+        if (!cancel) setTargets(null)
+      })
+    return () => {
+      cancel = true
+    }
+  }, [])
+
   const [guestRemaining, setGuestRemaining] = useState<number | null>(
     isGuest ? initialGuestRemaining ?? GUEST_LIMIT : null
   )
@@ -190,7 +213,7 @@ export function Chat({
       >
         {messages.length ? (
           <>
-            <ChatList messages={messages} onOpenSection={setSection} />
+            <ChatList messages={messages} onOpenSection={setSection} targets={targets} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
         ) : (

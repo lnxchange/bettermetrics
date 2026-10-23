@@ -207,49 +207,379 @@ export interface UnresolvedCitation {
   section: string
 }
 
-/** Citations whose chapter is missing, or whose section is not one of that chapter's headings. */
-export function unresolvedCitations(
-  markdown: string,
-  headingsBySlug: Map<string, Set<string>>
-): UnresolvedCitation[] {
+/** Citations whose section is not in the book, or whose chapter or appendix is missing. */
+export function unresolvedCitations(markdown: string, index: CorpusIndex): UnresolvedCitation[] {
   const unresolved: UnresolvedCitation[] = []
   for (const part of splitCitations(markdown)) {
     if (!part.href) continue
     const target = treatiseSectionTarget(part.href)
     if (!target) continue
-    const headings = headingsBySlug.get(target.slug)
-    if (!headings || (target.section && !headings.has(target.section))) {
-      unresolved.push({ text: part.text, href: part.href, slug: target.slug, section: target.section })
-    }
+    if (targetExists(index, target.slug, target.section)) continue
+    unresolved.push({ text: part.text, href: part.href, slug: target.slug, section: target.section })
   }
   return unresolved
 }
 
+export interface LinkifyOptions {
+  index?: CorpusIndex
+  /** Old section id to where an accepted publish moved it. A null section was removed. */
+  history?: Record<string, { slug: string; section: string | null }>
+  /** Leave citations as text until the index has loaded. */
+  pending?: boolean
+}
+
+const UPDATE_NOTE =
+  'The treatise has been updated since this chat. This section is no longer in the book. Re-ask the question, or read the chapter.'
+
 /** Turn locus citations in prose into markdown links. Leaves fenced and inline code alone. */
-export function linkifyTreatiseMarkdown(markdown: string) {
+export function linkifyTreatiseMarkdown(markdown: string, options?: LinkifyOptions) {
+  if (options?.pending) return markdown
   return markdown
     .split(/(```[\s\S]*?```|`[^`\n]*`|\[[^\]]+\]\([^)]+\))/g)
-    .map((part, index) => (index % 2 === 1 ? part : linkifyProse(part)))
+    .map((part, index) => (index % 2 === 1 ? part : linkifyProse(part, options)))
     .join('')
 }
 
-function linkifyProse(prose: string) {
-  const parts = splitCitations(prose)
-  return parts
-    .map(part => (part.href ? `[${part.text}](${part.href})` : part.text))
-    .join('')
+function linkifyProse(prose: string, options?: LinkifyOptions) {
+  const parts = options?.index ? applyIndex(splitCitations(prose), options.index, options.history) : splitCitations(prose)
+  return parts.map(part => (part.href ? `[${part.text}](${part.href})` : part.text)).join('')
 }
 
-const SECTION_AT_START = new RegExp(String.raw`^(${SECTION_NUMBER})\b`)
+function applyIndex(
+  parts: CitationPart[],
+  index: CorpusIndex,
+  history?: LinkifyOptions['history']
+): CitationPart[] {
+  const resolved: CitationPart[] = []
+  for (const part of parts) {
+    if (!part.href) {
+      resolved.push(part)
+      continue
+    }
+    const target = treatiseSectionTarget(part.href)
+    if (!target) {
+      resolved.push(part)
+      continue
+    }
+    if (target.section) {
+      const id = target.section.toLowerCase()
+      const live = index.sections[id]
+      if (live) {
+        resolved.push({ text: part.text, href: treatisePath(live.slug, id) })
+        continue
+      }
+      if (!history) {
+        resolved.push({ text: part.text })
+        continue
+      }
+      const destination = history[id]
+      if (destination?.section && index.sections[destination.section]) {
+        const current = index.sections[destination.section]
+        resolved.push({ text: part.text, href: treatisePath(current.slug, destination.section) })
+        continue
+      }
+      const slug = destination?.slug || chapterSlugFor(id) || target.slug
+      resolved.push({ text: part.text })
+      resolved.push({ text: ` ([${UPDATE_NOTE}](${treatisePath(slug)}))` })
+      continue
+    }
+    const owner = ownerForSlug(index, target.slug)
+    if (index.chapters.includes(target.slug)) {
+      resolved.push(part)
+      continue
+    }
+    if (owner) {
+      const section = index.sections[ownerKey(target.slug) || '']
+      resolved.push({
+        text: part.text,
+        href: section ? treatisePath(section.slug, ownerKey(target.slug) || '') : treatisePath(owner)
+      })
+      continue
+    }
+    if (!history) {
+      resolved.push({ text: part.text })
+      continue
+    }
+    resolved.push({ text: part.text })
+    resolved.push({ text: ` ([${UPDATE_NOTE}](${treatisePath(target.slug)}))` })
+  }
+  return resolved
+}
+
+// The ebook's heading and body rules (build/crossrefs.py). A heading may be
+// "14.1 - Title". A body label must be followed by a capital or a bracket, so
+// "4.5 million" is not a section. An appendix heading may live inside a chapter.
+const HEADING_SECTION = new RegExp(String.raw`^(${SECTION_NUMBER})(?![\d.])`, 'i')
+const APPENDIX_HEADING = /^Appendix\s+([0-9]*[A-Za-z](?:\.\d+)*)(?![A-Za-z0-9])/i
+const BODY_LABEL = new RegExp(String.raw`^(${SECTION_NUMBER})[ \u00a0]+[(A-Z]`)
+
+export function headingSectionId(plain: string): string | null {
+  const appendix = plain.match(APPENDIX_HEADING)
+  if (appendix) return appendix[1].toLowerCase()
+  const section = plain.match(HEADING_SECTION)
+  if (section) return section[1].toLowerCase()
+  return null
+}
+
+export function bodyLabelId(plain: string): string | null {
+  const stripped = plain.replace(/^\*\*/, '')
+  const match = stripped.match(BODY_LABEL)
+  return match ? match[1].toLowerCase() : null
+}
 
 export function anchorForHeading(plain: string) {
-  const match = plain.match(SECTION_AT_START)
-  if (match) return match[1].toLowerCase()
+  const section = headingSectionId(plain)
+  if (section) return section
   const slug = plain
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
   return slug || 'section'
+}
+
+export interface IndexedSection {
+  id: string
+  text: string
+  level: number
+  start: number
+  end: number
+}
+
+export interface CorpusIndex {
+  sections: Record<string, { slug: string; text: string }>
+  owners: Record<string, string>
+  chapters: string[]
+}
+
+export interface SectionChange {
+  fromSection: string
+  fromSlug: string
+  toSection: string | null
+  toSlug: string
+  text: string
+}
+
+export function emptyCorpusIndex(): CorpusIndex {
+  return { sections: {}, owners: {}, chapters: [] }
+}
+
+export function treatisePath(slug: string, section?: string) {
+  if (slug === '2') return '/glossary'
+  const path = `/treatise/${slug}`
+  return section ? `${path}#${section}` : path
+}
+
+function ownerKey(slug: string) {
+  const appendix = slug.match(/^appendix-(.+)$/)
+  return appendix ? appendix[1] : null
+}
+
+function chapterSlugFor(sectionId: string) {
+  const locus = sectionLocus(sectionId)
+  if (locus.chapter) return locus.chapter
+  if (locus.appendix) return `appendix-${locus.appendix}`
+  return null
+}
+
+function ownerForSlug(index: CorpusIndex, slug: string) {
+  if (index.owners[slug]) return index.owners[slug]
+  const key = ownerKey(slug)
+  return key ? index.owners[key] : undefined
+}
+
+export function targetExists(index: CorpusIndex, slug: string, section: string) {
+  if (section) return Boolean(index.sections[section.toLowerCase()])
+  if (index.chapters.includes(slug)) return true
+  return Boolean(ownerForSlug(index, slug))
+}
+
+function claim(record: Record<string, string>, key: string, slug: string) {
+  const dedicated = `appendix-${key}`
+  if (record[key] === dedicated) return
+  if (!record[key] || slug === dedicated) record[key] = slug
+}
+
+/** Sections in one chapter, in document order, with the span of each. */
+export function indexChapter(slug: string, markdown: string): IndexedSection[] {
+  const sections: IndexedSection[] = []
+  const lines = markdown.split('\n')
+  let offset = 0
+  let fenced = false
+  for (const line of lines) {
+    const start = offset
+    offset += line.length + 1
+    if (line.startsWith('```')) {
+      fenced = !fenced
+      continue
+    }
+    if (fenced) continue
+    const heading = line.match(/^(#{1,6})[ \t]+(.+)$/)
+    if (heading) {
+      const text = heading[2].replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim()
+      const id = headingSectionId(text)
+      if (!id) continue
+      sections.push({ id, text, level: Math.max(heading[1].length, 2), start, end: markdown.length })
+      continue
+    }
+    const text = line.replace(/^\*\*/, '').replace(/\s+/g, ' ').trim()
+    const id = bodyLabelId(text)
+    if (!id) continue
+    sections.push({ id, text, level: 5, start, end: markdown.length })
+  }
+  for (let i = 0; i < sections.length; i++) {
+    const next = sections.slice(i + 1).find(section => section.level <= sections[i].level)
+    sections[i].end = next ? next.start : markdown.length
+  }
+  void slug
+  return sections
+}
+
+export function buildCorpusIndex(chapters: { slug: string; markdown: string }[]): CorpusIndex {
+  const index = emptyCorpusIndex()
+  for (const chapter of chapters) {
+    index.chapters.push(chapter.slug)
+    if (/^\d+$/.test(chapter.slug)) claim(index.owners, chapter.slug, chapter.slug)
+    const appendix = ownerKey(chapter.slug)
+    if (appendix) claim(index.owners, appendix, chapter.slug)
+    for (const section of indexChapter(chapter.slug, chapter.markdown)) {
+      if (!index.sections[section.id]) index.sections[section.id] = { slug: chapter.slug, text: section.text }
+      if (APPENDIX_HEADING.test(section.text) && !section.id.includes('.')) {
+        claim(index.owners, section.id, chapter.slug)
+      }
+    }
+  }
+  return index
+}
+
+function identityText(section: IndexedSection) {
+  const stripped = section.text
+    .replace(new RegExp(`^${section.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i'), '')
+    .replace(/^[\s.:—–-]+/, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+  return stripped
+}
+
+function bodyKey(markdown: string, section: IndexedSection) {
+  return markdown
+    .slice(section.start, section.end)
+    .replace(new RegExp(section.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function uniqueBy(sections: IndexedSection[], key: (section: IndexedSection) => string) {
+  const groups = new Map<string, IndexedSection[]>()
+  for (const section of sections) {
+    const value = key(section)
+    if (!value) continue
+    const group = groups.get(value) || []
+    group.push(section)
+    groups.set(value, group)
+  }
+  const unique = new Map<string, IndexedSection>()
+  for (const [value, group] of Array.from(groups.entries())) {
+    if (group.length === 1) unique.set(value, group[0])
+  }
+  return unique
+}
+
+/** Renumbered and removed sections, matched within one chapter. */
+export function diffChapterSections(
+  slug: string,
+  previousMarkdown: string,
+  nextMarkdown: string
+): { moves: SectionChange[]; deletions: SectionChange[] } {
+  const previous = indexChapter(slug, previousMarkdown)
+  const next = indexChapter(slug, nextMarkdown)
+  const matched = new Set<string>()
+  const used = new Set<string>()
+  const moves: SectionChange[] = []
+
+  const pair = (oldSections: Map<string, IndexedSection>, newSections: Map<string, IndexedSection>) => {
+    for (const [key, before] of Array.from(oldSections.entries())) {
+      if (matched.has(before.id)) continue
+      const after = newSections.get(key)
+      if (!after || used.has(after.id)) continue
+      matched.add(before.id)
+      used.add(after.id)
+      if (before.id === after.id) continue
+      moves.push({
+        fromSection: before.id,
+        fromSlug: slug,
+        toSection: after.id,
+        toSlug: slug,
+        text: before.text
+      })
+    }
+  }
+
+  pair(uniqueBy(previous, identityText), uniqueBy(next, identityText))
+  pair(
+    uniqueBy(
+      previous.filter(section => !matched.has(section.id)),
+      section => bodyKey(previousMarkdown, section)
+    ),
+    uniqueBy(
+      next.filter(section => !used.has(section.id)),
+      section => bodyKey(nextMarkdown, section)
+    )
+  )
+
+  const deletions: SectionChange[] = []
+  const nextIds = new Set(next.map(section => section.id))
+  for (const section of previous) {
+    if (matched.has(section.id) || nextIds.has(section.id)) continue
+    matched.add(section.id)
+    deletions.push({
+      fromSection: section.id,
+      fromSlug: slug,
+      toSection: null,
+      toSlug: slug,
+      text: section.text
+    })
+  }
+  return { moves, deletions }
+}
+
+export interface StoredMove {
+  from_section: string
+  from_slug: string
+  to_section: string | null
+  to_slug: string
+}
+
+/** Walk recorded hops to the section that exists now, or to the chapter it left. */
+export function composeRedirects(moves: StoredMove[], index: CorpusIndex) {
+  const latest = new Map<string, StoredMove>()
+  for (const move of moves) latest.set(move.from_section, move)
+  const redirects: Record<string, { slug: string; section: string | null }> = {}
+  for (const start of Array.from(latest.keys())) {
+    if (index.sections[start]) continue
+    const seen = new Set<string>()
+    let current = start
+    let slug = latest.get(start)?.from_slug || chapterSlugFor(start) || ''
+    let removed = false
+    while (latest.has(current) && !seen.has(current)) {
+      seen.add(current)
+      const hop = latest.get(current)
+      if (!hop) break
+      slug = hop.to_slug || hop.from_slug
+      if (!hop.to_section) {
+        removed = true
+        slug = hop.from_slug
+        break
+      }
+      current = hop.to_section
+    }
+    if (!removed && index.sections[current]) {
+      redirects[start] = { slug: index.sections[current].slug, section: current }
+      continue
+    }
+    redirects[start] = { slug, section: null }
+  }
+  return redirects
 }
 
 export function uniqueAnchor(base: string, used: Set<string>) {

@@ -18,6 +18,14 @@ import { createClient } from '@supabase/supabase-js'
 import { prepareTreatiseMarkdown } from '../lib/treatise-render'
 import { indexTreatise } from '../lib/rag/treatise-index'
 import { auditTreatiseDirectory } from './audit-treatise-citations'
+import {
+  buildCorpusIndex,
+  diffChapterSections,
+  SectionChange,
+  splitCitations,
+  treatiseSectionTarget,
+  unresolvedCitations
+} from '../lib/treatise-citations'
 import { Database, Json } from '../lib/db_types'
 
 config({ path: path.join(process.cwd(), '.env.local') })
@@ -278,6 +286,33 @@ async function syncGlossaryDerivations(
   )
 }
 
+function citesSection(markdown: string, sectionId: string) {
+  return splitCitations(markdown).some(part => {
+    if (!part.href) return false
+    return treatiseSectionTarget(part.href)?.section === sectionId
+  })
+}
+
+function reportChanges(changes: SectionChange[], incoming: { label: string; markdown: string }[]) {
+  const moves = changes.filter(change => change.toSection)
+  const deletions = changes.filter(change => !change.toSection)
+  if (moves.length > 0) {
+    console.log('section moves')
+    for (const move of moves) {
+      console.log(`  ${move.fromSlug}  ${move.fromSection} -> ${move.toSection}  ${move.text}`)
+      const mentions = incoming.filter(chapter => citesSection(chapter.markdown, move.fromSection)).map(chapter => chapter.label)
+      if (mentions.length > 0) console.log(`    still cited in ${mentions.join(', ')}`)
+    }
+  }
+  if (deletions.length > 0) {
+    console.log('section removals')
+    for (const removal of deletions.slice(0, 30)) {
+      console.log(`  ${removal.fromSlug}  ${removal.fromSection}  ${removal.text}`)
+    }
+    if (deletions.length > 30) console.log(`  … ${deletions.length - 30} more`)
+  }
+}
+
 async function main() {
   const directory = process.env.TREATISE_DIR || DEFAULT_DIR
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -291,24 +326,72 @@ async function main() {
     auth: { persistSession: false, autoRefreshToken: false }
   })
 
-  const { data: stored, error: storedError } = await supabase
-    .from('treatise_chapters')
-    .select('slug, source_sha, source_date')
-  if (storedError) throw new Error(storedError.message)
-  const current = new Map(
-    (stored ?? []).map(row => [row.slug, { sha: row.source_sha, date: row.source_date }])
-  )
-
-  const slugs: string[] = []
-  for (const [slug, file] of Array.from(files.entries())) {
+  const incoming: {
+    slug: string
+    label: string
+    markdown: string
+    date: string
+    described: NonNullable<ReturnType<typeof describe>>
+  }[] = []
+  for (const file of Array.from(files.values())) {
     const described = describe(file)
     if (!described) continue
-    const markdown = await readFile(file.fullPath, 'utf8')
+    incoming.push({
+      slug: described.slug,
+      label: described.label,
+      markdown: await readFile(file.fullPath, 'utf8'),
+      date: file.date,
+      described
+    })
+  }
+
+  const { data: stored, error: storedError } = await supabase
+    .from('treatise_chapters')
+    .select('slug, markdown, source_sha, source_date')
+  if (storedError) throw new Error(storedError.message)
+  const storedRows = stored ?? []
+  const current = new Map(storedRows.map(row => [row.slug, { sha: row.source_sha, date: row.source_date }]))
+
+  const previousIndex = buildCorpusIndex(storedRows)
+  const nextIndex = buildCorpusIndex(incoming)
+  const changes: SectionChange[] = []
+  if (storedRows.length > 0) {
+    const storedBySlug = new Map(storedRows.map(row => [row.slug, row.markdown]))
+    for (const chapter of incoming) {
+      const previous = storedBySlug.get(chapter.slug)
+      if (previous === undefined) continue
+      const diff = diffChapterSections(chapter.slug, previous, chapter.markdown)
+      changes.push(...diff.moves, ...diff.deletions)
+    }
+    reportChanges(changes, incoming)
+    const previousUnresolved = storedRows.reduce(
+      (sum, row) => sum + unresolvedCitations(row.markdown, previousIndex).length,
+      0
+    )
+    const nextUnresolved = incoming.reduce(
+      (sum, chapter) => sum + unresolvedCitations(chapter.markdown, nextIndex).length,
+      0
+    )
+    console.log(`citations  ${nextUnresolved} unresolved, was ${previousUnresolved}`)
+    if (nextUnresolved > previousUnresolved) {
+      console.error(`refusing to publish: unresolved citations rose from ${previousUnresolved} to ${nextUnresolved}`)
+      for (const chapter of incoming) {
+        const misses = unresolvedCitations(chapter.markdown, nextIndex)
+        for (const miss of misses.slice(0, 8)) console.error(`  ${chapter.label}  ${miss.text}`)
+      }
+      process.exit(1)
+    }
+  }
+
+  const slugs: string[] = []
+  for (const chapter of incoming) {
+    const { slug, described } = chapter
+    const markdown = chapter.markdown
     const source_sha = createHash('sha256').update(markdown).digest('hex')
     const existing = current.get(slug)
     slugs.push(slug)
-    if (existing && existing.sha === source_sha && existing.date === file.date) {
-      console.log(`${described.label}  ${file.date}  unchanged`)
+    if (existing && existing.sha === source_sha && existing.date === chapter.date) {
+      console.log(`${described.label}  ${chapter.date}  unchanged`)
       continue
     }
     const prepared = prepareTreatiseMarkdown(markdown)
@@ -320,13 +403,26 @@ async function main() {
       markdown,
       headings: prepared.headings as unknown as Json,
       source_sha,
-      source_date: file.date,
+      source_date: chapter.date,
       position: described.position,
       updated_at: new Date().toISOString()
     }
     const { error } = await supabase.from('treatise_chapters').upsert(row, { onConflict: 'slug' })
     if (error) throw new Error(`${slug}: ${error.message}`)
-    console.log(`${described.label}  ${file.date}  ${prepared.headings.length} headings`)
+    console.log(`${described.label}  ${chapter.date}  ${prepared.headings.length} headings`)
+  }
+
+  if (changes.length > 0) {
+    const { error: moveError } = await supabase.from('treatise_section_moves').insert(
+      changes.map(change => ({
+        from_section: change.fromSection,
+        from_slug: change.fromSlug,
+        to_section: change.toSection,
+        to_slug: change.toSlug
+      }))
+    )
+    if (moveError) throw new Error(`section moves: ${moveError.message}`)
+    console.log(`recorded ${changes.length} section changes`)
   }
 
   await syncGlossaryDerivations(supabase, directory)

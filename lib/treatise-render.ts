@@ -2,6 +2,8 @@ import { Marked } from 'marked'
 import { restoreShieldedMath, shieldMath } from '@/lib/render-math'
 import {
   anchorForHeading,
+  bodyLabelId,
+  CorpusIndex,
   linkifyTreatiseMarkdown,
   TreatiseHeading,
   uniqueAnchor
@@ -24,7 +26,10 @@ export function stripLeadingH1(markdown: string) {
   return markdown.replace(/^#\s+[^\n]*\n+/, '')
 }
 
-export function prepareTreatiseMarkdown(markdown: string): {
+export function prepareTreatiseMarkdown(
+  markdown: string,
+  index?: CorpusIndex
+): {
   html: string
   headings: TreatiseHeading[]
 } {
@@ -45,11 +50,20 @@ export function prepareTreatiseMarkdown(markdown: string): {
           headings.push({ id, text: plain, level })
         }
         return `<h${level} id="${id}" class="scroll-mt-24">${text}</h${level}>\n`
+      },
+      paragraph({ tokens }) {
+        const text = restoreShieldedMath(this.parser.parseInline(tokens), shielded.slots)
+        const plain = plainHeading(text)
+        const label = bodyLabelId(plain)
+        if (!label) return `<p>${text}</p>\n`
+        const id = uniqueAnchor(label, used)
+        headings.push({ id, text: plain, level: 5 })
+        return `<p id="${id}" class="scroll-mt-24">${text}</p>\n`
       }
     }
   })
 
-  const linked = linkifyTreatiseMarkdown(shielded.markdown)
+  const linked = linkifyTreatiseMarkdown(shielded.markdown, index ? { index } : undefined)
   const parsed = marked.parse(linked, { async: false }) as string
   let html = restoreShieldedMath(parsed, shielded.slots)
   html = html

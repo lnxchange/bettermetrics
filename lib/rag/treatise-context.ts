@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
-import { anchorForHeading, citationTargets, uniqueAnchor } from '@/lib/treatise-citations'
+import { citationTargets, indexChapter } from '@/lib/treatise-citations'
 
 // When the user names a glossary term, the definition and the chapter that
 // derives it are the answer. Otherwise, a short chapter opening still helps
@@ -167,28 +167,12 @@ function homeChapter(definitions: GlossaryRow[]) {
 }
 
 function headingSpans(markdown: string): HeadingSpan[] {
-  const spans: HeadingSpan[] = []
-  const re = /^(#{2,4})\s+(.+)$/gm
-  const used = new Set<string>()
-  let match: RegExpExecArray | null
-  while ((match = re.exec(markdown)) !== null) {
-    const plain = match[2].replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim()
-    spans.push({
-      id: uniqueAnchor(anchorForHeading(plain), used),
-      level: match[1].length,
-      start: match.index,
-      end: markdown.length
-    })
-  }
-  for (let i = 0; i < spans.length; i++) {
-    for (let j = i + 1; j < spans.length; j++) {
-      if (spans[j].level <= spans[i].level) {
-        spans[i].end = spans[j].start
-        break
-      }
-    }
-  }
-  return spans
+  return indexChapter('', markdown).map(section => ({
+    id: section.id,
+    level: section.level,
+    start: section.start,
+    end: section.end
+  }))
 }
 
 function formatDefinition(row: GlossaryRow) {

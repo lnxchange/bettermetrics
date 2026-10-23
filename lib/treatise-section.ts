@@ -2,7 +2,7 @@ import { TreatiseHeading } from '@/lib/treatise-citations'
 
 function tagIndex(html: string, id: string) {
   const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const match = new RegExp(`<h[2-4]\\b[^>]*\\sid="${escaped}"`, 'i').exec(html)
+  const match = new RegExp(`<[a-z0-9]+\\b[^>]*\\sid="${escaped}"`, 'i').exec(html)
   return match ? match.index : -1
 }
 

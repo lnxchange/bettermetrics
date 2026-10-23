@@ -2,7 +2,13 @@ import { cached } from '@/lib/cached'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
-import { TreatiseHeading } from '@/lib/treatise-citations'
+import {
+  buildCorpusIndex,
+  composeRedirects,
+  CorpusIndex,
+  StoredMove,
+  TreatiseHeading
+} from '@/lib/treatise-citations'
 
 export type TreatisePart = 'I' | 'II' | 'appendix'
 
@@ -141,6 +147,38 @@ export const loadTreatiseChapters = cached(
   { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
 )
 
+export const loadCorpusIndex = cached(
+  async (): Promise<CorpusIndex> => {
+    const supabase = anonClient()
+    if (!supabase) return buildCorpusIndex([])
+    const { data, error } = await supabase.from('treatise_chapters').select('slug, markdown')
+    if (error) throw new Error(`Treatise query failed: ${error.message}`)
+    return buildCorpusIndex(data ?? [])
+  },
+  ['treatise-corpus-index'],
+  { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
+)
+
+export const loadSectionMoves = cached(
+  async (): Promise<StoredMove[]> => {
+    const supabase = anonClient()
+    if (!supabase) return []
+    const { data, error } = await supabase
+      .from('treatise_section_moves')
+      .select('from_section, from_slug, to_section, to_slug, published_at')
+      .order('published_at', { ascending: true })
+    if (error) throw new Error(`Treatise moves query failed: ${error.message}`)
+    return data ?? []
+  },
+  ['treatise-section-moves'],
+  { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
+)
+
+export async function loadTreatiseTargets() {
+  const [index, moves] = await Promise.all([loadCorpusIndex(), loadSectionMoves()])
+  return { ...index, redirects: composeRedirects(moves, index) }
+}
+
 export const loadTreatiseChapter = cached(
   async (slug: string): Promise<TreatiseChapter | null> => {
     const supabase = anonClient()
@@ -152,7 +190,8 @@ export const loadTreatiseChapter = cached(
       .maybeSingle()
     if (error) throw new Error(`Treatise query failed: ${error.message}`)
     if (!data) return null
-    const prepared = prepareTreatiseMarkdown(data.markdown)
+    const index = await loadCorpusIndex()
+    const prepared = prepareTreatiseMarkdown(data.markdown, index)
     return {
       ...summaryFromRow(data),
       markdown: data.markdown,

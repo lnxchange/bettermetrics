@@ -11,8 +11,7 @@
  */
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'
-import { prepareTreatiseMarkdown } from '../lib/treatise-render'
-import { unresolvedCitations } from '../lib/treatise-citations'
+import { buildCorpusIndex, unresolvedCitations } from '../lib/treatise-citations'
 
 const DEFAULT_DIR =
   '/Users/yuleguttenbeil/Documents/Cursor/aim-treatise/aim-treatise/CORPUS/TREATISE'
@@ -60,22 +59,16 @@ async function latestFiles(directory: string) {
 
 export async function auditTreatiseDirectory(directory: string) {
   const files = await latestFiles(directory)
-  const chapters: { label: string; slug: string; markdown: string; headings: Set<string> }[] = []
+  const chapters: { label: string; slug: string; markdown: string }[] = []
   for (const file of Array.from(files.values())) {
     const markdown = await readFile(file.fullPath, 'utf8')
-    const prepared = prepareTreatiseMarkdown(markdown)
-    chapters.push({
-      label: file.label,
-      slug: file.slug,
-      markdown,
-      headings: new Set(prepared.headings.map(heading => heading.id))
-    })
+    chapters.push({ label: file.label, slug: file.slug, markdown })
   }
 
-  const headingsBySlug = new Map(chapters.map(chapter => [chapter.slug, chapter.headings]))
+  const index = buildCorpusIndex(chapters)
   let unresolved = 0
   for (const chapter of chapters) {
-    const misses = unresolvedCitations(chapter.markdown, headingsBySlug)
+    const misses = unresolvedCitations(chapter.markdown, index)
     const seen = new Set<string>()
     const list = misses.filter(miss => {
       if (seen.has(miss.href)) return false

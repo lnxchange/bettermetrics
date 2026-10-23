@@ -2,14 +2,18 @@ import { type Message } from 'ai'
 
 import { Separator } from '@/components/ui/separator'
 import { ChatMessage } from '@/components/chat-message'
-import { TreatiseSectionTarget } from '@/lib/treatise-citations'
+import { CorpusIndex, TreatiseSectionTarget } from '@/lib/treatise-citations'
 
 export interface ChatList {
   messages: Message[]
   onOpenSection?: (target: TreatiseSectionTarget) => void
+  targets?: {
+    index: CorpusIndex
+    redirects: Record<string, { slug: string; section: string | null }>
+  } | null
 }
 
-export function ChatList({ messages, onOpenSection }: ChatList) {
+export function ChatList({ messages, onOpenSection, targets }: ChatList) {
   if (!messages.length) {
     return null
   }
@@ -18,7 +22,7 @@ export function ChatList({ messages, onOpenSection }: ChatList) {
     <div className="relative mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
         <div key={index} className="chat-message">
-          <ChatMessage message={message} onOpenSection={onOpenSection} />
+          <ChatMessage message={message} onOpenSection={onOpenSection} targets={targets} />
           {index < messages.length - 1 && (
             <Separator className="my-4 md:my-8" />
           )}
