@@ -120,8 +120,10 @@ export function withChapterTwo(chapters: TreatiseChapterSummary[]) {
 }
 
 // Chapter reads (and the markdown render, which is the expensive part) are
-// cached briefly. The twice-daily sync writes land within this window, so the
-// "next visit" promise in scripts/sync-treatise.sh holds to within five minutes.
+// cached briefly. The publish Action in the aim-treatise repo writes on its
+// weekly run and when Run workflow is pressed, then calls /api/revalidate to
+// drop this cache. Without that call, a visit within five minutes can still
+// see the previous text.
 const TREATISE_REVALIDATE = 300
 
 export const loadTreatiseChapters = cached(

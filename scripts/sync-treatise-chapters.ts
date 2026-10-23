@@ -5,7 +5,10 @@
  *
  *   TREATISE_DIR="/path/to/CORPUS/TREATISE" npx tsx scripts/sync-treatise-chapters.ts
  *
- * The default directory is the Drive copy, which is the text that moves day to day.
+ * The scheduled run is the GitHub Action in the aim-treatise repo
+ * (.github/workflows/publish-to-website.yml): weekly, or when Run workflow
+ * is pressed. It sets TREATISE_DIR to its checkout. Locally the default is
+ * the git clone.
  */
 import { createHash } from 'crypto'
 import { config } from 'dotenv'
@@ -20,7 +23,7 @@ import { Database, Json } from '../lib/db_types'
 config({ path: path.join(process.cwd(), '.env.local') })
 
 const DEFAULT_DIR =
-  '/Users/yuleguttenbeil/Library/CloudStorage/GoogleDrive-yule@mode.law/My Drive/AIM Corpus/aim-treatise/CORPUS/TREATISE'
+  '/Users/yuleguttenbeil/Documents/Cursor/aim-treatise/aim-treatise/CORPUS/TREATISE'
 
 const FILE_NAME = /^(\d{6}) - (Chapter|Appendix) ([0-9]+[A-Z]?|[A-Z]) - .+\.md$/
 

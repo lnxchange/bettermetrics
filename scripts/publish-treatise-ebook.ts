@@ -1,10 +1,12 @@
 /**
  * Build the draft treatise ebook and upload it when the current draft is
- * missing or at least seven days old.
+ * missing or at least seven days old. TREATISE_EPUB=1 rebuilds on this run.
  *
  *   TREATISE_EPUB=1 npx tsx scripts/publish-treatise-ebook.ts
  *
- * The chapter sync stays on its own schedule. This step is the weekly one.
+ * The GitHub Action in the aim-treatise repo runs this weekly, and on a
+ * manual run only when "Rebuild the draft ebook" is on. TREATISE_DIR points
+ * that run at the checkout. Locally the default is the git clone.
  */
 import { execFileSync } from 'child_process'
 import { config } from 'dotenv'
@@ -18,7 +20,7 @@ config({ path: path.join(process.cwd(), '.env.local') })
 const BUCKET = 'treatise-ebooks'
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000
 const DEFAULT_DIR =
-  '/Users/yuleguttenbeil/Library/CloudStorage/GoogleDrive-yule@mode.law/My Drive/AIM Corpus/aim-treatise/CORPUS/TREATISE'
+  '/Users/yuleguttenbeil/Documents/Cursor/aim-treatise/aim-treatise/CORPUS/TREATISE'
 const BUILDER =
   process.env.EPUB_BUILDER ??
   '/Users/yuleguttenbeil/Documents/Cursor/aim-treatise/build/build_epub.py'

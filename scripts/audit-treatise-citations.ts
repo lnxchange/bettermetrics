@@ -5,6 +5,9 @@
  *
  *   npm run audit-treatise-citations
  *   TREATISE_DIR="/path/to/CORPUS/TREATISE" npm run audit-treatise-citations
+ *
+ * The default directory is the local git clone. The publish Action passes
+ * TREATISE_DIR for its own checkout.
  */
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'
@@ -12,7 +15,7 @@ import { prepareTreatiseMarkdown } from '../lib/treatise-render'
 import { unresolvedCitations } from '../lib/treatise-citations'
 
 const DEFAULT_DIR =
-  '/Users/yuleguttenbeil/Library/CloudStorage/GoogleDrive-yule@mode.law/My Drive/AIM Corpus/aim-treatise/CORPUS/TREATISE'
+  '/Users/yuleguttenbeil/Documents/Cursor/aim-treatise/aim-treatise/CORPUS/TREATISE'
 
 const FILE_NAME = /^(\d{6}) - (Chapter|Appendix) ([0-9]+[A-Z]?|[A-Z]) - .+\.md$/
 
