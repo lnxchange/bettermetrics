@@ -24,13 +24,40 @@ export function stripLeadingH1(markdown: string) {
   return markdown.replace(/^#\s+[^\n]*\n+/, '')
 }
 
+const PIPE_ROW = /^\s*\|.*\|\s*$/
+const LOOSE_DELIMITER_ROW = /^\s*\|(?:\s*:?[-—–,]+:?\s*\|)+\s*$/
+
+/**
+ * The source documents pass through a word processor, which turns a table's
+ * `|---|` delimiter row into em dashes, en dashes or commas. GFM only accepts
+ * hyphens there, so without this the whole table renders as one paragraph.
+ */
+export function repairTableDelimiters(markdown: string) {
+  const lines = markdown.split('\n')
+  let fenced = false
+  for (let index = 0; index < lines.length; index += 1) {
+    if (/^\s*(```|~~~)/.test(lines[index])) {
+      fenced = !fenced
+      continue
+    }
+    if (fenced || index === 0) continue
+    if (!LOOSE_DELIMITER_ROW.test(lines[index]) || !PIPE_ROW.test(lines[index - 1])) continue
+    if (index > 1 && PIPE_ROW.test(lines[index - 2])) continue
+    lines[index] = lines[index].replace(
+      /:?[-—–,]+:?/g,
+      cell => `${cell.startsWith(':') ? ':' : ''}---${cell.endsWith(':') ? ':' : ''}`
+    )
+  }
+  return lines.join('\n')
+}
+
 export function prepareTreatiseMarkdown(markdown: string): {
   html: string
   headings: TreatiseHeading[]
 } {
   const headings: TreatiseHeading[] = []
   const used = new Set<string>()
-  const shielded = shieldMath(stripLeadingH1(markdown))
+  const shielded = shieldMath(repairTableDelimiters(stripLeadingH1(markdown)))
   const marked = new Marked()
   marked.use({
     renderer: {
