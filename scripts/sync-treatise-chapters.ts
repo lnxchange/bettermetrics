@@ -115,7 +115,7 @@ function glossarySlug(term: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-interface GlossaryDraft {
+export interface GlossaryDraft {
   term: string
   definition: string
   explanation: string
@@ -124,7 +124,43 @@ interface GlossaryDraft {
   cross_references: string[]
 }
 
-function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
+/** Comma or semicolon, but not a comma inside parentheses such as "(wA, wI, wM)". */
+export function splitCrossReferences(value: string) {
+  const parts: string[] = []
+  let buffer = ''
+  let depth = 0
+  for (const char of value.trim()) {
+    if (char === '(') depth += 1
+    else if (char === ')') depth = Math.max(0, depth - 1)
+    if ((char === ',' || char === ';') && depth === 0) {
+      const item = cleanCrossReference(buffer)
+      if (item) parts.push(item)
+      buffer = ''
+      continue
+    }
+    buffer += char
+  }
+  const last = cleanCrossReference(buffer)
+  if (last) parts.push(last)
+  return parts
+}
+
+function cleanCrossReference(value: string) {
+  return value
+    .split(/\.\s+\*?(?:Canonical reference|See)\b/i)[0]
+    .trim()
+    .replace(/\.$/, '')
+    .trim()
+}
+
+function definitionFrom(raw: string, term: string) {
+  const text = collapse(raw).replace(/\*\*/g, '').trim()
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const labelled = text.match(new RegExp(`^${escaped}\\s*[:.]\\s+([\\s\\S]+)$`, 'i'))
+  return labelled ? labelled[1].trim() : text
+}
+
+export function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
   const entries: GlossaryDraft[] = []
   const parts = markdown.split(/^### /m).slice(1)
   for (const part of parts) {
@@ -135,7 +171,7 @@ function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
     const stop = body.search(
       /^\*\*Explanation\.?\*\*|^\*Derivation:|^\*Epistemic Status:|^\*Cross-references:|^\*\*\*\s*$/m
     )
-    const definition = collapse(stop === -1 ? body : body.slice(0, stop)).replace(/^\*\*[^*]+\*\*\s*/, '')
+    const definition = definitionFrom(stop === -1 ? body : body.slice(0, stop), heading)
     const explanationMatch = body.match(
       /^\*\*Explanation\.?\*\*\s*([\s\S]*?)(?=^\*Derivation:|^\*Epistemic Status:|^\*Cross-references:|^\*\*\*\s*$)/m
     )
@@ -148,13 +184,7 @@ function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
       explanation: explanationMatch ? collapse(explanationMatch[1]) : '',
       derivation: derivation ? derivation[1].trim() : '',
       epistemic_status: status ? status[1].trim() : null,
-      cross_references: refs
-        ? refs[1]
-            .replace(/\.$/, '')
-            .split(',')
-            .map(item => item.trim())
-            .filter(Boolean)
-        : []
+      cross_references: refs ? splitCrossReferences(refs[1]) : []
     })
   }
   return entries
@@ -191,14 +221,33 @@ async function syncGlossaryDerivations(
   const parsed = parseGlossaryEntries(markdown)
   const { data, error } = await supabase
     .from('glossary_entries')
-    .select('slug, term, derivation, position')
+    .select('slug, term, definition, explanation, derivation, epistemic_status, cross_references, position')
   if (error) throw new Error(`glossary: ${error.message}`)
 
-  const byTerm = new Map<string, { slug: string; derivation: string | null; position: number }>()
-  const bySlug = new Map<string, { slug: string; derivation: string | null; position: number }>()
+  const byTerm = new Map<
+    string,
+    {
+      slug: string
+      derivation: string | null
+      definition: string
+      explanation: string
+      epistemic_status: string | null
+      cross_references: string[]
+      position: number
+    }
+  >()
+  const bySlug = new Map<string, { slug: string; position: number }>()
   const occupied: { slug: string; term: string; position: number }[] = []
   for (const row of data ?? []) {
-    const stored = { slug: row.slug, derivation: row.derivation, position: row.position }
+    const stored = {
+      slug: row.slug,
+      derivation: row.derivation,
+      definition: row.definition,
+      explanation: row.explanation,
+      epistemic_status: row.epistemic_status,
+      cross_references: row.cross_references ?? [],
+      position: row.position
+    }
     byTerm.set(row.term.trim().toLowerCase(), stored)
     bySlug.set(row.slug, stored)
     occupied.push({ slug: row.slug, term: row.term, position: row.position })
@@ -208,14 +257,27 @@ async function syncGlossaryDerivations(
   let inserted = 0
   const now = new Date().toISOString()
   for (const entry of parsed) {
-    if (!entry.derivation) continue
     const stripped = entry.term.replace(/\s*\([^)]*\)\s*$/, '').trim().toLowerCase()
     const row = byTerm.get(entry.term.toLowerCase()) ?? byTerm.get(stripped)
     if (!row) continue
-    if ((row.derivation ?? '').trim() === entry.derivation) continue
+    const same =
+      row.definition.trim() === entry.definition &&
+      row.explanation.trim() === entry.explanation &&
+      (row.derivation ?? '').trim() === entry.derivation &&
+      (row.epistemic_status ?? '') === (entry.epistemic_status ?? '') &&
+      row.cross_references.join('\n') === entry.cross_references.join('\n')
+    if (same) continue
     const { error: updateError } = await supabase
       .from('glossary_entries')
-      .update({ derivation: entry.derivation, updated_at: now })
+      .update({
+        definition: entry.definition,
+        explanation: entry.explanation,
+        derivation: entry.derivation || null,
+        epistemic_status: entry.epistemic_status,
+        cross_references: entry.cross_references,
+        source_sha,
+        updated_at: now
+      })
       .eq('slug', row.slug)
     if (updateError) throw new Error(`glossary ${row.slug}: ${updateError.message}`)
     updated += 1
@@ -273,7 +335,15 @@ async function syncGlossaryDerivations(
       position
     })
     if (insertError) throw new Error(`glossary insert ${entry.term}: ${insertError.message}`)
-    const stored = { slug, derivation: entry.derivation, position }
+    const stored = {
+      slug,
+      derivation: entry.derivation,
+      definition: entry.definition,
+      explanation: entry.explanation,
+      epistemic_status: entry.epistemic_status,
+      cross_references: entry.cross_references,
+      position
+    }
     occupied.push({ slug, term: entry.term, position })
     byTerm.set(entry.term.toLowerCase(), stored)
     bySlug.set(slug, stored)
@@ -282,7 +352,7 @@ async function syncGlossaryDerivations(
   }
 
   console.log(
-    `glossary  ${file.date}  ${updated} derivations updated, ${inserted} entries added, ${parsed.length} in Chapter 2`
+    `glossary  ${file.date}  ${updated} entries updated, ${inserted} entries added, ${parsed.length} in Chapter 2`
   )
 }
 
@@ -448,7 +518,10 @@ async function main() {
   )
 }
 
-main().catch(error => {
-  console.error(error instanceof Error ? error.message : error)
-  process.exit(1)
-})
+const entry = process.argv[1] || ''
+if (entry.includes('sync-treatise-chapters')) {
+  main().catch(error => {
+    console.error(error instanceof Error ? error.message : error)
+    process.exit(1)
+  })
+}
