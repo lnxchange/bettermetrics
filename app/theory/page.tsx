@@ -7,14 +7,17 @@ import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
+const THEORY_TITLE = 'AIM Theory of Motivation Explained'
+const THEORY_DESCRIPTION =
+  'The AIM theory of motivation: wanting comes from Appetites, Intrinsic Motivation, and Mimetic Desire, merged into one decision signal.'
+
 export const metadata: Metadata = {
-  title: { absolute: 'The AIM Framework of Human Motivation Explained' },
-  description:
-    'The architecture of the AIM Framework in seven short sections: three sources of motivation, the Decision Hub, Source Opacity, Confabulation, Object Parasitism and Satiation.',
+  title: { absolute: THEORY_TITLE },
+  description: THEORY_DESCRIPTION,
   alternates: { canonical: '/theory' },
   openGraph: {
-    title: 'The AIM Framework of Human Motivation Explained',
-    description: 'The architecture of the AIM Framework in seven short sections.',
+    title: THEORY_TITLE,
+    description: THEORY_DESCRIPTION,
     url: '/theory',
     images: [SITE_OG_IMAGE],
     type: 'article'
@@ -77,12 +80,14 @@ export default function TheoryPage() {
       <section className="border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-gray-50 py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            The theory
+            The AIM theory of motivation
           </h1>
           <p className="text-lg text-gray-700">
-            Enough of the architecture to know what question you want to ask. Each part ends
-            with questions the chat can answer from the Treatise itself. The framework these
-            pages summarise is stated in full in Chapter 4 and Appendix A.
+            The AIM theory of motivation says wanting comes from three sources: Appetites,
+            Intrinsic Motivation, and Mimetic Desire. Enough of the architecture to know what
+            question you want to ask. Each part ends with questions the chat can answer from
+            the Treatise itself. The framework these pages summarise is stated in full in
+            Chapter 4 and Appendix A.
           </p>
           <FrameworkCore className="mt-8" />
           <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label="Sections">

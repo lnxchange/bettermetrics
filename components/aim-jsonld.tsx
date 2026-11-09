@@ -21,10 +21,21 @@ export function AIMJsonLd() {
         "@type": "CreativeWork",
         "@id": "https://aimtheory.org/#AIMFramework",
         "name": "AIM Framework",
-        "alternateName": "Appetites-Intrinsic-Mimetic Framework",
+        "alternateName": [
+          "Appetites, Intrinsic Motivation, and Mimetic Desire",
+          "Appetites-Intrinsic-Mimetic Framework",
+          "AIM theory of motivation",
+          "AIM motivation theory"
+        ],
+        "url": `${SITE_URL}/theory`,
         "genre": "Theoretical Framework",
-        "description": "A taxonomic synthesis integrating neuroscience, behavioral economics, and legal systems analysis to resolve definitional inconsistencies in motivation science through three neurologically distinct sources.",
+        "description": "The AIM theory of motivation: wanting comes from three neurologically distinct sources, Appetites, Intrinsic Motivation, and Mimetic Desire. A taxonomic synthesis integrating neuroscience, behavioral economics, and legal systems analysis.",
         "keywords": [
+          "AIM theory of motivation",
+          "AIM motivation theory",
+          "Appetites",
+          "Intrinsic Motivation",
+          "Mimetic Desire",
           "motivational taxonomy",
           "behavioral economics",
           "neuroscience synthesis",
