@@ -290,9 +290,12 @@ export default function HomePage() {
           />
           <div>
             <p className="text-lg text-gray-800">
-              The AIM Framework is the work of <strong>Yule Guttenbeil</strong>, a technology lawyer with a
-              commerce degree in management. The framework is his account of wanting, written
-              so psychology, economics and neuroscience can share one set of definitions.
+              The AIM Framework is the work of <strong>Yule Guttenbeil</strong>, a technology lawyer,
+              sound engineer and music producer, with a commerce degree in management. That
+              engineering practice is what enabled him to apply engineering concepts to the
+              definitional problem the framework addresses. The framework is his account of
+              wanting, written so psychology, economics and neuroscience can share one set of
+              definitions.
             </p>
             <Link
               href="/about"

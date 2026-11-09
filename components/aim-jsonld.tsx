@@ -76,7 +76,7 @@ export function AIMJsonLd() {
         "@id": "https://aimtheory.org/#YuleGuttenbeil",
         "name": "Yule Guttenbeil",
         "jobTitle": "Principal Commercial Lawyer & Behavioral Systems Architect",
-        "description": "Creator of the AIM Framework. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
+        "description": "Creator of the AIM Framework. Technology lawyer, sound engineer and music producer. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
         "url": "https://aimtheory.org",
         "sameAs": [
           "https://aimtheory.org"
@@ -87,7 +87,9 @@ export function AIMJsonLd() {
           "Behavioral Economics",
           "Motivational Taxonomy",
           "Neuroscience Synthesis",
-          "Systems Architecture"
+          "Systems Architecture",
+          "Sound Engineering",
+          "Music Production"
         ]
       },
       {
