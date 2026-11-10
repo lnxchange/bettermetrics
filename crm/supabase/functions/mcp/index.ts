@@ -532,6 +532,206 @@ Each task should include at least: id (required, used for the mark-as-done actio
     },
   );
 
+  const historyItemSchema = z.object({
+    date: z
+      .string()
+      .describe("When it happened, as a date (2026-11-10) or a timestamp"),
+    kind: z
+      .string()
+      .describe(
+        "Short kind, such as email-sent or reply. email-sent and reply also move last_contacted_at later.",
+      ),
+    subject: z.string().nullable().optional().describe("Subject line, if any"),
+    text: z
+      .string()
+      .nullable()
+      .optional()
+      .describe("The full email or a summary"),
+  });
+
+  server.registerTool(
+    "upsert_outreach_contact",
+    {
+      title: "Upsert Outreach Contact",
+      description: `Create or update one outreach contact, its history, and its deal.
+
+Match an existing contact on external_id first. Match on email only when email_holder is "self", and only against the person's own addresses (Work, Home, or Other). An assistant or agent address is stored with that holder and is never treated as the person's own email, so it cannot merge two people.
+
+Every scalar respects locked_fields. A field a CRM user has edited is left as they left it. first_contacted_at only moves earlier and last_contacted_at only moves later. Neither date is cleared. Sending the same history again (same contact, date, kind, and subject) does nothing.
+
+contacts.status changes only when it is not locked: replied or engaged becomes in-conversation, declined becomes declined, and every other outreach status leaves status as it is.
+
+When deal is present, one deal is kept for that contact and deal.category. The stage advances along the configured order, or moves to declined or passed. It never moves backwards. A stage a user changed after the last sync is left untouched.
+
+Runs as the signed-in user, under row-level security. Returns {"contact_id", "deal_id", "created"}.`,
+      inputSchema: z.object({
+        external_id: z
+          .string()
+          .describe(
+            "Stable id from the treatise list, such as aim-outreach:P-007",
+          ),
+        first_name: z.string().nullable().optional(),
+        last_name: z.string().nullable().optional(),
+        email: z.string().nullable().optional(),
+        email_holder: z
+          .enum(["self", "assistant", "agent"])
+          .nullable()
+          .optional()
+          .describe(
+            "Who the email belongs to. self is the person's own address. assistant and agent are never used to match or as their own email.",
+          ),
+        contact_via: z
+          .string()
+          .nullable()
+          .optional()
+          .describe("How to reach them: assistant, agent, or a contact form"),
+        company: z.string().nullable().optional(),
+        company_sector: z
+          .string()
+          .nullable()
+          .optional()
+          .describe(
+            "Filled on the company only when it is new or its sector is empty",
+          ),
+        title: z.string().nullable().optional(),
+        linkedin_url: z.string().nullable().optional(),
+        tags: z.array(z.string()).optional(),
+        list: z
+          .enum(["primary", "secondary"])
+          .nullable()
+          .optional()
+          .describe(
+            "primary: asked to evaluate. secondary: could amplify the theory, not asked to validate.",
+          ),
+        ask_policy: z
+          .enum(["may-ask-to-validate", "do-not-ask"])
+          .nullable()
+          .optional(),
+        source: z.string().nullable().optional(),
+        background: z
+          .string()
+          .nullable()
+          .optional()
+          .describe(
+            "Markdown: who they are, why they fit, the AIM claims they bear on, and sources",
+          ),
+        outreach_status: z
+          .enum([
+            "identified",
+            "researched",
+            "drafted",
+            "in-outlook",
+            "sent",
+            "replied",
+            "engaged",
+            "declined",
+            "no-response",
+            "holding",
+          ])
+          .nullable()
+          .optional(),
+        first_contacted_at: z.string().nullable().optional(),
+        last_contacted_at: z.string().nullable().optional(),
+        history: z.array(historyItemSchema).optional(),
+        deal: z
+          .object({
+            category: z
+              .string()
+              .describe("validation for primary, promotion for secondary"),
+            name: z.string().nullable().optional(),
+          })
+          .nullable()
+          .optional(),
+      }),
+      annotations: { idempotentHint: true },
+    },
+    async (payload) => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `[MCP upsert_outreach_contact] user=${userId} external_id=${payload.external_id}`,
+      );
+      try {
+        const rows = (await postgres.query(
+          "select public.upsert_outreach_contact($1::jsonb) as result",
+          [payload],
+        )) as { result: unknown }[];
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(rows[0]?.result ?? null, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            { type: "text" as const, text: `Error: ${errorMessage(error)}` },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.registerTool(
+    "log_contact_event",
+    {
+      title: "Log Contact Event",
+      description: `Add one history note to a contact found by external_id or contact_id.
+
+The note is dated date. Its text is the kind, then the subject, then the text. Sending the same contact, date, kind, and subject again does nothing.
+
+When kind is email-sent or reply, last_contacted_at moves later if that field is not locked. It never moves earlier and it is never cleared. Other kinds only add the note.
+
+Runs as the signed-in user, under row-level security.`,
+      inputSchema: z.object({
+        external_id: z
+          .string()
+          .optional()
+          .describe("Stable outreach id. Provide this or contact_id."),
+        contact_id: z
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .describe("CRM contact id. Provide this or external_id."),
+        date: z.string().describe("When it happened, as a date or timestamp"),
+        kind: z.string().describe("Short kind, such as email-sent or reply"),
+        subject: z.string().nullable().optional(),
+        text: z.string().nullable().optional(),
+      }),
+      annotations: { idempotentHint: true },
+    },
+    async (payload) => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `[MCP log_contact_event] user=${userId} kind=${payload.kind}`,
+      );
+      try {
+        const rows = (await postgres.query(
+          "select public.log_contact_event($1::jsonb) as result",
+          [payload],
+        )) as { result: unknown }[];
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(rows[0]?.result ?? null, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            { type: "text" as const, text: `Error: ${errorMessage(error)}` },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+
   return server;
 }
 

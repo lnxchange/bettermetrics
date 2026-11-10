@@ -40,6 +40,8 @@ const personalInfoTypeMap: Record<string, string> = {
   Work: "work",
   Home: "home",
   Other: "other",
+  Assistant: "assistant",
+  Agent: "agent",
 };
 
 export const contactGender: ContactGender[] = [

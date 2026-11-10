@@ -53,6 +53,10 @@ alter table public.contacts add column fts tsvector generated always as (
     || public.search_document(
         title,
         background,
+        outreach_status,
+        email_holder,
+        contact_via,
+        list,
         jsonb_path_query_array(email_jsonb, '$[*]."email"')::text,
         jsonb_path_query_array(phone_jsonb, '$[*]."number"')::text
     )
@@ -141,7 +145,7 @@ begin
         union all
         (select 'contacts', co.id, concat_ws(' ', co.first_name, co.last_name),
             (select cc.name from public.companies cc where cc.id = co.company_id), co.id, null::bigint, co.first_seen,
-            concat_ws(' · ', co.title, co.background,
+            concat_ws(' · ', co.title, co.background, co.outreach_status, co.email_holder, co.contact_via, co.list,
                 (select string_agg(e ->> 'email', ' ') from jsonb_array_elements(co.email_jsonb) e),
                 (select string_agg(p ->> 'number', ' ') from jsonb_array_elements(co.phone_jsonb) p)),
             ts_rank(co.fts, tsq) as rank

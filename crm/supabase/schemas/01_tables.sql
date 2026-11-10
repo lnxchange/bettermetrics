@@ -55,9 +55,29 @@ create table public.contacts (
  ask_policy text,
  site_user_id uuid,
  locked_fields text[] not null default '{}'::text[],
+ outreach_status text,
+ first_contacted_at timestamp with time zone,
+ last_contacted_at timestamp with time zone,
+ email_holder text,
+ contact_via text,
+ list text,
  constraint contacts_ask_policy_check check (
   ask_policy is null
   or ask_policy in ('may-ask-to-validate', 'do-not-ask')
+ ),
+ constraint contacts_outreach_status_check check (
+  outreach_status is null
+  or outreach_status in (
+   'identified', 'researched', 'drafted', 'in-outlook', 'sent',
+   'replied', 'engaged', 'declined', 'no-response', 'holding'
+  )
+ ),
+ constraint contacts_email_holder_check check (
+  email_holder is null
+  or email_holder in ('self', 'assistant', 'agent')
+ ),
+ constraint contacts_list_check check (
+  list is null or list in ('primary', 'secondary')
  )
 );
 
@@ -85,7 +105,8 @@ create table public.deals (
     archived_at timestamp with time zone,
     expected_closing_date date,
     sales_id bigint,
-    index smallint
+    index smallint,
+    synced_stage text
 );
 
 create table public.deal_notes (

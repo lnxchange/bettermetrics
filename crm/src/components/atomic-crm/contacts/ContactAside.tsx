@@ -10,6 +10,7 @@ import { TagsListEdit } from "./TagsListEdit";
 import { ContactStatusSelector } from "./ContactInputs";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
+import { ContactOutreachInfo } from "./ContactOutreach";
 import { AsideSection } from "../misc/AsideSection";
 import type { Contact } from "../types";
 import { ContactMergeButton } from "./ContactMergeButton";
@@ -33,6 +34,12 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
 
       <AsideSection title={translate("resources.notes.fields.status")}>
         <ContactStatusSelector />
+      </AsideSection>
+
+      <AsideSection
+        title={translate("resources.contacts.field_categories.outreach")}
+      >
+        <ContactOutreachInfo />
       </AsideSection>
 
       <AsideSection

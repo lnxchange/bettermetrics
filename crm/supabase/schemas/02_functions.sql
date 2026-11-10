@@ -214,6 +214,9 @@ begin
 
     for item in select jsonb_array_elements(new.email_jsonb)
     loop
+        if coalesce(item->>'type', '') in ('Assistant', 'Agent') then
+            continue;
+        end if;
         select public.get_avatar_for_email(item->>'email') into contact_avatar;
         if (contact_avatar is not null) then
             exit;
@@ -474,4 +477,81 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
+$$;
+
+-- A CRM edit locks the scalar it changed. Sync sets app.contact_sync so its
+-- own writes are not treated as edits.
+CREATE OR REPLACE FUNCTION "public"."lock_edited_contact_fields"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    SET "search_path" TO 'public'
+    AS $$
+declare
+  fields text[] := coalesce(new.locked_fields, '{}'::text[]);
+begin
+  if coalesce(current_setting('app.contact_sync', true), '') = 'on' then
+    return new;
+  end if;
+
+  if new.first_name is distinct from old.first_name then
+    fields := fields || array['first_name'];
+  end if;
+  if new.last_name is distinct from old.last_name then
+    fields := fields || array['last_name'];
+  end if;
+  if new.title is distinct from old.title then
+    fields := fields || array['title'];
+  end if;
+  if new.email_jsonb is distinct from old.email_jsonb then
+    fields := fields || array['email'];
+  end if;
+  if new.company_id is distinct from old.company_id then
+    fields := fields || array['company'];
+  end if;
+  if new.tags is distinct from old.tags then
+    fields := fields || array['tags'];
+  end if;
+  if new.external_id is distinct from old.external_id then
+    fields := fields || array['external_id'];
+  end if;
+  if new.ask_policy is distinct from old.ask_policy then
+    fields := fields || array['ask_policy'];
+  end if;
+  if new.background is distinct from old.background then
+    fields := fields || array['background'];
+  end if;
+  if new.source is distinct from old.source then
+    fields := fields || array['source'];
+  end if;
+  if new.linkedin_url is distinct from old.linkedin_url then
+    fields := fields || array['linkedin_url'];
+  end if;
+  if new.outreach_status is distinct from old.outreach_status then
+    fields := fields || array['outreach_status'];
+  end if;
+  if new.first_contacted_at is distinct from old.first_contacted_at then
+    fields := fields || array['first_contacted_at'];
+  end if;
+  if new.last_contacted_at is distinct from old.last_contacted_at then
+    fields := fields || array['last_contacted_at'];
+  end if;
+  if new.email_holder is distinct from old.email_holder then
+    fields := fields || array['email_holder'];
+  end if;
+  if new.contact_via is distinct from old.contact_via then
+    fields := fields || array['contact_via'];
+  end if;
+  if new.list is distinct from old.list then
+    fields := fields || array['list'];
+  end if;
+  if new.status is distinct from old.status then
+    fields := fields || array['status'];
+  end if;
+
+  select coalesce(array_agg(distinct value), '{}'::text[])
+    into fields
+  from unnest(fields) as value;
+
+  new.locked_fields := fields;
+  return new;
+end;
 $$;

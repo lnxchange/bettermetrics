@@ -1,5 +1,5 @@
 import { endOfYesterday, startOfMonth, startOfWeek, subMonths } from "date-fns";
-import { CheckSquare, Clock, Tag, TrendingUp, Users } from "lucide-react";
+import { Calendar, CheckSquare, Clock, Send, Tag, TrendingUp, Users } from "lucide-react";
 import {
   useGetIdentity,
   useGetList,
@@ -16,6 +16,7 @@ import { ResponsiveFilters } from "../misc/ResponsiveFilters";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ActiveFilterButton } from "../misc/ActiveFilterButton";
 import { AccountManagerFilter } from "../sales/AccountManagerInput";
+import { outreachStatuses, outreachStatusLabel } from "./ContactOutreach";
 
 export const ContactListFilter = () => {
   const { noteStatuses } = useConfigurationContext();
@@ -109,6 +110,75 @@ export const ContactListFilter = () => {
         ))}
       </FilterCategory>
 
+      <FilterCategory
+        label="resources.contacts.filters.outreach"
+        icon={<Send />}
+      >
+        {outreachStatuses.map((status) => (
+          <ToggleFilterButton
+            key={status}
+            className="w-auto md:w-full justify-between h-10 md:h-8"
+            label={outreachStatusLabel(status, translate)}
+            value={{ outreach_status: status }}
+            size={isMobile ? "lg" : undefined}
+          />
+        ))}
+      </FilterCategory>
+
+      <FilterCategory
+        label="resources.contacts.filters.last_contacted"
+        icon={<Calendar />}
+      >
+        <ToggleFilterButton
+          className="w-auto md:w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.today"
+          value={{
+            "last_contacted_at@gte": endOfYesterday().toISOString(),
+            "last_contacted_at@lte": undefined,
+          }}
+          size={isMobile ? "lg" : undefined}
+        />
+        <ToggleFilterButton
+          className="w-auto md:w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.this_week"
+          value={{
+            "last_contacted_at@gte": startOfWeek(new Date()).toISOString(),
+            "last_contacted_at@lte": undefined,
+          }}
+          size={isMobile ? "lg" : undefined}
+        />
+        <ToggleFilterButton
+          className="w-auto md:w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.before_this_week"
+          value={{
+            "last_contacted_at@gte": undefined,
+            "last_contacted_at@lte": startOfWeek(new Date()).toISOString(),
+          }}
+          size={isMobile ? "lg" : undefined}
+        />
+        <ToggleFilterButton
+          className="w-auto md:w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.before_this_month"
+          value={{
+            "last_contacted_at@gte": undefined,
+            "last_contacted_at@lte": startOfMonth(new Date()).toISOString(),
+          }}
+          size={isMobile ? "lg" : undefined}
+        />
+        <ToggleFilterButton
+          className="w-auto md:w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.before_last_month"
+          value={{
+            "last_contacted_at@gte": undefined,
+            "last_contacted_at@lte": subMonths(
+              startOfMonth(new Date()),
+              1,
+            ).toISOString(),
+          }}
+          size={isMobile ? "lg" : undefined}
+        />
+      </FilterCategory>
+
       <FilterCategory label="resources.contacts.filters.tags" icon={<Tag />}>
         {data &&
           data.map((record) => (
@@ -165,6 +235,7 @@ export const ContactListFilter = () => {
 
 export const ContactListFilterSummary = () => {
   const { noteStatuses } = useConfigurationContext();
+  const translate = useTranslate();
   const { identity } = useGetIdentity();
   const { data } = useGetList("tags", {
     pagination: { page: 1, perPage: 10 },
@@ -234,6 +305,59 @@ export const ContactListFilterSummary = () => {
           value={{ status: status.value }}
         />
       ))}
+
+      {outreachStatuses.map((status) => (
+        <ActiveFilterButton
+          key={status}
+          className="w-auto justify-between h-8"
+          label={outreachStatusLabel(status, translate)}
+          value={{ outreach_status: status }}
+        />
+      ))}
+
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.today"
+        value={{
+          "last_contacted_at@gte": endOfYesterday().toISOString(),
+          "last_contacted_at@lte": undefined,
+        }}
+      />
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.this_week"
+        value={{
+          "last_contacted_at@gte": startOfWeek(new Date()).toISOString(),
+          "last_contacted_at@lte": undefined,
+        }}
+      />
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.before_this_week"
+        value={{
+          "last_contacted_at@gte": undefined,
+          "last_contacted_at@lte": startOfWeek(new Date()).toISOString(),
+        }}
+      />
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.before_this_month"
+        value={{
+          "last_contacted_at@gte": undefined,
+          "last_contacted_at@lte": startOfMonth(new Date()).toISOString(),
+        }}
+      />
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.before_last_month"
+        value={{
+          "last_contacted_at@gte": undefined,
+          "last_contacted_at@lte": subMonths(
+            startOfMonth(new Date()),
+            1,
+          ).toISOString(),
+        }}
+      />
 
       {data &&
         data.map((record) => (

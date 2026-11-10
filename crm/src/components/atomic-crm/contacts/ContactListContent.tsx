@@ -21,6 +21,7 @@ import { Status } from "../misc/Status";
 import { formatRelativeDate } from "../misc/RelativeDate";
 import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
+import { ContactOutreachSummary, outreachStatusLabel } from "./ContactOutreach";
 import { TagsList } from "./TagsList";
 
 export const ContactListContent = () => {
@@ -157,6 +158,7 @@ const ContactItemContent = ({
             </div>
           ) : null}
         </div>
+        <ContactOutreachSummary contact={contact} />
         {contact.last_seen && (
           <div className="text-right ml-4">
             <div
@@ -249,6 +251,7 @@ export const ContactListContentMobile = () => {
 
 const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
   const translate = useTranslate();
+  const [locale = "en"] = useLocaleState();
   return (
     <Link
       to={`/contacts/${contact.id}/show`}
@@ -263,6 +266,19 @@ const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
             </div>
             <Status status={contact.status} />
           </div>
+          {contact.outreach_status || contact.last_contacted_at ? (
+            <div className="text-sm text-muted-foreground">
+              {contact.outreach_status
+                ? outreachStatusLabel(contact.outreach_status, translate)
+                : null}
+              {contact.outreach_status && contact.last_contacted_at
+                ? " · "
+                : null}
+              {contact.last_contacted_at
+                ? formatRelativeDate(contact.last_contacted_at, locale)
+                : null}
+            </div>
+          ) : null}
           <div className="text-sm text-muted-foreground">
             <div className="flex flex-col gap-1">
               <span>
