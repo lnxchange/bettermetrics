@@ -28,13 +28,13 @@ Do this while already signed in at [aimtheory.org](https://aimtheory.org) as tha
 
 ## Add the connector
 
-1. Open claude.ai → Settings → Connectors → Add custom connector.
-2. Paste the connector URL above.
-3. When the browser opens, you land on `https://aimtheory.org/admin#/oauth/consent`.
-4. Sign in to the CRM if it asks, then approve access.
-5. Ask Claude to run `get_schema`, then a read-only `query` against `contacts_summary`.
+1. Stay signed in at [aimtheory.org](https://aimtheory.org) as the administrator. That site login is what lets the approval page open. It is a different step from Claude's first connection check.
+2. Open claude.ai → Settings → Connectors → Add custom connector.
+3. Paste the connector URL above.
+4. Claude first checks the server with no login. That check is a 401. It means "sign-in is required," and it is the expected answer. It is not a rejection of your aimtheory session.
+5. The browser should then open `https://aimtheory.org/admin#/oauth/consent`. Click Approve. Until that button is clicked, Claude has nothing to finish and reports that the connection timed out.
 
-The CRM consent screen is the page in `src/components/supabase/oauth-consent-page.tsx`. The authorization path configured for local development is `/#/oauth/consent`. On the hosted project the site URL must be `https://aimtheory.org/admin`, so the full consent address is `https://aimtheory.org/admin#/oauth/consent`.
+The approval page is `src/components/supabase/oauth-consent-page.tsx`. The hosted consent address is `https://aimtheory.org/admin#/oauth/consent`. A slash before the hash (`/admin/#/...`) makes the site redirect and drop the approval id, which is what made the connection time out.
 
 ## What Claude can do
 
@@ -46,4 +46,4 @@ Both tools run as the signed-in user, under the same row-level security as the C
 
 ## Hosted project
 
-The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`. The `mcp` function is deployed there with JWT verification off. An unauthenticated request gets `401` and a `WWW-Authenticate` header pointing at the protected-resource metadata. The OAuth server is enabled, with dynamic client registration and authorization path `/#/oauth/consent`. The auth site URL is `https://aimtheory.org/admin`. Signup stays closed. Tokens are signed with an ES256 key. `SUPABASE_DB_URL` and `CRM_BASE_URL` (`https://aimtheory.org/admin`) are set on the function.
+The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`. The `mcp` function is deployed there with JWT verification off. An unauthenticated request gets `401` and a `WWW-Authenticate` header. That is the discovery response, not a failed login. The OAuth server is enabled, with dynamic client registration. The consent address is `https://aimtheory.org/admin#/oauth/consent`. Signup stays closed. Tokens are signed with an ES256 key. `SUPABASE_DB_URL` and `CRM_BASE_URL` (`https://aimtheory.org/admin`) are set on the function.
