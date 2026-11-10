@@ -10,6 +10,7 @@ import { Label } from './ui/label'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { safeNextPath } from '@/lib/auth/session-cookie'
 
 interface LoginFormProps extends React.ComponentPropsWithoutRef<'form'> {
   action: 'sign-in' | 'sign-up'
@@ -33,7 +34,11 @@ export function LoginForm({
   })
 
   const signIn = async () => {
-    const { email, password } = formState
+    const email = formState.email.trim()
+    const { password } = formState
+    // Finish any in-flight refresh of a dead cookie before starting a new
+    // session. Otherwise that refresh fails and deletes the cookie we just set.
+    await supabase.auth.initialize()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -42,7 +47,8 @@ export function LoginForm({
   }
 
   const signUp = async () => {
-    const { email, password, firstName, lastName } = formState
+    const { password, firstName, lastName } = formState
+    const email = formState.email.trim()
     const { error, data } = await supabase.auth.signUp({
       email,
       password,
@@ -82,6 +88,12 @@ export function LoginForm({
     }
 
     setIsLoading(false)
+    if (action === 'sign-in') {
+      const next = safeNextPath(
+        new URLSearchParams(window.location.search).get('redirectedFrom')
+      )
+      router.replace(next)
+    }
     router.refresh()
   }
 
@@ -93,14 +105,18 @@ export function LoginForm({
           <Input
             name="firstName"
             value={formState.firstName}
-            onChange={e => setFormState(prev => ({ ...prev, firstName: e.target.value }))}
+            onChange={e =>
+              setFormState(prev => ({ ...prev, firstName: e.target.value }))
+            }
             required
           />
           <Label>Last name</Label>
           <Input
             name="lastName"
             value={formState.lastName}
-            onChange={e => setFormState(prev => ({ ...prev, lastName: e.target.value }))}
+            onChange={e =>
+              setFormState(prev => ({ ...prev, lastName: e.target.value }))
+            }
             required
           />
         </>
@@ -109,6 +125,7 @@ export function LoginForm({
       <Input
         name="email"
         type="email"
+        autoComplete="email"
         value={formState.email}
         onChange={e =>
           setFormState(prev => ({
@@ -116,12 +133,16 @@ export function LoginForm({
             email: e.target.value
           }))
         }
+        required
       />
 
       <Label>Password</Label>
       <Input
         name="password"
         type="password"
+        autoComplete={
+          action === 'sign-in' ? 'current-password' : 'new-password'
+        }
         value={formState.password}
         onChange={e =>
           setFormState(prev => ({
@@ -129,16 +150,20 @@ export function LoginForm({
             password: e.target.value
           }))
         }
+        required
       />
       {action === 'sign-in' && (
-        <div className="text-right mb-2">
-          <Link href="/reset-password" className="text-sm text-blue-600 hover:underline">
+        <div className="mb-2 text-right">
+          <Link
+            href="/reset-password"
+            className="text-sm text-blue-600 hover:underline"
+          >
             Forgot password?
           </Link>
         </div>
       )}
 
-      <Button disabled={isLoading}>
+      <Button type="submit" disabled={isLoading}>
         {isLoading && <IconSpinner className="mr-2 animate-spin" />}
         {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
       </Button>
