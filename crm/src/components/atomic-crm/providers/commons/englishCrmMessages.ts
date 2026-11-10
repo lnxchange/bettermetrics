@@ -1,10 +1,10 @@
 export const englishCrmMessages = {
   resources: {
     companies: {
-      name: "Company |||| Companies",
-      forcedCaseName: "Company",
+      name: "Organisation |||| Organisations",
+      forcedCaseName: "Organisation",
       fields: {
-        name: "Company name",
+        name: "Organisation name",
         website: "Website",
         linkedin_url: "LinkedIn URL",
         phone_number: "Phone number",
@@ -24,11 +24,11 @@ export const englishCrmMessages = {
         sales_id: "Account manager",
       },
       empty: {
-        description: "It seems your company list is empty.",
-        title: "No companies found",
+        description: "It seems your organisation list is empty.",
+        title: "No organisations found",
       },
       import: {
-        title: "Import companies",
+        title: "Import organisations",
       },
       field_categories: {
         contact: "Contact details",
@@ -37,10 +37,10 @@ export const englishCrmMessages = {
         context: "Context",
       },
       action: {
-        create: "Create Company",
-        edit: "Edit company",
-        new: "New Company",
-        show: "Show company",
+        create: "Create organisation",
+        edit: "Edit organisation",
+        new: "New organisation",
+        show: "Show organisation",
       },
       added_on: "Added on %{date}",
       followed_by: "Followed by %{name}",
@@ -56,9 +56,9 @@ export const englishCrmMessages = {
         two_hundred_fifty_or_more_employees: "250 or more employees",
       },
       autocomplete: {
-        create_error: "An error occurred while creating the company",
+        create_error: "An error occurred while creating the organisation",
         create_item: "Create %{item}",
-        create_label: "Start typing to create a new company",
+        create_label: "Start typing to create a new organisation",
       },
     },
     contacts: {
@@ -80,7 +80,7 @@ export const englishCrmMessages = {
         first_contacted_at: "First contacted",
         last_contacted_at: "Last contacted",
         title: "Title",
-        company_id: "Company",
+        company_id: "Organisation",
         email_jsonb: "Email addresses",
         email: "Email",
         phone_jsonb: "Phone numbers",
@@ -188,7 +188,7 @@ export const englishCrmMessages = {
         before_this_month: "Before this month",
         before_this_week: "Before this week",
         managed_by_me: "Managed by me",
-        search: "Search name, company...",
+        search: "Search name, organisation...",
         this_week: "This week",
         today: "Today",
         tags: "Tags",
@@ -208,7 +208,7 @@ export const englishCrmMessages = {
       fields: {
         name: "Name",
         description: "Description",
-        company_id: "Company",
+        company_id: "Organisation",
         contact_ids: "Contacts",
         categories: "Categories",
         amount: "Budget",
@@ -433,8 +433,8 @@ export const englishCrmMessages = {
       title: "Changelog",
     },
     activity: {
-      added_company: "%{name} added company",
-      you_added_company: "You added company",
+      added_company: "%{name} added organisation",
+      you_added_company: "You added organisation",
       added_contact: "%{name} added",
       you_added_contact: "You added",
       added_note: "%{name} added a note about",
@@ -486,7 +486,7 @@ export const englishCrmMessages = {
     },
     search: {
       title: "Search",
-      placeholder: "Search contacts, companies, deals, tasks and notes...",
+      placeholder: "Search contacts, organisations, deals, tasks and notes...",
       hint: "Type at least %{min} characters to search",
       recent_contacts: "Recently viewed",
       empty: "No result found",
@@ -495,7 +495,7 @@ export const englishCrmMessages = {
       show_more: "Show more",
       groups: {
         contacts: "Contacts",
-        companies: "Companies",
+        companies: "Organisations",
         deals: "Deals",
         tasks: "Tasks",
         contact_notes: "Contact notes",
@@ -520,7 +520,7 @@ export const englishCrmMessages = {
       },
       idle: {
         description_1:
-          "You can import sales, companies, contacts, companies, notes, and tasks.",
+          "You can import sales, organisations, contacts, notes, and tasks.",
         description_2:
           "Data must be in a JSON file matching the following sample:",
       },

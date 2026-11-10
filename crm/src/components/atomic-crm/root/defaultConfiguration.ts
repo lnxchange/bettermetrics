@@ -14,7 +14,7 @@ export const defaultTitle = "AIM";
 
 export const defaultCompanySectors = [
   { value: "university", label: "University" },
-  { value: "research-lab", label: "Research lab" },
+  { value: "research-lab", label: "Research institution" },
   { value: "press", label: "Press" },
   { value: "think-tank", label: "Think tank" },
   { value: "public-institution", label: "Public institution" },
