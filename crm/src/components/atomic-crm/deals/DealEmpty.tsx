@@ -5,6 +5,7 @@ import { CreateButton } from "@/components/admin/create-button";
 import { Progress } from "@/components/ui/progress";
 
 import { DataImportButton } from "../dataImport/DataImportButton";
+import { EmptyIllustration } from "../misc/EmptyIllustration";
 import useAppBarHeight from "../misc/useAppBarHeight";
 import type { Contact } from "../types";
 import { DealCreate } from "./DealCreate";
@@ -32,10 +33,7 @@ export const DealEmpty = ({ children }: { children?: ReactNode }) => {
         height: `calc(100dvh - ${appbarHeight}px)`,
       }}
     >
-      <img
-        src="./img/empty.svg"
-        alt={translate("resources.deals.empty.title")}
-      />
+      <EmptyIllustration kind="deals" />
       {contacts && contacts.length > 0 ? (
         <>
           <div className="flex flex-col items-center gap-0">

@@ -2,6 +2,7 @@ import { CreateButton } from "@/components/admin/create-button";
 import { useTranslate } from "ra-core";
 
 import { DataImportButton } from "../dataImport/DataImportButton";
+import { EmptyIllustration } from "../misc/EmptyIllustration";
 import useAppBarHeight from "../misc/useAppBarHeight";
 
 export const CompanyEmpty = () => {
@@ -14,12 +15,7 @@ export const CompanyEmpty = () => {
         height: `calc(100dvh - ${appbarHeight}px)`,
       }}
     >
-      <img
-        src="./img/empty.svg"
-        alt={translate("resources.companies.empty.title", {
-          _: "No companies found",
-        })}
-      />
+      <EmptyIllustration kind="companies" />
       <div className="flex flex-col gap-0 items-center">
         <h6 className="text-lg font-bold">
           {translate("resources.companies.empty.title", {

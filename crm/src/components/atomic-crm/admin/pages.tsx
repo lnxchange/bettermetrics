@@ -1,5 +1,6 @@
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { EmptyIllustration, type EmptyKind } from "../misc/EmptyIllustration";
 
 function Page({
   title,
@@ -31,9 +32,20 @@ function Notice({ error }: { error: string | null }) {
 }
 
 const buttonClass =
-  "rounded-md bg-[#1E3A8A] px-3 py-2 text-sm font-medium text-white hover:bg-[#1e40af]";
+  "rounded-md bg-[#1E3A8A] px-3 py-2 text-sm font-medium text-white hover:bg-[#1e40af] disabled:opacity-50";
 const quietClass =
-  "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50";
+  "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50";
+const dangerClass =
+  "rounded-md border border-red-200 bg-white px-3 py-2 text-sm text-red-700 hover:bg-red-50";
+
+function EmptyPanel({ kind, label }: { kind: EmptyKind; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2 px-4 py-10">
+      <EmptyIllustration kind={kind} />
+      <p className="text-sm text-slate-500">{label}</p>
+    </div>
+  );
+}
 
 export function InboxPage() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -88,7 +100,11 @@ export function InboxPage() {
               </button>
             </li>
           ))}
-          {messages.length === 0 && <li className="px-3 py-6 text-sm text-slate-500">No messages yet.</li>}
+          {messages.length === 0 && (
+            <li>
+              <EmptyPanel kind="inbox" label="No messages yet." />
+            </li>
+          )}
         </ul>
         {selected && (
           <article className="rounded-lg border border-slate-200 bg-white p-5">
@@ -143,7 +159,11 @@ export function ArticlesPage() {
             </button>
           </li>
         ))}
-        {articles.length === 0 && <li className="px-4 py-6 text-sm text-slate-500">No articles yet.</li>}
+        {articles.length === 0 && (
+          <li>
+            <EmptyPanel kind="articles" label="No articles yet." />
+          </li>
+        )}
       </ul>
     </Page>
   );
@@ -281,38 +301,206 @@ export function ArticleEditorPage() {
   );
 }
 
+type SiteUser = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  created_at: string | null;
+  last_sign_in_at: string | null;
+  email_confirmed: boolean;
+  is_admin: boolean;
+  disabled: boolean;
+};
+
+function formatWhen(value: string | null) {
+  if (!value) return "—";
+  return new Date(value).toLocaleString();
+}
+
 export function UsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<SiteUser[]>([]);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = async () => {
+    const response = await fetch("/api/admin/users");
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.error || "Could not load users");
+      return;
+    }
+    const next = (data.users || []) as SiteUser[];
+    setUsers(next);
+    setCurrentUserId(data.currentUserId || "");
+    setSelectedId(current => (current && next.some(user => user.id === current) ? current : null));
+  };
 
   useEffect(() => {
-    fetch("/api/admin/users")
-      .then(response => response.json())
-      .then(data => setUsers(data.users || []))
-      .catch(() => setError("Could not load users"));
+    load().catch(() => setError("Could not load users"));
   }, []);
+
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return users;
+    return users.filter(user => {
+      const name = `${user.first_name} ${user.last_name}`.toLowerCase();
+      return name.includes(needle) || user.email.toLowerCase().includes(needle);
+    });
+  }, [query, users]);
+
+  const selected = users.find(user => user.id === selectedId) || null;
+
+  const open = (user: SiteUser) => {
+    setSelectedId(user.id);
+    setFirstName(user.first_name);
+    setLastName(user.last_name);
+    setNotice(null);
+    setError(null);
+  };
+
+  const act = async (body: Record<string, unknown>, method: "PATCH" | "POST" | "DELETE") => {
+    if (!selected) return;
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+    const response = await fetch("/api/admin/users", {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: selected.id, ...body }),
+    });
+    const data = await response.json();
+    setBusy(false);
+    if (!response.ok) {
+      setError(data.error || "Could not update that user");
+      return;
+    }
+    setNotice(data.message || "Saved.");
+    await load();
+  };
 
   return (
     <Page title="Users">
       <Notice error={error} />
-      <table className="w-full overflow-hidden rounded-lg border border-slate-200 bg-white text-sm">
-        <thead className="bg-slate-50 text-left text-slate-500">
-          <tr>
-            <th className="px-4 py-3 font-medium">Name</th>
-            <th className="px-4 py-3 font-medium">Email</th>
-            <th className="px-4 py-3 font-medium">Signed up</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <tr key={user.id} className="border-t border-slate-100">
-              <td className="px-4 py-3">{[user.first_name, user.last_name].filter(Boolean).join(" ") || "—"}</td>
-              <td className="px-4 py-3">{user.email}</td>
-              <td className="px-4 py-3">{user.created_at ? new Date(user.created_at).toLocaleString() : ""}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {notice && (
+        <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          {notice}
+        </p>
+      )}
+      <input
+        className="mb-4 w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm"
+        placeholder="Search by name or email"
+        value={query}
+        onChange={event => setQuery(event.target.value)}
+      />
+      {users.length === 0 ? (
+        <div className="rounded-lg border border-slate-200 bg-white">
+          <EmptyPanel kind="users" label="No users yet." />
+        </div>
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+          <table className="w-full overflow-hidden rounded-lg border border-slate-200 bg-white text-sm">
+            <thead className="bg-slate-50 text-left text-slate-500">
+              <tr>
+                <th className="px-4 py-3 font-medium">Name</th>
+                <th className="px-4 py-3 font-medium">Email</th>
+                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Last sign-in</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(user => (
+                <tr
+                  key={user.id}
+                  className={`cursor-pointer border-t border-slate-100 ${selectedId === user.id ? "bg-slate-50" : ""}`}
+                  onClick={() => open(user)}
+                >
+                  <td className="px-4 py-3">
+                    {[user.first_name, user.last_name].filter(Boolean).join(" ") || "—"}
+                    {user.is_admin && (
+                      <span className="ml-2 rounded-full bg-[#1E3A8A] px-2 py-0.5 text-xs font-medium text-white">
+                        Admin
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">{user.email}</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    {user.disabled ? "Disabled" : user.email_confirmed ? "Confirmed" : "Unconfirmed"}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">{formatWhen(user.last_sign_in_at)}</td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td className="px-4 py-6 text-slate-500" colSpan={4}>
+                    No users match that search.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          {selected && (
+            <form
+              className="space-y-3 rounded-lg border border-slate-200 bg-white p-4"
+              onSubmit={event => {
+                event.preventDefault();
+                act({ firstName, lastName }, "PATCH");
+              }}
+            >
+              <h2 className="text-sm font-semibold text-slate-900">{selected.email}</h2>
+              <p className="text-xs text-slate-500">Signed up {formatWhen(selected.created_at)}</p>
+              <label className="block text-sm">
+                First name
+                <input className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" value={firstName} onChange={event => setFirstName(event.target.value)} required />
+              </label>
+              <label className="block text-sm">
+                Last name
+                <input className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2" value={lastName} onChange={event => setLastName(event.target.value)} required />
+              </label>
+              <button className={buttonClass} disabled={busy} type="submit">Save name</button>
+              <div className="flex flex-col gap-2 border-t border-slate-100 pt-3">
+                <button
+                  className={quietClass}
+                  disabled={busy || (selected.is_admin && selected.id === currentUserId)}
+                  type="button"
+                  onClick={() => act({ isAdmin: !selected.is_admin }, "PATCH")}
+                >
+                  {selected.is_admin ? "Remove admin" : "Make admin"}
+                </button>
+                <button className={quietClass} disabled={busy} type="button" onClick={() => act({ action: "reset-password" }, "POST")}>
+                  Send password reset
+                </button>
+                <button
+                  className={quietClass}
+                  disabled={busy || selected.id === currentUserId}
+                  type="button"
+                  onClick={() => act({ disabled: !selected.disabled }, "PATCH")}
+                >
+                  {selected.disabled ? "Enable account" : "Disable account"}
+                </button>
+                <button
+                  className={dangerClass}
+                  disabled={busy || selected.id === currentUserId}
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm(`Delete ${selected.email}? Their CRM contact stays.`)) {
+                      act({}, "DELETE");
+                    }
+                  }}
+                >
+                  Delete account
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
     </Page>
   );
 }
@@ -379,7 +567,11 @@ export function DocumentsPage({ kind }: { kind: "research" | "rag" }) {
             <button className={quietClass} onClick={() => remove(document.id)}>Delete</button>
           </li>
         ))}
-        {documents.length === 0 && <li className="px-4 py-6 text-slate-500">No documents yet.</li>}
+        {documents.length === 0 && (
+          <li>
+            <EmptyPanel kind="documents" label="No documents yet." />
+          </li>
+        )}
       </ul>
     </Page>
   );
