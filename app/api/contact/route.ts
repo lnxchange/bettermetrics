@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { syncContactMessage } from '@/lib/crm/sync'
 
 const NOTIFY_TO = 'yule@attune.legal'
 const NOTIFY_FROM = 'Use Better Metrics <notifications@lexnova.com.au>'
@@ -74,6 +75,16 @@ export async function POST(req: NextRequest) {
           savedToDatabase = true
           messageId = saved?.id
           console.log('Contact message saved to database')
+          await syncContactMessage({
+            name,
+            email,
+            affiliation,
+            interest,
+            subject,
+            message,
+            paper_scope: paperScope,
+            paper_questions: paperQuestions
+          })
         }
       } catch (dbErr) {
         console.error('Database connection error:', dbErr)

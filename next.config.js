@@ -23,6 +23,16 @@ module.exports = {
       }
     ]
   },
+  async rewrites() {
+    // The CRM is a static app. Real Next admin pages (articles, inbox, users,
+    // documents) are matched first. Anything else under /admin is the CRM.
+    return {
+      fallback: [
+        { source: '/admin', destination: '/crm/index.html' },
+        { source: '/admin/:path*', destination: '/crm/index.html' }
+      ]
+    }
+  },
   async redirects() {
     // Pages retired in the site refocus. The theory now lives on /theory, the
     // self-diagnosis on the home page, and the research programme on /about.
