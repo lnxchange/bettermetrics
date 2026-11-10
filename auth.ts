@@ -1,51 +1,41 @@
 import 'server-only'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies, headers } from 'next/headers'
+import {
+  AUTH_STORAGE_KEY,
+  readSession,
+  SESSION_HANDLED_HEADER
+} from '@/lib/auth/session-cookie'
 
 export const auth = async ({
   cookieStore
 }: {
   cookieStore: ReturnType<typeof cookies>
 }) => {
-  // Check if Supabase is configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.log('Auth: Supabase not configured')
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
     return null
   }
 
+  // A still-valid access token is enough. getSession() would refresh an
+  // expired one, and doing that from a Server Component cannot store the
+  // replacement. The next request then presents the spent refresh token
+  // and Supabase revokes the whole sign-in.
+  const handled = headers().get(SESSION_HANDLED_HEADER) === '1'
+  const current = readSession(cookieStore.get(AUTH_STORAGE_KEY)?.value)
+  if (handled || current) return current
+
   try {
-    const supabase = createServerComponentClient({
+    const supabase = createRouteHandlerClient({
       cookies: () => cookieStore
     })
-    
-    console.log('Auth: Attempting to get session')
     const { data, error } = await supabase.auth.getSession()
-    
-    if (error) {
-      console.error('Auth: Session error:', error)
-      throw error
-    }
-    
-    console.log('Auth: Session result:', {
-      hasSession: !!data.session,
-      userId: data.session?.user?.id,
-      sessionExpiry: data.session?.expires_at,
-      sessionValid: data.session?.expires_at ? Date.now() < data.session.expires_at * 1000 : false
-    })
-    
-    const session = data.session
-
-    if (!session?.user) {
-      console.log('Auth: No user found in session')
+    if (error || !data.session?.user) return null
+    if (data.session.expires_at && data.session.expires_at * 1000 <= Date.now())
       return null
-    }
-
-    if (session.expires_at && session.expires_at * 1000 <= Date.now()) {
-      console.log('Auth: Session expired')
-      return null
-    }
-
-    return session
+    return data.session
   } catch (error) {
     console.error('Auth error:', error)
     return null

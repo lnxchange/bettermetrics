@@ -2,6 +2,13 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
+import {
+  applySetCookieHeaders,
+  clearAuthCookieHeaders,
+  isAdminPath,
+  SESSION_HANDLED_HEADER,
+  setCookieList
+} from '@/lib/auth/session-cookie'
 
 // Old article URLs still indexed from usebettermetrics.com carried file
 // extensions and mixed case ("/articles/Report-14-The-Easterlin-Paradox.md").
@@ -22,109 +29,135 @@ function normaliseArticlePath(pathname: string): string | null {
   return `/articles/${slug}`
 }
 
+function redirectKeepingCookies(from: NextResponse, url: URL, status?: number) {
+  const redirect = NextResponse.redirect(url, status)
+  for (const cookie of setCookieList(from.headers)) {
+    redirect.headers.append('set-cookie', cookie)
+  }
+  return redirect
+}
+
+// Refresh once, then show the new cookie to Server Components via the
+// forwarded request. Their auth helper cannot write cookies, so a second
+// refresh on the same token revokes the session.
+function forwardSession(req: NextRequest, res: NextResponse) {
+  const requestHeaders = new Headers(req.headers)
+  requestHeaders.delete(SESSION_HANDLED_HEADER)
+  requestHeaders.set(SESSION_HANDLED_HEADER, '1')
+
+  const setCookies = setCookieList(res.headers)
+  if (setCookies.length > 0) {
+    requestHeaders.set(
+      'cookie',
+      applySetCookieHeaders(req.headers.get('cookie') ?? '', setCookies)
+    )
+  }
+
+  const forwarded = NextResponse.next({ request: { headers: requestHeaders } })
+  for (const cookie of setCookies)
+    forwarded.headers.append('set-cookie', cookie)
+  return forwarded
+}
+
 export async function middleware(req: NextRequest) {
-  try {
-    const res = NextResponse.next()
+  const res = NextResponse.next()
 
-    const normalisedArticle = normaliseArticlePath(req.nextUrl.pathname)
-    if (normalisedArticle) {
-      const redirectUrl = req.nextUrl.clone()
-      redirectUrl.pathname = normalisedArticle
-      return NextResponse.redirect(redirectUrl, 301)
-    }
+  const normalisedArticle = normaliseArticlePath(req.nextUrl.pathname)
+  if (normalisedArticle) {
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = normalisedArticle
+    return NextResponse.redirect(redirectUrl, 301)
+  }
 
-    // Routes where we need to touch the Supabase session (to refresh cookies
-    // and/or enforce sign-in). /chat is included so signed-in users keep a
-    // fresh session, but guests are allowed through (quota enforced in
-    // /api/chat).
-    const requiresAuth = 
-      req.url.includes('/admin') || 
-      req.url.includes('/chat') || 
-      req.url.includes('/api/chat') ||
-      req.url.includes('/api/admin') ||
-      req.url.includes('/api/documents/download') || // Research docs need auth
-      req.url.includes('/sign-in') ||
-      req.url.includes('/sign-up') ||
-      req.url.includes('/api/auth')
+  if (
+    req.nextUrl.pathname.startsWith('/_next') ||
+    req.nextUrl.pathname === '/favicon.ico'
+  ) {
+    return res
+  }
 
-    // Skip static files
-    if (req.url.includes('/_next') || req.url.includes('/favicon')) {
-      return res
-    }
+  const configured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 
-    // If route doesn't require auth, allow through
-    if (!requiresAuth) {
-      return res
-    }
-
-    // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      // For auth-required routes without Supabase, show service unavailable
-      if (req.url.includes('/admin')) {
-        const redirectUrl = req.nextUrl.clone()
-        redirectUrl.pathname = '/service-unavailable'
-        return NextResponse.redirect(redirectUrl)
+  let session: { user?: { user_metadata?: { is_admin?: boolean } } } | null =
+    null
+  if (configured) {
+    try {
+      const supabase = createMiddlewareClient({ req, res })
+      const { data, error } = await supabase.auth.getSession()
+      if (error) {
+        for (const cookie of clearAuthCookieHeaders())
+          res.headers.append('set-cookie', cookie)
+      } else {
+        session = data.session
       }
-      // For API routes, return 503
-      if (req.url.includes('/api/')) {
-        return NextResponse.json({ 
-          error: 'Service unavailable - authentication not configured' 
-        }, { status: 503 })
-      }
-      // For sign-in/sign-up routes, allow through to show "not available" message
-      return res
+    } catch (error) {
+      console.error('Middleware auth error:', error)
+      for (const cookie of clearAuthCookieHeaders())
+        res.headers.append('set-cookie', cookie)
     }
+  }
 
-    // Only try to create Supabase client if environment variables are configured
-    const supabase = createMiddlewareClient({ req, res })
-    const { data: { session } } = await supabase.auth.getSession()
+  const pathname = req.nextUrl.pathname
+  // Match the path only. req.url also contains the query, so a sign-in URL
+  // such as /sign-in?redirectedFrom=/admin used to be treated as /admin and
+  // bounced the browser back onto /sign-in after a successful password login.
+  const requiresAdmin =
+    isAdminPath(pathname) || pathname.startsWith('/api/admin')
+  const requiresDownload = pathname.startsWith('/api/documents/download')
 
-    // Handle download attempts - redirect to sign-in
-    if (req.url.includes('/api/documents/download') && !session) {
+  if (!configured && requiresAdmin) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { error: 'Service unavailable - authentication not configured' },
+        { status: 503 }
+      )
+    }
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = '/service-unavailable'
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  if (requiresDownload && !session) {
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = '/sign-in'
+    redirectUrl.searchParams.set('redirectedFrom', pathname)
+    redirectUrl.searchParams.set('reason', 'download-requires-auth')
+    return redirectKeepingCookies(res, redirectUrl)
+  }
+
+  if (requiresAdmin) {
+    if (!session) {
       const redirectUrl = req.nextUrl.clone()
       redirectUrl.pathname = '/sign-in'
-      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
-      redirectUrl.searchParams.set('reason', 'download-requires-auth')
-      return NextResponse.redirect(redirectUrl)
+      redirectUrl.searchParams.set('redirectedFrom', pathname)
+      return redirectKeepingCookies(res, redirectUrl)
     }
 
-    // /chat is open to guests; the API enforces the guest quota.
-
-    // Handle admin routes - require admin status
-    if (req.url.includes('/admin')) {
-      if (!session) {
-        const redirectUrl = req.nextUrl.clone()
-        redirectUrl.pathname = '/sign-in'
-        redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
-        return NextResponse.redirect(redirectUrl)
-      }
-
-      const isAdmin = session.user?.user_metadata?.is_admin === true
-      if (!isAdmin) {
-        const redirectUrl = req.nextUrl.clone()
-        redirectUrl.pathname = '/'
-        redirectUrl.searchParams.set('error', 'admin-access-required')
-        return NextResponse.redirect(redirectUrl)
-      }
+    const isAdmin = session.user?.user_metadata?.is_admin === true
+    if (!isAdmin) {
+      const redirectUrl = req.nextUrl.clone()
+      redirectUrl.pathname = '/'
+      redirectUrl.searchParams.set('error', 'admin-access-required')
+      return redirectKeepingCookies(res, redirectUrl)
     }
-
-    return res
-  } catch (error) {
-    console.error('Middleware error:', error)
-    return NextResponse.next()
   }
+
+  if (!configured) return res
+  return forwardSession(req, res)
 }
 
 export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - share (publicly shared chats)
-     * - api (API routes)
+     * - api (API routes refresh their own session)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!share|api|_next/static|_next/image|favicon.ico).*)'
+    '/((?!api|_next/static|_next/image|favicon.ico).*)'
   ]
 }
