@@ -32,6 +32,16 @@ const Header = () => {
     currentPath = "/companies";
   } else if (matchPath("/deals/*", location.pathname)) {
     currentPath = "/deals";
+  } else if (matchPath("/inbox", location.pathname)) {
+    currentPath = "/inbox";
+  } else if (matchPath("/articles/*", location.pathname) || matchPath("/articles", location.pathname)) {
+    currentPath = "/articles";
+  } else if (matchPath("/users", location.pathname)) {
+    currentPath = "/users";
+  } else if (matchPath("/research", location.pathname)) {
+    currentPath = "/research";
+  } else if (matchPath("/knowledge", location.pathname)) {
+    currentPath = "/knowledge";
   } else {
     currentPath = false;
   }
@@ -77,14 +87,11 @@ const Header = () => {
                     to="/deals"
                     isActive={currentPath === "/deals"}
                   />
-                  <SiteAdminLink href="/admin/inbox" label="Inbox" />
-                  <SiteAdminLink href="/admin/articles" label="Articles" />
-                  <SiteAdminLink href="/admin/users" label="Users" />
-                  <SiteAdminLink
-                    href="/admin/research-documents"
-                    label="Research"
-                  />
-                  <SiteAdminLink href="/admin/rag-documents" label="Knowledge" />
+                  <NavigationTab label="Inbox" to="/inbox" isActive={currentPath === "/inbox"} />
+                  <NavigationTab label="Articles" to="/articles" isActive={currentPath === "/articles"} />
+                  <NavigationTab label="Users" to="/users" isActive={currentPath === "/users"} />
+                  <NavigationTab label="Research" to="/research" isActive={currentPath === "/research"} />
+                  <NavigationTab label="Knowledge" to="/knowledge" isActive={currentPath === "/knowledge"} />
                 </nav>
               </div>
               <div className="flex items-center">
@@ -109,12 +116,6 @@ const Header = () => {
     </>
   );
 };
-
-const SiteAdminLink = ({ href, label }: { href: string; label: string }) => (
-  <a href={href} className={itemClass(false)}>
-    {label}
-  </a>
-);
 
 const NavigationTab = ({
   label,

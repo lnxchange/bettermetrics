@@ -94,9 +94,17 @@ export async function syncSiteUsers(site: SupabaseClient): Promise<number> {
     const users = data?.users ?? []
     for (const user of users) {
       if (!user.email) continue
+      const metadata = user.user_metadata || {}
       const ok = await upsertSyncedContact({
         email: user.email,
-        fullName: typeof user.user_metadata?.name === 'string' ? user.user_metadata.name : user.email,
+        firstName: typeof metadata.first_name === 'string' ? metadata.first_name : null,
+        lastName: typeof metadata.last_name === 'string' ? metadata.last_name : null,
+        fullName:
+          typeof metadata.first_name === 'string'
+            ? null
+            : typeof metadata.name === 'string'
+              ? metadata.name
+              : user.email,
         source: 'website-signup',
         tagNames: ['site-user'],
         siteUserId: user.id,

@@ -34,6 +34,8 @@ export async function GET(req: NextRequest) {
     const users = (data?.users || []).map(u => ({
       id: u.id,
       email: u.email,
+      first_name: u.user_metadata?.first_name || '',
+      last_name: u.user_metadata?.last_name || '',
       created_at: u.created_at
     }))
 
