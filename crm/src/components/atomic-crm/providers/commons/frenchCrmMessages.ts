@@ -49,7 +49,7 @@ export const frenchCrmMessages = {
       followed_by_you: "Suivie par vous",
       no_contacts: "Aucun contact",
       nb_contacts: "%{smart_count} contact |||| %{smart_count} contacts",
-      nb_deals: "%{smart_count} affaire |||| %{smart_count} affaires",
+      nb_deals: "%{smart_count} engagement |||| %{smart_count} engagements",
       sizes: {
         one_employee: "1 employé",
         two_to_nine_employees: "2-9 employés",

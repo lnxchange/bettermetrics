@@ -5,11 +5,13 @@ import { List } from "@/components/admin/list";
 import { ListPagination } from "@/components/admin/list-pagination";
 import { SortButton } from "@/components/admin/sort-button";
 
+import { Card } from "@/components/ui/card";
+
 import { DataImportButton } from "../dataImport/DataImportButton";
 import { TopToolbar } from "../layout/TopToolbar";
 import { CompanyEmpty } from "./CompanyEmpty";
 import { CompanyListFilter } from "./CompanyListFilter";
-import { ImageList } from "./GridList";
+import { CompanyListContent } from "./CompanyListContent";
 
 export const CompanyList = () => {
   const { identity } = useGetIdentity();
@@ -38,7 +40,9 @@ const CompanyListLayout = () => {
     <div className="w-full flex flex-row gap-8">
       <CompanyListFilter />
       <div className="flex flex-col flex-1 gap-4">
-        <ImageList />
+        <Card className="py-0">
+          <CompanyListContent />
+        </Card>
       </div>
     </div>
   );
@@ -53,7 +57,7 @@ const CompanyListActions = () => {
       <ExportButton />
       <CreateButton
         label={translate("resources.companies.action.new", {
-          _: "New Company",
+          _: "New organisation",
         })}
       />
     </TopToolbar>

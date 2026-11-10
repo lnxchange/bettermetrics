@@ -47,7 +47,7 @@ export const englishCrmMessages = {
       followed_by_you: "Followed by you",
       no_contacts: "No contact",
       nb_contacts: "%{smart_count} contact |||| %{smart_count} contacts",
-      nb_deals: "%{smart_count} deal |||| %{smart_count} deals",
+      nb_deals: "%{smart_count} engagement |||| %{smart_count} engagements",
       sizes: {
         one_employee: "1 employee",
         two_to_nine_employees: "2-9 employees",

@@ -2,7 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Deal } from "../types";
-import { findDealLabel } from "./dealUtils";
+import { findDealLabel, isDonationDeal } from "./dealUtils";
 import { DealCard } from "./DealCard";
 
 export const DealColumn = ({
@@ -12,7 +12,9 @@ export const DealColumn = ({
   stage: string;
   deals: Deal[];
 }) => {
-  const totalAmount = deals.reduce((sum, deal) => sum + deal.amount, 0);
+  const donationTotal = deals
+    .filter((deal) => isDonationDeal(deal.categories))
+    .reduce((sum, deal) => sum + (deal.amount ?? 0), 0);
   const { dealStages, currency } = useConfigurationContext();
   return (
     <div className="flex-1 pb-8">
@@ -20,15 +22,17 @@ export const DealColumn = ({
         <h3 className="text-base font-medium">
           {findDealLabel(dealStages, stage)}
         </h3>
-        <p className="text-sm text-muted-foreground">
-          {totalAmount.toLocaleString("en-US", {
-            notation: "compact",
-            style: "currency",
-            currency,
-            currencyDisplay: "narrowSymbol",
-            minimumSignificantDigits: 3,
-          })}
-        </p>
+        {donationTotal > 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {donationTotal.toLocaleString("en-US", {
+              notation: "compact",
+              style: "currency",
+              currency,
+              currencyDisplay: "narrowSymbol",
+              minimumSignificantDigits: 3,
+            })}
+          </p>
+        ) : null}
       </div>
       <Droppable droppableId={stage}>
         {(droppableProvided, snapshot) => (
