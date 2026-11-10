@@ -47,3 +47,4 @@ content/reports/*.md
 # SEO monitor output (scripts/seo)
 seo-output/
 .lighthouseci/
+crm/supabase/.temp/
