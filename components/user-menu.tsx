@@ -67,6 +67,9 @@ export function UserMenu({ user }: UserMenuProps) {
             <div className="text-xs text-zinc-500">{user?.email}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-xs" onClick={() => { window.location.href = '/account' }}>
+            Profile
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={signOut} className="text-xs">
             Log Out
           </DropdownMenuItem>

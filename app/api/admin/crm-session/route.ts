@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { auth } from '@/auth'
 import { crmConfig, splitName } from '@/lib/crm/config'
+import { syncSiteUsers } from '@/lib/crm/sync'
 
 export async function GET() {
   const config = crmConfig()
@@ -92,6 +93,15 @@ export async function GET() {
   if (verifyError || !verified.session) {
     console.error('CRM session verify failed', verifyError?.message)
     return NextResponse.json({ error: 'Could not open the CRM session' }, { status: 502 })
+  }
+
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const site = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    )
+    await syncSiteUsers(site).catch(error => console.error('CRM user sync failed', error))
   }
 
   return NextResponse.json({

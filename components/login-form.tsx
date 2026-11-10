@@ -25,10 +25,9 @@ export function LoginForm({
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient()
 
-  const [formState, setFormState] = React.useState<{
-    email: string
-    password: string
-  }>({
+  const [formState, setFormState] = React.useState({
+    firstName: '',
+    lastName: '',
     email: '',
     password: ''
   })
@@ -43,14 +42,27 @@ export function LoginForm({
   }
 
   const signUp = async () => {
-    const { email, password } = formState
+    const { email, password, firstName, lastName } = formState
     const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/api/auth/callback`
+        emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+        data: {
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          name: `${firstName.trim()} ${lastName.trim()}`
+        }
       }
     })
+
+    if (!error && data.session) {
+      await fetch('/api/account/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName })
+      })
+    }
 
     if (!error && !data.session)
       toast.success('Check your inbox to confirm your email address!')
@@ -75,6 +87,24 @@ export function LoginForm({
 
   return (
     <form onSubmit={handleOnSubmit} {...props}>
+      {action === 'sign-up' && (
+        <>
+          <Label>First name</Label>
+          <Input
+            name="firstName"
+            value={formState.firstName}
+            onChange={e => setFormState(prev => ({ ...prev, firstName: e.target.value }))}
+            required
+          />
+          <Label>Last name</Label>
+          <Input
+            name="lastName"
+            value={formState.lastName}
+            onChange={e => setFormState(prev => ({ ...prev, lastName: e.target.value }))}
+            required
+          />
+        </>
+      )}
       <Label>Email</Label>
       <Input
         name="email"

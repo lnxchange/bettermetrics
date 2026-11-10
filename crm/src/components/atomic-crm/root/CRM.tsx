@@ -59,6 +59,13 @@ import { ContactListMobile } from "../contacts/ContactList.tsx";
 import { ContactShow } from "../contacts/ContactShow.tsx";
 import { CompanyShow } from "../companies/CompanyShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
+import {
+  ArticleEditorPage,
+  ArticlesPage,
+  DocumentsPage,
+  InboxPage,
+  UsersPage,
+} from "../admin/pages";
 
 const defaultStore = localStorageStore(undefined, "CRM");
 
@@ -262,6 +269,13 @@ const DesktopAdmin = (
         <Route path={SettingsPage.path} element={<SettingsPage />} />
         <Route path={ImportPage.path} element={<ImportPage />} />
         <Route path={ChangelogPage.path} element={<ChangelogPage />} />
+        <Route path="/inbox" element={<InboxPage />} />
+        <Route path="/articles" element={<ArticlesPage />} />
+        <Route path="/articles/new" element={<ArticleEditorPage />} />
+        <Route path="/articles/:id" element={<ArticleEditorPage />} />
+        <Route path="/users" element={<UsersPage />} />
+        <Route path="/research" element={<DocumentsPage kind="research" />} />
+        <Route path="/knowledge" element={<DocumentsPage kind="rag" />} />
       </CustomRoutes>
       <Resource name="deals" {...deals} />
       <Resource name="contacts" {...contacts} />
@@ -337,6 +351,13 @@ const MobileAdmin = (
             element={<SettingsPageMobile />}
           />
           <Route path={ChangelogPage.path} element={<ChangelogPage />} />
+          <Route path="/inbox" element={<InboxPage />} />
+          <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/articles/new" element={<ArticleEditorPage />} />
+          <Route path="/articles/:id" element={<ArticleEditorPage />} />
+          <Route path="/users" element={<UsersPage />} />
+          <Route path="/research" element={<DocumentsPage kind="research" />} />
+          <Route path="/knowledge" element={<DocumentsPage kind="rag" />} />
         </CustomRoutes>
         <Resource
           name="contacts"
