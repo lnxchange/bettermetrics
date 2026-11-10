@@ -106,9 +106,11 @@ export async function syncSiteUsers(site: SupabaseClient): Promise<number> {
               ? metadata.name
               : user.email,
         source: 'website-signup',
+        externalId: `site-user:${user.id}`,
         tagNames: ['site-user'],
         siteUserId: user.id,
-        askPolicy: 'may-ask-to-validate'
+        askPolicy: 'may-ask-to-validate',
+        companyName: typeof metadata.organization === 'string' ? metadata.organization : null
       })
       if (ok) synced += 1
     }

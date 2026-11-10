@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useTranslate } from "ra-core";
 
+import { EmptyIllustration } from "../misc/EmptyIllustration";
 import useAppBarHeight from "../misc/useAppBarHeight";
 import { DataImportButton } from "../dataImport/DataImportButton";
 import { ContactCreateSheet } from "./ContactCreateSheet";
@@ -23,10 +24,7 @@ export const ContactEmpty = () => {
           height: `calc(100dvh - ${appbarHeight}px)`,
         }}
       >
-        <img
-          src="./img/empty.svg"
-          alt={translate("resources.contacts.empty.title")}
-        />
+        <EmptyIllustration kind="contacts" />
         <div className="flex flex-col gap-0 items-center">
           <h6 className="text-lg font-bold">
             {translate("resources.contacts.empty.title")}
