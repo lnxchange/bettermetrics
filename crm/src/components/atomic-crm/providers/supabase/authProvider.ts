@@ -132,7 +132,11 @@ export const getAuthProvider = (): AuthProvider => {
         credentials: "same-origin",
       });
       if (response.status === 401 || response.status === 403) {
-        const next = encodeURIComponent("/admin");
+        const next = encodeURIComponent(
+          window.location.pathname +
+            window.location.search +
+            window.location.hash,
+        );
         window.location.assign(`/sign-in?redirectedFrom=${next}`);
         return new Promise(() => undefined);
       }

@@ -37,9 +37,9 @@ export async function middleware(req: NextRequest) {
     // and/or enforce sign-in). /chat is included so signed-in users keep a
     // fresh session, but guests are allowed through (quota enforced in
     // /api/chat).
-    const requiresAuth = 
-      req.url.includes('/admin') || 
-      req.url.includes('/chat') || 
+    const requiresAuth =
+      req.url.includes('/admin') ||
+      req.url.includes('/chat') ||
       req.url.includes('/api/chat') ||
       req.url.includes('/api/admin') ||
       req.url.includes('/api/documents/download') || // Research docs need auth
@@ -58,7 +58,10 @@ export async function middleware(req: NextRequest) {
     }
 
     // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
       // For auth-required routes without Supabase, show service unavailable
       if (req.url.includes('/admin')) {
         const redirectUrl = req.nextUrl.clone()
@@ -67,9 +70,12 @@ export async function middleware(req: NextRequest) {
       }
       // For API routes, return 503
       if (req.url.includes('/api/')) {
-        return NextResponse.json({ 
-          error: 'Service unavailable - authentication not configured' 
-        }, { status: 503 })
+        return NextResponse.json(
+          {
+            error: 'Service unavailable - authentication not configured'
+          },
+          { status: 503 }
+        )
       }
       // For sign-in/sign-up routes, allow through to show "not available" message
       return res
@@ -77,7 +83,9 @@ export async function middleware(req: NextRequest) {
 
     // Only try to create Supabase client if environment variables are configured
     const supabase = createMiddlewareClient({ req, res })
-    const { data: { session } } = await supabase.auth.getSession()
+    const {
+      data: { session }
+    } = await supabase.auth.getSession()
 
     // Handle download attempts - redirect to sign-in
     if (req.url.includes('/api/documents/download') && !session) {
@@ -90,12 +98,17 @@ export async function middleware(req: NextRequest) {
 
     // /chat is open to guests; the API enforces the guest quota.
 
-    // Handle admin routes - require admin status
+    // Handle admin routes - require admin status.
+    // Keep the query string. The Claude approval id arrives as
+    // /admin/oauth/consent?authorization_id=... and a path-only return
+    // drops it, which leaves the approval page with nothing to approve.
     if (req.url.includes('/admin')) {
       if (!session) {
+        const returnTo = req.nextUrl.pathname + req.nextUrl.search
         const redirectUrl = req.nextUrl.clone()
         redirectUrl.pathname = '/sign-in'
-        redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
+        redirectUrl.search = ''
+        redirectUrl.searchParams.set('redirectedFrom', returnTo)
         return NextResponse.redirect(redirectUrl)
       }
 

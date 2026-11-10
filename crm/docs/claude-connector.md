@@ -24,17 +24,17 @@ POST /rest/v1/rpc/upsert_outreach_contact
 
 Sign in as the aimtheory.org administrator. That person is the CRM staff user. The CRM does not accept public signup: `handle_new_user` still rejects a new account once a staff row exists, unless the account was invited.
 
-Do this while already signed in at [aimtheory.org](https://aimtheory.org) as that administrator. The CRM is served at `/admin`, and the site asks for an administrator session before the page loads. The consent address lives in the URL hash, which a sign-in redirect would drop.
+Do this while already signed in at [aimtheory.org](https://aimtheory.org) as that administrator. The approval page is part of the site, and the site asks for an administrator session before it loads.
 
 ## Add the connector
 
-1. Stay signed in at [aimtheory.org](https://aimtheory.org) as the administrator. That site login is what lets the approval page open. It is a different step from Claude's first connection check.
+1. Stay signed in at [aimtheory.org](https://aimtheory.org) as the administrator.
 2. Open claude.ai → Settings → Connectors → Add custom connector.
-3. Paste the connector URL above.
-4. Claude first checks the server with no login. That check is a 401. It means "sign-in is required," and it is the expected answer. It is not a rejection of your aimtheory session.
-5. The browser should then open `https://aimtheory.org/admin#/oauth/consent`. Click Approve. Until that button is clicked, Claude has nothing to finish and reports that the connection timed out.
+3. Paste the connector URL above. Do not open the approval address yourself.
+4. Claude first checks the server with no login. That check is a 401. It means "sign-in is required," and it is the expected answer.
+5. The browser then opens `https://aimtheory.org/admin/oauth/consent?authorization_id=...`. The approval id is in that address, before any `#`. Click **Approve**. The connection is not finished until that button is clicked.
 
-The approval page is `src/components/supabase/oauth-consent-page.tsx`. The hosted consent address is `https://aimtheory.org/admin#/oauth/consent`. A slash before the hash (`/admin/#/...`) makes the site redirect and drop the approval id, which is what made the connection time out.
+The approval page is `app/admin/oauth/consent/page.tsx`. It reads `authorization_id` from the query string and approves as the signed-in administrator. An address with the id only after `#` loses it when the site sends the browser to sign-in, and the CRM then reports that the approval id is missing.
 
 ## What Claude can do
 
@@ -46,4 +46,4 @@ Both tools run as the signed-in user, under the same row-level security as the C
 
 ## Hosted project
 
-The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`. The `mcp` function is deployed there with JWT verification off. An unauthenticated request gets `401` and a `WWW-Authenticate` header. That is the discovery response, not a failed login. The OAuth server is enabled, with dynamic client registration. The consent address is `https://aimtheory.org/admin#/oauth/consent`. Signup stays closed. Tokens are signed with an ES256 key. `SUPABASE_DB_URL` and `CRM_BASE_URL` (`https://aimtheory.org/admin`) are set on the function.
+The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`. The `mcp` function is deployed there with JWT verification off. An unauthenticated request gets `401` and a `WWW-Authenticate` header. That is the discovery response, not a failed login. The OAuth server is enabled, with dynamic client registration. The consent address is `https://aimtheory.org/admin/oauth/consent`. Signup stays closed. Tokens are signed with an ES256 key. `SUPABASE_DB_URL` and `CRM_BASE_URL` (`https://aimtheory.org/admin`) are set on the function.
