@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npm --prefix crm ci --ignore-scripts && npm run build:crm && node scripts/generate-search-index.js && next build",
+    "build": "npm --prefix crm ci --include=dev --ignore-scripts && npm run build:crm && node scripts/generate-search-index.js && next build",
     "build:crm": "VITE_SUPABASE_URL=\"${CRM_SUPABASE_URL:-${CRM_NEXT_PUBLIC_SUPABASE_URL:-}}\" VITE_SB_PUBLISHABLE_KEY=\"${CRM_SUPABASE_ANON_KEY:-${CRM_NEXT_PUBLIC_SUPABASE_ANON_KEY:-}}\" npm --prefix crm run build",
     "build:search": "node scripts/generate-search-index.js",
     "start": "next start",
