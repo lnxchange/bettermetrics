@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
@@ -455,9 +454,6 @@ export default function RAGDocumentsPage() {
                 Manage documents used by the AIM chatbot&apos;s knowledge base
               </p>
             </div>
-            <Button asChild>
-              <Link href="/admin">← Back to Dashboard</Link>
-            </Button>
           </div>
         </div>
 

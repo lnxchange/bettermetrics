@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -150,9 +149,6 @@ export default function AdminInboxPage() {
                   : 'No messages yet'}
             </p>
           </div>
-          <Button variant="outline" asChild>
-            <Link href="/admin">← Back to Dashboard</Link>
-          </Button>
         </div>
 
         {/* Filter Tabs */}

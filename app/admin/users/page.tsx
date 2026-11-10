@@ -1,7 +1,5 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 type AdminUser = {
@@ -51,9 +49,6 @@ export default function AdminUsersPage() {
               <h1 className="text-3xl font-bold text-gray-900">Users</h1>
               <p className="mt-2 text-gray-600">View user email addresses and signup dates</p>
             </div>
-            <Button asChild>
-              <Link href="/admin">← Back to Dashboard</Link>
-            </Button>
           </div>
         </div>
 
