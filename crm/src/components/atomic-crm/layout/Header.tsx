@@ -2,7 +2,6 @@ import { FileText, Import, Settings, User, Users } from "lucide-react";
 import { CanAccess, useTranslate, useUserMenu } from "ra-core";
 import { Link, matchPath, useLocation } from "react-router";
 import { RefreshButton } from "@/components/admin/refresh-button";
-import { ThemeModeToggle } from "@/components/admin/theme-mode-toggle";
 import { UserMenu } from "@/components/admin/user-menu";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
@@ -10,9 +9,17 @@ import { useConfigurationContext } from "../root/ConfigurationContext";
 import { ImportPage } from "../misc/ImportPage";
 import { ChangelogPage } from "../misc/ChangelogPage";
 import { GlobalSearchButton } from "../search/GlobalSearchButton";
+import { AimMark } from "./AimMark";
+
+const itemClass = (active: boolean) =>
+  `px-3 py-4 text-sm font-medium transition-colors border-b-2 ${
+    active
+      ? "text-[#1E3A8A] border-[#0D9488]"
+      : "text-slate-600 border-transparent hover:text-[#1E3A8A]"
+  }`;
 
 const Header = () => {
-  const { darkModeLogo, lightModeLogo, title } = useConfigurationContext();
+  const { title } = useConfigurationContext();
   const location = useLocation();
   const translate = useTranslate();
 
@@ -32,26 +39,17 @@ const Header = () => {
   return (
     <>
       <nav className="grow">
-        <header className="bg-secondary">
+        <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
           <div className="px-4">
             <div className="flex justify-between items-center flex-1">
               <Link
                 to="/"
-                className="flex items-center gap-2 text-secondary-foreground no-underline"
+                className="flex items-center gap-2 text-slate-900 no-underline"
+                aria-label={title}
               >
-                <img
-                  className="[.light_&]:hidden h-6"
-                  src={darkModeLogo}
-                  alt={title}
-                />
-                <img
-                  className="[.dark_&]:hidden h-6"
-                  src={lightModeLogo}
-                  alt={title}
-                />
-                <h1 className="text-xl font-semibold">{title}</h1>
+                <AimMark className="h-7 w-auto" />
               </Link>
-              <div>
+              <div className="min-w-0 overflow-x-auto">
                 <nav className="flex">
                   <NavigationTab
                     label={translate("ra.page.dashboard")}
@@ -91,7 +89,6 @@ const Header = () => {
               </div>
               <div className="flex items-center">
                 <GlobalSearchButton />
-                <ThemeModeToggle />
                 <RefreshButton />
                 <UserMenu>
                   <ProfileMenu />
@@ -114,10 +111,7 @@ const Header = () => {
 };
 
 const SiteAdminLink = ({ href, label }: { href: string; label: string }) => (
-  <a
-    href={href}
-    className="px-4 py-3 text-sm font-medium text-secondary-foreground/80 transition-colors border-b-2 border-transparent hover:text-secondary-foreground"
-  >
+  <a href={href} className={itemClass(false)}>
     {label}
   </a>
 );
@@ -133,11 +127,7 @@ const NavigationTab = ({
 }) => (
   <Link
     to={to}
-    className={`px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
-      isActive
-        ? "text-secondary-foreground border-secondary-foreground"
-        : "text-secondary-foreground/70 border-transparent hover:text-secondary-foreground/80"
-    }`}
+    className={itemClass(isActive)}
   >
     {label}
   </Link>

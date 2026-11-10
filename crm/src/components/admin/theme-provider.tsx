@@ -17,8 +17,8 @@ type ThemeProviderProps = {
  */
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "theme",
+  defaultTheme = "light",
+  storageKey = "aim-admin-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useStore<Theme>(storageKey, defaultTheme);
