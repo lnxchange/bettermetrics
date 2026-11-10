@@ -46,17 +46,4 @@ Both tools run as the signed-in user, under the same row-level security as the C
 
 ## Hosted project
 
-The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`.
-
-As of this change the hosted OAuth server answers `OAuth server is disabled`, and `POST /functions/v1/mcp` answers 404 because the function has not been deployed yet. Turn the OAuth server on in Authentication → OAuth Server, with dynamic client registration enabled and the authorization path `/#/oauth/consent`. Set the auth site URL to `https://aimtheory.org/admin`. Leave signup closed. The project must sign tokens with an asymmetric key, because the MCP server verifies the user JWT against the project JWKS.
-
-Deploy the function from `crm/` with JWT verification off, matching `supabase/config.toml`:
-
-```
-supabase link --project-ref szwxjzzyfevvnpaewyph
-supabase db push
-supabase functions deploy mcp --no-verify-jwt
-supabase secrets set CRM_BASE_URL=https://aimtheory.org/admin
-```
-
-`CRM_BASE_URL` is what the task list uses to link back to a contact. Confirm the function can read `SUPABASE_DB_URL`. If the platform does not inject it, set that secret from the project's database URL.
+The CRM project is `szwxjzzyfevvnpaewyph` in `ap-southeast-2`. The `mcp` function is deployed there with JWT verification off. An unauthenticated request gets `401` and a `WWW-Authenticate` header pointing at the protected-resource metadata. The OAuth server is enabled, with dynamic client registration and authorization path `/#/oauth/consent`. The auth site URL is `https://aimtheory.org/admin`. Signup stays closed. Tokens are signed with an ES256 key. `SUPABASE_DB_URL` and `CRM_BASE_URL` (`https://aimtheory.org/admin`) are set on the function.
