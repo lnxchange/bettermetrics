@@ -31,6 +31,7 @@ import {
   findDealLabel,
   formatDealCategories,
   formatISODateString,
+  isDonationDeal,
 } from "./dealUtils";
 
 export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
@@ -108,20 +109,22 @@ const DealShowContent = () => {
               </div>
             </div>
 
-            <div className="flex flex-col mr-10">
-              <span className="text-xs text-muted-foreground tracking-wide">
-                {translate("resources.deals.fields.amount")}
-              </span>
-              <span className="text-sm">
-                {record.amount.toLocaleString("en-US", {
-                  notation: "compact",
-                  style: "currency",
-                  currency,
-                  currencyDisplay: "narrowSymbol",
-                  minimumSignificantDigits: 3,
-                })}
-              </span>
-            </div>
+            {isDonationDeal(record.categories) ? (
+              <div className="flex flex-col mr-10">
+                <span className="text-xs text-muted-foreground tracking-wide">
+                  {translate("resources.deals.fields.amount")}
+                </span>
+                <span className="text-sm">
+                  {(record.amount ?? 0).toLocaleString("en-US", {
+                    notation: "compact",
+                    style: "currency",
+                    currency,
+                    currencyDisplay: "narrowSymbol",
+                    minimumSignificantDigits: 3,
+                  })}
+                </span>
+              </div>
+            ) : null}
 
             {!!record.categories?.length && (
               <div className="flex flex-col mr-10">

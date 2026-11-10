@@ -7,10 +7,10 @@ import { ShowButton } from "@/components/admin/show-button";
 import { AddTask } from "../tasks/AddTask";
 import { TasksIterator } from "../tasks/TasksIterator";
 import { TagsListEdit } from "./TagsListEdit";
-import { ContactStatusSelector } from "./ContactInputs";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { ContactOutreachInfo } from "./ContactOutreach";
+import { ContactRelationships } from "./ContactRelationships";
 import { AsideSection } from "../misc/AsideSection";
 import type { Contact } from "../types";
 import { ContactMergeButton } from "./ContactMergeButton";
@@ -32,14 +32,16 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         )}
       </div>
 
-      <AsideSection title={translate("resources.notes.fields.status")}>
-        <ContactStatusSelector />
-      </AsideSection>
-
       <AsideSection
         title={translate("resources.contacts.field_categories.outreach")}
       >
         <ContactOutreachInfo />
+      </AsideSection>
+
+      <AsideSection
+        title={translate("resources.contacts.field_categories.relationships")}
+      >
+        <ContactRelationships />
       </AsideSection>
 
       <AsideSection

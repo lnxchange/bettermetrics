@@ -94,13 +94,13 @@ describe("DataImportButton", () => {
 
     await expect.element(options.getByText("Contacts")).toBeVisible();
     await expect.element(options.getByText("Organisations")).toBeVisible();
-    await expect.element(options.getByText("Deals")).toBeVisible();
+    await expect.element(options.getByText("Engagements")).toBeVisible();
   });
 
   it.each([
     ["contacts", "Import contacts"],
     ["companies", "Import organisations"],
-    ["deals", "Import deals"],
+    ["deals", "Import engagements"],
   ] as const)(
     "imports %s from a dialog with no resource to pick",
     async (resource, heading) => {
@@ -181,7 +181,7 @@ describe("DataImportButton", () => {
     const options = screen.getByRole("listbox");
 
     await expect.element(options.getByText("Contacts")).toBeVisible();
-    await expect.element(options.getByText("Deals")).not.toBeInTheDocument();
+    await expect.element(options.getByText("Engagements")).not.toBeInTheDocument();
   });
 
   it("renders nothing for a resource the running app does not register", async () => {
@@ -275,7 +275,7 @@ describe("DataImportButton", () => {
 
     await screen.getByRole("button", { name: "Import data" }).click();
     await screen.getByLabelText("Resource").click();
-    await screen.getByRole("listbox").getByText("Deals").click();
+    await screen.getByRole("listbox").getByText("Engagements").click();
 
     await screen
       .getByLabelText("CSV File")

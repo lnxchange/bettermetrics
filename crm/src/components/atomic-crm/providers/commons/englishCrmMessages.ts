@@ -71,6 +71,7 @@ export const englishCrmMessages = {
         outreach: "Outreach",
         personal_info: "Personal info",
         position: "Position",
+        relationships: "Relationships",
       },
       fields: {
         first_name: "First name",
@@ -79,6 +80,10 @@ export const englishCrmMessages = {
         outreach_status: "Outreach",
         first_contacted_at: "First contacted",
         last_contacted_at: "Last contacted",
+        list: "List",
+        introduced_by: "Introduced by",
+        introduced: "Introduced",
+        related_contacts: "Related contacts",
         title: "Title",
         company_id: "Organisation",
         email_jsonb: "Email addresses",
@@ -92,6 +97,7 @@ export const englishCrmMessages = {
       },
       action: {
         add: "Add contact",
+        add_related: "Add related contact",
         add_first: "Add your first contact",
         create: "Create contact",
         edit: "Edit contact",
@@ -144,6 +150,18 @@ export const englishCrmMessages = {
         declined: "Declined",
         "no-response": "No response",
         holding: "Holding",
+      },
+      list_values: {
+        primary: "Primary",
+        secondary: "Secondary",
+      },
+      outreach_board: {
+        title: "Outreach",
+        empty: "No contacts yet.",
+      },
+      enquiries: {
+        title: "Website enquiries",
+        empty: "No website enquiries waiting.",
       },
       list: {
         error_loading: "Error loading contacts",
@@ -204,7 +222,8 @@ export const englishCrmMessages = {
       },
     },
     deals: {
-      name: "Deal |||| Deals",
+      name: "Engagement |||| Engagements",
+      forcedCaseName: "Engagement",
       fields: {
         name: "Name",
         description: "Description",
@@ -216,23 +235,23 @@ export const englishCrmMessages = {
         stage: "Stage",
       },
       action: {
-        back_to_deal: "Back to deal",
-        create: "Create deal",
-        new: "New Deal",
+        back_to_deal: "Back to engagement",
+        create: "Create engagement",
+        new: "New engagement",
       },
       field_categories: {
         misc: "Misc",
       },
       filters: {
-        only_mine: "Only deals I manage",
+        only_mine: "Only engagements I manage",
       },
       archived: {
         action: "Archive",
         error: "Error: deal not archived",
-        list_title: "Archived Deals",
-        success: "Deal archived",
-        title: "Archived Deal",
-        view: "View archived deals",
+        list_title: "Archived engagements",
+        success: "Engagement archived",
+        title: "Archived engagement",
+        view: "View archived engagements",
       },
       inputs: {
         linked_to: "Linked to",
@@ -242,14 +261,14 @@ export const englishCrmMessages = {
         error: "Error: deal not unarchived",
         success: "Deal unarchived",
       },
-      updated: "Deal updated",
+      updated: "Engagement updated",
       empty: {
-        before_create: "before creating a deal.",
-        description: "It seems your deal list is empty.",
-        title: "No deals found",
+        before_create: "before creating an engagement.",
+        description: "It seems your engagement list is empty.",
+        title: "No engagements found",
       },
       import: {
-        title: "Import deals",
+        title: "Import engagements",
       },
       invalid_date: "Invalid date",
     },
@@ -261,7 +280,7 @@ export const englishCrmMessages = {
         date: "Date",
         attachments: "Attachments",
         contact_id: "Contact",
-        deal_id: "Deal",
+        deal_id: "Engagement",
       },
       action: {
         add: "Add note",
@@ -496,10 +515,10 @@ export const englishCrmMessages = {
       groups: {
         contacts: "Contacts",
         companies: "Organisations",
-        deals: "Deals",
+        deals: "Engagements",
         tasks: "Tasks",
         contact_notes: "Contact notes",
-        deal_notes: "Deal notes",
+        deal_notes: "Engagement notes",
       },
     },
     image_editor: {

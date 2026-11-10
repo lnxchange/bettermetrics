@@ -1,5 +1,5 @@
 import { endOfYesterday, startOfMonth, startOfWeek, subMonths } from "date-fns";
-import { Calendar, CheckSquare, Clock, Send, Tag, TrendingUp, Users } from "lucide-react";
+import { Calendar, CheckSquare, Clock, Inbox, Send, Tag, Users } from "lucide-react";
 import {
   useGetIdentity,
   useGetList,
@@ -19,7 +19,6 @@ import { AccountManagerFilter } from "../sales/AccountManagerInput";
 import { outreachStatuses, outreachStatusLabel } from "./ContactOutreach";
 
 export const ContactListFilter = () => {
-  const { noteStatuses } = useConfigurationContext();
   const isMobile = useIsMobile();
   const { identity } = useGetIdentity();
   const translate = useTranslate();
@@ -92,22 +91,10 @@ export const ContactListFilter = () => {
       </FilterCategory>
 
       <FilterCategory
-        label="resources.notes.fields.status"
-        icon={<TrendingUp />}
+        label="resources.contacts.enquiries.title"
+        icon={<Inbox />}
       >
-        {noteStatuses.map((status) => (
-          <ToggleFilterButton
-            key={status.value}
-            className="w-auto md:w-full justify-between h-10 md:h-8"
-            label={
-              <span>
-                {status.label} <Status status={status.value} />
-              </span>
-            }
-            value={{ status: status.value }}
-            size={isMobile ? "lg" : undefined}
-          />
-        ))}
+        <WebsiteEnquiryFilter />
       </FilterCategory>
 
       <FilterCategory
@@ -391,5 +378,23 @@ export const ContactListFilterSummary = () => {
         value={{ sales_id: identity?.id }}
       />
     </div>
+  );
+};
+
+const WebsiteEnquiryFilter = () => {
+  const isMobile = useIsMobile();
+  const { data } = useGetList("tags", {
+    pagination: { page: 1, perPage: 200 },
+    sort: { field: "name", order: "ASC" },
+  });
+  const inbound = data?.find((tag) => tag.name === "inbound");
+  if (!inbound) return null;
+  return (
+    <ToggleFilterButton
+      className="w-auto md:w-full justify-between h-10 md:h-8"
+      label="resources.contacts.enquiries.title"
+      value={{ "tags@cs": `{${inbound.id}}` }}
+      size={isMobile ? "lg" : undefined}
+    />
   );
 };

@@ -113,6 +113,8 @@ export type Contact = {
   last_contacted_at?: string | null;
   email_holder?: "self" | "assistant" | "agent" | null;
   contact_via?: string | null;
+  introduced_by?: Identifier | null;
+  introduced_by_name?: string | null;
   list?: "primary" | "secondary" | null;
 } & Pick<RaRecord, "id">;
 

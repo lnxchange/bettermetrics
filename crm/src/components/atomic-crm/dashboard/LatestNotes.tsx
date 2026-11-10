@@ -5,6 +5,7 @@ import { ReferenceField } from "@/components/admin/reference-field";
 import { TextField } from "@/components/admin/text-field";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { Markdown } from "../misc/Markdown";
 import type { Contact, ContactNote } from "../types";
 
 export const LatestNotes = () => {
@@ -78,10 +79,8 @@ export const LatestNotes = () => {
                   }),
                 })}
               </div>
-              <div>
-                <p className="text-sm line-clamp-3 overflow-hidden">
-                  {note.text}
-                </p>
+              <div className="text-sm line-clamp-3 overflow-hidden">
+                {note.text ? <Markdown>{note.text}</Markdown> : null}
               </div>
             </div>
           ))}

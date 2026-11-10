@@ -48,6 +48,7 @@ export const defaultDealCategories = [
   { value: "validation", label: "Validation" },
   { value: "promotion", label: "Promotion" },
   { value: "coverage", label: "Coverage" },
+  { value: "donation", label: "Donation" },
 ];
 
 export const defaultNoteStatuses = [

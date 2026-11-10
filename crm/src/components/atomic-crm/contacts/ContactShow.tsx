@@ -24,10 +24,10 @@ import { NoteCreate, NotesIterator, NotesIteratorMobile } from "../notes";
 import { NoteCreateSheet } from "../notes/NoteCreateSheet";
 import { TagsListEdit } from "./TagsListEdit";
 import { ContactEditSheet } from "./ContactEditSheet";
-import { ContactStatusSelector } from "./ContactInputs";
+import { ContactOutreachInfo } from "./ContactOutreach";
+import { ContactRelationships } from "./ContactRelationships";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
-import { ContactOutreachInfo } from "./ContactOutreach";
 import { ContactTasksList } from "./ContactTasksList";
 import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
@@ -222,11 +222,11 @@ const ContactShowContentMobile = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold">
-                  {translate("resources.notes.fields.status")}
+                  {translate("resources.contacts.field_categories.relationships")}
                 </h3>
                 <Separator />
                 <div className="mt-3">
-                  <ContactStatusSelector />
+                  <ContactRelationships />
                 </div>
               </div>
               <div>

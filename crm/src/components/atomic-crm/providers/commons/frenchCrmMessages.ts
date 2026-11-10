@@ -74,6 +74,7 @@ export const frenchCrmMessages = {
         outreach: "Prise de contact",
         personal_info: "Informations personnelles",
         position: "Poste",
+        relationships: "Relations",
       },
       fields: {
         first_name: "Prénom",
@@ -82,6 +83,10 @@ export const frenchCrmMessages = {
         outreach_status: "Prise de contact",
         first_contacted_at: "Premier contact",
         last_contacted_at: "Dernier contact",
+        list: "Liste",
+        introduced_by: "Présenté par",
+        introduced: "A présenté",
+        related_contacts: "Contacts liés",
         title: "Titre",
         company_id: "Organisation",
         email_jsonb: "Adresses e-mail",
@@ -95,6 +100,7 @@ export const frenchCrmMessages = {
       },
       action: {
         add: "Ajouter un contact",
+        add_related: "Ajouter un contact lié",
         add_first: "Ajoutez votre premier contact",
         create: "Créer un contact",
         edit: "Modifier le contact",
@@ -147,6 +153,18 @@ export const frenchCrmMessages = {
         declined: "A décliné",
         "no-response": "Sans réponse",
         holding: "En attente",
+      },
+      list_values: {
+        primary: "Principale",
+        secondary: "Secondaire",
+      },
+      outreach_board: {
+        title: "Prise de contact",
+        empty: "Aucun contact pour le moment.",
+      },
+      enquiries: {
+        title: "Demandes du site",
+        empty: "Aucune demande du site en attente.",
       },
       list: {
         error_loading: "Erreur lors du chargement des contacts",
@@ -208,7 +226,8 @@ export const frenchCrmMessages = {
       },
     },
     deals: {
-      name: "Affaire |||| Affaires",
+      name: "Engagement |||| Engagements",
+      forcedCaseName: "Engagement",
       fields: {
         name: "Nom",
         description: "Description",
@@ -505,7 +524,7 @@ export const frenchCrmMessages = {
       groups: {
         contacts: "Contacts",
         companies: "Organisations",
-        deals: "Affaires",
+        deals: "Engagements",
         tasks: "Tâches",
         contact_notes: "Notes de contact",
         deal_notes: "Notes d'affaire",

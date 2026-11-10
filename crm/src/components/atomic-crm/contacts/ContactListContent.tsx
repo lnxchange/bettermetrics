@@ -4,7 +4,6 @@ import {
   RecordContextProvider,
   RecordRepresentation,
   useListContext,
-  useLocaleState,
   useTimeout,
   useTranslate,
 } from "ra-core";
@@ -17,12 +16,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 
-import { Status } from "../misc/Status";
-import { formatRelativeDate } from "../misc/RelativeDate";
-import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
-import { ContactOutreachSummary, outreachStatusLabel } from "./ContactOutreach";
+import { ContactOutreachSummary } from "./ContactOutreach";
 import { TagsList } from "./TagsList";
+import type { Contact } from "../types";
 
 export const ContactListContent = () => {
   const translate = useTranslate();
@@ -106,11 +103,7 @@ const ContactItemContent = ({
   handleToggleItem: (id: Identifier, event: MouseEvent) => void;
 }) => {
   const translate = useTranslate();
-  const [locale = "en"] = useLocaleState();
   const { selectedIds } = useListContext<Contact>();
-  const lastActivity = contact.last_seen
-    ? formatRelativeDate(contact.last_seen, locale)
-    : null;
 
   return (
     <div className="flex flex-row items-center pl-2 pr-4 py-2 hover:bg-muted transition-colors first:rounded-t-xl last:rounded-b-xl">
@@ -159,19 +152,6 @@ const ContactItemContent = ({
           ) : null}
         </div>
         <ContactOutreachSummary contact={contact} />
-        {contact.last_seen && (
-          <div className="text-right ml-4">
-            <div
-              className="text-sm text-muted-foreground"
-              title={contact.last_seen}
-            >
-              {translate("crm.common.last_activity_with_date", {
-                date: lastActivity,
-              })}{" "}
-              <Status status={contact.status} />
-            </div>
-          </div>
-        )}
       </Link>
     </div>
   );
@@ -251,7 +231,6 @@ export const ContactListContentMobile = () => {
 
 const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
   const translate = useTranslate();
-  const [locale = "en"] = useLocaleState();
   return (
     <Link
       to={`/contacts/${contact.id}/show`}
@@ -264,21 +243,8 @@ const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
             <div className="font-medium">
               <RecordRepresentation />
             </div>
-            <Status status={contact.status} />
           </div>
-          {contact.outreach_status || contact.last_contacted_at ? (
-            <div className="text-sm text-muted-foreground">
-              {contact.outreach_status
-                ? outreachStatusLabel(contact.outreach_status, translate)
-                : null}
-              {contact.outreach_status && contact.last_contacted_at
-                ? " · "
-                : null}
-              {contact.last_contacted_at
-                ? formatRelativeDate(contact.last_contacted_at, locale)
-                : null}
-            </div>
-          ) : null}
+          <ContactOutreachSummary contact={contact} />
           <div className="text-sm text-muted-foreground">
             <div className="flex flex-col gap-1">
               <span>

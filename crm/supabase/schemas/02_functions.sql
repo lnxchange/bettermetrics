@@ -543,6 +543,9 @@ begin
   if new.list is distinct from old.list then
     fields := fields || array['list'];
   end if;
+  if new.introduced_by is distinct from old.introduced_by then
+    fields := fields || array['introduced_by'];
+  end if;
   if new.status is distinct from old.status then
     fields := fields || array['status'];
   end if;

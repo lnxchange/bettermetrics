@@ -132,7 +132,13 @@ select
     co.last_contacted_at,
     co.email_holder,
     co.contact_via,
-    co.list
+    co.list,
+    co.introduced_by,
+    (
+        select trim(both from concat_ws(' ', introducer.first_name, introducer.last_name))
+        from public.contacts introducer
+        where introducer.id = co.introduced_by
+    ) as introduced_by_name
 from public.contacts co
     left join public.tasks t on co.id = t.contact_id
     left join public.companies c on co.company_id = c.id

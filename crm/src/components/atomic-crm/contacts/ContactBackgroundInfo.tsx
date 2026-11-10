@@ -5,7 +5,7 @@ import {
   useTranslate,
   WithRecord,
 } from "ra-core";
-import { TextField } from "@/components/admin/text-field";
+import { Markdown } from "../misc/Markdown";
 import { formatLocalizedDate } from "../misc/RelativeDate";
 import { useGetSalesName } from "../sales/useGetSalesName";
 import type { Contact } from "../types";
@@ -32,9 +32,7 @@ export const ContactBackgroundInfo = () => {
       <WithRecord<Contact>
         render={(record) =>
           record?.background ? (
-            <div className="pb-2 text-sm">
-              <TextField source="background" record={record} />
-            </div>
+            <Markdown className="pb-2 text-sm">{record.background}</Markdown>
           ) : null
         }
       />

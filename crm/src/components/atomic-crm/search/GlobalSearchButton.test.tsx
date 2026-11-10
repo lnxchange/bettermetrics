@@ -240,7 +240,7 @@ describe("GlobalSearchDialog", () => {
       .toBeVisible();
     await expect
       .element(
-        screen.getByRole("group", { name: "Deals" }).getByText("Zero Corp"),
+        screen.getByRole("group", { name: "Engagements" }).getByText("Zero Corp"),
       )
       .toBeVisible();
   });
@@ -253,7 +253,7 @@ describe("GlobalSearchDialog", () => {
     await expect
       .element(
         screen
-          .getByRole("group", { name: "Deals" })
+          .getByRole("group", { name: "Engagements" })
           .getByText("Boulangerie Martin"),
       )
       .toBeVisible();
@@ -280,7 +280,7 @@ describe("GlobalSearchDialog", () => {
     await screen.getByPlaceholder(PLACEHOLDER).fill("supply");
 
     const match = screen
-      .getByRole("group", { name: "Deals" })
+      .getByRole("group", { name: "Engagements" })
       .getByText("supply", { exact: true });
     await expect.element(match).toBeVisible();
     expect(match.element().tagName).toBe("MARK");

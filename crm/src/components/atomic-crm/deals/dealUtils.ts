@@ -2,6 +2,11 @@ import { format } from "date-fns";
 
 import type { DealStage, LabeledValue } from "../types";
 
+export const DONATION_CATEGORY = "donation";
+
+export const isDonationDeal = (categories?: string[] | null) =>
+  Boolean(categories?.includes(DONATION_CATEGORY));
+
 export const findDealLabel = (dealStages: DealStage[], dealValue: string) => {
   const dealStage = dealStages.find((stage) => stage.value === dealValue);
   return dealStage?.label;
