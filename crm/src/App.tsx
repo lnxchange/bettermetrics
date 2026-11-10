@@ -12,7 +12,6 @@ import {
 
 const App = () => (
   <CRM
-    basename="/admin"
     disableTelemetry
     title={defaultTitle}
     currency={defaultCurrency}
