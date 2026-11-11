@@ -42,18 +42,20 @@ export const OutreachBoard = () => {
                 <RecordContextProvider value={contact}>
                   <Link
                     to={`/contacts/${contact.id}/show`}
-                    className="flex min-w-0 items-center gap-3 overflow-hidden px-3 py-2.5 hover:bg-muted"
+                    className="flex min-w-0 items-start gap-3 px-3 py-2.5 hover:bg-muted"
                   >
-                    <span className="shrink-0">
+                    <span className="mt-0.5 shrink-0">
                       <Avatar record={contact} />
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                      {contactName(contact)}
+                    <span className="min-w-0 flex-1">
+                      <span className="block break-words text-sm font-medium leading-snug">
+                        {contactName(contact)}
+                      </span>
+                      <ContactOutreachSummary
+                        contact={contact}
+                        className="mt-0.5 max-w-none shrink text-left font-normal text-muted-foreground [&_div]:text-xs"
+                      />
                     </span>
-                    <ContactOutreachSummary
-                      contact={contact}
-                      className="max-w-[46%] min-w-0 shrink break-words text-xs"
-                    />
                   </Link>
                 </RecordContextProvider>
               </li>
