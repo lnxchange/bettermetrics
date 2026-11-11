@@ -1,5 +1,6 @@
 import { useLocaleState, useRecordContext, useTranslate } from "ra-core";
 
+import { cn } from "@/lib/utils";
 import { formatLocalizedDate, formatRelativeDate } from "../misc/RelativeDate";
 import type { Contact } from "../types";
 
@@ -74,7 +75,13 @@ export const ContactOutreachInfo = () => {
   );
 };
 
-export const ContactOutreachSummary = ({ contact }: { contact: Contact }) => {
+export const ContactOutreachSummary = ({
+  contact,
+  className,
+}: {
+  contact: Contact;
+  className?: string;
+}) => {
   const translate = useTranslate();
   const [locale = "en"] = useLocaleState();
   const listLabel = contact.list
@@ -94,7 +101,7 @@ export const ContactOutreachSummary = ({ contact }: { contact: Contact }) => {
   }
 
   return (
-    <div className="shrink-0 text-right leading-tight">
+    <div className={cn("shrink-0 text-right leading-tight", className)}>
       {contact.outreach_status ? (
         <div className="text-sm">
           {outreachStatusLabel(contact.outreach_status, translate)}

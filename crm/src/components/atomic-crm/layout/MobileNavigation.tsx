@@ -240,7 +240,7 @@ const MoreButton = () => {
           className="h-12 gap-3 px-4 text-base"
           render={<a href="/" />}
         >
-          Site
+          Main Site
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

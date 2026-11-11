@@ -97,9 +97,9 @@ const Header = () => {
               <div className="flex items-center">
                 <a
                   href="/"
-                  className="shrink-0 px-3 py-4 text-sm font-medium text-slate-600 hover:text-[#1E3A8A]"
+                  className="shrink-0 whitespace-nowrap px-3 py-4 text-sm font-medium text-slate-600 hover:text-[#1E3A8A]"
                 >
-                  Site
+                  Main Site
                 </a>
                 <GlobalSearchButton />
                 <RefreshButton />
@@ -151,7 +151,7 @@ const SiteMenu = () => {
       onClick={userMenuContext.onClose}
       render={<a href="/" className="flex items-center gap-2" />}
     >
-      Site
+      Main Site
     </DropdownMenuItem>
   );
 };

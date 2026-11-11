@@ -26,7 +26,7 @@ export const OutreachBoard = () => {
           {translate("resources.contacts.outreach_board.title")}
         </h2>
       </div>
-      <Card className="py-0">
+      <Card className="overflow-hidden py-0">
         {isPending ? (
           <p className="p-4 text-sm text-muted-foreground">
             {translate("ra.page.loading")}
@@ -42,13 +42,18 @@ export const OutreachBoard = () => {
                 <RecordContextProvider value={contact}>
                   <Link
                     to={`/contacts/${contact.id}/show`}
-                    className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted"
+                    className="flex min-w-0 items-center gap-3 overflow-hidden px-3 py-2.5 hover:bg-muted"
                   >
-                    <Avatar record={contact} />
+                    <span className="shrink-0">
+                      <Avatar record={contact} />
+                    </span>
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">
                       {contactName(contact)}
                     </span>
-                    <ContactOutreachSummary contact={contact} />
+                    <ContactOutreachSummary
+                      contact={contact}
+                      className="max-w-[46%] min-w-0 shrink break-words text-xs"
+                    />
                   </Link>
                 </RecordContextProvider>
               </li>
