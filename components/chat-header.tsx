@@ -14,7 +14,7 @@ export async function ChatHeader({
   isGuest?: boolean
 }) {
   return (
-    <div className="flex h-14 shrink-0 items-center justify-between border-b bg-background px-4">
+    <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 border-b bg-background px-4 py-2">
       <div className="flex items-center gap-2">
         {!isGuest && (
           <Sidebar>

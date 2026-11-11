@@ -262,6 +262,7 @@ export function Chat({
       {section && (
         <TreatiseSectionPanel
           target={section}
+          returnHref={`/chat/${chatId}`}
           onOpen={setSection}
           onClose={() => setSection(null)}
         />

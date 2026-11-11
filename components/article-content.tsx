@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { Mermaid } from '@/components/ui/mermaid'
+import { useGlossaryDecorate } from '@/components/glossary-lookup'
 
 interface ArticleContentProps {
   html: string
@@ -44,9 +45,11 @@ function splitDiagrams(html: string): ArticlePart[] {
  */
 export function ArticleContent({ html, className }: ArticleContentProps) {
   const parts = useMemo(() => splitDiagrams(html), [html])
+  const root = useRef<HTMLDivElement>(null)
+  useGlossaryDecorate(root, html)
 
   return (
-    <div className={className}>
+    <div ref={root} className={className}>
       {parts.map((part, index) =>
         part.kind === 'html' ? (
           <div key={index} dangerouslySetInnerHTML={{ __html: part.html }} />

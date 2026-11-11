@@ -1,3 +1,6 @@
+'use client'
+
+import { useRef } from 'react'
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -9,6 +12,7 @@ import { Mermaid } from '@/components/ui/mermaid'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconPerplexity, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
+import { useGlossaryDecorate } from '@/components/glossary-lookup'
 import {
   CorpusIndex,
   linkifyTreatiseMarkdown,
@@ -33,6 +37,8 @@ export function ChatMessage({ message, onOpenSection, targets, ...props }: ChatM
           targets ? { index: targets.index, history: targets.redirects } : { pending: true }
         )
       : message.content
+  const body = useRef<HTMLDivElement>(null)
+  useGlossaryDecorate(body, content)
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -48,7 +54,7 @@ export function ChatMessage({ message, onOpenSection, targets, ...props }: ChatM
       >
         {message.role === 'user' ? <IconUser /> : <IconPerplexity />}
       </div>
-      <div className="ml-4 min-w-0 flex-1 space-y-2 overflow-x-auto px-1">
+      <div ref={body} className="ml-4 min-w-0 flex-1 space-y-2 overflow-x-auto px-1">
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
           remarkPlugins={[remarkGfm, remarkMath]}
@@ -59,7 +65,7 @@ export function ChatMessage({ message, onOpenSection, targets, ...props }: ChatM
             },
             a({ href, children, ...props }) {
               const section = href ? treatiseSectionTarget(href) : null
-              if (section?.section && onOpenSection) {
+              if (section && onOpenSection) {
                 return (
                   <a
                     href={href}
@@ -92,15 +98,6 @@ export function ChatMessage({ message, onOpenSection, targets, ...props }: ChatM
                 )
               }
               
-              // A chapter link from a removed section stays in this tab.
-              if (section && !section.section) {
-                return (
-                  <a href={href} className="text-blue-600 hover:underline dark:text-blue-400">
-                    {children}
-                  </a>
-                )
-              }
-
               // Regular links
               return (
                 <a

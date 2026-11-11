@@ -6,6 +6,15 @@ import { ArticleContent } from '@/components/article-content'
 import { TableOfContents, TableOfContentsMobile } from '@/components/table-of-contents'
 import { TreatiseHeading } from '@/lib/treatise-citations'
 
+function withReturn(href: string, returnTo: string | null) {
+  if (!returnTo) return href
+  const hashAt = href.indexOf('#')
+  const path = hashAt === -1 ? href : href.slice(0, hashAt)
+  const hash = hashAt === -1 ? '' : href.slice(hashAt)
+  const join = path.includes('?') ? '&' : '?'
+  return `${path}${join}from=${encodeURIComponent(returnTo)}${hash}`
+}
+
 export function TreatiseChapterView({
   label,
   title,
@@ -16,7 +25,8 @@ export function TreatiseChapterView({
   html,
   missingSection,
   previous,
-  next
+  next,
+  returnTo = null
 }: {
   label: string
   title: string
@@ -28,6 +38,7 @@ export function TreatiseChapterView({
   missingSection: string | null
   previous: { href: string; label: string } | null
   next: { href: string; label: string } | null
+  returnTo?: string | null
 }) {
   const ids = useMemo(() => new Set(headings.map(heading => heading.id)), [headings])
   const [activeId, setActiveId] = useState('')
@@ -86,6 +97,13 @@ export function TreatiseChapterView({
 
   return (
     <div className="bg-white">
+      {returnTo && (
+        <div className="sticky top-16 z-30 border-b border-gray-200 bg-white px-4 py-2">
+          <Link href={returnTo} className="text-sm font-medium text-primary-700 hover:underline">
+            ← Back to conversation
+          </Link>
+        </div>
+      )}
       <section className="border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-gray-50 py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <p className="mb-3 text-sm text-gray-500">
@@ -95,7 +113,7 @@ export function TreatiseChapterView({
             <span className="mx-2">/</span>
             {label}
           </p>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{title}</h1>
+          <h1 className="break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">{title}</h1>
           {updatedOn && (
             <p className="mt-4 text-sm font-semibold text-gray-900">Updated {updatedOn}</p>
           )}
@@ -128,14 +146,14 @@ export function TreatiseChapterView({
             />
             <nav className="mt-12 flex flex-col gap-3 border-t border-gray-200 pt-6 text-sm sm:flex-row sm:justify-between">
               {previous ? (
-                <Link href={previous.href} className="text-primary-700 hover:underline">
+                <Link href={withReturn(previous.href, returnTo)} className="text-primary-700 hover:underline">
                   ← {previous.label}
                 </Link>
               ) : (
                 <span />
               )}
               {next && (
-                <Link href={next.href} className="text-primary-700 hover:underline sm:text-right">
+                <Link href={withReturn(next.href, returnTo)} className="text-primary-700 hover:underline sm:text-right">
                   {next.label} →
                 </Link>
               )}

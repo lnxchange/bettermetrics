@@ -5,6 +5,7 @@ import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes'
 import { ThemeProviderProps } from 'next-themes/dist/types'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { GlossaryProvider } from '@/components/glossary-lookup'
 
 function LightUnlessChosen() {
   const { theme, setTheme } = useTheme()
@@ -18,7 +19,9 @@ export function Providers({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider {...props}>
       <LightUnlessChosen />
-      <TooltipProvider>{children}</TooltipProvider>
+      <TooltipProvider>
+        <GlossaryProvider>{children}</GlossaryProvider>
+      </TooltipProvider>
     </NextThemesProvider>
   )
 }

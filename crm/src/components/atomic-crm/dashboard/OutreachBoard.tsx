@@ -1,5 +1,5 @@
 import { Inbox, Users } from "lucide-react";
-import { useGetList, useTranslate } from "ra-core";
+import { RecordContextProvider, useGetList, useTranslate } from "ra-core";
 import { Link } from "react-router";
 import { Card } from "@/components/ui/card";
 
@@ -13,7 +13,7 @@ const contactName = (contact: Contact) =>
 
 export const OutreachBoard = () => {
   const translate = useTranslate();
-  const { data, total, isPending } = useGetList<Contact>("contacts", {
+  const { data, isPending } = useGetList<Contact>("contacts", {
     pagination: { page: 1, perPage: 8 },
     sort: { field: "last_contacted_at", order: "DESC" },
   });
@@ -27,22 +27,34 @@ export const OutreachBoard = () => {
         </h2>
       </div>
       <Card className="py-0">
-        <SimpleList<Contact>
-          linkType="show"
-          data={data}
-          total={total}
-          isPending={isPending}
-          resource="contacts"
-          className="[&>li:first-child>a]:rounded-t-xl [&>li:last-child>a]:rounded-b-xl"
-          primaryText={contactName}
-          secondaryText={(contact) => <ContactOutreachSummary contact={contact} />}
-          leftAvatar={(contact) => <Avatar record={contact} />}
-          empty={
-            <p className="p-4 text-sm">
-              {translate("resources.contacts.outreach_board.empty")}
-            </p>
-          }
-        />
+        {isPending ? (
+          <p className="p-4 text-sm text-muted-foreground">
+            {translate("ra.page.loading")}
+          </p>
+        ) : !data?.length ? (
+          <p className="p-4 text-sm">
+            {translate("resources.contacts.outreach_board.empty")}
+          </p>
+        ) : (
+          <ul className="[&>li:first-child>a]:rounded-t-xl [&>li:last-child>a]:rounded-b-xl">
+            {data.map((contact) => (
+              <li key={contact.id}>
+                <RecordContextProvider value={contact}>
+                  <Link
+                    to={`/contacts/${contact.id}/show`}
+                    className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted"
+                  >
+                    <Avatar record={contact} />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                      {contactName(contact)}
+                    </span>
+                    <ContactOutreachSummary contact={contact} />
+                  </Link>
+                </RecordContextProvider>
+              </li>
+            ))}
+          </ul>
+        )}
       </Card>
     </div>
   );

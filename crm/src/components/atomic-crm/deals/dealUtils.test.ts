@@ -1,6 +1,6 @@
 import { commands } from "vitest/browser";
 
-import { formatISODateString } from "./dealUtils";
+import { formatISODateString, parseDealDate } from "./dealUtils";
 
 describe("formatISODateString", () => {
   let originalTimezone: string;
@@ -50,5 +50,15 @@ describe("formatISODateString", () => {
     expect(() => formatISODateString(invalidDate)).toThrow(
       "Invalid date format. Expected YYYY-MM-DD.",
     );
+  });
+
+  it("returns no date for an empty closing date", () => {
+    expect(formatISODateString(null)).toBeNull();
+    expect(formatISODateString("")).toBeNull();
+    expect(parseDealDate(null)).toBeNull();
+  });
+
+  it("formats a timestamp as the calendar day named in the string", () => {
+    expect(formatISODateString("2026-09-30T00:00:00.000Z")).toBe("Sep 30, 2026");
   });
 });

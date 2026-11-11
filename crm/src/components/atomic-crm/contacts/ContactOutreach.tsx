@@ -94,7 +94,7 @@ export const ContactOutreachSummary = ({ contact }: { contact: Contact }) => {
   }
 
   return (
-    <div className="text-right ml-4">
+    <div className="shrink-0 text-right leading-tight">
       {contact.outreach_status ? (
         <div className="text-sm">
           {outreachStatusLabel(contact.outreach_status, translate)}
