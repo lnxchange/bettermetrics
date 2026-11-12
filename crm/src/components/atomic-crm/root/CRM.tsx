@@ -58,6 +58,7 @@ import { MobileTasksList } from "../tasks/MobileTasksList.tsx";
 import { ContactListMobile } from "../contacts/ContactList.tsx";
 import { ContactShow } from "../contacts/ContactShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
+import { AiChatPage } from "../admin/AiChatPage";
 import {
   ArticleEditorPage,
   ArticlesPage,
@@ -273,6 +274,7 @@ const DesktopAdmin = (
         <Route path="/articles/new" element={<ArticleEditorPage />} />
         <Route path="/articles/:id" element={<ArticleEditorPage />} />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/ai" element={<AiChatPage />} />
         <Route path="/research" element={<DocumentsPage kind="research" />} />
         <Route path="/knowledge" element={<DocumentsPage kind="rag" />} />
       </CustomRoutes>
@@ -355,6 +357,7 @@ const MobileAdmin = (
           <Route path="/articles/new" element={<ArticleEditorPage />} />
           <Route path="/articles/:id" element={<ArticleEditorPage />} />
           <Route path="/users" element={<UsersPage />} />
+          <Route path="/ai" element={<AiChatPage />} />
           <Route path="/research" element={<DocumentsPage kind="research" />} />
           <Route path="/knowledge" element={<DocumentsPage kind="rag" />} />
         </CustomRoutes>

@@ -38,6 +38,8 @@ const Header = () => {
     currentPath = "/articles";
   } else if (matchPath("/users", location.pathname)) {
     currentPath = "/users";
+  } else if (matchPath("/ai", location.pathname)) {
+    currentPath = "/ai";
   } else if (matchPath("/research", location.pathname)) {
     currentPath = "/research";
   } else if (matchPath("/knowledge", location.pathname)) {
@@ -90,6 +92,7 @@ const Header = () => {
                   <NavigationTab label="Inbox" to="/inbox" isActive={currentPath === "/inbox"} />
                   <NavigationTab label="Articles" to="/articles" isActive={currentPath === "/articles"} />
                   <NavigationTab label="Users" to="/users" isActive={currentPath === "/users"} />
+                  <NavigationTab label="AI chat" to="/ai" isActive={currentPath === "/ai"} />
                   <NavigationTab label="Research" to="/research" isActive={currentPath === "/research"} />
                   <NavigationTab label="Knowledge" to="/knowledge" isActive={currentPath === "/knowledge"} />
                 </nav>

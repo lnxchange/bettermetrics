@@ -90,7 +90,7 @@ export function AiSettings() {
   return (
     <form className="mx-auto max-w-3xl space-y-8 px-4 py-8" onSubmit={save}>
       <div>
-        <h1 className="text-2xl font-semibold">AI settings</h1>
+        <h1 className="text-2xl font-semibold">AI chat</h1>
         <p className="mt-1 text-sm text-slate-600">Changes apply to Ask the AI within half a minute. The CHAT_PAUSED environment variable still overrides this page.</p>
       </div>
       <label className="flex items-center gap-2 text-sm">

@@ -199,6 +199,7 @@ const MoreButton = () => {
     { to: "/inbox", label: "Inbox" },
     { to: "/articles", label: "Articles" },
     { to: "/users", label: "Users" },
+    { to: "/ai", label: "AI chat" },
     { to: "/research", label: "Research" },
     { to: "/knowledge", label: "Knowledge" },
     { to: "/settings", label: translate("crm.settings.title") },
