@@ -8,6 +8,7 @@ import { ChatHeader } from '@/components/chat-header'
 import { cookies } from 'next/headers'
 import { guestsAllowed } from '@/lib/chat-access'
 import { loadChatSettings, PAUSED_MESSAGE } from '@/lib/chat-settings'
+import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export const runtime = 'edge'
@@ -49,6 +50,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   const chatProps = {
     requiresAccount,
     requiresOwnKey: true as const,
+    usesSiteKey: isSiteAdmin(session?.user) && adminSiteKey(settings.providers) !== null,
     paused,
     pausedMessage,
     noticeMarkdown: settings.noticeMarkdown

@@ -5,6 +5,7 @@ import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
 import { guestsAllowed } from '@/lib/chat-access'
 import { loadChatSettings, PAUSED_MESSAGE } from '@/lib/chat-settings'
+import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false }
@@ -27,6 +28,7 @@ export default async function ChatPage({
   const settings = await loadChatSettings()
   const paused = process.env.CHAT_PAUSED === 'true' || settings.paused
   const pausedMessage = process.env.CHAT_PAUSED === 'true' ? PAUSED_MESSAGE : settings.pausedMessage
+  const usesSiteKey = isSiteAdmin(session?.user) && adminSiteKey(settings.providers) !== null
 
   return (
     <>
@@ -38,6 +40,7 @@ export default async function ChatPage({
           initialQuestion={searchParams?.q}
           requiresAccount={requiresAccount}
           requiresOwnKey
+          usesSiteKey={usesSiteKey}
           paused={paused}
           pausedMessage={pausedMessage}
           noticeMarkdown={settings.noticeMarkdown}

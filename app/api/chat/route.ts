@@ -11,6 +11,7 @@ import { ChatProvider } from '@/lib/chat-provider-ids'
 import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
 import { generate, LlmError, readerMessage } from '@/lib/llm'
 import { readActiveKey } from '@/lib/user-api-keys'
+import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { createHash } from 'crypto'
 
 type SearchResult = {
@@ -233,10 +234,11 @@ export async function POST(req: Request) {
       )
     }
 
-    // Guests are refused. Chat has no site key to bill.
+    // Guests are refused. Only an admin with no saved key is billed to a site key.
     const session = await auth({ cookieStore })
     const userId: string | null = session?.user?.id ?? null
     const isGuest = !userId
+    const isAdmin = isSiteAdmin(session?.user)
 
     if (isGuest) {
       console.warn('Chat refused: account required', {
@@ -274,31 +276,39 @@ export async function POST(req: Request) {
       )
     }
 
-    // Resolve who pays before any retrieval or model call. A missing key must
-    // not fall through to a site key, and it must not run a vector search.
+    // Resolve who pays before any retrieval or model call. A reader with no
+    // saved key does not fall through to a site key. An admin does.
     let apiKey: string | null = null
     let provider: ChatProvider = 'anthropic'
+    let payer: 'reader' | 'site' = 'reader'
     if (userId) {
       const stored = await readActiveKey(userId)
       if (stored.key) {
         apiKey = stored.key
         provider = stored.provider
-      } else if ('reason' in stored && stored.reason === 'unavailable') {
-        return new Response(
-          JSON.stringify({
-            error: 'key_store_unavailable',
-            message: 'API key storage is unavailable. Try again in a moment.'
-          }),
-          { status: 503, headers: { 'Content-Type': 'application/json' } }
-        )
       } else {
-        return new Response(
-          JSON.stringify({
-            error: 'api_key_required',
-            message: 'Add an API key in your profile. Questions are billed to that key.'
-          }),
-          { status: 403, headers: { 'Content-Type': 'application/json' } }
-        )
+        const site = isAdmin ? adminSiteKey(settings.providers) : null
+        if (site) {
+          apiKey = site.apiKey
+          provider = site.provider
+          payer = 'site'
+        } else if ('reason' in stored && stored.reason === 'unavailable') {
+          return new Response(
+            JSON.stringify({
+              error: 'key_store_unavailable',
+              message: 'API key storage is unavailable. Try again in a moment.'
+            }),
+            { status: 503, headers: { 'Content-Type': 'application/json' } }
+          )
+        } else {
+          return new Response(
+            JSON.stringify({
+              error: 'api_key_required',
+              message: 'Add an API key in your profile. Questions are billed to that key.'
+            }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+          )
+        }
       }
       if (!settings.providers[provider]) {
         return new Response(
@@ -451,6 +461,7 @@ export async function POST(req: Request) {
 
     console.log('Making chat request:', {
       provider,
+      payer,
       model,
       userId,
       messageCount: chatMessages.length,

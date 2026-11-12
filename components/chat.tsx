@@ -33,6 +33,8 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   requiresAccount?: boolean
   /** Signed-in readers must save their own key before sending. */
   requiresOwnKey?: boolean
+  /** An admin with no saved key is billed to the site key. */
+  usesSiteKey?: boolean
   paused?: boolean
   pausedMessage?: string
   noticeMarkdown?: string
@@ -47,6 +49,7 @@ export function Chat({
   initialQuestion,
   requiresAccount = true,
   requiresOwnKey = true,
+  usesSiteKey = false,
   paused = false,
   pausedMessage,
   noticeMarkdown
@@ -68,8 +71,9 @@ export function Chat({
   const [quotaExceeded, setQuotaExceeded] = useState(false)
   const [serverAccountRequired, setServerAccountRequired] = useState(false)
   const [keyState, setKeyState] = useState<'unknown' | 'ready' | 'missing'>(
-    isGuest || !requiresOwnKey ? 'ready' : 'unknown'
+    isGuest || !requiresOwnKey || usesSiteKey ? 'ready' : 'unknown'
   )
+  const [hasOwnKey, setHasOwnKey] = useState(false)
   useEffect(() => {
     let cancel = false
     fetch('/api/treatise/targets')
@@ -102,15 +106,18 @@ export function Chat({
       .then(response => (response.ok ? response.json() : null))
       .then(data => {
         if (cancel) return
-        setKeyState(Array.isArray(data?.keys) && data.keys.length > 0 ? 'ready' : 'missing')
+        const ownKey = Array.isArray(data?.keys) && data.keys.length > 0
+        const siteKey = usesSiteKey || data?.usesSiteKey === true
+        setHasOwnKey(ownKey)
+        setKeyState(ownKey || siteKey ? 'ready' : 'missing')
       })
       .catch(() => {
-        if (!cancel) setKeyState('missing')
+        if (!cancel) setKeyState(usesSiteKey ? 'ready' : 'missing')
       })
     return () => {
       cancel = true
     }
-  }, [isGuest, requiresOwnKey])
+  }, [isGuest, requiresOwnKey, usesSiteKey])
   const quotaHitRef = useRef(false)
 
   // Generate a stable chat ID if one isn't provided
@@ -308,7 +315,16 @@ export function Chat({
             </div>
           </div>
         ) : (
-          keyState === 'ready' && !quotaExceeded && <EmptyScreen onAsk={submit} />
+          keyState === 'ready' && !quotaExceeded && (
+            <>
+              {usesSiteKey && !hasOwnKey && (
+                <p className="mx-auto mb-4 max-w-2xl px-4 text-sm text-muted-foreground">
+                  You&apos;re signed in as an admin. Questions use the site key until you save your own.
+                </p>
+              )}
+              <EmptyScreen onAsk={submit} />
+            </>
+          )
         )}
         {quotaExceeded && (
           <div className="mx-auto mt-6 max-w-2xl px-4">

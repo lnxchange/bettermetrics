@@ -23,6 +23,7 @@ const CREATE_LINKS: Record<ChatProvider, { href: string; label: string }> = {
 
 export function AccountApiKey() {
   const [keys, setKeys] = useState<SavedKey[]>([])
+  const [usesSiteKey, setUsesSiteKey] = useState(false)
   const [notice, setNotice] = useState(BYOK_NOTICE)
   const [provider, setProvider] = useState<ChatProvider>('anthropic')
   const [apiKey, setApiKey] = useState('')
@@ -44,6 +45,7 @@ export function AccountApiKey() {
       .then(data => {
         if (cancel || !data) return
         refresh(data)
+        setUsesSiteKey(data.usesSiteKey === true)
         if (typeof data.noticeMarkdown === 'string' && data.noticeMarkdown.trim()) {
           setNotice(data.noticeMarkdown)
         }
@@ -113,6 +115,11 @@ export function AccountApiKey() {
   return (
     <form id="api-key" className="space-y-4" onSubmit={save}>
       <ByokNotice markdown={notice} />
+      {usesSiteKey && (
+        <p className="text-sm text-slate-700">
+          You&apos;re an admin. Chat uses the site key, so you can ask without saving one here. A key you save replaces the site key for your questions.
+        </p>
+      )}
       {loading ? <p className="text-sm text-slate-600">Loading keys…</p> : null}
       <ul className="space-y-2 text-sm">
         {CHAT_PROVIDERS.map(id => {

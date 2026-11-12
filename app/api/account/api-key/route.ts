@@ -6,6 +6,7 @@ import { auth } from '@/auth'
 import { isChatProvider, keyMatchesProvider, detectProvider, PROVIDER_INFO, type ChatProvider } from '@/lib/chat-provider-ids'
 import { loadChatSettings } from '@/lib/chat-settings'
 import { validateProviderKey } from '@/lib/llm/validate'
+import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import {
   activateUserKey,
   consumeKeySave,
@@ -23,9 +24,12 @@ const LINKS: Record<string, string> = {
   openrouter: 'https://openrouter.ai/keys'
 }
 
-async function userId() {
+async function viewer() {
   const session = await auth({ cookieStore: cookies() })
-  return session?.user?.id ?? null
+  return {
+    id: session?.user?.id ?? null,
+    admin: isSiteAdmin(session?.user)
+  }
 }
 
 function ipHash(req: NextRequest) {
@@ -34,18 +38,32 @@ function ipHash(req: NextRequest) {
 }
 
 export async function GET() {
-  const id = await userId()
+  const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const keys = await listUserKeys(id)
   const settings = await loadChatSettings()
-  return NextResponse.json({ keys, links: LINKS, noticeMarkdown: settings.noticeMarkdown })
+  return NextResponse.json({
+    keys,
+    links: LINKS,
+    noticeMarkdown: settings.noticeMarkdown,
+    usesSiteKey: admin && adminSiteKey(settings.providers) !== null
+  })
 }
 
 export async function PUT(req: NextRequest) {
-  const id = await userId()
+  const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!(await consumeKeySave(id, ipHash(req)))) {
-    return NextResponse.json({ error: 'Too many key changes. Try again later.' }, { status: 429 })
+  if (!admin) {
+    const gate = await consumeKeySave(id, ipHash(req))
+    if (gate === 'limited') {
+      return NextResponse.json({ error: 'Too many key changes. Try again later.' }, { status: 429 })
+    }
+    if (gate === 'unavailable') {
+      return NextResponse.json(
+        { error: 'Key storage is not ready, so the key was not saved.' },
+        { status: 503 }
+      )
+    }
   }
 
   const body = await req.json().catch(() => null)
@@ -99,7 +117,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const id = await userId()
+  const { id } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json().catch(() => null)
   const provider = isChatProvider(body?.provider) ? body.provider : null

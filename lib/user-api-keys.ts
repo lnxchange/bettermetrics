@@ -111,30 +111,34 @@ export async function deleteUserChatKey(userId: string, provider: ChatProvider) 
   }
 }
 
-export async function consumeKeySave(userId: string, ipHash: string) {
+export async function consumeKeySave(
+  userId: string,
+  ipHash: string
+): Promise<'ok' | 'limited' | 'unavailable'> {
   const supabase = serviceClient()
-  if (!supabase) return false
+  if (!supabase) return 'unavailable'
   const hour = new Date()
   hour.setMinutes(0, 0, 0)
-  const window = hour.toISOString()
+  const windowStart = hour.toISOString()
   const buckets = [
     { bucket: `user:${userId}`, limit: 5 },
     { bucket: `ip:${ipHash}`, limit: 20 }
   ]
   for (const item of buckets) {
-    const { data } = await supabase
+    const { data, error: readError } = await supabase
       .from('api_key_save_attempts')
       .select('count')
       .eq('bucket', item.bucket)
-      .eq('window_start', window)
+      .eq('window_start', windowStart)
       .maybeSingle()
+    if (readError) return 'unavailable'
     const count = typeof data?.count === 'number' ? data.count : 0
-    if (count >= item.limit) return false
+    if (count >= item.limit) return 'limited'
     const { error } = await supabase.from('api_key_save_attempts').upsert(
-      { bucket: item.bucket, window_start: window, count: count + 1 },
+      { bucket: item.bucket, window_start: windowStart, count: count + 1 },
       { onConflict: 'bucket,window_start' }
     )
-    if (error) return false
+    if (error) return 'unavailable'
   }
-  return true
+  return 'ok'
 }
