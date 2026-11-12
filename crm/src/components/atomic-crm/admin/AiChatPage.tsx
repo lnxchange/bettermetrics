@@ -50,6 +50,14 @@ export function AiChatPage() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [log, setLog] = useState<LogRow[]>([]);
   const [usage, setUsage] = useState<UsageRow[]>([]);
+  const [sponsored, setSponsored] = useState<{
+    capUsd: number;
+    settled: number;
+    reserved: number;
+    days: { day: string; usd: number }[];
+    readers: { id: string; name: string; questions: number; usd: number; last: string }[];
+    invites: { sent: number; redeemed: number; expired: number };
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState("");
   const [saving, setSaving] = useState(false);
@@ -65,6 +73,7 @@ export function AiChatPage() {
         setSettings(data.settings);
         setLog(data.log || []);
         setUsage(data.usage || []);
+        setSponsored(data.sponsored || null);
       })
       .catch(() => setError("Could not load AI settings"));
   }, []);
@@ -106,6 +115,24 @@ export function AiChatPage() {
           Changes apply to Ask the AI within half a minute. The CHAT_PAUSED environment variable still overrides this page.
         </p>
       </div>
+      {sponsored && (
+        <section className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-700">
+          <h2 className="text-lg font-semibold text-slate-900">Sponsored chat</h2>
+          <p className="mt-2">This month: US${sponsored.settled.toFixed(2)} settled and US${sponsored.reserved.toFixed(2)} reserved, of US${sponsored.capUsd.toFixed(2)}.</p>
+          <ul className="mt-2">
+            {sponsored.days.map(day => (
+              <li key={day.day}>{day.day}: US${day.usd.toFixed(2)}</li>
+            ))}
+          </ul>
+          <h3 className="mt-3 font-medium text-slate-900">Readers</h3>
+          <ul>
+            {sponsored.readers.map(reader => (
+              <li key={reader.id}>{reader.name}: {reader.questions} questions, US${reader.usd.toFixed(2)}, last {reader.last}</li>
+            ))}
+          </ul>
+          <p className="mt-2">Invitations sent {sponsored.invites.sent}, redeemed {sponsored.invites.redeemed}, expired {sponsored.invites.expired}.</p>
+        </section>
+      )}
       {error && (
         <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       )}

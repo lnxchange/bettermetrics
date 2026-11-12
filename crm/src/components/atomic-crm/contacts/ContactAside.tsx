@@ -10,6 +10,7 @@ import { TagsListEdit } from "./TagsListEdit";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { ContactOutreachInfo } from "./ContactOutreach";
+import { ChatInvitePanel } from "./ChatInvitePanel";
 import { ContactRelationships } from "./ContactRelationships";
 import { AsideSection } from "../misc/AsideSection";
 import type { Contact } from "../types";
@@ -36,6 +37,7 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         title={translate("resources.contacts.field_categories.outreach")}
       >
         <ContactOutreachInfo />
+        <ChatInvitePanel />
       </AsideSection>
 
       <AsideSection

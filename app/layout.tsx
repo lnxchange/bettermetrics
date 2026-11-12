@@ -15,6 +15,7 @@ import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { AIMJsonLd } from '@/components/aim-jsonld'
+import { BotIdClient } from 'botid/client'
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 
@@ -108,7 +109,15 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <BotIdClient
+          protect={[
+            { path: '/api/chat', method: 'POST' },
+            { path: '/api/invite/redeem', method: 'POST' },
+            { path: '/api/invite/request', method: 'POST' }
+          ]}
+        />
+      </head>
       <body
         className={cn(
           'font-sans antialiased',

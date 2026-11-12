@@ -11,7 +11,9 @@ import { ChatProvider } from '@/lib/chat-provider-ids'
 import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
 import { generate, LlmError, readerMessage } from '@/lib/llm'
 import { readActiveKey } from '@/lib/user-api-keys'
-import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
+import { siteKeyFor, isSiteAdmin } from '@/lib/site-keys'
+import { checkBotId } from 'botid/server'
+import { actualCost, loadPrices, maybeAlert, releaseSiteSpend, reserveSiteSpend, settleSiteSpend } from '@/lib/chat-budget'
 import { createHash } from 'crypto'
 
 type SearchResult = {
@@ -47,6 +49,15 @@ async function loadContextSnapshot(
     text: snapshot.text,
     sectionIds: Array.isArray(snapshot.sectionIds) ? snapshot.sectionIds.filter(id => typeof id === 'string') : []
   }
+}
+
+function logRefusal(reason: string, req: Request, userId: string | null) {
+  console.warn('Chat refused', {
+    reason,
+    userId,
+    country: req.headers.get('x-vercel-ip-country'),
+    userAgent: req.headers.get('user-agent')
+  })
 }
 
 function trim(text: string, maxChars: number) {
@@ -276,41 +287,81 @@ export async function POST(req: Request) {
       )
     }
 
-    // Resolve who pays before any retrieval or model call. A reader with no
-    // saved key does not fall through to a site key. An admin does.
+    const human = await checkBotId()
+    if (human.isBot) {
+      logRefusal('bot', req, userId)
+      return new Response(
+        JSON.stringify({ error: 'bot', message: 'Access denied.' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Resolve who pays before any retrieval or model call.
     let apiKey: string | null = null
     let provider: ChatProvider = 'anthropic'
     let payer: 'reader' | 'site' = 'reader'
+    let reservationId: string | null = null
+    let siteModel: string | null = null
+    let siteMaxTokens: number | null = null
+    const sponsored = session?.user?.app_metadata?.chat_access === 'sponsored'
     if (userId) {
       const stored = await readActiveKey(userId)
       if (stored.key) {
         apiKey = stored.key
         provider = stored.provider
-      } else {
-        const site = isAdmin ? adminSiteKey(settings.providers) : null
-        if (site) {
-          apiKey = site.apiKey
-          provider = site.provider
-          payer = 'site'
-        } else if ('reason' in stored && stored.reason === 'unavailable') {
+      } else if (sponsored || isAdmin) {
+        const siteKey = siteKeyFor('anthropic')
+        if (!siteKey || settings.providers.anthropic === false) {
+          logRefusal('site_key_unavailable', req, userId)
           return new Response(
-            JSON.stringify({
-              error: 'key_store_unavailable',
-              message: 'API key storage is unavailable. Try again in a moment.'
-            }),
+            JSON.stringify({ error: 'site_key_unavailable', message: 'Site-paid chat is not available.' }),
             { status: 503, headers: { 'Content-Type': 'application/json' } }
           )
-        } else {
+        }
+        const reserved = await reserveSiteSpend({
+          userId,
+          requestChars: conversationChars + AIM_SYSTEM_PROMPT.length + settings.treatiseContextMaxChars,
+          maxOutputTokens: settings.sitePaidMaxOutputTokens,
+          ttl: settings.anthropicCacheTtl,
+          capUsd: settings.siteMonthlyCapUsd,
+          model: settings.sitePaidModel,
+          skipReaderLimits: isAdmin && !sponsored,
+          dailyQuestions: settings.sponsoredDailyQuestions,
+          monthlyUsd: settings.sponsoredMonthlyUsd
+        })
+        if (!reserved.ok) {
+          logRefusal(reserved.reason, req, userId)
           return new Response(
-            JSON.stringify({
-              error: 'api_key_required',
-              message: 'Add an API key in your profile. Questions are billed to that key.'
-            }),
-            { status: 403, headers: { 'Content-Type': 'application/json' } }
+            JSON.stringify({ error: reserved.reason, message: reserved.message }),
+            { status: reserved.status, headers: { 'Content-Type': 'application/json' } }
           )
         }
+        apiKey = siteKey
+        provider = 'anthropic'
+        payer = 'site'
+        reservationId = reserved.id
+        siteModel = settings.sitePaidModel
+        siteMaxTokens = settings.sitePaidMaxOutputTokens
+      } else if ('reason' in stored && stored.reason === 'unavailable') {
+        return new Response(
+          JSON.stringify({
+            error: 'key_store_unavailable',
+            message: 'API key storage is unavailable. Try again in a moment.'
+          }),
+          { status: 503, headers: { 'Content-Type': 'application/json' } }
+        )
+      } else {
+        logRefusal('api_key_required', req, userId)
+        return new Response(
+          JSON.stringify({
+            error: 'api_key_required',
+            message: 'Add an API key in your profile, or request an invitation.'
+          }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        )
       }
       if (!settings.providers[provider]) {
+        if (reservationId) await releaseSiteSpend(reservationId)
         return new Response(
           JSON.stringify({
             error: 'provider_off',
@@ -442,7 +493,7 @@ export async function POST(req: Request) {
       : mode === 'layperson'
         ? (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
         : ''
-    const model = settings.models[provider]
+    const model = siteModel || settings.models[provider]
 
     const chatMessages = messages
       .filter((msg: any) => msg?.role === 'user' || msg?.role === 'assistant')
@@ -475,6 +526,7 @@ export async function POST(req: Request) {
     let inputTokens = 0
     let outputTokens = 0
     let cachedTokens = 0
+    let cacheWriteTokens = 0
     try {
       const result = await generate(provider, {
         apiKey,
@@ -483,7 +535,7 @@ export async function POST(req: Request) {
         treatiseContext: ragContext.trim(),
         modeInstructions,
         messages: chatMessages,
-        maxTokens: settings.maxOutputTokens,
+        maxTokens: siteMaxTokens || settings.maxOutputTokens,
         cache: settings.cache[provider],
         anthropicCacheTtl: settings.anthropicCacheTtl,
         promptCacheKey: typeof json.id === 'string' ? json.id : undefined
@@ -492,6 +544,7 @@ export async function POST(req: Request) {
       inputTokens = result.inputTokens
       outputTokens = result.outputTokens
       cachedTokens = result.cachedTokens
+      cacheWriteTokens = result.cacheWriteTokens ?? 0
     } catch (error) {
       const code = error instanceof LlmError ? error.code : 'unavailable'
       console.error('Chat provider error:', {
@@ -503,6 +556,7 @@ export async function POST(req: Request) {
         messageCount: messages.length,
         timestamp: new Date().toISOString()
       })
+      if (reservationId) await releaseSiteSpend(reservationId)
       await recordChatUsage({
         userId,
         provider,
@@ -510,9 +564,12 @@ export async function POST(req: Request) {
         inputTokens: 0,
         outputTokens: 0,
         cachedTokens: 0,
+        cacheWriteTokens: 0,
         contextChars: ragContext.length,
         outcome: `refused:${code}`,
-        ipHash
+        ipHash,
+        paidBy: payer,
+        costUsd: 0
       })
       return new Response(
         JSON.stringify({ error: 'provider_error', message: readerMessage(code) }),
@@ -591,6 +648,32 @@ export async function POST(req: Request) {
       }
     })
 
+    const prices = payer === 'site' ? await loadPrices() : []
+    const costUsd = payer === 'site'
+      ? actualCost({
+          model,
+          inputTokens,
+          outputTokens,
+          cacheReadTokens: cachedTokens,
+          cacheWriteTokens,
+          ttl: settings.anthropicCacheTtl,
+          prices
+        })
+      : 0
+    if (reservationId) {
+      await settleSiteSpend(reservationId, costUsd)
+      await maybeAlert(settings.siteMonthlyCapUsd)
+    }
+    console.log('Chat answered', {
+      payer,
+      model,
+      userId,
+      inputTokens,
+      outputTokens,
+      cachedTokens,
+      cacheWriteTokens,
+      costUsd
+    })
     await recordChatUsage({
       userId,
       provider,
@@ -598,9 +681,12 @@ export async function POST(req: Request) {
       inputTokens,
       outputTokens,
       cachedTokens,
+      cacheWriteTokens,
       contextChars: ragContext.length,
       outcome: 'answered',
-      ipHash
+      ipHash,
+      paidBy: payer,
+      costUsd
     })
 
     return new Response(responseStream, {

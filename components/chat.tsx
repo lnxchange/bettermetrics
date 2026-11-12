@@ -21,6 +21,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from './ui/button'
 import { toast } from 'react-hot-toast'
 import { ByokNotice } from '@/components/byok-notice'
+import { InviteRequest } from '@/components/invite-request'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -312,6 +313,7 @@ export function Chat({
               <Button asChild>
                 <Link href="/account#api-key">Add an API key</Link>
               </Button>
+              <InviteRequest />
             </div>
           </div>
         ) : (

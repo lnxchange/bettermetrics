@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 
 import { auth } from '@/auth'
 import { chatStore } from '@/lib/chat-store'
+import { loadPrices, sponsoredSummary } from '@/lib/chat-budget'
 import { CHAT_PROVIDERS, isChatProvider } from '@/lib/chat-provider-ids'
 import {
   ChatSettings,
@@ -43,6 +44,11 @@ function rowFromSettings(settings: ChatSettings) {
     cache: settings.cache,
     anthropic_cache_ttl: settings.anthropicCacheTtl,
     notice_markdown: settings.noticeMarkdown,
+    sponsored_daily_questions: settings.sponsoredDailyQuestions,
+    sponsored_monthly_usd: settings.sponsoredMonthlyUsd,
+    site_monthly_cap_usd: settings.siteMonthlyCapUsd,
+    site_paid_model: settings.sitePaidModel,
+    site_paid_max_output_tokens: settings.sitePaidMaxOutputTokens,
     updated_at: new Date().toISOString()
   }
 }
@@ -59,7 +65,9 @@ export async function GET() {
     supabase.from('chat_settings_log').select('id, email, setting, old_value, new_value, created_at').order('created_at', { ascending: false }).limit(50),
     supabase.from('chat_usage').select('created_at, user_id, provider, model, input_tokens, output_tokens, cached_tokens, outcome').gte('created_at', since).limit(5000)
   ])
-  return NextResponse.json({ settings, log: log ?? [], usage: usage ?? [] })
+  const sponsored = await sponsoredSummary(settings.siteMonthlyCapUsd).catch(() => null)
+  const prices = await loadPrices().catch(() => [])
+  return NextResponse.json({ settings, log: log ?? [], usage: usage ?? [], sponsored, prices })
 }
 
 export async function PUT(req: NextRequest) {
@@ -86,8 +94,38 @@ export async function PUT(req: NextRequest) {
       }))
     )
   }
+  const prices = inputPrices(body)
+  if (prices) {
+    for (const price of prices) {
+      await supabase.from('chat_model_prices').upsert({
+        model: price.model,
+        input_usd_per_mtok: price.inputUsdPerMtok,
+        output_usd_per_mtok: price.outputUsdPerMtok,
+        cache_write_5m_usd_per_mtok: price.cacheWrite5mUsdPerMtok,
+        cache_write_1h_usd_per_mtok: price.cacheWrite1hUsdPerMtok,
+        cache_read_usd_per_mtok: price.cacheReadUsdPerMtok
+      })
+    }
+  }
   clearSettingsCache()
   return NextResponse.json({ settings: next })
+}
+
+function inputPrices(body: unknown) {
+  if (!body || typeof body !== 'object' || !Array.isArray((body as { prices?: unknown }).prices)) return null
+  return ((body as { prices: unknown[] }).prices).flatMap(item => {
+    if (!item || typeof item !== 'object') return []
+    const row = item as Record<string, unknown>
+    if (typeof row.model !== 'string' || !/^[A-Za-z0-9._:/-]{1,80}$/.test(row.model)) return []
+    const num = (value: unknown) => (typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null)
+    const input = num(row.inputUsdPerMtok)
+    const output = num(row.outputUsdPerMtok)
+    const write5 = num(row.cacheWrite5mUsdPerMtok)
+    const write1 = num(row.cacheWrite1hUsdPerMtok)
+    const read = num(row.cacheReadUsdPerMtok)
+    if (input === null || output === null || write5 === null || write1 === null || read === null) return []
+    return [{ model: row.model, inputUsdPerMtok: input, outputUsdPerMtok: output, cacheWrite5mUsdPerMtok: write5, cacheWrite1hUsdPerMtok: write1, cacheReadUsdPerMtok: read }]
+  })
 }
 
 function sanitize(body: unknown, previous: ChatSettings): ChatSettings | { error: string } {
@@ -150,6 +188,20 @@ function sanitize(body: unknown, previous: ChatSettings): ChatSettings | { error
   if (input.anthropicCacheTtl === '5m' || input.anthropicCacheTtl === '1h') {
     next.anthropicCacheTtl = input.anthropicCacheTtl
   }
+  if (typeof input.sponsoredDailyQuestions === 'number' && input.sponsoredDailyQuestions >= 1 && input.sponsoredDailyQuestions <= 500) {
+    next.sponsoredDailyQuestions = Math.round(input.sponsoredDailyQuestions)
+  }
+  if (typeof input.sponsoredMonthlyUsd === 'number') {
+    next.sponsoredMonthlyUsd = Math.round(Math.min(50, Math.max(0, input.sponsoredMonthlyUsd)) * 100) / 100
+  }
+  if (typeof input.siteMonthlyCapUsd === 'number') {
+    if (input.siteMonthlyCapUsd > 50) return { error: 'The site cap cannot be more than US$50.' }
+    next.siteMonthlyCapUsd = Math.round(Math.max(0, input.siteMonthlyCapUsd) * 100) / 100
+  }
+  if (typeof input.sitePaidModel === 'string' && /^[A-Za-z0-9._:/-]{1,80}$/.test(input.sitePaidModel.trim())) {
+    next.sitePaidModel = input.sitePaidModel.trim()
+  }
+  if (typeof input.sitePaidMaxOutputTokens === 'number') next.sitePaidMaxOutputTokens = input.sitePaidMaxOutputTokens
   if (typeof input.noticeMarkdown === 'string') {
     if (!input.noticeMarkdown.trim()) return { error: 'The notice cannot be empty.' }
     next.noticeMarkdown = input.noticeMarkdown

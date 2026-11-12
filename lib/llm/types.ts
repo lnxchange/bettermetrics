@@ -21,6 +21,7 @@ export type GenerateResult = {
   inputTokens: number
   outputTokens: number
   cachedTokens: number
+  cacheWriteTokens?: number
 }
 
 export type LlmFailure =
