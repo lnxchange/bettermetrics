@@ -1,6 +1,6 @@
 import 'server-only'
-import { createClient } from '@supabase/supabase-js'
 
+import { chatStore } from '@/lib/chat-store'
 import { BYOK_NOTICE, PAUSED_MESSAGE } from '@/lib/chat-notice'
 import { ChatProvider, CHAT_PROVIDERS, isChatProvider } from '@/lib/chat-provider-ids'
 
@@ -75,10 +75,7 @@ let memory: { at: number; settings: ChatSettings } | null = null
 let lastPurge = 0
 
 function service() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) return null
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } })
+  return chatStore()
 }
 
 function bool(value: unknown, fallback: boolean) {
