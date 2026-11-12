@@ -2,6 +2,7 @@ import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
+import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
 import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export default async function ChatPage({
@@ -16,15 +17,19 @@ export default async function ChatPage({
   const guestRemaining = isGuest
     ? Math.max(0, GUEST_LIMIT - peekGuestCount(cookieStore.get(GUEST_COOKIE)?.value))
     : undefined
+  const requiresAccount = !guestsAllowed()
+  const requiresOwnKey = !platformKeyAllowed()
 
   return (
     <>
-      <ChatHeader userId={session?.user?.id} isGuest={isGuest} />
+      <ChatHeader userId={session?.user?.id} isGuest={isGuest} requiresAccount={requiresAccount} />
       <div className="flex-1 overflow-auto">
         <Chat
           isGuest={isGuest}
           initialGuestRemaining={guestRemaining}
           initialQuestion={searchParams?.q}
+          requiresAccount={requiresAccount}
+          requiresOwnKey={requiresOwnKey}
         />
       </div>
     </>

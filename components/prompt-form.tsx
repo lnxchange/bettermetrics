@@ -18,6 +18,7 @@ export interface PromptProps
   onSubmit: (value: string) => Promise<void>
   isLoading: boolean
   disabled?: boolean
+  placeholder?: string
 }
 
 export function PromptForm({
@@ -25,7 +26,8 @@ export function PromptForm({
   input,
   setInput,
   isLoading,
-  disabled = false
+  disabled = false,
+  placeholder
 }: PromptProps) {
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
@@ -71,7 +73,10 @@ export function PromptForm({
           rows={1}
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder={disabled ? 'Sign in to keep asking' : 'Ask a question about the AIM Framework'}
+          placeholder={
+            placeholder ??
+            (disabled ? 'Sign in to keep asking' : 'Ask a question about the AIM Framework')
+          }
           spellCheck={false}
           disabled={disabled}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"

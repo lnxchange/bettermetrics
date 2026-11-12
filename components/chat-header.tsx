@@ -8,10 +8,12 @@ import { ThemeToggle } from '@/components/theme-toggle'
 
 export async function ChatHeader({
   userId,
-  isGuest = false
+  isGuest = false,
+  requiresAccount = true
 }: {
   userId?: string
   isGuest?: boolean
+  requiresAccount?: boolean
 }) {
   return (
     <div className="flex h-14 shrink-0 items-center justify-between border-b bg-background px-4">
@@ -34,10 +36,10 @@ export async function ChatHeader({
       <div className="flex items-center gap-3">
         {isGuest && (
           <Link
-            href="/sign-in?redirectedFrom=/chat"
+            href="/sign-in?redirectedFrom=/chat&reason=chat"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Sign in to save chats
+            {requiresAccount ? 'Sign in to ask' : 'Sign in to save chats'}
           </Link>
         )}
         <ThemeToggle />

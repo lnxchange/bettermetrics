@@ -6,6 +6,7 @@ import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
 import { cookies } from 'next/headers'
+import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
 import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export const runtime = 'edge'
@@ -38,6 +39,9 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 
+  const requiresAccount = !guestsAllowed()
+  const requiresOwnKey = !platformKeyAllowed()
+
   // Guests get a fresh, unsaved conversation at this URL.
   if (!session?.user) {
     const guestRemaining = Math.max(
@@ -46,7 +50,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     )
     return (
       <>
-        <ChatHeader isGuest />
+        <ChatHeader isGuest requiresAccount={requiresAccount} />
         <div className="flex-1 overflow-auto">
           <Chat
             id={params.id}
@@ -54,6 +58,8 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
             isGuest
             initialGuestRemaining={guestRemaining}
             initialQuestion={searchParams?.q}
+            requiresAccount={requiresAccount}
+            requiresOwnKey={requiresOwnKey}
           />
         </div>
       </>
@@ -66,12 +72,14 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     // New chat: the URL was created before any message was sent.
     return (
       <>
-        <ChatHeader userId={session.user.id} />
+        <ChatHeader userId={session.user.id} requiresAccount={requiresAccount} />
         <div className="flex-1 overflow-auto">
           <Chat
             id={params.id}
             initialMessages={[]}
             initialQuestion={searchParams?.q}
+            requiresAccount={requiresAccount}
+            requiresOwnKey={requiresOwnKey}
           />
         </div>
       </>
@@ -84,9 +92,14 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
 
   return (
     <>
-      <ChatHeader userId={session.user.id} />
+      <ChatHeader userId={session.user.id} requiresAccount={requiresAccount} />
       <div className="flex-1 overflow-auto">
-        <Chat id={chat.id} initialMessages={chat.messages} />
+        <Chat
+          id={chat.id}
+          initialMessages={chat.messages}
+          requiresAccount={requiresAccount}
+          requiresOwnKey={requiresOwnKey}
+        />
       </div>
     </>
   )

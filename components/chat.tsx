@@ -28,6 +28,10 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   initialGuestRemaining?: number
   /** Question passed via /chat?q=... ; auto-submitted once on mount. */
   initialQuestion?: string
+  /** Anonymous visitors cannot send until they sign in. */
+  requiresAccount?: boolean
+  /** Signed-in readers must save their own Anthropic key before sending. */
+  requiresOwnKey?: boolean
 }
 
 export function Chat({
@@ -36,7 +40,9 @@ export function Chat({
   className,
   isGuest = false,
   initialGuestRemaining,
-  initialQuestion
+  initialQuestion,
+  requiresAccount = true,
+  requiresOwnKey = true
 }: ChatProps) {
   const router = useRouter()
   const [chatMode, setChatMode] = useLocalStorage<'academic' | 'layperson'>(
@@ -53,6 +59,10 @@ export function Chat({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null)
   const [quotaExceeded, setQuotaExceeded] = useState(false)
+  const [serverAccountRequired, setServerAccountRequired] = useState(false)
+  const [keyState, setKeyState] = useState<'unknown' | 'ready' | 'missing'>(
+    isGuest || !requiresOwnKey ? 'ready' : 'unknown'
+  )
   useEffect(() => {
     let cancel = false
     fetch('/api/treatise/targets')
@@ -75,7 +85,25 @@ export function Chat({
   const [guestRemaining, setGuestRemaining] = useState<number | null>(
     isGuest ? initialGuestRemaining ?? GUEST_LIMIT : null
   )
+  const accountRequired = (isGuest && requiresAccount) || serverAccountRequired
   const lastSubmittedRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (isGuest || !requiresOwnKey) return
+    let cancel = false
+    fetch('/api/account/api-key')
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (cancel) return
+        setKeyState(data?.configured ? 'ready' : 'missing')
+      })
+      .catch(() => {
+        if (!cancel) setKeyState('missing')
+      })
+    return () => {
+      cancel = true
+    }
+  }, [isGuest, requiresOwnKey])
   const quotaHitRef = useRef(false)
   const autoSubmittedRef = useRef(false)
 
@@ -113,13 +141,23 @@ export function Chat({
           setGuestRemaining(Number(remaining))
         }
 
-        if (response.status === 403) {
+        if (response.status === 401 || response.status === 403) {
           try {
             const body = await response.clone().json()
             if (body?.error === 'guest_quota') {
               quotaHitRef.current = true
               setQuotaExceeded(true)
               setGuestRemaining(0)
+              return
+            }
+            if (body?.error === 'auth_required') {
+              quotaHitRef.current = true
+              setServerAccountRequired(true)
+              return
+            }
+            if (body?.error === 'api_key_required') {
+              quotaHitRef.current = true
+              setKeyState('missing')
               return
             }
           } catch {
@@ -130,7 +168,7 @@ export function Chat({
         if (response.status === 401) {
           toast.error('Your session has expired. Please sign in again.')
           setTimeout(() => {
-            window.location.href = '/sign-in?redirectedFrom=/chat'
+            window.location.href = '/sign-in?redirectedFrom=/chat&reason=chat'
           }, 1500)
         } else if (!response.ok) {
           setErrorMessage(
@@ -167,7 +205,9 @@ export function Chat({
       hasMounted &&
       !autoSubmittedRef.current &&
       messages.length === 0 &&
-      !quotaExceeded
+      !quotaExceeded &&
+      !accountRequired &&
+      keyState === 'ready'
     ) {
       autoSubmittedRef.current = true
       // Strip ?q= so a reload doesn't resend.
@@ -176,8 +216,9 @@ export function Chat({
       }
       submit(initialQuestion)
     }
+    // submit is recreated each render; the ref stops a second send.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, initialQuestion, hasMounted])
+  }, [id, initialQuestion, hasMounted, accountRequired, keyState, quotaExceeded])
 
   // Scroll to top of new assistant messages
   useEffect(() => {
@@ -216,8 +257,41 @@ export function Chat({
             <ChatList messages={messages} onOpenSection={setSection} targets={targets} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
+        ) : accountRequired ? (
+          <div className="mx-auto mt-6 max-w-2xl px-4">
+            <div className="rounded-lg border bg-background p-6">
+              <h2 className="mb-2 text-base font-semibold">Create an account to ask</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                The assistant is for signed-in readers. After you create an account, add your own
+                Anthropic API key and questions are billed to you.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild>
+                  <Link href={`/sign-in?redirectedFrom=/chat/${chatId}&reason=chat`}>Sign in</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={`/sign-up?redirectedFrom=/chat/${chatId}&reason=chat`}>
+                    Create an account
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : keyState === 'missing' ? (
+          <div className="mx-auto mt-6 max-w-2xl px-4">
+            <div className="rounded-lg border bg-background p-6">
+              <h2 className="mb-2 text-base font-semibold">Add your Anthropic API key</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Chat uses your key, so this site does not pay for the answer. Save a key on your
+                profile, then come back and ask.
+              </p>
+              <Button asChild>
+                <Link href="/account#api-key">Add an API key</Link>
+              </Button>
+            </div>
+          </div>
         ) : (
-          !quotaExceeded && <EmptyScreen onAsk={submit} />
+          keyState === 'ready' && !quotaExceeded && <EmptyScreen onAsk={submit} />
         )}
         {quotaExceeded && (
           <div className="mx-auto mt-6 max-w-2xl px-4">
@@ -226,14 +300,18 @@ export function Chat({
                 You&apos;ve used your {GUEST_LIMIT} free questions
               </h2>
               <p className="mb-4 text-sm text-muted-foreground">
-                Sign in to keep asking and to save your conversations. It&apos;s free.
+                {requiresOwnKey
+                  ? 'Sign in, then add your Anthropic API key. Further questions are billed to that key.'
+                  : 'Sign in to keep asking and to save your conversations.'}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
-                  <Link href={`/sign-in?redirectedFrom=/chat/${chatId}`}>Sign in</Link>
+                  <Link href={`/sign-in?redirectedFrom=/chat/${chatId}&reason=chat`}>Sign in</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href={`/sign-up?redirectedFrom=/chat/${chatId}`}>Create an account</Link>
+                  <Link href={`/sign-up?redirectedFrom=/chat/${chatId}&reason=chat`}>
+                    Create an account
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -253,8 +331,17 @@ export function Chat({
         errorMessage={errorMessage}
         lastFailedMessage={lastFailedMessage}
         onRetry={handleRetry}
-        guestRemaining={guestRemaining}
-        disabled={quotaExceeded}
+        guestRemaining={accountRequired ? null : guestRemaining}
+        disabled={quotaExceeded || accountRequired || keyState !== 'ready'}
+        placeholder={
+          accountRequired
+            ? 'Create an account to ask'
+            : keyState === 'missing'
+              ? 'Add your API key to ask'
+              : keyState === 'unknown'
+                ? 'Checking your account…'
+                : undefined
+        }
         mode={chatMode}
         onModeChange={setChatMode}
         panelOpen={section !== null}

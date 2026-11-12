@@ -18,6 +18,8 @@ import {
   verifyGuestCookie
 } from '@/lib/guest-quota'
 import { consumeGuestQuestion } from '@/lib/guest-rate-limit'
+import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
+import { readUserAnthropicKey } from '@/lib/user-api-keys'
 
 type SearchResult = {
   chunk_text: string
@@ -207,12 +209,6 @@ export async function POST(req: Request) {
       return new Response('Service unavailable - Supabase not configured', { status: 503 })
     }
     
-    // Check if Anthropic API key is configured
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.log('Anthropic API key not configured')
-      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
-    }
-    
     // Create Supabase client
     let supabase: ReturnType<typeof createRouteHandlerClient<Database>>
     try {
@@ -227,11 +223,25 @@ export async function POST(req: Request) {
     const json = await req.json()
     const { messages, previewToken, mode } = json
 
-    // Session is optional: signed-in users get saved history, guests get a
-    // small quota enforced via a signed cookie.
+    // Guests are refused unless CHAT_ALLOW_GUESTS=true. Signed-in readers are
+    // billed to their own key unless CHAT_ALLOW_PLATFORM_KEY=true.
     const session = await auth({ cookieStore })
     const userId: string | null = session?.user?.id ?? null
     const isGuest = !userId
+
+    if (isGuest && !guestsAllowed()) {
+      console.warn('Chat refused: account required', {
+        country: req.headers.get('x-vercel-ip-country'),
+        userAgent: req.headers.get('user-agent')
+      })
+      return new Response(
+        JSON.stringify({
+          error: 'auth_required',
+          message: 'Create an account to ask the assistant.'
+        }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response('Bad request', { status: 400 })
@@ -285,6 +295,42 @@ export async function POST(req: Request) {
         )
       }
       guestRemaining = GUEST_LIMIT - guestState.count - 1
+    }
+
+    // Resolve who pays before any retrieval or model call. A missing key must
+    // not fall through to the site key, and it must not run a vector search.
+    let apiKey: string | null = null
+    let keySource: 'user' | 'platform' = 'platform'
+    if (userId) {
+      const stored = await readUserAnthropicKey(userId)
+      if (stored.key) {
+        apiKey = stored.key
+        keySource = 'user'
+      } else if ('reason' in stored && stored.reason === 'unavailable') {
+        return new Response(
+          JSON.stringify({
+            error: 'key_store_unavailable',
+            message: 'API key storage is unavailable. Try again in a moment.'
+          }),
+          { status: 503, headers: { 'Content-Type': 'application/json' } }
+        )
+      } else if (platformKeyAllowed() && process.env.ANTHROPIC_API_KEY) {
+        apiKey = process.env.ANTHROPIC_API_KEY
+      } else {
+        return new Response(
+          JSON.stringify({
+            error: 'api_key_required',
+            message:
+              'Add your Anthropic API key in your profile. Questions are billed to that key.'
+          }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+    } else if (!process.env.ANTHROPIC_API_KEY) {
+      console.log('Anthropic API key not configured')
+      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
+    } else {
+      apiKey = process.env.ANTHROPIC_API_KEY
     }
 
     // Get the latest user message for RAG context
@@ -388,16 +434,20 @@ export async function POST(req: Request) {
       content: msg.content
     }))
 
-    // Initialize Anthropic client
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    })
+    if (!apiKey) {
+      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
+    }
+
+    const anthropic = new Anthropic({ apiKey })
 
     console.log('Making Claude API request:', {
       model,
       guest: isGuest,
+      keySource,
+      userId,
       messageCount: claudeMessages.length,
-      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
+      country: req.headers.get('x-vercel-ip-country'),
+      userAgent: req.headers.get('user-agent'),
       timestamp: new Date().toISOString()
     })
 
@@ -412,12 +462,13 @@ export async function POST(req: Request) {
       })
     } catch (error: any) {
       console.error('=== CLAUDE API ERROR ===')
-      console.error('Error:', error)
-      console.error('Request details:', {
+      console.error('Claude API error:', {
+        message: error?.message,
+        status: error?.status,
         userId,
         chatId: json.id,
         messageCount: messages.length,
-        hasApiKey: !!process.env.ANTHROPIC_API_KEY,
+        keySource,
         model,
         timestamp: new Date().toISOString()
       })
@@ -465,6 +516,8 @@ export async function POST(req: Request) {
     console.log(`Claude response received: ${fullContent.length} characters`, {
       model,
       guest: isGuest,
+      keySource,
+      userId,
       usage
     })
 
@@ -553,9 +606,7 @@ export async function POST(req: Request) {
       userId: 'unknown', // session not available in catch block
       chatId: 'unknown', // json not available in catch block
       messageCount: 0, // messages not available in catch block
-      apiUsed: 'Claude 3.5 Sonnet',
-      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-      apiKeyPrefix: process.env.ANTHROPIC_API_KEY?.substring(0, 15),
+      apiUsed: 'Claude',
       hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
       timestamp: new Date().toISOString(),

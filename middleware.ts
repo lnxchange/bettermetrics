@@ -34,9 +34,9 @@ export async function middleware(req: NextRequest) {
     }
 
     // Routes where we need to touch the Supabase session (to refresh cookies
-    // and/or enforce sign-in). /chat is included so signed-in users keep a
-    // fresh session, but guests are allowed through (quota enforced in
-    // /api/chat).
+    // and/or enforce sign-in). /chat stays reachable so the page can explain
+    // that an account is required. /api is outside this matcher's scope;
+    // /api/chat refuses anonymous callers itself.
     const requiresAuth = 
       req.url.includes('/admin') || 
       req.url.includes('/chat') || 
@@ -88,7 +88,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(redirectUrl)
     }
 
-    // /chat is open to guests; the API enforces the guest quota.
+    // /chat stays open so visitors see the sign-in wall. The API refuses them.
 
     // Handle admin routes - require admin status
     if (req.url.includes('/admin')) {

@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { AccountApiKey } from '@/components/account-api-key'
+
 export default function AccountPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -63,7 +65,8 @@ export default function AccountPage() {
   if (loading) return <p className="mx-auto max-w-md px-4 py-16 text-sm text-slate-600">Loading your profile…</p>
 
   return (
-    <form className="mx-auto max-w-md space-y-4 px-4 py-16" onSubmit={save}>
+    <div className="mx-auto max-w-md space-y-12 px-4 py-16">
+    <form className="space-y-4" onSubmit={save}>
       <h1 className="text-2xl font-semibold text-slate-900">Your profile</h1>
       <p className="text-sm text-slate-600">Your name and email are how we reach you. A new email needs a confirmation from your inbox before it replaces the current one.</p>
       <label className="block text-sm">
@@ -96,5 +99,7 @@ export default function AccountPage() {
         Save profile
       </button>
     </form>
+    <AccountApiKey />
+    </div>
   )
 }

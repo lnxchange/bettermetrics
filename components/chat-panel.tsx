@@ -27,6 +27,7 @@ export interface ChatPanelProps
   /** null for signed-in users; a number for guests */
   guestRemaining?: number | null
   disabled?: boolean
+  placeholder?: string
   mode: 'academic' | 'layperson'
   onModeChange: (mode: 'academic' | 'layperson') => void
   panelOpen?: boolean
@@ -45,6 +46,7 @@ export function ChatPanel({
   onRetry,
   guestRemaining,
   disabled = false,
+  placeholder,
   mode,
   onModeChange,
   panelOpen = false
@@ -90,6 +92,7 @@ export function ChatPanel({
             setInput={setInput}
             isLoading={isLoading}
             disabled={disabled}
+            placeholder={placeholder}
           />
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1 text-xs text-muted-foreground">
             <span>
