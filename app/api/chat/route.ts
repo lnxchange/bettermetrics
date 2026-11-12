@@ -17,6 +17,7 @@ import {
   signGuestState,
   verifyGuestCookie
 } from '@/lib/guest-quota'
+import { consumeGuestQuestion } from '@/lib/guest-rate-limit'
 
 type SearchResult = {
   chunk_text: string
@@ -170,7 +171,11 @@ This conversation has already begun. Continue from what has been said. Do not de
 const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
 A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
-const CHAT_MODEL = 'claude-opus-5-5'
+// Signed-in readers get Opus. Guests get Sonnet, which costs a fraction of
+// Opus per token; both are overridable in the Vercel environment.
+const CHAT_MODEL = process.env.CHAT_MODEL || 'claude-opus-5-5'
+const GUEST_CHAT_MODEL = process.env.GUEST_CHAT_MODEL || 'claude-sonnet-5'
+
 // 5. Natural, conversational responses without forced structures
 // 6. Superior at avoiding unnecessary disclaimers and meta-commentary
 // 7. 8K output tokens for complete answers
@@ -180,6 +185,17 @@ const CHAT_MODEL = 'claude-opus-5-5'
 // - Focuses entirely on your corpus via RAG
 // - Better instruction following for flexible response formats
 // - More natural, less defensive writing style
+
+// Ceilings on the conversation a request may resend.
+const GUEST_MAX_MESSAGES = 2 * GUEST_LIMIT
+const GUEST_MAX_CONVERSATION_CHARS = 40_000
+const MAX_MESSAGES = 60
+const MAX_CONVERSATION_CHARS = 400_000
+
+// Prompt caching: the system prompt and the Treatise context are sent as
+// separate cached blocks, so a repeat of the same prefix within five minutes
+// is billed at the cache-read rate instead of full input price.
+const CACHE = { type: 'ephemeral' as const }
 
 export async function POST(req: Request) {
   try {
@@ -217,24 +233,55 @@ export async function POST(req: Request) {
     const userId: string | null = session?.user?.id ?? null
     const isGuest = !userId
 
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return new Response('Bad request', { status: 400 })
+    }
+
+    // Every request resends the whole conversation, so its size is the input
+    // cost. Guests get a short, small conversation; everyone gets a ceiling.
+    const conversationChars = messages.reduce(
+      (sum: number, msg: any) => sum + (typeof msg?.content === 'string' ? msg.content.length : 0),
+      0
+    )
+    const maxMessages = isGuest ? GUEST_MAX_MESSAGES : MAX_MESSAGES
+    const maxChars = isGuest ? GUEST_MAX_CONVERSATION_CHARS : MAX_CONVERSATION_CHARS
+    if (messages.length > maxMessages || conversationChars > maxChars) {
+      return new Response(
+        JSON.stringify({
+          error: 'conversation_too_long',
+          message: 'This conversation is too long. Please start a new chat.'
+        }),
+        { status: 413, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const guestRefusal = (message: string) =>
+      new Response(
+        JSON.stringify({ error: 'guest_quota', message, limit: GUEST_LIMIT }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            [GUEST_REMAINING_HEADER]: '0'
+          }
+        }
+      )
+
     let guestState = { count: 0, since: Date.now() }
     let guestRemaining: number | null = null
     if (isGuest) {
       guestState = await verifyGuestCookie(cookieStore.get(GUEST_COOKIE)?.value)
       if (guestState.count >= GUEST_LIMIT) {
-        return new Response(
-          JSON.stringify({
-            error: 'guest_quota',
-            message: `You've used your ${GUEST_LIMIT} free questions. Sign in to continue.`,
-            limit: GUEST_LIMIT
-          }),
-          {
-            status: 403,
-            headers: {
-              'Content-Type': 'application/json',
-              [GUEST_REMAINING_HEADER]: '0'
-            }
-          }
+        return guestRefusal(`You've used your ${GUEST_LIMIT} free questions. Sign in to continue.`)
+      }
+      // The cookie alone can be skipped by not sending it. The server-side
+      // count per IP address and site-wide is what bounds guest spend.
+      const limit = await consumeGuestQuestion(req)
+      if (!limit.allowed) {
+        return guestRefusal(
+          limit.reason === 'ip'
+            ? `You've used your free questions for today. Sign in to continue.`
+            : `Guest questions are unavailable right now. Sign in to continue.`
         )
       }
       guestRemaining = GUEST_LIMIT - guestState.count - 1
@@ -310,21 +357,34 @@ export async function POST(req: Request) {
     }
 
     // Build system message with RAG context
-    let systemContent = AIM_SYSTEM_PROMPT
-    if (ragContext) {
-      systemContent += `\n\n${ragContext}`
+    // Same text and order as before, split into blocks so the stable prefix
+    // (system prompt, then the Treatise context) can be cached. The mode
+    // instructions change between the first reply and follow-ups, so they come
+    // last and are not cached.
+    const systemBlocks: Anthropic.TextBlockParam[] = [
+      { type: 'text', text: AIM_SYSTEM_PROMPT, cache_control: CACHE }
+    ]
+    if (ragContext.trim()) {
+      systemBlocks.push({ type: 'text', text: ragContext.trim(), cache_control: CACHE })
     }
     const continuing = messages.some((msg: { role?: string }) => msg.role === 'assistant')
     if (mode === 'academic') {
-      systemContent += `\n\n${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`
+      systemBlocks.push({
+        type: 'text',
+        text: `${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`.trim()
+      })
     } else if (mode === 'layperson') {
-      systemContent += `\n\n${continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST}`
+      systemBlocks.push({
+        type: 'text',
+        text: (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
+      })
     }
+    const model = isGuest ? GUEST_CHAT_MODEL : CHAT_MODEL
 
     // Prepare messages for Claude API
     // Claude expects system message separately, not in messages array
-    const claudeMessages = messages.map((msg: any) => ({
-      role: msg.role === 'user' ? 'user' : 'assistant',
+    const claudeMessages: Anthropic.MessageParam[] = messages.map((msg: any) => ({
+      role: msg.role === 'user' ? ('user' as const) : ('assistant' as const),
       content: msg.content
     }))
 
@@ -334,7 +394,8 @@ export async function POST(req: Request) {
     })
 
     console.log('Making Claude API request:', {
-      model: CHAT_MODEL,
+      model,
+      guest: isGuest,
       messageCount: claudeMessages.length,
       hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
       timestamp: new Date().toISOString()
@@ -344,9 +405,9 @@ export async function POST(req: Request) {
     let stream
     try {
       stream = await anthropic.messages.stream({
-        model: CHAT_MODEL,
-        max_tokens: 8192,  // Claude Opus supports 8K output tokens
-        system: systemContent,  // System prompt separate from messages
+        model,
+        max_tokens: 8192,
+        system: systemBlocks,  // System prompt separate from messages
         messages: claudeMessages,
       })
     } catch (error: any) {
@@ -357,7 +418,7 @@ export async function POST(req: Request) {
         chatId: json.id,
         messageCount: messages.length,
         hasApiKey: !!process.env.ANTHROPIC_API_KEY,
-        model: CHAT_MODEL,
+        model,
         timestamp: new Date().toISOString()
       })
       console.error('===========================')
@@ -379,9 +440,16 @@ export async function POST(req: Request) {
 
     // Collect the full response from Claude's stream
     let fullContent = ''
+    // Token usage, logged so cache hits and per-question cost show in Vercel logs
+    let usage: Record<string, unknown> = {}
 
     try {
       for await (const chunk of stream) {
+        if (chunk.type === 'message_start') {
+          usage = { ...usage, ...chunk.message.usage }
+        } else if (chunk.type === 'message_delta') {
+          usage = { ...usage, output_tokens: chunk.usage.output_tokens }
+        }
         if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
           fullContent += chunk.delta.text
         }
@@ -394,7 +462,11 @@ export async function POST(req: Request) {
       }
     }
 
-    console.log(`Claude response received: ${fullContent.length} characters`)
+    console.log(`Claude response received: ${fullContent.length} characters`, {
+      model,
+      guest: isGuest,
+      usage
+    })
 
     // Section citations are turned into treatise links when the reply is shown.
 
