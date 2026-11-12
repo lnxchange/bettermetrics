@@ -263,7 +263,7 @@ export function Chat({
               <h2 className="mb-2 text-base font-semibold">Create an account to ask</h2>
               <p className="mb-4 text-sm text-muted-foreground">
                 The assistant is for signed-in readers. After you create an account, add your own
-                Anthropic API key and questions are billed to you.
+                API key and questions are billed to that provider.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
@@ -280,10 +280,10 @@ export function Chat({
         ) : keyState === 'missing' ? (
           <div className="mx-auto mt-6 max-w-2xl px-4">
             <div className="rounded-lg border bg-background p-6">
-              <h2 className="mb-2 text-base font-semibold">Add your Anthropic API key</h2>
+              <h2 className="mb-2 text-base font-semibold">Add your API key</h2>
               <p className="mb-4 text-sm text-muted-foreground">
-                Chat uses your key, so this site does not pay for the answer. Save a key on your
-                profile, then come back and ask.
+                Chat uses your Anthropic, OpenAI, Google, or OpenRouter key, so this site does not
+                pay for the answer. Save a key on your profile, then come back and ask.
               </p>
               <Button asChild>
                 <Link href="/account#api-key">Add an API key</Link>
@@ -301,7 +301,7 @@ export function Chat({
               </h2>
               <p className="mb-4 text-sm text-muted-foreground">
                 {requiresOwnKey
-                  ? 'Sign in, then add your Anthropic API key. Further questions are billed to that key.'
+                  ? 'Sign in, then add your API key. Further questions are billed to that provider.'
                   : 'Sign in to keep asking and to save your conversations.'}
               </p>
               <div className="flex flex-wrap gap-3">

@@ -51,7 +51,7 @@ export default async function SignUpPage({
         {fromChat && (
           <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-800">
-              After your account is ready, add your Anthropic API key on your profile. Questions are billed to that key.
+              After your account is ready, add your API key on your profile. Questions are billed to that provider.
             </p>
           </div>
         )}

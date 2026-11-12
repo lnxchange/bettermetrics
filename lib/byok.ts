@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto'
 
 /**
- * Encrypts a reader's Anthropic API key before it is stored.
+ * Encrypts a reader's API key before it is stored.
  * The raw key is only decrypted in the chat route, on the server.
  * Set BYOK_ENCRYPTION_KEY in production. If it is unset, the service role
  * key is the fallback, so rotating that key makes stored keys unreadable.

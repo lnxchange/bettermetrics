@@ -3,8 +3,6 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
-import Anthropic from '@anthropic-ai/sdk'
-
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
@@ -19,7 +17,9 @@ import {
 } from '@/lib/guest-quota'
 import { consumeGuestQuestion } from '@/lib/guest-rate-limit'
 import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
-import { readUserAnthropicKey } from '@/lib/user-api-keys'
+import { ChatProvider, SystemBlock, defaultModel } from '@/lib/chat-provider-ids'
+import { ProviderError, completeChat } from '@/lib/chat-providers'
+import { readUserChatKey } from '@/lib/user-api-keys'
 
 type SearchResult = {
   chunk_text: string
@@ -173,9 +173,7 @@ This conversation has already begun. Continue from what has been said. Do not de
 const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
 A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
-// Signed-in readers get Opus. Guests get Sonnet, which costs a fraction of
-// Opus per token; both are overridable in the Vercel environment.
-const CHAT_MODEL = process.env.CHAT_MODEL || 'claude-opus-5-5'
+// Guests, when enabled, stay on the site's Anthropic key and a cheaper model.
 const GUEST_CHAT_MODEL = process.env.GUEST_CHAT_MODEL || 'claude-sonnet-5'
 
 // 5. Natural, conversational responses without forced structures
@@ -301,10 +299,14 @@ export async function POST(req: Request) {
     // not fall through to the site key, and it must not run a vector search.
     let apiKey: string | null = null
     let keySource: 'user' | 'platform' = 'platform'
+    let provider: ChatProvider = 'anthropic'
+    let modelOverride: string | null = null
     if (userId) {
-      const stored = await readUserAnthropicKey(userId)
+      const stored = await readUserChatKey(userId)
       if (stored.key) {
         apiKey = stored.key
+        provider = stored.provider
+        modelOverride = stored.model
         keySource = 'user'
       } else if ('reason' in stored && stored.reason === 'unavailable') {
         return new Response(
@@ -321,7 +323,7 @@ export async function POST(req: Request) {
           JSON.stringify({
             error: 'api_key_required',
             message:
-              'Add your Anthropic API key in your profile. Questions are billed to that key.'
+              'Add an API key in your profile. Questions are billed to that key.'
           }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }
         )
@@ -407,7 +409,7 @@ export async function POST(req: Request) {
     // (system prompt, then the Treatise context) can be cached. The mode
     // instructions change between the first reply and follow-ups, so they come
     // last and are not cached.
-    const systemBlocks: Anthropic.TextBlockParam[] = [
+    const systemBlocks: SystemBlock[] = [
       { type: 'text', text: AIM_SYSTEM_PROMPT, cache_control: CACHE }
     ]
     if (ragContext.trim()) {
@@ -425,95 +427,71 @@ export async function POST(req: Request) {
         text: (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
       })
     }
-    const model = isGuest ? GUEST_CHAT_MODEL : CHAT_MODEL
+    const model = isGuest ? GUEST_CHAT_MODEL : modelOverride || defaultModel(provider)
 
-    // Prepare messages for Claude API
-    // Claude expects system message separately, not in messages array
-    const claudeMessages: Anthropic.MessageParam[] = messages.map((msg: any) => ({
-      role: msg.role === 'user' ? ('user' as const) : ('assistant' as const),
-      content: msg.content
-    }))
+    const chatMessages = messages
+      .filter((msg: any) => msg?.role === 'user' || msg?.role === 'assistant')
+      .filter((msg: any) => typeof msg?.content === 'string')
+      .map((msg: any) => ({
+        role: msg.role === 'user' ? ('user' as const) : ('assistant' as const),
+        content: msg.content as string
+      }))
 
     if (!apiKey) {
       return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
     }
 
-    const anthropic = new Anthropic({ apiKey })
-
-    console.log('Making Claude API request:', {
+    console.log('Making chat request:', {
+      provider,
       model,
       guest: isGuest,
       keySource,
       userId,
-      messageCount: claudeMessages.length,
+      messageCount: chatMessages.length,
       country: req.headers.get('x-vercel-ip-country'),
       userAgent: req.headers.get('user-agent'),
       timestamp: new Date().toISOString()
     })
 
-    // Call Claude API with streaming
-    let stream
+    let fullContent = ''
+    let usage: Record<string, unknown> = {}
     try {
-      stream = await anthropic.messages.stream({
+      const result = await completeChat({
+        provider,
+        apiKey,
         model,
-        max_tokens: 8192,
-        system: systemBlocks,  // System prompt separate from messages
-        messages: claudeMessages,
+        systemBlocks,
+        messages: chatMessages
       })
-    } catch (error: any) {
-      console.error('=== CLAUDE API ERROR ===')
-      console.error('Claude API error:', {
-        message: error?.message,
-        status: error?.status,
+      fullContent = result.text
+      usage = result.usage
+    } catch (error) {
+      const status = error instanceof ProviderError ? error.status : 502
+      console.error('Chat provider error:', {
+        message: error instanceof Error ? error.message : 'Request failed',
+        status,
+        provider,
+        model,
         userId,
         chatId: json.id,
         messageCount: messages.length,
         keySource,
-        model,
         timestamp: new Date().toISOString()
       })
-      console.error('===========================')
-
+      const rejected = status === 401 || status === 403
       return new Response(
         JSON.stringify({
-          error: 'Claude API error',
-          details: error.message || 'Unknown error',
-          timestamp: new Date().toISOString()
+          error: 'provider_error',
+          message: rejected
+            ? 'That API key was rejected. Save a new one on your profile.'
+            : 'The model could not answer. Check the key and model on your profile, then try again.'
         }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 502, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
-    console.log('Claude API streaming response initiated')
-
-    // Collect the full response from Claude's stream
-    let fullContent = ''
-    // Token usage, logged so cache hits and per-question cost show in Vercel logs
-    let usage: Record<string, unknown> = {}
-
-    try {
-      for await (const chunk of stream) {
-        if (chunk.type === 'message_start') {
-          usage = { ...usage, ...chunk.message.usage }
-        } else if (chunk.type === 'message_delta') {
-          usage = { ...usage, output_tokens: chunk.usage.output_tokens }
-        }
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullContent += chunk.delta.text
-        }
-      }
-    } catch (streamError) {
-      console.error('Error reading Claude stream:', streamError)
-      // If we have partial content, use it
-      if (!fullContent) {
-        throw streamError
-      }
-    }
-
-    console.log(`Claude response received: ${fullContent.length} characters`, {
+    console.log(`Chat response received: ${fullContent.length} characters`, {
+      provider,
       model,
       guest: isGuest,
       keySource,

@@ -53,7 +53,7 @@ export default async function SignInPage({
         {(searchParams.reason === 'chat' || searchParams.redirectedFrom?.startsWith('/chat')) && (
           <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-800">
-              Create an account to ask the assistant. You will add your own Anthropic API key, and questions are billed to that key.
+              Create an account to ask the assistant. You will add your own API key, and questions are billed to that provider.
             </p>
           </div>
         )}
