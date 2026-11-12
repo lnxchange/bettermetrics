@@ -79,10 +79,82 @@ export async function completeChat(input: {
     OPENAI_COMPAT[input.provider],
     input.apiKey,
     model,
-    systemText(input.systemBlocks),
+    input.systemBlocks,
     input.messages,
-    input.provider === 'openrouter'
+    input.provider
   )
+}
+
+const CACHE_KEY = 'aimtheory-chat'
+
+type ContentPart = {
+  type: 'text'
+  text: string
+  prompt_cache_breakpoint?: { mode: 'explicit' }
+  cache_control?: { type: 'ephemeral' }
+}
+
+/** Stable blocks are marked for caching. The mode instructions stay after that boundary. */
+export function systemMessageContent(blocks: SystemBlock[], provider: ChatProvider): ContentPart[] {
+  return blocks
+    .filter(block => block.text.trim())
+    .map(block => {
+      const part: ContentPart = { type: 'text', text: block.text.trim() }
+      if (!block.cache_control) return part
+      if (provider === 'openai' || provider === 'openrouter') {
+        part.prompt_cache_breakpoint = { mode: 'explicit' }
+      }
+      if (provider === 'google' || provider === 'openrouter') {
+        part.cache_control = { type: 'ephemeral' }
+      }
+      return part
+    })
+}
+
+export function buildProviderMessages(
+  provider: ChatProvider,
+  blocks: SystemBlock[],
+  messages: ChatMessage[]
+) {
+  const kept = blocks.filter(block => block.text.trim())
+  const stable = kept.filter(block => block.cache_control)
+  const dynamic = kept.filter(block => !block.cache_control)
+  const system: { role: 'system'; content: ContentPart[] }[] = []
+  if (stable.length) system.push({ role: 'system', content: systemMessageContent(stable, provider) })
+  if (dynamic.length) {
+    system.push({ role: 'system', content: systemMessageContent(dynamic, provider) })
+  }
+  if (!system.length && kept.length) {
+    system.push({ role: 'system', content: systemMessageContent(kept, provider) })
+  }
+  return [...system, ...messages]
+}
+
+function cacheFields(provider: ChatProvider): Record<string, unknown> {
+  if (provider === 'openai') {
+    return {
+      prompt_cache_key: CACHE_KEY,
+      prompt_cache_options: { mode: 'explicit', ttl: '30m' }
+    }
+  }
+  if (provider === 'openrouter') return { prompt_cache_key: CACHE_KEY }
+  return {}
+}
+
+export function usageFromChunk(usage: {
+  prompt_tokens?: number
+  completion_tokens?: number
+  prompt_tokens_details?: { cached_tokens?: number; cache_write_tokens?: number }
+}): Record<string, unknown> {
+  const result: Record<string, unknown> = {}
+  if (typeof usage.prompt_tokens === 'number') result.input_tokens = usage.prompt_tokens
+  if (typeof usage.completion_tokens === 'number') result.output_tokens = usage.completion_tokens
+  const details = usage.prompt_tokens_details
+  if (typeof details?.cached_tokens === 'number') result.cached_tokens = details.cached_tokens
+  if (typeof details?.cache_write_tokens === 'number') {
+    result.cache_write_tokens = details.cache_write_tokens
+  }
+  return result
 }
 
 async function completeAnthropic(
@@ -129,38 +201,45 @@ async function completeOpenAICompat(
   baseUrl: string,
   apiKey: string,
   model: string,
-  system: string,
+  blocks: SystemBlock[],
   messages: ChatMessage[],
-  openRouter: boolean
+  provider: ChatProvider
 ): Promise<ChatResult> {
   const headers: Record<string, string> = {
     Authorization: `Bearer ${apiKey}`,
     'Content-Type': 'application/json'
   }
-  if (openRouter) {
+  if (provider === 'openrouter') {
     headers['HTTP-Referer'] = 'https://aimtheory.org'
     headers['X-Title'] = 'AIM Framework'
   }
   const tokenField = baseUrl.includes('api.openai.com') ? 'max_completion_tokens' : 'max_tokens'
-  let response: Response
-  try {
-    response = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model,
-        [tokenField]: OUTPUT_TOKENS,
-        stream: true,
-        stream_options: { include_usage: true },
-        messages: [{ role: 'system', content: system }, ...messages]
-      }),
-      signal: AbortSignal.timeout(280000)
-    })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Request failed'
-    throw new ProviderError(502, redact(message, apiKey))
+  const cachedBody = {
+    model,
+    [tokenField]: OUTPUT_TOKENS,
+    stream: true,
+    stream_options: { include_usage: true },
+    ...cacheFields(provider),
+    messages: buildProviderMessages(provider, blocks, messages)
+  }
+  const plainBody = {
+    model,
+    [tokenField]: OUTPUT_TOKENS,
+    stream: true,
+    stream_options: { include_usage: true },
+    ...(provider === 'google' ? {} : { prompt_cache_key: CACHE_KEY }),
+    messages: [{ role: 'system', content: systemText(blocks) }, ...messages]
   }
 
+  let response = await postChat(baseUrl, headers, cachedBody, apiKey)
+  if (response.status === 400) {
+    const detail = await response.text().catch(() => '')
+    if (/prompt_cache|cache_control|unknown parameter|unrecognized|extra inputs|additional properties/i.test(detail)) {
+      response = await postChat(baseUrl, headers, plainBody, apiKey)
+    } else {
+      throw new ProviderError(400, redact(detail || response.statusText, apiKey))
+    }
+  }
   if (!response.ok) {
     const detail = await response.text().catch(() => '')
     throw new ProviderError(response.status, redact(detail || response.statusText, apiKey))
@@ -170,15 +249,29 @@ async function completeOpenAICompat(
   let usage: Record<string, unknown> = {}
   await readSse(response, chunk => {
     text += openAIDeltaText(chunk)
-    if (chunk?.usage && typeof chunk.usage === 'object') {
-      usage = {
-        input_tokens: chunk.usage.prompt_tokens,
-        output_tokens: chunk.usage.completion_tokens
-      }
-    }
+    if (chunk?.usage && typeof chunk.usage === 'object') usage = usageFromChunk(chunk.usage)
   })
   if (!text) throw new ProviderError(502, 'The model returned an empty answer')
   return { text, usage }
+}
+
+async function postChat(
+  baseUrl: string,
+  headers: Record<string, string>,
+  body: unknown,
+  apiKey: string
+) {
+  try {
+    return await fetch(`${baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(280000)
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Request failed'
+    throw new ProviderError(502, redact(message, apiKey))
+  }
 }
 
 export function openAIDeltaText(chunk: {
