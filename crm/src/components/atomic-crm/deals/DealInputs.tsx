@@ -1,4 +1,5 @@
 import { required, useTranslate } from "ra-core";
+import { useWatch } from "react-hook-form";
 import { AutocompleteArrayInput } from "@/components/admin/autocomplete-array-input";
 import { ReferenceArrayInput } from "@/components/admin/reference-array-input";
 import { ReferenceInput } from "@/components/admin/reference-input";
@@ -10,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import { useConfigurationContext } from "../root/ConfigurationContext";
+import { isDonationDeal } from "./dealUtils";
 import { AutocompleteCompanyInput } from "../companies/AutocompleteCompanyInput.tsx";
 import { AutocompleteContactInput } from "../contacts/AutocompleteContactInput.tsx";
 
@@ -62,6 +64,8 @@ const DealLinkedToInputs = () => {
 const DealMiscInputs = () => {
   const { dealStages, dealCategories } = useConfigurationContext();
   const translate = useTranslate();
+  const categories = useWatch({ name: "categories" }) as string[] | undefined;
+  const showAmount = isDonationDeal(categories);
   return (
     <div className="flex flex-col gap-4 flex-1">
       <h6 className="text-lg font-semibold">
@@ -75,12 +79,9 @@ const DealMiscInputs = () => {
         optionValue="value"
         helperText={false}
       />
-      <NumberInput
-        source="amount"
-        defaultValue={0}
-        helperText={false}
-        validate={required()}
-      />
+      {showAmount ? (
+        <NumberInput source="amount" helperText={false} validate={required()} />
+      ) : null}
       <DateInput
         validate={required()}
         source="expected_closing_date"

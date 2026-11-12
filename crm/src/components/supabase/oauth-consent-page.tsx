@@ -25,7 +25,11 @@ import {
 export function OAuthConsentPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const authorizationId = searchParams.get("authorization_id");
+  const authorizationId =
+    searchParams.get("authorization_id") ||
+    (typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("authorization_id"));
   const authProvider = useAuthProvider();
   const translate = useTranslate();
 
@@ -39,7 +43,9 @@ export function OAuthConsentPage() {
   useEffect(() => {
     async function loadAuthDetails() {
       if (!authorizationId) {
-        setError("Missing authorization_id");
+        setError(
+          "This approval link has no approval id. Close this tab and add the connector again from Claude.",
+        );
         setLoading(false);
         return;
       }
@@ -142,7 +148,7 @@ export function OAuthConsentPage() {
       <Layout>
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
-            {translate("ra.message.error", { _: "Error" })}
+            Approval stopped
           </h1>
           <p className="text-destructive">{error}</p>
         </div>

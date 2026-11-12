@@ -33,6 +33,13 @@ create or replace trigger company_saved
     before insert or update on public.companies
     for each row execute function public.handle_company_saved();
 
+-- Lock scalars a person edited in the CRM. Runs before the email and avatar
+-- triggers so a rewrite of email_jsonb is not mistaken for an edit. Sync sets
+-- app.contact_sync and the function leaves those writes unlocked.
+create or replace trigger "00_lock_edited_contact_fields"
+    before update on public.contacts
+    for each row execute function public.lock_edited_contact_fields();
+
 -- Lowercase contact emails before insert or update (must run before contact_saved)
 create or replace trigger "10_lowercase_contact_emails"
     before insert or update on public.contacts

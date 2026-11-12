@@ -197,9 +197,9 @@ export const Note = ({
         <div className="pt-2 text-sm max-w-150">
           {note.text &&
             (isCollapsedCompact ? (
-              <p ref={contentRef} className="line-clamp-2">
-                {note.text.replace(/\s+/g, " ").trim()}
-              </p>
+              <div ref={contentRef} className="line-clamp-2 overflow-hidden">
+                <Markdown>{note.text}</Markdown>
+              </div>
             ) : (
               <div
                 ref={contentRef}

@@ -108,6 +108,14 @@ export type Contact = {
   ask_policy?: "may-ask-to-validate" | "do-not-ask" | null;
   site_user_id?: string | null;
   locked_fields?: string[] | null;
+  outreach_status?: string | null;
+  first_contacted_at?: string | null;
+  last_contacted_at?: string | null;
+  email_holder?: "self" | "assistant" | "agent" | null;
+  contact_via?: string | null;
+  introduced_by?: Identifier | null;
+  introduced_by_name?: string | null;
+  list?: "primary" | "secondary" | null;
 } & Pick<RaRecord, "id">;
 
 export type ContactNote = {

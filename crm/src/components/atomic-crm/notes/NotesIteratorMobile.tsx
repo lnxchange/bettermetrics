@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotateCcw } from "lucide-react";
 
+import { Markdown } from "../misc/Markdown";
 import { RelativeDate } from "../misc/RelativeDate";
 import { Status } from "../misc/Status";
 import { useGetSalesName } from "../sales/useGetSalesName";
@@ -138,9 +139,9 @@ export const NoteMobile = ({
         </span>
       </div>
       {note.text && (
-        <p className="pt-2 text-sm line-clamp-3">
-          {note.text.replace(/\s+/g, " ").trim()}
-        </p>
+        <div className="pt-2 text-sm line-clamp-3 overflow-hidden">
+          {note.text ? <Markdown>{note.text}</Markdown> : null}
+        </div>
       )}
     </Link>
   );

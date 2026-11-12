@@ -27,16 +27,27 @@ interface SectionPayload {
   next: SectionStep | null
 }
 
+function openInTreatise(href: string, returnHref?: string) {
+  if (!returnHref) return href
+  const hashAt = href.indexOf('#')
+  const path = hashAt === -1 ? href : href.slice(0, hashAt)
+  const hash = hashAt === -1 ? '' : href.slice(hashAt)
+  const join = path.includes('?') ? '&' : '?'
+  return `${path}${join}from=${encodeURIComponent(returnHref)}${hash}`
+}
+
 function sameSection(a: TreatiseSectionTarget, b: TreatiseSectionTarget) {
   return a.slug === b.slug && a.section === b.section
 }
 
 export function TreatiseSectionPanel({
   target,
+  returnHref,
   onOpen,
   onClose
 }: {
   target: TreatiseSectionTarget
+  returnHref?: string
   onOpen: (target: TreatiseSectionTarget) => void
   onClose: () => void
 }) {
@@ -104,15 +115,25 @@ export function TreatiseSectionPanel({
 
   return (
     <aside
-      className="fixed bottom-0 right-0 top-[7.5rem] z-30 flex w-full flex-col border-l bg-background lg:w-[min(40vw,28rem)]"
+      className="fixed bottom-0 right-0 top-16 z-40 flex w-full flex-col border-l bg-background lg:top-[7.5rem] lg:z-30 lg:w-[min(40vw,28rem)]"
       aria-label="Treatise section"
     >
+      <button
+        type="button"
+        onClick={onClose}
+        className="border-b px-4 py-3 text-left text-sm font-medium text-primary-700 lg:hidden"
+      >
+        ← Back to conversation
+      </button>
       <div className="flex items-start justify-between gap-3 border-b px-4 py-3">
         <div className="min-w-0">
           <p className="text-xs text-muted-foreground">{payload?.label ?? 'Treatise'}</p>
           <p className="truncate text-sm font-medium">{payload?.heading ?? target.section}</p>
           {payload && (
-            <Link href={payload.href} className="text-xs text-primary-700 hover:underline">
+            <Link
+              href={openInTreatise(payload.href, returnHref)}
+              className="text-xs text-primary-700 hover:underline"
+            >
               Open {payload.label}
             </Link>
           )}
@@ -123,18 +144,18 @@ export function TreatiseSectionPanel({
             disabled={cursor.index === 0}
             onClick={() => recall(index.current - 1)}
             className="rounded-md border px-2 py-1 text-xs hover:bg-muted disabled:cursor-default disabled:opacity-40"
-            aria-label="Back"
+            aria-label="Earlier section"
           >
-            ← Back
+            Earlier
           </button>
           <button
             type="button"
             disabled={cursor.index >= cursor.length - 1}
             onClick={() => recall(index.current + 1)}
             className="rounded-md border px-2 py-1 text-xs hover:bg-muted disabled:cursor-default disabled:opacity-40"
-            aria-label="Forward"
+            aria-label="Later section"
           >
-            Forward →
+            Later
           </button>
           <button
             type="button"

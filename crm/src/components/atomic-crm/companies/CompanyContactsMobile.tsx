@@ -3,8 +3,8 @@ import { RecordContextProvider, useListContext, useTranslate } from "ra-core";
 import { Link, useLocation } from "react-router";
 
 import { Avatar } from "../contacts/Avatar";
+import { ContactOutreachSummary } from "../contacts/ContactOutreach";
 import { AsideSection } from "../misc/AsideSection";
-import { Status } from "../misc/Status";
 import type { Company, Contact } from "../types";
 
 export const CompanyContactsMobile = ({ record }: { record: Company }) => {
@@ -45,7 +45,7 @@ const CompanyContactsIteratorMobile = () => {
             <div className="font-medium truncate">
               {`${contact.first_name} ${contact.last_name ?? ""}`}
             </div>
-            <Status status={contact.status} />
+            <ContactOutreachSummary contact={contact} />
           </div>
           {contact.title && (
             <div className="text-muted-foreground truncate">

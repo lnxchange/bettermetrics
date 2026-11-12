@@ -95,9 +95,16 @@ const Header = () => {
                 </nav>
               </div>
               <div className="flex items-center">
+                <a
+                  href="/"
+                  className="shrink-0 whitespace-nowrap px-3 py-4 text-sm font-medium text-slate-600 hover:text-[#1E3A8A]"
+                >
+                  Main Site
+                </a>
                 <GlobalSearchButton />
                 <RefreshButton />
                 <UserMenu>
+                  <SiteMenu />
                   <ProfileMenu />
                   <CanAccess resource="sales" action="list">
                     <UsersMenu />
@@ -133,6 +140,21 @@ const NavigationTab = ({
     {label}
   </Link>
 );
+
+const SiteMenu = () => {
+  const userMenuContext = useUserMenu();
+  if (!userMenuContext) {
+    throw new Error("<SiteMenu> must be used inside <UserMenu>");
+  }
+  return (
+    <DropdownMenuItem
+      onClick={userMenuContext.onClose}
+      render={<a href="/" className="flex items-center gap-2" />}
+    >
+      Main Site
+    </DropdownMenuItem>
+  );
+};
 
 const UsersMenu = () => {
   const translate = useTranslate();

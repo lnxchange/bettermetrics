@@ -13,7 +13,7 @@ describe("DealInputs", () => {
     const screen = await render(<CreateForm />);
 
     // pick the company first: the contact created from this form should inherit it
-    await screen.getByRole("combobox", { name: /company/i }).click();
+    await screen.getByRole("combobox", { name: /organisation/i }).click();
     await screen.getByRole("option", { name: /Smith Corp/ }).click();
 
     // contacts is the first of the form's autocompletes (categories comes later)
@@ -33,7 +33,7 @@ describe("DealInputs", () => {
       .element(sheet.getByLabelText(/last name/i))
       .toHaveValue("Hopper");
     await expect
-      .element(sheet.getByRole("combobox", { name: /company/i }))
+      .element(sheet.getByRole("combobox", { name: /organisation/i }))
       .toHaveTextContent("Smith Corp");
 
     await sheet.getByRole("button", { name: /^save$/i }).click();

@@ -74,6 +74,9 @@ grant all on table public.contacts to anon;
 grant all on table public.contacts to authenticated;
 grant all on table public.contacts to service_role;
 
+grant all on table public.contact_links to authenticated;
+grant all on table public.contact_links to service_role;
+
 grant all on table public.contact_notes to anon;
 grant all on table public.contact_notes to authenticated;
 grant all on table public.contact_notes to service_role;

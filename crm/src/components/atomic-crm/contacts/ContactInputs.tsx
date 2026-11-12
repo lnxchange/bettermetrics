@@ -14,10 +14,12 @@ import { BooleanInput } from "@/components/admin/boolean-input";
 import { ReferenceInput } from "@/components/admin/reference-input";
 import { TextInput } from "@/components/admin/text-input";
 import { RadioButtonGroupInput } from "@/components/admin/radio-button-group-input";
+import { AutocompleteInput } from "@/components/admin/autocomplete-input";
 import { SelectInput } from "@/components/admin/select-input";
 import { ArrayInput } from "@/components/admin/array-input";
 import { SimpleFormIterator } from "@/components/admin/simple-form-iterator";
 
+import { contactOptionText } from "../misc/ContactOption";
 import { isLinkedinUrl } from "../misc/isLinkedInUrl";
 import { StatusSelector } from "../notes";
 import type { Sale, Contact } from "../types";
@@ -212,6 +214,13 @@ const ContactMiscInputs = () => {
         {translate("resources.contacts.field_categories.misc")}
       </h6>
       <TextInput source="background" multiline helperText={false} />
+      <ReferenceInput source="introduced_by" reference="contacts">
+        <AutocompleteInput
+          label="resources.contacts.fields.introduced_by"
+          optionText={contactOptionText}
+          helperText={false}
+        />
+      </ReferenceInput>
       <SelectInput
         source="ask_policy"
         label="Ask policy"

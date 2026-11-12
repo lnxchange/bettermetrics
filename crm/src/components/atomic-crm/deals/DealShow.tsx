@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { isValid } from "date-fns";
+import { format } from "date-fns";
 import { Archive, ArchiveRestore } from "lucide-react";
 import {
   InfiniteListBase,
@@ -30,7 +30,8 @@ import { ContactList } from "./ContactList";
 import {
   findDealLabel,
   formatDealCategories,
-  formatISODateString,
+  isDonationDeal,
+  parseDealDate,
 } from "./dealUtils";
 
 export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
@@ -41,7 +42,7 @@ export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="lg:max-w-4xl p-4 overflow-y-auto max-h-9/10 top-1/20 translate-y-0">
+      <DialogContent className="max-h-[85vh] overflow-y-auto p-4 translate-y-0 top-[5vh] lg:max-w-4xl">
         {id ? (
           <ShowBase id={id}>
             <DealShowContent />
@@ -57,6 +58,9 @@ const DealShowContent = () => {
   const { dealStages, dealCategories, currency } = useConfigurationContext();
   const record = useRecordContext<Deal>();
   if (!record) return null;
+  const closingDate = parseDealDate(record.expected_closing_date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <>
@@ -89,18 +93,18 @@ const DealShowContent = () => {
             </div>
           </div>
 
-          <div className="flex gap-8 m-4">
+          <div className="m-4 flex flex-wrap gap-x-8 gap-y-4">
             <div className="flex flex-col mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
                 {translate("resources.deals.fields.expected_closing_date")}
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-sm">
-                  {isValid(new Date(record.expected_closing_date))
-                    ? formatISODateString(record.expected_closing_date)
+                  {closingDate
+                    ? format(closingDate, "PP")
                     : translate("resources.deals.invalid_date")}
                 </span>
-                {new Date(record.expected_closing_date) < new Date() ? (
+                {closingDate && closingDate < today ? (
                   <Badge variant="destructive">
                     {translate("crm.common.past")}
                   </Badge>
@@ -108,20 +112,22 @@ const DealShowContent = () => {
               </div>
             </div>
 
-            <div className="flex flex-col mr-10">
-              <span className="text-xs text-muted-foreground tracking-wide">
-                {translate("resources.deals.fields.amount")}
-              </span>
-              <span className="text-sm">
-                {record.amount.toLocaleString("en-US", {
-                  notation: "compact",
-                  style: "currency",
-                  currency,
-                  currencyDisplay: "narrowSymbol",
-                  minimumSignificantDigits: 3,
-                })}
-              </span>
-            </div>
+            {isDonationDeal(record.categories) ? (
+              <div className="flex flex-col mr-10">
+                <span className="text-xs text-muted-foreground tracking-wide">
+                  {translate("resources.deals.fields.amount")}
+                </span>
+                <span className="text-sm">
+                  {(record.amount ?? 0).toLocaleString("en-US", {
+                    notation: "compact",
+                    style: "currency",
+                    currency,
+                    currencyDisplay: "narrowSymbol",
+                    minimumSignificantDigits: 3,
+                  })}
+                </span>
+              </div>
+            ) : null}
 
             {!!record.categories?.length && (
               <div className="flex flex-col mr-10">

@@ -27,12 +27,11 @@ import { cn } from "@/lib/utils";
 import { ActivityLog } from "../activity/ActivityLog";
 import { Avatar } from "../contacts/Avatar";
 import { TagsList } from "../contacts/TagsList";
-import { findDealLabel, formatDealCategories } from "../deals/dealUtils";
+import { findDealLabel, formatDealCategories, isDonationDeal } from "../deals/dealUtils";
 import { MobileContent } from "../layout/MobileContent";
 import MobileHeader from "../layout/MobileHeader";
 import { MobileBackButton } from "../misc/MobileBackButton";
 import { formatRelativeDate } from "../misc/RelativeDate";
-import { Status } from "../misc/Status";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Company, Contact, Deal } from "../types";
 import {
@@ -234,8 +233,7 @@ const ContactsIterator = () => {
                   <div className="text-sm text-muted-foreground">
                     {translate("crm.common.last_activity_with_date", {
                       date: formatRelativeDate(contact.last_seen, locale),
-                    })}{" "}
-                    <Status status={contact.status} />
+                    })}
                   </div>
                 </div>
               )}
@@ -283,14 +281,16 @@ const DealsIterator = () => {
               <div className="flex-1 min-w-0">
                 <div className="font-medium">{deal.name}</div>
                 <div className="text-sm text-muted-foreground">
-                  {findDealLabel(dealStages, deal.stage)},{" "}
-                  {deal.amount.toLocaleString("en-US", {
-                    notation: "compact",
-                    style: "currency",
-                    currency,
-                    currencyDisplay: "narrowSymbol",
-                    minimumSignificantDigits: 3,
-                  })}
+                  {findDealLabel(dealStages, deal.stage)}
+                  {isDonationDeal(deal.categories)
+                    ? `, ${deal.amount.toLocaleString("en-US", {
+                        notation: "compact",
+                        style: "currency",
+                        currency,
+                        currencyDisplay: "narrowSymbol",
+                        minimumSignificantDigits: 3,
+                      })}`
+                    : ""}
                   {deal.categories?.length
                     ? `, ${formatDealCategories(dealCategories, deal.categories)}`
                     : ""}

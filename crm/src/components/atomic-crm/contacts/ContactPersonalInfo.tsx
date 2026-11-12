@@ -78,11 +78,13 @@ export const ContactPersonalInfo = () => {
 };
 
 const EmailRow = () => {
-  const record = useRecordContext<{ email: string }>();
+  const record = useRecordContext<{ email: string; type?: string }>();
   const translate = useTranslate();
   const [copied, setCopied] = useState(false);
 
   if (!record) return null;
+  const heldBySomeoneElse =
+    record.type === "Assistant" || record.type === "Agent";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(record.email).then(() => {
@@ -108,6 +110,7 @@ const EmailRow = () => {
         </button>
       }
       primary={<EmailField source="email" />}
+      showType={heldBySomeoneElse}
     />
   );
 };

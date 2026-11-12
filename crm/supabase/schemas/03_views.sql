@@ -118,15 +118,27 @@ select
     co.linkedin_url,
     co.email_jsonb,
     co.phone_jsonb,
+    (jsonb_path_query_array(co.email_jsonb, '$[*]."email"'))::text as email_fts,
+    (jsonb_path_query_array(co.phone_jsonb, '$[*]."number"'))::text as phone_fts,
+    c.name as company_name,
+    count(distinct t.id) filter (where t.done_date is null) as nb_tasks,
     co.external_id,
     co.source,
     co.ask_policy,
     co.site_user_id,
     co.locked_fields,
-    (jsonb_path_query_array(co.email_jsonb, '$[*]."email"'))::text as email_fts,
-    (jsonb_path_query_array(co.phone_jsonb, '$[*]."number"'))::text as phone_fts,
-    c.name as company_name,
-    count(distinct t.id) filter (where t.done_date is null) as nb_tasks
+    co.outreach_status,
+    co.first_contacted_at,
+    co.last_contacted_at,
+    co.email_holder,
+    co.contact_via,
+    co.list,
+    co.introduced_by,
+    (
+        select trim(both from concat_ws(' ', introducer.first_name, introducer.last_name))
+        from public.contacts introducer
+        where introducer.id = co.introduced_by
+    ) as introduced_by_name
 from public.contacts co
     left join public.tasks t on co.id = t.contact_id
     left join public.companies c on co.company_id = c.id

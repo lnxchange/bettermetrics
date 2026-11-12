@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import {
   Home,
   ListTodo,
+  MoreHorizontal,
   Plus,
-  Settings,
   StickyNote,
   UserPlus,
   Users,
@@ -83,7 +83,7 @@ export const MobileNavigation = () => {
             label={translate("resources.tasks.name", { smart_count: 2 })}
             isActive={currentPath === "/tasks"}
           />
-          <SettingsButton />
+          <MoreButton />
         </>
       </div>
     </nav>
@@ -184,17 +184,65 @@ const CreateButton = () => {
   );
 };
 
-const SettingsButton = () => {
+const MoreButton = () => {
   const translate = useTranslate();
   const location = useLocation();
-  const isActive = !!matchPath("/settings", location.pathname);
+  const items = [
+    {
+      to: "/deals",
+      label: translate("resources.deals.name", { smart_count: 2 }),
+    },
+    {
+      to: "/companies",
+      label: translate("resources.companies.name", { smart_count: 2 }),
+    },
+    { to: "/inbox", label: "Inbox" },
+    { to: "/articles", label: "Articles" },
+    { to: "/users", label: "Users" },
+    { to: "/research", label: "Research" },
+    { to: "/knowledge", label: "Knowledge" },
+    { to: "/settings", label: translate("crm.settings.title") },
+  ];
+  const isActive = items.some(
+    (item) =>
+      location.pathname === item.to ||
+      location.pathname.startsWith(`${item.to}/`),
+  );
 
   return (
-    <NavigationButton
-      href="/settings"
-      Icon={Settings}
-      label={translate("crm.settings.title")}
-      isActive={isActive}
-    />
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "flex-col gap-1 h-auto py-2 px-1 rounded-md w-16",
+              isActive ? null : "text-muted-foreground",
+            )}
+          />
+        }
+      >
+        <MoreHorizontal className="size-6" />
+        <span className="text-[0.6rem] font-medium">More</span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" side="top" className="mb-2">
+        {items.map((item) => (
+          <DropdownMenuItem
+            key={item.to}
+            className="h-12 gap-3 px-4 text-base"
+            render={<Link to={item.to} />}
+          >
+            {item.label}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuItem
+          className="h-12 gap-3 px-4 text-base"
+          render={<a href="/" />}
+        >
+          Main Site
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

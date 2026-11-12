@@ -2,6 +2,11 @@ import { format } from "date-fns";
 
 import type { DealStage, LabeledValue } from "../types";
 
+export const DONATION_CATEGORY = "donation";
+
+export const isDonationDeal = (categories?: string[] | null) =>
+  Boolean(categories?.includes(DONATION_CATEGORY));
+
 export const findDealLabel = (dealStages: DealStage[], dealValue: string) => {
   const dealStage = dealStages.find((stage) => stage.value === dealValue);
   return dealStage?.label;
@@ -47,16 +52,40 @@ function ucFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const isoDateStringRegex = /^\d{4}-\d{2}-\d{2}$/;
+const isoDatePrefix = /^(\d{4})-(\d{2})-(\d{2})/;
 
-export function formatISODateString(dateString: string) {
-  if (!isoDateStringRegex.test(dateString)) {
+/**
+ * Calendar day named by a date or timestamp, in the local timezone.
+ * An empty value is no date. A timestamp uses the day written in the string,
+ * so `2026-09-30T00:00:00.000Z` stays 30 September in every timezone.
+ */
+export function parseDealDate(value: string | null | undefined): Date | null {
+  if (value == null) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const match = text.match(isoDatePrefix);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+  return date;
+}
+
+export function formatISODateString(
+  dateString: string | null | undefined,
+): string | null {
+  if (dateString == null || String(dateString).trim() === "") return null;
+  const date = parseDealDate(dateString);
+  if (!date) {
     throw new Error("Invalid date format. Expected YYYY-MM-DD.");
   }
-  // Some browsers will consider a date in the format YYYY-MM-DD as UTC, which can cause off-by-one-day issues depending on the user's timezone.
-  // To avoid this, we can parse the date components manually and create a date object in the local timezone.
-  const [year, month, day] = dateString.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-
   return format(date, "PP");
 }

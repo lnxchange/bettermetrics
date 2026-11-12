@@ -4,11 +4,23 @@ import { TreatiseChapterView } from '@/components/treatise-chapter'
 import { formatSourceDate, loadTreatiseChapter, loadTreatiseChapters } from '@/lib/treatise'
 import { SITE_OG_IMAGE, metaDescription } from '@/lib/site'
 
+function chatReturnPath(value: string | undefined) {
+  if (!value) return null
+  let decoded = value
+  try {
+    decoded = decodeURIComponent(value)
+  } catch {
+    return null
+  }
+  if (!/^\/chat(\/[A-Za-z0-9_-]+)?$/.test(decoded)) return null
+  return decoded
+}
+
 export const dynamic = 'force-dynamic'
 
 interface TreatiseChapterPageProps {
   params: { slug: string }
-  searchParams?: { section?: string }
+  searchParams?: { section?: string; from?: string }
 }
 
 export async function generateMetadata({ params }: TreatiseChapterPageProps): Promise<Metadata> {
@@ -69,6 +81,7 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
     requested && !chapter.headings.some(heading => heading.id === requested.toLowerCase())
       ? requested
       : null
+  const returnTo = chatReturnPath(searchParams?.from)
 
   return (
     <TreatiseChapterView
@@ -78,6 +91,7 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
       sourceNote="This is the current working text. The treatise is unfinished, and this page changes when the chapter changes."
       frameworkNote={frameworkNote}
       headings={chapter.headings}
+      returnTo={returnTo}
       html={chapter.html}
       missingSection={missingSection}
       previous={previous ? { href: previous.href, label: previous.label } : null}

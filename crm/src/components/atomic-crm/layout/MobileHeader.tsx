@@ -6,7 +6,12 @@ const MobileHeader = ({ children }: { children: React.ReactNode }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-10 h-14 w-full flex justify-between items-center border-b border-slate-200 bg-white px-4">
       {children}
-      <GlobalSearchButton variant="icon" />
+      <div className="flex items-center gap-1">
+        <a href="/" className="whitespace-nowrap px-2 text-sm font-medium text-slate-600">
+          Main Site
+        </a>
+        <GlobalSearchButton variant="icon" />
+      </div>
     </header>
   );
 };

@@ -3,10 +3,10 @@ import type { CrmMessages } from "./englishCrmMessages";
 export const frenchCrmMessages = {
   resources: {
     companies: {
-      name: "Entreprise |||| Entreprises",
-      forcedCaseName: "Entreprise",
+      name: "Organisation |||| Organisations",
+      forcedCaseName: "Organisation",
       fields: {
-        name: "Nom de l'entreprise",
+        name: "Nom de l'organisation",
         website: "Site web",
         linkedin_url: "LinkedIn",
         phone_number: "Numéro de téléphone",
@@ -26,11 +26,11 @@ export const frenchCrmMessages = {
         sales_id: "Responsable de compte",
       },
       empty: {
-        description: "Il semble que la liste de vos entreprises soit vide.",
-        title: "Aucune entreprise trouvée",
+        description: "Il semble que la liste de vos organisations soit vide.",
+        title: "Aucune organisation trouvée",
       },
       import: {
-        title: "Importer des entreprises",
+        title: "Importer des organisations",
       },
       field_categories: {
         contact: "Coordonnées",
@@ -39,17 +39,17 @@ export const frenchCrmMessages = {
         context: "Contexte",
       },
       action: {
-        create: "Créer une entreprise",
-        edit: "Modifier l'entreprise",
-        new: "Nouvelle entreprise",
-        show: "Afficher l'entreprise",
+        create: "Créer une organisation",
+        edit: "Modifier l'organisation",
+        new: "Nouvelle organisation",
+        show: "Afficher l'organisation",
       },
       added_on: "Ajoutée le %{date}",
       followed_by: "Suivie par %{name}",
       followed_by_you: "Suivie par vous",
       no_contacts: "Aucun contact",
       nb_contacts: "%{smart_count} contact |||| %{smart_count} contacts",
-      nb_deals: "%{smart_count} affaire |||| %{smart_count} affaires",
+      nb_deals: "%{smart_count} engagement |||| %{smart_count} engagements",
       sizes: {
         one_employee: "1 employé",
         two_to_nine_employees: "2-9 employés",
@@ -59,9 +59,9 @@ export const frenchCrmMessages = {
       },
       autocomplete: {
         create_error:
-          "Une erreur s'est produite lors de la création de l'entreprise",
+          "Une erreur s'est produite lors de la création de l'organisation",
         create_item: "Créer %{item}",
-        create_label: "Commencez à taper pour créer une nouvelle entreprise",
+        create_label: "Commencez à taper pour créer une nouvelle organisation",
       },
     },
     contacts: {
@@ -71,15 +71,24 @@ export const frenchCrmMessages = {
         background_info: "Informations complémentaires",
         identity: "Identité",
         misc: "Divers",
+        outreach: "Prise de contact",
         personal_info: "Informations personnelles",
         position: "Poste",
+        relationships: "Relations",
       },
       fields: {
         first_name: "Prénom",
         last_name: "Nom",
         last_seen: "Dernière activité",
+        outreach_status: "Prise de contact",
+        first_contacted_at: "Premier contact",
+        last_contacted_at: "Dernier contact",
+        list: "Liste",
+        introduced_by: "Présenté par",
+        introduced: "A présenté",
+        related_contacts: "Contacts liés",
         title: "Titre",
-        company_id: "Entreprise",
+        company_id: "Organisation",
         email_jsonb: "Adresses e-mail",
         email: "E-mail",
         phone_jsonb: "Numéros de téléphone",
@@ -91,6 +100,7 @@ export const frenchCrmMessages = {
       },
       action: {
         add: "Ajouter un contact",
+        add_related: "Ajouter un contact lié",
         add_first: "Ajoutez votre premier contact",
         create: "Créer un contact",
         edit: "Modifier le contact",
@@ -128,7 +138,33 @@ export const frenchCrmMessages = {
           work: "Pro",
           home: "Perso",
           other: "Autre",
+          assistant: "Assistant",
+          agent: "Agent",
         },
+      },
+      outreach_status: {
+        identified: "Identifié",
+        researched: "Documenté",
+        drafted: "Brouillon",
+        "in-outlook": "Dans Outlook",
+        sent: "Envoyé",
+        replied: "A répondu",
+        engaged: "Engagé",
+        declined: "A décliné",
+        "no-response": "Sans réponse",
+        holding: "En attente",
+      },
+      list_values: {
+        primary: "Principale",
+        secondary: "Secondaire",
+      },
+      outreach_board: {
+        title: "Prise de contact",
+        empty: "Aucun contact pour le moment.",
+      },
+      enquiries: {
+        title: "Demandes du site",
+        empty: "Aucune demande du site en attente.",
       },
       list: {
         error_loading: "Erreur lors du chargement des contacts",
@@ -174,11 +210,13 @@ export const frenchCrmMessages = {
         before_this_month: "Avant ce mois-ci",
         before_this_week: "Avant cette semaine",
         managed_by_me: "Géré par moi",
-        search: "Rechercher nom, entreprise...",
+        search: "Rechercher nom, organisation...",
         this_week: "Cette semaine",
         today: "Aujourd'hui",
         tags: "Étiquettes",
         tasks: "Tâches",
+        outreach: "Prise de contact",
+        last_contacted: "Dernier contact",
       },
       hot: {
         empty_change_status:
@@ -188,11 +226,12 @@ export const frenchCrmMessages = {
       },
     },
     deals: {
-      name: "Affaire |||| Affaires",
+      name: "Engagement |||| Engagements",
+      forcedCaseName: "Engagement",
       fields: {
         name: "Nom",
         description: "Description",
-        company_id: "Entreprise",
+        company_id: "Organisation",
         contact_ids: "Contacts",
         categories: "Catégories",
         amount: "Budget",
@@ -418,8 +457,8 @@ export const frenchCrmMessages = {
       title: "Notes de version",
     },
     activity: {
-      added_company: "%{name} a ajouté l'entreprise",
-      you_added_company: "Vous avez ajouté l'entreprise",
+      added_company: "%{name} a ajouté l'organisation",
+      you_added_company: "Vous avez ajouté l'organisation",
       added_contact: "%{name} a ajouté le contact",
       you_added_contact: "Vous avez ajouté le contact",
       added_note: "%{name} a ajouté une note sur",
@@ -474,7 +513,7 @@ export const frenchCrmMessages = {
     search: {
       title: "Rechercher",
       placeholder:
-        "Rechercher un contact, une entreprise, une affaire, une tâche, une note...",
+        "Rechercher un contact, une organisation, une affaire, une tâche, une note...",
       hint: "Saisissez au moins %{min} caractères pour lancer la recherche",
       recent_contacts: "Consultés récemment",
       empty: "Aucun résultat",
@@ -484,8 +523,8 @@ export const frenchCrmMessages = {
       show_more: "Afficher plus",
       groups: {
         contacts: "Contacts",
-        companies: "Entreprises",
-        deals: "Affaires",
+        companies: "Organisations",
+        deals: "Engagements",
         tasks: "Tâches",
         contact_notes: "Notes de contact",
         deal_notes: "Notes d'affaire",
@@ -510,7 +549,7 @@ export const frenchCrmMessages = {
       },
       idle: {
         description_1:
-          "Vous pouvez importer des ventes, des entreprises, des contacts, des entreprises, des notes et des tâches.",
+          "Vous pouvez importer des ventes, des organisations, des contacts, des notes et des tâches.",
         description_2:
           "Les données doivent se trouver dans un fichier JSON correspondant à l'exemple suivant :",
       },

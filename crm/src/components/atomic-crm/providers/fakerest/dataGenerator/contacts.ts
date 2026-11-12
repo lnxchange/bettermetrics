@@ -96,6 +96,19 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
       sales_id: company.sales_id!,
       nb_tasks: 0,
       linkedin_url: null,
+      external_id: null,
+      source: null,
+      ask_policy: null,
+      site_user_id: null,
+      locked_fields: null,
+      outreach_status: null,
+      first_contacted_at: null,
+      last_contacted_at: null,
+      email_holder: null,
+      contact_via: null,
+      list: null,
+      introduced_by: null,
+      introduced_by_name: null,
     };
   });
 };
