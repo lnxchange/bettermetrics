@@ -6,20 +6,12 @@ import { revalidatePath } from 'next/cache'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
-import { treatiseContext } from '@/lib/rag/treatise-context'
-import {
-  GUEST_COOKIE,
-  GUEST_LIMIT,
-  GUEST_REMAINING_HEADER,
-  guestCookieHeader,
-  signGuestState,
-  verifyGuestCookie
-} from '@/lib/guest-quota'
-import { consumeGuestQuestion } from '@/lib/guest-rate-limit'
-import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
-import { ChatProvider, SystemBlock, defaultModel } from '@/lib/chat-provider-ids'
-import { ProviderError, completeChat } from '@/lib/chat-providers'
-import { readUserChatKey } from '@/lib/user-api-keys'
+import { extendContextSnapshot, treatiseContext } from '@/lib/rag/treatise-context'
+import { ChatProvider } from '@/lib/chat-provider-ids'
+import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
+import { generate, LlmError, readerMessage } from '@/lib/llm'
+import { readActiveKey } from '@/lib/user-api-keys'
+import { createHash } from 'crypto'
 
 type SearchResult = {
   chunk_text: string
@@ -40,6 +32,20 @@ function dedupeBy<T>(arr: T[], key: (x: T) => string) {
     }
   }
   return out
+}
+
+async function loadContextSnapshot(
+  supabase: ReturnType<typeof createRouteHandlerClient<Database>>,
+  id: string,
+  userId: string
+) {
+  const { data } = await supabase.from('chats').select('payload').eq('id', id).eq('user_id', userId).maybeSingle()
+  const snapshot = (data?.payload as { contextSnapshot?: { text?: string; sectionIds?: string[] } } | null)?.contextSnapshot
+  if (!snapshot || typeof snapshot.text !== 'string') return null
+  return {
+    text: snapshot.text,
+    sectionIds: Array.isArray(snapshot.sectionIds) ? snapshot.sectionIds.filter(id => typeof id === 'string') : []
+  }
 }
 
 function trim(text: string, maxChars: number) {
@@ -173,8 +179,6 @@ This conversation has already begun. Continue from what has been said. Do not de
 const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
 A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
-// Guests, when enabled, stay on the site's Anthropic key and a cheaper model.
-const GUEST_CHAT_MODEL = process.env.GUEST_CHAT_MODEL || 'claude-sonnet-5'
 
 // 5. Natural, conversational responses without forced structures
 // 6. Superior at avoiding unnecessary disclaimers and meta-commentary
@@ -187,18 +191,18 @@ const GUEST_CHAT_MODEL = process.env.GUEST_CHAT_MODEL || 'claude-sonnet-5'
 // - More natural, less defensive writing style
 
 // Ceilings on the conversation a request may resend.
-const GUEST_MAX_MESSAGES = 2 * GUEST_LIMIT
-const GUEST_MAX_CONVERSATION_CHARS = 40_000
-const MAX_MESSAGES = 60
-const MAX_CONVERSATION_CHARS = 400_000
-
 // Prompt caching: the system prompt and the Treatise context are sent as
 // separate cached blocks, so a repeat of the same prefix within five minutes
 // is billed at the cache-read rate instead of full input price.
-const CACHE = { type: 'ephemeral' as const }
-
 export async function POST(req: Request) {
   try {
+    if (process.env.CHAT_PAUSED === 'true') {
+      return new Response(
+        JSON.stringify({ error: 'chat_paused', message: PAUSED_MESSAGE }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
     const cookieStore = cookies()
     
     // Check if Supabase is configured
@@ -221,13 +225,20 @@ export async function POST(req: Request) {
     const json = await req.json()
     const { messages, previewToken, mode } = json
 
-    // Guests are refused unless CHAT_ALLOW_GUESTS=true. Signed-in readers are
-    // billed to their own key unless CHAT_ALLOW_PLATFORM_KEY=true.
+    const settings = await loadChatSettings()
+    if (settings.paused) {
+      return new Response(
+        JSON.stringify({ error: 'chat_paused', message: settings.pausedMessage }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Guests are refused. Chat has no site key to bill.
     const session = await auth({ cookieStore })
     const userId: string | null = session?.user?.id ?? null
     const isGuest = !userId
 
-    if (isGuest && !guestsAllowed()) {
+    if (isGuest) {
       console.warn('Chat refused: account required', {
         country: req.headers.get('x-vercel-ip-country'),
         userAgent: req.headers.get('user-agent')
@@ -251,8 +262,8 @@ export async function POST(req: Request) {
       (sum: number, msg: any) => sum + (typeof msg?.content === 'string' ? msg.content.length : 0),
       0
     )
-    const maxMessages = isGuest ? GUEST_MAX_MESSAGES : MAX_MESSAGES
-    const maxChars = isGuest ? GUEST_MAX_CONVERSATION_CHARS : MAX_CONVERSATION_CHARS
+    const maxMessages = settings.maxMessages
+    const maxChars = settings.maxConversationChars
     if (messages.length > maxMessages || conversationChars > maxChars) {
       return new Response(
         JSON.stringify({
@@ -263,51 +274,15 @@ export async function POST(req: Request) {
       )
     }
 
-    const guestRefusal = (message: string) =>
-      new Response(
-        JSON.stringify({ error: 'guest_quota', message, limit: GUEST_LIMIT }),
-        {
-          status: 403,
-          headers: {
-            'Content-Type': 'application/json',
-            [GUEST_REMAINING_HEADER]: '0'
-          }
-        }
-      )
-
-    let guestState = { count: 0, since: Date.now() }
-    let guestRemaining: number | null = null
-    if (isGuest) {
-      guestState = await verifyGuestCookie(cookieStore.get(GUEST_COOKIE)?.value)
-      if (guestState.count >= GUEST_LIMIT) {
-        return guestRefusal(`You've used your ${GUEST_LIMIT} free questions. Sign in to continue.`)
-      }
-      // The cookie alone can be skipped by not sending it. The server-side
-      // count per IP address and site-wide is what bounds guest spend.
-      const limit = await consumeGuestQuestion(req)
-      if (!limit.allowed) {
-        return guestRefusal(
-          limit.reason === 'ip'
-            ? `You've used your free questions for today. Sign in to continue.`
-            : `Guest questions are unavailable right now. Sign in to continue.`
-        )
-      }
-      guestRemaining = GUEST_LIMIT - guestState.count - 1
-    }
-
     // Resolve who pays before any retrieval or model call. A missing key must
-    // not fall through to the site key, and it must not run a vector search.
+    // not fall through to a site key, and it must not run a vector search.
     let apiKey: string | null = null
-    let keySource: 'user' | 'platform' = 'platform'
     let provider: ChatProvider = 'anthropic'
-    let modelOverride: string | null = null
     if (userId) {
-      const stored = await readUserChatKey(userId)
+      const stored = await readActiveKey(userId)
       if (stored.key) {
         apiKey = stored.key
         provider = stored.provider
-        modelOverride = stored.model
-        keySource = 'user'
       } else if ('reason' in stored && stored.reason === 'unavailable') {
         return new Response(
           JSON.stringify({
@@ -316,23 +291,58 @@ export async function POST(req: Request) {
           }),
           { status: 503, headers: { 'Content-Type': 'application/json' } }
         )
-      } else if (platformKeyAllowed() && process.env.ANTHROPIC_API_KEY) {
-        apiKey = process.env.ANTHROPIC_API_KEY
       } else {
         return new Response(
           JSON.stringify({
             error: 'api_key_required',
-            message:
-              'Add an API key in your profile. Questions are billed to that key.'
+            message: 'Add an API key in your profile. Questions are billed to that key.'
           }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }
         )
       }
-    } else if (!process.env.ANTHROPIC_API_KEY) {
-      console.log('Anthropic API key not configured')
-      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
+      if (!settings.providers[provider]) {
+        return new Response(
+          JSON.stringify({
+            error: 'provider_off',
+            message: 'That provider is turned off. Choose another key on your profile.'
+          }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
     } else {
-      apiKey = process.env.ANTHROPIC_API_KEY
+      return new Response(
+        JSON.stringify({
+          error: 'auth_required',
+          message: 'Create an account to ask the assistant.'
+        }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const ipHash = createHash('sha256')
+      .update(req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown')
+      .digest('hex')
+      .slice(0, 32)
+    const throttle = await questionAllowed(userId, ipHash, settings)
+    if (!throttle.allowed) {
+      await recordChatUsage({
+        userId,
+        provider,
+        model: settings.models[provider],
+        inputTokens: 0,
+        outputTokens: 0,
+        cachedTokens: 0,
+        contextChars: 0,
+        outcome: `refused:${throttle.reason}`,
+        ipHash
+      })
+      return new Response(
+        JSON.stringify({
+          error: 'rate_limited',
+          message: 'You have reached the question limit. Try again later.'
+        }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     // Get the latest user message for RAG context
@@ -347,7 +357,9 @@ export async function POST(req: Request) {
 
     // Search for relevant context using RAG with strict AIM definition
     let ragContext = ''
+    let contextSnapshot: { text: string; sectionIds: string[] } = { text: '', sectionIds: [] }
     let hasRagResults = false
+    const savedSnapshot = userId && json.id ? await loadContextSnapshot(supabase, json.id, userId) : null
     try {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -359,43 +371,48 @@ export async function POST(req: Request) {
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
         // A named glossary term brings its definition and chapter. Search would
         // let other passages compete with that definition, so it stays out.
-        const treatise = await treatiseContext(retrievalQuery).catch(error => {
+        const treatise = await treatiseContext(retrievalQuery, settings.treatiseContextMaxChars).catch(error => {
           console.error('Treatise context error:', error)
-          return { text: '', grounded: false }
+          return { text: '', grounded: false, sectionIds: [] as string[] }
         })
-        const results = treatise.grounded
-          ? []
-          : await vectorSearch
-              .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
-              .catch(error => {
-                console.error('Vector search error:', error)
-                return []
-              })
-        hasRagResults = results.length > 0 || treatise.text.length > 0
-        
-        if (hasRagResults) {
-          // Filter out Chantal McNaught's name from RAG context
-          const filteredResults = results.map(result => ({
-            ...result,
-            chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
-          }))
-          
-          const contextBlock = [treatise.text, prepareRagContext(filteredResults, userQuery.length)]
-            .filter(Boolean)
-            .join('\n\n---\n\n')
-            .replace(/Chantal McNaught/gi, 'a PhD candidate')
-          const grounding = treatise.grounded
-            ? DEFINITION_RULE
-            : `**STRICT RAG GROUNDING (CRITICAL):**
+        if (savedSnapshot?.text) {
+          contextSnapshot = extendContextSnapshot(savedSnapshot, treatise, settings.treatiseContextMaxChars)
+          ragContext = contextSnapshot.text
+          hasRagResults = true
+        } else {
+          const results = treatise.grounded
+            ? []
+            : await vectorSearch
+                .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
+                .catch(error => {
+                  console.error('Vector search error:', error)
+                  return []
+                })
+          hasRagResults = results.length > 0 || treatise.text.length > 0
+          if (hasRagResults) {
+            const filteredResults = results.map(result => ({
+              ...result,
+              chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
+            }))
+            const contextBlock = [treatise.text, prepareRagContext(filteredResults, userQuery.length)]
+              .filter(Boolean)
+              .join('\n\n---\n\n')
+              .replace(/Chantal McNaught/gi, 'a PhD candidate')
+            const grounding = treatise.grounded
+              ? DEFINITION_RULE
+              : `**STRICT RAG GROUNDING (CRITICAL):**
 1. Answer based ONLY on the Context above - do not import external definitions.
 2. If a term appears in the Context (like "Quantum Epistemology"), use ONLY the AIM definition from the Context.
 3. DO NOT conflate AIM terminology with similar terms from other fields.
 4. Quote or closely paraphrase the Context when possible to ensure accuracy.
 5. If the Context does not fully address the question, state what IS covered and what is missing.
 6. DO NOT invent analogies or connections not explicitly present in the Context.`
-          ragContext = `Context:\n${contextBlock}\n\n${grounding}`
-        } else {
-          ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
+            ragContext = `Context:\n${contextBlock}\n\n${grounding}`
+            contextSnapshot = { text: ragContext, sectionIds: treatise.sectionIds }
+          } else {
+            ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
+            contextSnapshot = { text: ragContext, sectionIds: [] }
+          }
         }
       }
     } catch (error) {
@@ -409,25 +426,13 @@ export async function POST(req: Request) {
     // (system prompt, then the Treatise context) can be cached. The mode
     // instructions change between the first reply and follow-ups, so they come
     // last and are not cached.
-    const systemBlocks: SystemBlock[] = [
-      { type: 'text', text: AIM_SYSTEM_PROMPT, cache_control: CACHE }
-    ]
-    if (ragContext.trim()) {
-      systemBlocks.push({ type: 'text', text: ragContext.trim(), cache_control: CACHE })
-    }
     const continuing = messages.some((msg: { role?: string }) => msg.role === 'assistant')
-    if (mode === 'academic') {
-      systemBlocks.push({
-        type: 'text',
-        text: `${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`.trim()
-      })
-    } else if (mode === 'layperson') {
-      systemBlocks.push({
-        type: 'text',
-        text: (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
-      })
-    }
-    const model = isGuest ? GUEST_CHAT_MODEL : modelOverride || defaultModel(provider)
+    const modeInstructions = mode === 'academic'
+      ? `${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`.trim()
+      : mode === 'layperson'
+        ? (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
+        : ''
+    const model = settings.models[provider]
 
     const chatMessages = messages
       .filter((msg: any) => msg?.role === 'user' || msg?.role === 'assistant')
@@ -438,65 +443,80 @@ export async function POST(req: Request) {
       }))
 
     if (!apiKey) {
-      return new Response('Service unavailable - Anthropic API not configured', { status: 503 })
+      return new Response(
+        JSON.stringify({ error: 'api_key_required', message: 'Add an API key in your profile.' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     console.log('Making chat request:', {
       provider,
       model,
-      guest: isGuest,
-      keySource,
       userId,
       messageCount: chatMessages.length,
+      contextChars: ragContext.length,
       country: req.headers.get('x-vercel-ip-country'),
       userAgent: req.headers.get('user-agent'),
       timestamp: new Date().toISOString()
     })
 
     let fullContent = ''
-    let usage: Record<string, unknown> = {}
+    let inputTokens = 0
+    let outputTokens = 0
+    let cachedTokens = 0
     try {
-      const result = await completeChat({
-        provider,
+      const result = await generate(provider, {
         apiKey,
         model,
-        systemBlocks,
-        messages: chatMessages
+        systemPrompt: AIM_SYSTEM_PROMPT,
+        treatiseContext: ragContext.trim(),
+        modeInstructions,
+        messages: chatMessages,
+        maxTokens: settings.maxOutputTokens,
+        cache: settings.cache[provider],
+        anthropicCacheTtl: settings.anthropicCacheTtl,
+        promptCacheKey: typeof json.id === 'string' ? json.id : undefined
       })
       fullContent = result.text
-      usage = result.usage
+      inputTokens = result.inputTokens
+      outputTokens = result.outputTokens
+      cachedTokens = result.cachedTokens
     } catch (error) {
-      const status = error instanceof ProviderError ? error.status : 502
+      const code = error instanceof LlmError ? error.code : 'unavailable'
       console.error('Chat provider error:', {
-        message: error instanceof Error ? error.message : 'Request failed',
-        status,
+        code,
         provider,
         model,
         userId,
         chatId: json.id,
         messageCount: messages.length,
-        keySource,
         timestamp: new Date().toISOString()
       })
-      const rejected = status === 401 || status === 403
+      await recordChatUsage({
+        userId,
+        provider,
+        model,
+        inputTokens: 0,
+        outputTokens: 0,
+        cachedTokens: 0,
+        contextChars: ragContext.length,
+        outcome: `refused:${code}`,
+        ipHash
+      })
       return new Response(
-        JSON.stringify({
-          error: 'provider_error',
-          message: rejected
-            ? 'That API key was rejected. Save a new one on your profile.'
-            : 'The model could not answer. Check the key and model on your profile, then try again.'
-        }),
+        JSON.stringify({ error: 'provider_error', message: readerMessage(code) }),
         { status: 502, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
-    console.log(`Chat response received: ${fullContent.length} characters`, {
+    console.log('Chat response received', {
       provider,
       model,
-      guest: isGuest,
-      keySource,
       userId,
-      usage
+      inputTokens,
+      outputTokens,
+      cachedTokens,
+      contextChars: ragContext.length
     })
 
     // Section citations are turned into treatise links when the reply is shown.
@@ -514,6 +534,7 @@ export async function POST(req: Request) {
           userId,
           createdAt,
           path,
+          contextSnapshot,
           messages: [
             ...messages,
             {
@@ -559,21 +580,25 @@ export async function POST(req: Request) {
       }
     })
 
-    const responseHeaders: Record<string, string> = {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
-    }
-    if (isGuest) {
-      const signed = await signGuestState({
-        count: guestState.count + 1,
-        since: guestState.since
-      })
-      responseHeaders['Set-Cookie'] = guestCookieHeader(signed)
-      responseHeaders[GUEST_REMAINING_HEADER] = String(Math.max(0, guestRemaining ?? 0))
-    }
+    await recordChatUsage({
+      userId,
+      provider,
+      model,
+      inputTokens,
+      outputTokens,
+      cachedTokens,
+      contextChars: ragContext.length,
+      outcome: 'answered',
+      ipHash
+    })
 
-    return new Response(responseStream, { headers: responseHeaders })
+    return new Response(responseStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      }
+    })
   } catch (error) {
     // Comprehensive error logging for debugging
     console.error('=== CHAT API GENERAL ERROR ===')

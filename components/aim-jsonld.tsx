@@ -110,11 +110,6 @@ export function AIMJsonLd() {
         "description": "Research platform for the AIM Framework: a taxonomic synthesis resolving definitional inconsistencies across neuroscience, behavioral economics, and psychology.",
         "publisher": {
           "@id": "https://aimtheory.org/#organization"
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://aimtheory.org/chat?query={search_term_string}",
-          "query-input": "required name=search_term_string"
         }
       },
       {

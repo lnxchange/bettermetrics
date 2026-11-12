@@ -25,12 +25,12 @@ export const PROVIDER_INFO: Record<
   google: {
     label: 'Google Gemini',
     placeholder: 'AIza...',
-    defaultModel: 'gemini-3.8-flash'
+    defaultModel: 'gemini-3.1-pro-preview'
   },
   openrouter: {
     label: 'OpenRouter',
     placeholder: 'sk-or-...',
-    defaultModel: 'openai/gpt-5.4'
+    defaultModel: 'anthropic/claude-opus-5-5'
   }
 }
 

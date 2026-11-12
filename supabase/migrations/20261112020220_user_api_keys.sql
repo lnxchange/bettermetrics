@@ -8,9 +8,10 @@
 
 create table public.user_api_keys (
   user_id uuid not null references auth.users (id) on delete cascade,
-  provider text not null default 'anthropic' check (provider = 'anthropic'),
+  provider text not null check (provider in ('anthropic', 'openai', 'google', 'openrouter')),
   ciphertext text not null check (length(ciphertext) > 0),
   hint text not null check (length(hint) between 4 and 8),
+  active boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   primary key (user_id, provider)

@@ -1,3 +1,5 @@
+import { ByokNotice } from '@/components/byok-notice'
+import { BYOK_NOTICE } from '@/lib/chat-notice'
 import { auth } from '@/auth'
 import { LoginButton } from '@/components/login-button'
 import { LoginForm } from '@/components/login-form'
@@ -51,10 +53,8 @@ export default async function SignInPage({
           </div>
         )}
         {(searchParams.reason === 'chat' || searchParams.redirectedFrom?.startsWith('/chat')) && (
-          <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <p className="text-sm text-blue-800">
-              Create an account to ask the assistant. You will add your own API key, and questions are billed to that provider.
-            </p>
+          <div className="mb-4">
+            <ByokNotice markdown={BYOK_NOTICE} />
           </div>
         )}
         <LoginForm action="sign-in" />

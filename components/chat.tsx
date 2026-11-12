@@ -20,18 +20,22 @@ import { GUEST_LIMIT, GUEST_REMAINING_HEADER } from '@/lib/guest-quota'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from './ui/button'
 import { toast } from 'react-hot-toast'
+import { ByokNotice } from '@/components/byok-notice'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
   isGuest?: boolean
   initialGuestRemaining?: number
-  /** Question passed via /chat?q=... ; auto-submitted once on mount. */
+  /** Question passed via /chat?q=... . It fills the box and is not sent until Send. */
   initialQuestion?: string
   /** Anonymous visitors cannot send until they sign in. */
   requiresAccount?: boolean
-  /** Signed-in readers must save their own Anthropic key before sending. */
+  /** Signed-in readers must save their own key before sending. */
   requiresOwnKey?: boolean
+  paused?: boolean
+  pausedMessage?: string
+  noticeMarkdown?: string
 }
 
 export function Chat({
@@ -42,7 +46,10 @@ export function Chat({
   initialGuestRemaining,
   initialQuestion,
   requiresAccount = true,
-  requiresOwnKey = true
+  requiresOwnKey = true,
+  paused = false,
+  pausedMessage,
+  noticeMarkdown
 }: ChatProps) {
   const router = useRouter()
   const [chatMode, setChatMode] = useLocalStorage<'academic' | 'layperson'>(
@@ -95,7 +102,7 @@ export function Chat({
       .then(response => (response.ok ? response.json() : null))
       .then(data => {
         if (cancel) return
-        setKeyState(data?.configured ? 'ready' : 'missing')
+        setKeyState(Array.isArray(data?.keys) && data.keys.length > 0 ? 'ready' : 'missing')
       })
       .catch(() => {
         if (!cancel) setKeyState('missing')
@@ -105,7 +112,6 @@ export function Chat({
     }
   }, [isGuest, requiresOwnKey])
   const quotaHitRef = useRef(false)
-  const autoSubmittedRef = useRef(false)
 
   // Generate a stable chat ID if one isn't provided
   const chatId = useMemo(() => id || nanoid(), [id])
@@ -155,9 +161,13 @@ export function Chat({
               setServerAccountRequired(true)
               return
             }
-            if (body?.error === 'api_key_required') {
+            if (body?.error === 'api_key_required' || body?.error === 'provider_off') {
               quotaHitRef.current = true
               setKeyState('missing')
+              return
+            }
+            if (body?.error === 'chat_paused') {
+              quotaHitRef.current = true
               return
             }
           } catch {
@@ -171,11 +181,17 @@ export function Chat({
             window.location.href = '/sign-in?redirectedFrom=/chat&reason=chat'
           }, 1500)
         } else if (!response.ok) {
-          setErrorMessage(
+          let message =
             response.status >= 500
               ? 'The server had trouble answering. Please try again.'
               : `Request failed (${response.status}).`
-          )
+          try {
+            const body = await response.clone().json()
+            if (typeof body?.message === 'string') message = body.message
+          } catch {
+            // keep the status message
+          }
+          setErrorMessage(message)
         }
       },
       onError(error) {
@@ -197,28 +213,12 @@ export function Chat({
     await append({ id, content, role: 'user' })
   }
 
-  // Auto-submit a deep-linked question once we're on the stable /chat/[id] URL.
+  // A linked question fills the box. The reader presses Send.
   useEffect(() => {
-    if (
-      id &&
-      initialQuestion &&
-      hasMounted &&
-      !autoSubmittedRef.current &&
-      messages.length === 0 &&
-      !quotaExceeded &&
-      !accountRequired &&
-      keyState === 'ready'
-    ) {
-      autoSubmittedRef.current = true
-      // Strip ?q= so a reload doesn't resend.
-      if (typeof window !== 'undefined') {
-        window.history.replaceState(null, '', `/chat/${id}`)
-      }
-      submit(initialQuestion)
+    if (initialQuestion && hasMounted && messages.length === 0) {
+      setInput(initialQuestion)
     }
-    // submit is recreated each render; the ref stops a second send.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, initialQuestion, hasMounted, accountRequired, keyState, quotaExceeded])
+  }, [initialQuestion, hasMounted, messages.length, setInput])
 
   // Scroll to top of new assistant messages
   useEffect(() => {
@@ -246,12 +246,29 @@ export function Chat({
     }
   }
 
+  if (paused) {
+    return (
+      <div className={cn('mx-auto mt-10 max-w-2xl px-4', className)}>
+        <div className="rounded-lg border bg-background p-6">
+          <p className="text-sm text-muted-foreground">{pausedMessage}</p>
+        </div>
+      </div>
+    )
+  }
+
+  const showNotice = Boolean(noticeMarkdown) && (accountRequired || keyState === 'missing')
+
   return (
     <>
       <div
         className={cn('pb-[200px] pt-4 md:pt-10', section && treatisePanelOffset, className)}
         suppressHydrationWarning
       >
+        {showNotice && (
+          <div className="mx-auto mb-6 max-w-2xl px-4">
+            <ByokNotice markdown={noticeMarkdown || ''} />
+          </div>
+        )}
         {messages.length ? (
           <>
             <ChatList messages={messages} onOpenSection={setSection} targets={targets} />
@@ -332,7 +349,7 @@ export function Chat({
         lastFailedMessage={lastFailedMessage}
         onRetry={handleRetry}
         guestRemaining={accountRequired ? null : guestRemaining}
-        disabled={quotaExceeded || accountRequired || keyState !== 'ready'}
+        disabled={quotaExceeded || accountRequired || keyState !== 'ready' || paused}
         placeholder={
           accountRequired
             ? 'Create an account to ask'

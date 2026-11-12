@@ -1,16 +1,11 @@
--- Readers can bill chat to Anthropic, OpenAI, Google Gemini, or OpenRouter.
--- OpenRouter is the key for other model hosts. An optional model id overrides
--- the default for that provider. The id is a request field, not part of a URL.
+-- Readers can keep one key for each of Anthropic, OpenAI, Google, and OpenRouter.
+-- `active` is the provider chat uses. A reader with one key uses that key.
 
-alter table public.user_api_keys drop constraint user_api_keys_provider_check;
+alter table public.user_api_keys drop constraint if exists user_api_keys_provider_check;
 
 alter table public.user_api_keys
   add constraint user_api_keys_provider_check
   check (provider in ('anthropic', 'openai', 'google', 'openrouter'));
 
 alter table public.user_api_keys
-  add column model text;
-
-alter table public.user_api_keys
-  add constraint user_api_keys_model_check
-  check (model is null or model ~ '^[A-Za-z0-9._:/-]{1,80}$');
+  add column if not exists active boolean not null default false;

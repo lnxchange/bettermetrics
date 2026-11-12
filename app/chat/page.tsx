@@ -1,8 +1,14 @@
+import { Metadata } from 'next'
 import { auth } from '@/auth'
 import { cookies } from 'next/headers'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
-import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
+import { guestsAllowed } from '@/lib/chat-access'
+import { loadChatSettings, PAUSED_MESSAGE } from '@/lib/chat-settings'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false }
+}
 import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export default async function ChatPage({
@@ -18,7 +24,9 @@ export default async function ChatPage({
     ? Math.max(0, GUEST_LIMIT - peekGuestCount(cookieStore.get(GUEST_COOKIE)?.value))
     : undefined
   const requiresAccount = !guestsAllowed()
-  const requiresOwnKey = !platformKeyAllowed()
+  const settings = await loadChatSettings()
+  const paused = process.env.CHAT_PAUSED === 'true' || settings.paused
+  const pausedMessage = process.env.CHAT_PAUSED === 'true' ? PAUSED_MESSAGE : settings.pausedMessage
 
   return (
     <>
@@ -29,7 +37,10 @@ export default async function ChatPage({
           initialGuestRemaining={guestRemaining}
           initialQuestion={searchParams?.q}
           requiresAccount={requiresAccount}
-          requiresOwnKey={requiresOwnKey}
+          requiresOwnKey
+          paused={paused}
+          pausedMessage={pausedMessage}
+          noticeMarkdown={settings.noticeMarkdown}
         />
       </div>
     </>

@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 
+import { ByokNotice } from '@/components/byok-notice'
+import { BYOK_NOTICE } from '@/lib/chat-notice'
 import {
   CHAT_PROVIDERS,
   ChatProvider,
@@ -10,31 +12,41 @@ import {
   isChatProvider
 } from '@/lib/chat-provider-ids'
 
+type SavedKey = { provider: ChatProvider; hint: string; active: boolean }
+
+const CREATE_LINKS: Record<ChatProvider, { href: string; label: string }> = {
+  anthropic: { href: 'https://platform.claude.com/settings/keys', label: 'platform.claude.com → API keys' },
+  openai: { href: 'https://platform.openai.com/api-keys', label: 'platform.openai.com → API keys' },
+  google: { href: 'https://aistudio.google.com/apikey', label: 'aistudio.google.com → Get API key' },
+  openrouter: { href: 'https://openrouter.ai/keys', label: 'openrouter.ai → Keys' }
+}
+
 export function AccountApiKey() {
-  const [hint, setHint] = useState<string | null>(null)
+  const [keys, setKeys] = useState<SavedKey[]>([])
+  const [notice, setNotice] = useState(BYOK_NOTICE)
   const [provider, setProvider] = useState<ChatProvider>('anthropic')
-  const [savedProvider, setSavedProvider] = useState<ChatProvider | null>(null)
-  const [model, setModel] = useState('')
-  const [configured, setConfigured] = useState(false)
   const [apiKey, setApiKey] = useState('')
   const [error, setError] = useState('')
   const [saved, setSaved] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
+  const refresh = (data: { keys?: SavedKey[] } | null) => {
+    const rows = data?.keys
+    const next = Array.isArray(rows) ? rows.filter(item => isChatProvider(item.provider)) : []
+    setKeys(next)
+  }
+
   useEffect(() => {
     let cancel = false
     fetch('/api/account/api-key')
-      .then(async response => (response.ok ? response.json() : null))
+      .then(response => (response.ok ? response.json() : null))
       .then(data => {
         if (cancel || !data) return
-        setConfigured(Boolean(data.configured))
-        setHint(typeof data.hint === 'string' ? data.hint : null)
-        if (isChatProvider(data.provider)) {
-          setProvider(data.provider)
-          setSavedProvider(data.provider)
+        refresh(data)
+        if (typeof data.noticeMarkdown === 'string' && data.noticeMarkdown.trim()) {
+          setNotice(data.noticeMarkdown)
         }
-        setModel(typeof data.model === 'string' ? data.model : '')
       })
       .finally(() => {
         if (!cancel) setLoading(false)
@@ -44,12 +56,6 @@ export function AccountApiKey() {
     }
   }, [])
 
-  const onKeyChange = (value: string) => {
-    setApiKey(value)
-    const detected = detectProvider(value)
-    if (detected) setProvider(detected)
-  }
-
   const save = async (event: FormEvent) => {
     event.preventDefault()
     setError('')
@@ -58,7 +64,7 @@ export function AccountApiKey() {
     const response = await fetch('/api/account/api-key', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey, provider, model })
+      body: JSON.stringify({ provider, apiKey })
     })
     const data = await response.json().catch(() => ({}))
     setSaving(false)
@@ -67,57 +73,86 @@ export function AccountApiKey() {
       return
     }
     setApiKey('')
-    setConfigured(true)
-    setHint(typeof data.hint === 'string' ? data.hint : null)
-    if (isChatProvider(data.provider)) setSavedProvider(data.provider)
+    refresh(data)
     setSaved('Key saved. Questions you ask are billed to this key.')
   }
 
-  const remove = async () => {
+  const activate = async (next: ChatProvider) => {
     setError('')
-    setSaved('')
-    setSaving(true)
-    const response = await fetch('/api/account/api-key', { method: 'DELETE' })
-    setSaving(false)
+    const response = await fetch('/api/account/api-key', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: next })
+    })
+    const data = await response.json().catch(() => ({}))
     if (!response.ok) {
-      setError('Could not remove that key')
+      setError(data.error || 'Could not choose that provider')
       return
     }
-    setConfigured(false)
-    setHint(null)
-    setSavedProvider(null)
-    setModel('')
-    setSaved('Key removed. Chat stays off until you add another.')
+    refresh(data)
   }
 
-  const savedLabel = savedProvider ? PROVIDER_INFO[savedProvider].label : 'A'
+  const remove = async (next: ChatProvider) => {
+    setError('')
+    setSaving(true)
+    const response = await fetch('/api/account/api-key', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: next })
+    })
+    const data = await response.json().catch(() => ({}))
+    setSaving(false)
+    if (!response.ok) {
+      setError(data.error || 'Could not remove that key')
+      return
+    }
+    refresh(data)
+    setSaved('Key removed.')
+  }
 
   return (
     <form id="api-key" className="space-y-4" onSubmit={save}>
-      <h2 className="text-xl font-semibold text-slate-900">Your API key</h2>
-      <p className="text-sm text-slate-600">
-        Ask the AI runs on your own key, so the questions you send are billed to that provider.
-        Anthropic, OpenAI, and Google Gemini keys work here. An OpenRouter key reaches other model
-        hosts. The key is stored encrypted and is not shown again.
-      </p>
-      {loading ? (
-        <p className="text-sm text-slate-600">Loading key status…</p>
-      ) : configured ? (
-        <p className="text-sm text-slate-700">
-          {savedLabel} key saved, ending in {hint}.
-        </p>
-      ) : (
-        <p className="text-sm text-slate-700">No key saved yet. Chat stays off until you add one.</p>
-      )}
+      <ByokNotice markdown={notice} />
+      {loading ? <p className="text-sm text-slate-600">Loading keys…</p> : null}
+      <ul className="space-y-2 text-sm">
+        {CHAT_PROVIDERS.map(id => {
+          const savedKey = keys.find(item => item.provider === id)
+          return (
+            <li key={id} className="rounded-md border border-slate-200 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-medium">{PROVIDER_INFO[id].label}</span>
+                {savedKey ? (
+                  <span>{savedKey.active ? 'Active' : 'Saved'} · ending in {savedKey.hint}</span>
+                ) : (
+                  <span className="text-slate-500">No key</span>
+                )}
+              </div>
+              <a className="text-[#1E3A8A] underline" href={CREATE_LINKS[id].href} target="_blank" rel="noreferrer">
+                {CREATE_LINKS[id].label}
+              </a>
+              {savedKey && (
+                <div className="mt-2 flex gap-2">
+                  {!savedKey.active && (
+                    <button type="button" className="text-sm underline" onClick={() => activate(id)}>
+                      Use this key
+                    </button>
+                  )}
+                  <button type="button" className="text-sm underline" onClick={() => remove(id)} disabled={saving}>
+                    Remove key
+                  </button>
+                </div>
+              )}
+            </li>
+          )
+        })}
+      </ul>
       <label className="block text-sm">
         Provider
         <select
           className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2"
           value={provider}
           onChange={event => {
-            if (!isChatProvider(event.target.value)) return
-            setProvider(event.target.value)
-            setModel('')
+            if (isChatProvider(event.target.value)) setProvider(event.target.value)
           }}
         >
           {CHAT_PROVIDERS.map(id => (
@@ -136,46 +171,23 @@ export function AccountApiKey() {
           autoComplete="off"
           spellCheck={false}
           value={apiKey}
-          onChange={event => onKeyChange(event.target.value)}
+          onChange={event => {
+            setApiKey(event.target.value)
+            const detected = detectProvider(event.target.value)
+            if (detected) setProvider(detected)
+          }}
           placeholder={PROVIDER_INFO[provider].placeholder}
         />
       </label>
-      <label className="block text-sm">
-        Model
-        <input
-          className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 font-mono"
-          name="model"
-          autoComplete="off"
-          spellCheck={false}
-          value={model}
-          onChange={event => setModel(event.target.value)}
-          placeholder={PROVIDER_INFO[provider].defaultModel}
-        />
-      </label>
-      <p className="text-sm text-slate-600">
-        Leave the model blank to use {PROVIDER_INFO[provider].defaultModel}.
-      </p>
       {error && <p className="text-sm text-red-700">{error}</p>}
       {saved && <p className="text-sm text-emerald-700">{saved}</p>}
-      <div className="flex flex-wrap gap-3">
-        <button
-          className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-          type="submit"
-          disabled={saving || apiKey.trim().length === 0}
-        >
-          Save key
-        </button>
-        {configured && (
-          <button
-            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-800 disabled:opacity-50"
-            type="button"
-            onClick={remove}
-            disabled={saving}
-          >
-            Remove key
-          </button>
-        )}
-      </div>
+      <button
+        className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+        type="submit"
+        disabled={saving || apiKey.trim().length === 0}
+      >
+        Save key
+      </button>
     </form>
   )
 }

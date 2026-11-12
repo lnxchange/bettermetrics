@@ -7,11 +7,14 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypt
  * key is the fallback, so rotating that key makes stored keys unreadable.
  */
 function encryptionKey(): Buffer {
-  const secret = process.env.BYOK_ENCRYPTION_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!secret) {
+  const secret = process.env.BYOK_ENCRYPTION_KEY
+  if (secret) return createHash('sha256').update(`aim-byok:${secret}`).digest()
+  if (process.env.NODE_ENV === 'production') {
     throw new Error('BYOK encryption secret is not configured')
   }
-  return createHash('sha256').update(`aim-byok:${secret}`).digest()
+  const fallback = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!fallback) throw new Error('BYOK encryption secret is not configured')
+  return createHash('sha256').update(`aim-byok-dev:${fallback}`).digest()
 }
 
 export function isAnthropicApiKey(value: string): boolean {

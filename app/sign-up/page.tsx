@@ -1,3 +1,5 @@
+import { ByokNotice } from '@/components/byok-notice'
+import { BYOK_NOTICE } from '@/lib/chat-notice'
 import { auth } from '@/auth'
 import { LoginButton } from '@/components/login-button'
 import { LoginForm } from '@/components/login-form'
@@ -47,12 +49,10 @@ export default async function SignUpPage({
     searchParams?.reason === 'chat' || searchParams?.redirectedFrom?.startsWith('/chat')
   return (
     <div className="flex h-[calc(100vh-theme(spacing.16))] flex-col items-center justify-center py-10">
-      <div className="w-full max-w-sm">
+      <div className={fromChat ? 'w-full max-w-xl' : 'w-full max-w-sm'}>
         {fromChat && (
-          <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <p className="text-sm text-blue-800">
-              After your account is ready, add your API key on your profile. Questions are billed to that provider.
-            </p>
+          <div className="mb-4">
+            <ByokNotice markdown={BYOK_NOTICE} />
           </div>
         )}
         <LoginForm action="sign-up" />

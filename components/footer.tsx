@@ -24,7 +24,8 @@ const links = [
   { href: '/glossary', label: 'Glossary' },
   { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' }
+  { href: '/contact', label: 'Contact' },
+  { href: '/privacy', label: 'Privacy' }
 ]
 
 export function Footer() {

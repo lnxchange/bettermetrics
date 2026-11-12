@@ -30,7 +30,7 @@ export function AskAI({
       : 'inline-flex items-center rounded-full border border-gray-300 bg-white px-3.5 py-1.5 text-sm text-gray-800 transition hover:border-primary-500 hover:bg-primary-50 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100'
 
   return (
-    <Link href={chatHref(question)} className={cn(base, className)}>
+    <Link href={chatHref(question)} rel="nofollow" className={cn(base, className)}>
       <svg
         className="mr-1.5 h-3.5 w-3.5 shrink-0 opacity-70"
         fill="none"

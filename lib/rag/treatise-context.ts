@@ -7,8 +7,38 @@ import { citationTargets, indexChapter } from '@/lib/treatise-citations'
 // a question that names a chapter without naming a term.
 
 const CACHE_MS = 10 * 60 * 1000
-const CHAPTER_BUDGET = 550_000
 const CHAPTER_OPENING_CHARS = 8000
+
+export function treatiseContextMaxChars(override?: number) {
+  if (typeof override === 'number' && override > 0) return override
+  const value = Number.parseInt(process.env.TREATISE_CONTEXT_MAX_CHARS ?? '', 10)
+  return Number.isFinite(value) && value > 0 ? value : 60_000
+}
+
+export function capTreatiseBlocks(blocks: string[], maxChars: number) {
+  const kept: string[] = []
+  const omitted: string[] = []
+  let used = 0
+  for (const block of blocks) {
+    const next = used === 0 ? block.length : block.length + 7
+    if (kept.length > 0 && used + next > maxChars) {
+      omitted.push(block.split('\n', 1)[0].slice(0, 180))
+      continue
+    }
+    if (kept.length === 0 && block.length > maxChars) {
+      omitted.push(block.split('\n', 1)[0].slice(0, 180))
+      continue
+    }
+    kept.push(block)
+    used += next
+  }
+  let text = kept.join('\n\n---\n\n')
+  if (omitted.length > 0) {
+    const note = `Sections left out because the context cap was reached: ${omitted.join('; ')}. Do not claim these sections say nothing; they were not supplied.`
+    text = `${text}\n\n${note}`.slice(0, maxChars)
+  }
+  return { text, omitted }
+}
 
 const TITLE_STOPWORDS = new Set([
   'about', 'after', 'against', 'and', 'architecture', 'between', 'chapter', 'from',
@@ -47,6 +77,7 @@ export interface TreatiseContextResult {
   text: string
   /** A glossary definition and the chapter that derives it are both attached. */
   grounded: boolean
+  sectionIds: string[]
 }
 
 let glossaryCache: { at: number; rows: GlossaryRow[] } | null = null
@@ -247,7 +278,7 @@ function neighbourSections(chapter: ChapterText, sections: string[], budget: num
     })
 }
 
-function chapterMaterial(definitions: GlossaryRow[], loaded: ChapterText[]) {
+function chapterMaterial(definitions: GlossaryRow[], loaded: ChapterText[], maxChars: number) {
   const bySlug = new Map(loaded.map(chapter => [chapter.slug, chapter]))
   const homeSlug = homeChapter(definitions)
   const home = bySlug.get(homeSlug)
@@ -262,36 +293,34 @@ function chapterMaterial(definitions: GlossaryRow[], loaded: ChapterText[]) {
     otherBlocks.push(...citedSections(chapter, [target.section]))
   }
 
-  if (home.markdown.length <= CHAPTER_BUDGET) {
-    const blocks = [formatChapter(home, home.markdown, '')]
-    let used = home.markdown.length
-    for (const block of otherBlocks) {
-      if (used + block.length > CHAPTER_BUDGET) break
-      blocks.push(block)
-      used += block.length
-    }
-    return blocks
-  }
-
   const homeSections = targets
     .filter(target => target.slug === home.slug && target.section)
     .map(target => target.section)
-  const homeBlocks = neighbourSections(home, homeSections, CHAPTER_BUDGET)
-  const blocks = [...homeBlocks]
-  let used = homeBlocks.reduce((sum, block) => sum + block.length, 0)
-  for (const block of otherBlocks) {
-    if (used + block.length > CHAPTER_BUDGET) break
-    blocks.push(block)
-    used += block.length
-  }
-  return blocks
+  const homeBlocks = neighbourSections(home, homeSections, maxChars)
+  return [...homeBlocks, ...otherBlocks]
 }
 
 /**
  * Definitions and treatise text for this conversation.
  * `grounded` is true when a named term brought its definition and its chapter.
  */
-export async function treatiseContext(text: string): Promise<TreatiseContextResult> {
+export function extendContextSnapshot(
+  previous: { text: string; sectionIds: string[] },
+  fresh: { text: string; sectionIds: string[] },
+  maxChars: number
+) {
+  const newIds = fresh.sectionIds.filter(id => !previous.sectionIds.includes(id))
+  if (!fresh.text || newIds.length === 0) return previous
+  const combined = `${previous.text}\n\n---\n\nAdditional sections:\n\n${fresh.text}`
+  if (combined.length > maxChars) return previous
+  return { text: combined, sectionIds: [...previous.sectionIds, ...newIds] }
+}
+
+function sectionIdsOf(text: string) {
+  return Array.from(text.matchAll(/Section ([^\]\n]+)/g)).map(match => match[1])
+}
+
+export async function treatiseContext(text: string, maxChars = treatiseContextMaxChars()): Promise<TreatiseContextResult> {
   const [definitions, named] = await Promise.all([
     glossary().then(rows => matchDefinitions(rows, text)),
     chapters().then(rows => matchChapters(rows, text))
@@ -310,7 +339,7 @@ export async function treatiseContext(text: string): Promise<TreatiseContextResu
     const targets = definitions.flatMap(row => citationTargets(row.derivation ?? ''))
     const slugs = Array.from(new Set([homeChapter(definitions), ...targets.map(target => target.slug)].filter(Boolean)))
     const loaded = await loadChapters(slugs)
-    const blocks = chapterMaterial(definitions, loaded)
+    const blocks = chapterMaterial(definitions, loaded, maxChars)
     grounded = blocks.length > 0
     parts.push(...blocks)
   } else if (named.length > 0) {
@@ -322,5 +351,6 @@ export async function treatiseContext(text: string): Promise<TreatiseContextResu
     }
   }
 
-  return { text: parts.join('\n\n---\n\n'), grounded }
+  const capped = capTreatiseBlocks(parts, maxChars)
+  return { text: capped.text, grounded, sectionIds: sectionIdsOf(capped.text) }
 }

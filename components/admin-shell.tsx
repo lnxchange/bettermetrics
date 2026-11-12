@@ -12,6 +12,7 @@ const items = [
   { href: '/admin/inbox', label: 'Inbox' },
   { href: '/admin/articles', label: 'Articles' },
   { href: '/admin/users', label: 'Users' },
+  { href: '/admin/ai', label: 'AI' },
   { href: '/admin/research-documents', label: 'Research' },
   { href: '/admin/rag-documents', label: 'Knowledge' }
 ]

@@ -6,7 +6,8 @@ import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { ChatHeader } from '@/components/chat-header'
 import { cookies } from 'next/headers'
-import { guestsAllowed, platformKeyAllowed } from '@/lib/chat-access'
+import { guestsAllowed } from '@/lib/chat-access'
+import { loadChatSettings, PAUSED_MESSAGE } from '@/lib/chat-settings'
 import { GUEST_COOKIE, GUEST_LIMIT, peekGuestCount } from '@/lib/guest-quota'
 
 export const runtime = 'edge'
@@ -25,13 +26,15 @@ export async function generateMetadata({
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 
+  const robots = { index: false, follow: false }
   if (!session?.user) {
-    return { title: 'Ask the AI' }
+    return { title: 'Ask the AI', robots }
   }
 
   const chat = await getChat(params.id)
   return {
-    title: chat?.title.toString().slice(0, 50) ?? 'Chat'
+    title: chat?.title.toString().slice(0, 50) ?? 'Chat',
+    robots
   }
 }
 
@@ -40,7 +43,16 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   const session = await auth({ cookieStore })
 
   const requiresAccount = !guestsAllowed()
-  const requiresOwnKey = !platformKeyAllowed()
+  const settings = await loadChatSettings()
+  const paused = process.env.CHAT_PAUSED === 'true' || settings.paused
+  const pausedMessage = process.env.CHAT_PAUSED === 'true' ? PAUSED_MESSAGE : settings.pausedMessage
+  const chatProps = {
+    requiresAccount,
+    requiresOwnKey: true as const,
+    paused,
+    pausedMessage,
+    noticeMarkdown: settings.noticeMarkdown
+  }
 
   // Guests get a fresh, unsaved conversation at this URL.
   if (!session?.user) {
@@ -58,8 +70,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
             isGuest
             initialGuestRemaining={guestRemaining}
             initialQuestion={searchParams?.q}
-            requiresAccount={requiresAccount}
-            requiresOwnKey={requiresOwnKey}
+            {...chatProps}
           />
         </div>
       </>
@@ -78,8 +89,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
             id={params.id}
             initialMessages={[]}
             initialQuestion={searchParams?.q}
-            requiresAccount={requiresAccount}
-            requiresOwnKey={requiresOwnKey}
+            {...chatProps}
           />
         </div>
       </>
@@ -97,8 +107,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
         <Chat
           id={chat.id}
           initialMessages={chat.messages}
-          requiresAccount={requiresAccount}
-          requiresOwnKey={requiresOwnKey}
+          {...chatProps}
         />
       </div>
     </>
