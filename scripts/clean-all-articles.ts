@@ -5,10 +5,7 @@
  * currently stored in the database.
  *
  * Usage:
- *   npx ts-node --project tsconfig.json scripts/clean-all-articles.ts
- *
- * Or add to package.json:
- *   "clean-articles": "ts-node scripts/clean-all-articles.ts"
+ *   npm run clean-articles
  */
 
 import { createClient } from '@supabase/supabase-js'

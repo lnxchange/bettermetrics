@@ -1,10 +1,12 @@
 # Admin Setup Guide
 
+`/admin` is the Atomic CRM. The site serves it only to a signed-in user whose Supabase user metadata contains `"is_admin": true`. Everyone else is sent to sign-in, or back to the home page.
+
 ## Initial Admin User Setup
 
-Since you're the first user, follow these steps to grant yourself admin access:
+The flag lives on the site's Supabase project (the one in `NEXT_PUBLIC_SUPABASE_URL`), not the separate CRM project.
 
-### Option 1: Using Supabase Dashboard (Recommended for Production)
+### Option 1: Using Supabase Dashboard
 
 1. Go to your Supabase project dashboard
 2. Navigate to **Authentication** > **Users**
@@ -18,9 +20,10 @@ Since you're the first user, follow these steps to grant yourself admin access:
    }
    ```
 7. Save changes
-8. Refresh your browser on the site - you should now have admin access
+8. Sign out of the site and sign back in, so the session picks up the new metadata
+9. Open `/admin`. You should see the CRM
 
-### Option 2: Using SQL (For Local Development)
+### Option 2: Using SQL (local development)
 
 1. Open Supabase Studio at http://localhost:54323
 2. Go to **SQL Editor**
@@ -30,14 +33,8 @@ Since you're the first user, follow these steps to grant yourself admin access:
    SET raw_user_meta_data = raw_user_meta_data || '{"is_admin": true}'::jsonb
    WHERE email = 'YOUR_EMAIL';
    ```
-4. Refresh your browser - you should now have admin access
-
-### Verifying Admin Access
-
-1. Navigate to `/admin` on your site
-2. You should see the admin dashboard instead of being redirected
-3. You should be able to upload and manage documents
+4. Sign out and sign back in, then open `/admin`
 
 ### Granting Admin to Additional Users
 
-Once you have admin access, you can use the Supabase dashboard to grant admin rights to other users following Option 1 above.
+Use the Supabase dashboard steps above, or the Users screen inside the CRM. Both set the same `is_admin` flag on the site user.
