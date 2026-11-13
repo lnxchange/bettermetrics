@@ -203,17 +203,6 @@
       ]
     },
     {
-      "title": "System Diagnostic",
-      "url": "/debug",
-      "sections": [
-        {
-          "heading": "System Diagnostic",
-          "anchor": "",
-          "content": "Run comprehensive tests to identify issues with authentication, API connections, and configuration."
-        }
-      ]
-    },
-    {
       "title": "Motivational Self-Diagnosis",
       "url": "/diagnostic",
       "sections": [
