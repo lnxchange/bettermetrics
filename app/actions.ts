@@ -4,7 +4,6 @@ import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 import { type Chat } from '@/lib/types'
 
@@ -68,23 +67,6 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
     revalidatePath('/')
     return revalidatePath(path)
   } catch (error) {
-    return {
-      error: 'Unauthorized'
-    }
-  }
-}
-
-export async function clearChats() {
-  try {
-    const cookieStore = cookies()
-    const supabase = createServerActionClient<Database>({
-      cookies: () => cookieStore
-    })
-    await supabase.from('chats').delete().throwOnError()
-    revalidatePath('/')
-    return redirect('/')
-  } catch (error) {
-    console.log('clear chats error', error)
     return {
       error: 'Unauthorized'
     }

@@ -197,23 +197,3 @@ function generateDefaultStructuredData(input: OptimizationInput) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/articles/${input.slug}` }
   }
 }
-
-export async function optimizeBatch(articles: OptimizationInput[], delayMs: number = 2000): Promise<Map<string, SEOOptimizationResult>> {
-  const results = new Map<string, SEOOptimizationResult>()
-  
-  for (const article of articles) {
-    try {
-      const result = await optimizeArticleSEO(article)
-      results.set(article.slug, result)
-      
-      // Rate limiting delay
-      if (delayMs > 0) {
-        await new Promise(resolve => setTimeout(resolve, delayMs))
-      }
-    } catch (error) {
-      console.error(`Failed to optimize ${article.slug}:`, error)
-    }
-  }
-  
-  return results
-}
