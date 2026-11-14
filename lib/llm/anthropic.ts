@@ -43,11 +43,13 @@ export async function generateAnthropic(input: GenerateInput): Promise<GenerateR
     let inputTokens = 0
     let outputTokens = 0
     let cachedTokens = 0
+    let cacheWriteTokens = 0
     for await (const chunk of stream) {
       if (chunk.type === 'message_start') {
         const usage = chunk.message.usage
         inputTokens = usage.input_tokens
         cachedTokens = usage.cache_read_input_tokens ?? 0
+        cacheWriteTokens = usage.cache_creation_input_tokens ?? 0
       } else if (chunk.type === 'message_delta') {
         outputTokens = chunk.usage.output_tokens
       }
@@ -56,7 +58,7 @@ export async function generateAnthropic(input: GenerateInput): Promise<GenerateR
       }
     }
     if (!text) throw new LlmError('unavailable')
-    return { text, inputTokens, outputTokens, cachedTokens }
+    return { text, inputTokens, outputTokens, cachedTokens, cacheWriteTokens }
   } catch (error) {
     if (error instanceof LlmError) throw error
     const status = typeof error === 'object' && error && 'status' in error && typeof error.status === 'number' ? error.status : 502

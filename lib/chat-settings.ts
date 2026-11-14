@@ -24,6 +24,11 @@ export type ChatSettings = {
   cache: Record<ChatProvider, boolean>
   anthropicCacheTtl: '5m' | '1h'
   noticeMarkdown: string
+  sponsoredDailyQuestions: number
+  sponsoredMonthlyUsd: number
+  siteMonthlyCapUsd: number
+  sitePaidModel: string
+  sitePaidMaxOutputTokens: number
 }
 
 const MODEL_DEFAULTS: Record<ChatProvider, string> = {
@@ -67,7 +72,12 @@ export function defaultChatSettings(): ChatSettings {
     guestDailyGlobal: 100,
     cache: { anthropic: true, openai: true, google: true, openrouter: true },
     anthropicCacheTtl: '5m',
-    noticeMarkdown: BYOK_NOTICE
+    noticeMarkdown: BYOK_NOTICE,
+    sponsoredDailyQuestions: 15,
+    sponsoredMonthlyUsd: 5,
+    siteMonthlyCapUsd: 40,
+    sitePaidModel: 'claude-sonnet-5-5',
+    sitePaidMaxOutputTokens: 2000
   }
 }
 
@@ -80,6 +90,13 @@ function service() {
 
 function bool(value: unknown, fallback: boolean) {
   return typeof value === 'boolean' ? value : fallback
+}
+
+function money(value: unknown, fallback: number, min: number, max: number) {
+  const parsed = typeof value === 'number' ? value : Number(value)
+  if (!Number.isFinite(parsed)) return fallback
+  const clamped = Math.min(max, Math.max(min, parsed))
+  return Math.round(clamped * 100) / 100
 }
 
 function int(value: unknown, fallback: number, min: number, max: number) {
@@ -129,7 +146,12 @@ export function settingsFromRow(row: Record<string, unknown> | null): ChatSettin
     guestDailyGlobal: int(row.guest_daily_global, base.guestDailyGlobal, 0, 100000),
     cache,
     anthropicCacheTtl: row.anthropic_cache_ttl === '1h' ? '1h' : '5m',
-    noticeMarkdown: typeof row.notice_markdown === 'string' && row.notice_markdown.trim() ? row.notice_markdown : base.noticeMarkdown
+    noticeMarkdown: typeof row.notice_markdown === 'string' && row.notice_markdown.trim() ? row.notice_markdown : base.noticeMarkdown,
+    sponsoredDailyQuestions: int(row.sponsored_daily_questions, base.sponsoredDailyQuestions, 1, 500),
+    sponsoredMonthlyUsd: money(row.sponsored_monthly_usd, base.sponsoredMonthlyUsd, 0, 50),
+    siteMonthlyCapUsd: money(row.site_monthly_cap_usd, base.siteMonthlyCapUsd, 0, 50),
+    sitePaidModel: typeof row.site_paid_model === 'string' && row.site_paid_model.trim() ? row.site_paid_model.trim() : base.sitePaidModel,
+    sitePaidMaxOutputTokens: int(row.site_paid_max_output_tokens, base.sitePaidMaxOutputTokens, 256, 8000)
   }
 }
 
@@ -161,6 +183,9 @@ export type UsageEvent = {
   contextChars: number
   outcome: string
   ipHash: string | null
+  costUsd?: number | null
+  paidBy?: 'site' | 'reader' | null
+  cacheWriteTokens?: number | null
 }
 
 export async function recordChatUsage(event: UsageEvent) {
@@ -182,7 +207,10 @@ export async function recordChatUsage(event: UsageEvent) {
     cached_tokens: event.cachedTokens,
     context_chars: event.contextChars,
     outcome: event.outcome,
-    ip_hash: event.ipHash
+    ip_hash: event.ipHash,
+    cost_usd: event.costUsd ?? null,
+    paid_by: event.paidBy ?? null,
+    cache_write_tokens: event.cacheWriteTokens ?? null
   })
 }
 

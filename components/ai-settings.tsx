@@ -21,6 +21,11 @@ type Settings = {
   cache: Record<string, boolean>
   anthropicCacheTtl: '5m' | '1h'
   noticeMarkdown: string
+  sponsoredDailyQuestions: number
+  sponsoredMonthlyUsd: number
+  siteMonthlyCapUsd: number
+  sitePaidModel: string
+  sitePaidMaxOutputTokens: number
 }
 
 type UsageRow = {
@@ -38,6 +43,7 @@ export function AiSettings() {
   const [settings, setSettings] = useState<Settings | null>(null)
   const [log, setLog] = useState<{ id: number; email: string; setting: string; created_at: string }[]>([])
   const [usage, setUsage] = useState<UsageRow[]>([])
+  const [sponsored, setSponsored] = useState<{ capUsd: number; settled: number; reserved: number; invites: { sent: number; redeemed: number; expired: number } } | null>(null)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState('')
   const [saving, setSaving] = useState(false)
@@ -56,6 +62,7 @@ export function AiSettings() {
         setSettings(data.settings)
         setLog(data.log || [])
         setUsage(data.usage || [])
+        setSponsored(data.sponsored || null)
       })
   }, [])
 
@@ -144,6 +151,14 @@ export function AiSettings() {
       <NumberField label="Questions per reader per hour" value={settings.questionsPerUserHour} onChange={value => set({ questionsPerUserHour: value })} />
       <NumberField label="Questions per reader per day" value={settings.questionsPerUserDay} onChange={value => set({ questionsPerUserDay: value })} />
       <NumberField label="Questions per IP address per day" value={settings.questionsPerIpDay} onChange={value => set({ questionsPerIpDay: value })} />
+      <NumberField label="Sponsored questions per reader per day" value={settings.sponsoredDailyQuestions} onChange={value => set({ sponsoredDailyQuestions: value })} />
+      <NumberField label="Sponsored US dollars per reader per month" value={settings.sponsoredMonthlyUsd} onChange={value => set({ sponsoredMonthlyUsd: value })} />
+      <NumberField label="Site-paid cap, US dollars per month (50 maximum)" value={settings.siteMonthlyCapUsd} onChange={value => set({ siteMonthlyCapUsd: value })} />
+      <label className="block text-sm">
+        Model for site-paid questions
+        <input className="mt-1 w-full rounded-md border px-3 py-2 font-mono text-sm" value={settings.sitePaidModel} onChange={event => set({ sitePaidModel: event.target.value })} />
+      </label>
+      <NumberField label="Site-paid answer length, maximum output tokens" value={settings.sitePaidMaxOutputTokens} onChange={value => set({ sitePaidMaxOutputTokens: value })} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={settings.guestChat} onChange={event => set({ guestChat: event.target.checked })} />
         Guest chat. Leave this off. There is no site key for guests to spend.
@@ -158,6 +173,13 @@ export function AiSettings() {
       <button className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50" disabled={saving}>
         Save settings
       </button>
+      {sponsored && (
+        <section>
+          <h2 className="text-lg font-semibold">Sponsored chat</h2>
+          <p className="mt-2 text-sm">This month: US${sponsored.settled.toFixed(2)} settled, US${sponsored.reserved.toFixed(2)} reserved, of a US${sponsored.capUsd.toFixed(2)} cap.</p>
+          <p className="mt-1 text-sm">Invitations sent {sponsored.invites.sent}, redeemed {sponsored.invites.redeemed}, expired {sponsored.invites.expired}.</p>
+        </section>
+      )}
       <section>
         <h2 className="text-lg font-semibold">Last 30 days</h2>
         <p className="mt-2 text-sm">Questions answered: {summary.answered}. Refusals: {summary.refused}. Input tokens: {summary.input}. Output tokens: {summary.output}. Cached input tokens: {summary.cached}.</p>
