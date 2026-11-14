@@ -31,59 +31,6 @@ function crmClient(): SupabaseClient | null {
   })
 }
 
-export type OutreachHistoryItem = {
-  date: string
-  kind: string
-  subject?: string | null
-  text?: string | null
-}
-
-export type OutreachContact = {
-  external_id: string
-  first_name?: string | null
-  last_name?: string | null
-  email?: string | null
-  email_holder?: 'self' | 'assistant' | 'agent' | null
-  contact_via?: string | null
-  company?: string | null
-  company_sector?: string | null
-  title?: string | null
-  linkedin_url?: string | null
-  tags?: string[]
-  list?: 'primary' | 'secondary' | null
-  ask_policy?: 'do-not-ask' | 'may-ask-to-validate' | null
-  source?: string | null
-  background?: string | null
-  outreach_status?: string | null
-  first_contacted_at?: string | null
-  last_contacted_at?: string | null
-  history?: OutreachHistoryItem[]
-  deal?: { category: string; name?: string | null } | null
-}
-
-export type OutreachContactResult = {
-  contact_id: number
-  deal_id: number | null
-  created: boolean
-}
-
-export async function upsertOutreachContact(
-  contact: OutreachContact
-): Promise<OutreachContactResult | null> {
-  const client = crmClient()
-  if (!client) return null
-
-  const { data, error } = await client.rpc('upsert_outreach_contact', {
-    p: contact
-  })
-
-  if (error) {
-    console.error('CRM outreach sync failed', error.message)
-    return null
-  }
-  return data as OutreachContactResult
-}
-
 export async function upsertSyncedContact(contact: SyncedContact): Promise<boolean> {
   const client = crmClient()
   if (!client) return false
