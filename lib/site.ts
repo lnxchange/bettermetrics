@@ -28,8 +28,3 @@ export function metaDescription(text: string, max = 158, pad = ' Part of the AIM
   const boundary = cut.lastIndexOf(' ')
   return `${cut.slice(0, boundary > 40 ? boundary : cut.length).replace(/[,;:\s]+$/, '')}…`
 }
-
-export function absoluteUrl(path: string) {
-  if (/^https?:\/\//.test(path)) return path
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`
-}
