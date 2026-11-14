@@ -68,15 +68,76 @@ export const loadGlossaryEntry = cached(
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 
+function glossaryLookupKeys(term: string) {
+  const keys = new Set<string>([term.toLowerCase()])
+  const axiom = term.match(/^Axiom\s+\d+\s*[-–:]\s*(.+)$/i)
+  if (axiom) {
+    keys.add(axiom[1].trim().toLowerCase())
+    const bare = axiom[1].replace(/\s*\([^)]*\)\s*$/, '').trim()
+    if (bare) keys.add(bare.toLowerCase())
+  }
+  const wrapped = term.match(/^(.*?)\s*\(([^)]+)\)\s*$/)
+  if (wrapped) {
+    const stem = wrapped[1].trim()
+    const inner = wrapped[2].trim()
+    if (stem) keys.add(stem.toLowerCase())
+    if (inner.length >= 3) keys.add(inner.toLowerCase())
+    const stemWithoutParen = stem.replace(/\s*\([^)]*\)\s*$/, '').trim()
+    if (stemWithoutParen) keys.add(stemWithoutParen.toLowerCase())
+  }
+  if (term.includes(',') && term.length < 40 && !term.includes('(')) {
+    for (const piece of term.split(',')) {
+      const item = piece.trim()
+      if (item) keys.add(item.toLowerCase())
+    }
+  }
+  return keys
+}
+
+function crossReferenceKeys(name: string) {
+  const cleaned = name
+    .split(/\.\s+\*?(?:Canonical reference|See)\b/i)[0]
+    .trim()
+    .replace(/\.$/, '')
+    .trim()
+  const keys = [cleaned.toLowerCase()]
+  const axiomTail = cleaned.match(/^(.*?)\s*\(Axiom\s+\d+\)\s*$/i)
+  if (axiomTail) keys.push(axiomTail[1].trim().toLowerCase())
+  const trailing = cleaned.match(/^(.*)\s+\(([^)]+)\)\s*$/)
+  if (trailing) {
+    const stem = trailing[1].trim()
+    const inner = trailing[2].trim()
+    if (stem) keys.push(stem.toLowerCase())
+    if (inner.length >= 3) keys.push(inner.toLowerCase())
+  }
+  const symbol = cleaned.match(/^[^\s()]+\s*\((.+)\)$/)
+  if (symbol && symbol[1].trim().length >= 3) keys.push(symbol[1].trim().toLowerCase())
+  return keys
+}
+
+/** Match a Chapter 2 cross-reference to a glossary term, including parenthetical aliases. */
+export function resolveGlossaryName<T extends { term: string }>(name: string, entries: T[]): T | null {
+  const byKey = new Map<string, T>()
+  for (const entry of entries) {
+    for (const key of Array.from(glossaryLookupKeys(entry.term))) {
+      if (!byKey.has(key)) byKey.set(key, entry)
+    }
+  }
+  for (const key of crossReferenceKeys(name)) {
+    const found = byKey.get(key)
+    if (found) return found
+  }
+  return null
+}
+
 /** Neighbouring entries and the slugs behind cross-reference names. Built from the cached index. */
 export async function loadGlossaryContext(slug: string) {
   const index = await loadGlossaryIndex()
   const i = index.findIndex(entry => entry.slug === slug)
-  const byTerm = new Map(index.map(entry => [entry.term.toLowerCase(), entry]))
   return {
     previous: i > 0 ? index[i - 1] : null,
     next: i >= 0 && i < index.length - 1 ? index[i + 1] : null,
-    resolve: (term: string) => byTerm.get(term.toLowerCase()) ?? null,
+    resolve: (term: string) => resolveGlossaryName(term, index),
     total: index.length
   }
 }
