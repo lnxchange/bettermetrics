@@ -116,7 +116,7 @@ export default function AboutPage() {
               >
                 award winning AI ethicist and consultant
               </a>
-              , and{' '}
+              ,{' '}
               <a
                 href="https://themusic.com.au/features/ulysses-wulf-brynn-davies/4ZHy9fT39vk/15-04-16"
                 target="_blank"
@@ -125,7 +125,7 @@ export default function AboutPage() {
               >
                 musician
               </a>
-              .
+              , and a sound engineer and music producer.
             </p>
             <p>
               While it might seem unusual for a lawyer to develop a framework of human
@@ -142,6 +142,18 @@ export default function AboutPage() {
               preferences. The AIM Framework provides refined definitions that align more
               accurately with how our motivations work neurologically and play out in behaviour,
               allowing the reduction of friction in human interactions.
+            </p>
+            <p>
+              My work as a sound engineer and music producer is what enabled me to apply
+              engineering concepts to that issue. Summing stereo to mono means you cannot
+              recover the stereo mix from the mono mix afterwards, and a want that has been
+              summed into one feeling cannot be separated back into the sources that produced
+              it. Feedback requires dropping the volume below the level at which it took off
+              to stop it, and a motivational loop that has taken off is not ended by a return
+              to the point where it began. Low-pass filters remove some frequencies while
+              leaving others legible, which is what a loose definition does to wants, needs,
+              and preferences: distinctions are taken out, and what remains still reads as if
+              it were the whole account.
             </p>
             <p>
               Contracts exist to manage rivalry; they make implicit expectations explicit and
