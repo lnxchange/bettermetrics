@@ -1,10 +1,5 @@
-import { AdminShell } from '@/components/admin-shell'
-import { AiSettings } from '@/components/ai-settings'
+import { AdminRedirect } from '@/components/admin-redirect'
 
-export default function AiSettingsPage() {
-  return (
-    <AdminShell>
-      <AiSettings />
-    </AdminShell>
-  )
+export default function Page() {
+  return <AdminRedirect hash="/ai" />
 }
