@@ -7,12 +7,12 @@
         {
           "heading": "About the Author and the AIM Framework",
           "anchor": "",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of aimtheory.org. The purpose of this website and the AIM Framework is to explain how recent neuroscienti"
+          "content": "The author, the book, and what it claims and does not claim. I'm Yule Guttenbeil, the person who formulated the AIM Framework and creator of aimtheory.org. The purpose of this website and the AIM Framework is to explain how recent neuroscientific discoveries shed light on where our motivations come "
         },
         {
           "heading": "Yule Guttenbeil",
           "anchor": "#yule-guttenbeil",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of ai"
+          "content": "The author, the book, and what it claims and does not claim. I'm Yule Guttenbeil, the person who formulated the AIM Framework and creator of aimtheory.org."
         },
         {
           "heading": "The book",
@@ -20,112 +20,25 @@
           "content": "The purpose of this website and the AIM Framework is to explain how recent neuroscientific discoveries shed light on where our motivations come from in the brain. These discoveries make it easier to u"
         },
         {
-          "heading": "What AIM claims, and does not",
-          "anchor": "#what-aim-claims-and-does-not",
+          "heading": "What the AIM Framework claims, and does not",
+          "anchor": "#what-the-aim-framework-claims-and-does-not",
           "content": "While it might seem unusual for a lawyer to develop a framework of human motivation, my professional background, particularly in writing and analysing contracts, has given me a unique ability when ass"
-        },
-        {
-          "heading": "How to challenge it",
-          "anchor": "#how-to-challenge-it",
-          "content": "Contracts exist to manage rivalry; they make implicit expectations explicit and help prevent conflict by clearly defining boundaries and roles. Without them, confusion and disputes arise because compe"
         },
         {
           "heading": "Get in touch",
           "anchor": "#get-in-touch",
-          "content": "The AIM Motivation Framework is a synthetic theory. It provides a basis for hypothesising predictions and tightly boundered tests in order to validate its premise. I am not a professional psychologist"
+          "content": "My work as a sound engineer and music producer is what enabled me to apply engineering concepts to that issue. Summing stereo to mono means you cannot recover the stereo mix from the mono mix afterwar"
         }
       ]
     },
     {
-      "title": "Article Management",
-      "url": "/admin/articles",
+      "title": "Your profile",
+      "url": "/account",
       "sections": [
         {
-          "heading": "Article Management",
+          "heading": "Your profile",
           "anchor": "",
-          "content": "Manage your published articles and drafts No articles found Create your first article to get started"
-        }
-      ]
-    },
-    {
-      "title": "Document Management",
-      "url": "/admin/documents",
-      "sections": [
-        {
-          "heading": "Document Management",
-          "anchor": "",
-          "content": ""
-        }
-      ]
-    },
-    {
-      "title": "Inbox",
-      "url": "/admin/inbox",
-      "sections": [
-        {
-          "heading": "Inbox",
-          "anchor": "",
-          "content": "unread message$` : messages.length > 0 ? 'No unread messages' : 'No messages yet'}  "
-        }
-      ]
-    },
-    {
-      "title": "Create New Article",
-      "url": "/admin/new-article",
-      "sections": [
-        {
-          "heading": "Create New Article",
-          "anchor": "",
-          "content": "Write or upload content to publish on the AIM Framework website /120 characters Auto-generated from title. URL: /articles/"
-        }
-      ]
-    },
-    {
-      "title": "Admin Dashboard",
-      "url": "/admin",
-      "sections": [
-        {
-          "heading": "Admin Dashboard",
-          "anchor": "",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page. Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and"
-        },
-        {
-          "heading": "Quick Stats",
-          "anchor": "#quick-stats",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page."
-        }
-      ]
-    },
-    {
-      "title": "RAG Documents",
-      "url": "/admin/rag-documents",
-      "sections": [
-        {
-          "heading": "RAG Documents",
-          "anchor": "",
-          "content": "Manage documents used by the AIM chatbot's knowledge base Supported formats: TXT, MD, DOCX Select multiple files. Supported formats: TXT, MD, DOCX"
-        }
-      ]
-    },
-    {
-      "title": "Research Documents",
-      "url": "/admin/research-documents",
-      "sections": [
-        {
-          "heading": "Research Documents",
-          "anchor": "",
-          "content": "Manage research documents that are publicly accessible Upload a single file Select multiple files for batch upload (titles will be auto-generated from filenames)"
-        }
-      ]
-    },
-    {
-      "title": "Users",
-      "url": "/admin/users",
-      "sections": [
-        {
-          "heading": "Users",
-          "anchor": "",
-          "content": "View user email addresses and signup dates"
+          "content": "Loading your profile… Your name and email are how we reach you. A new email needs a confirmation from your inbox before it replaces the current one. "
         }
       ]
     },
@@ -173,11 +86,11 @@
         {
           "heading": "Contact Yule Guttenbeil",
           "anchor": "",
-          "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage you to try our AIM Chat AI assistant first. It has access to the latest versions of our research docu"
+          "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage you to try the AIM Framework AI assistant first. It has access to the latest versions of our research"
         },
         {
-          "heading": "Have Questions About AIM?",
-          "anchor": "#have-questions-about-aim",
+          "heading": "Have Questions About the AIM Framework?",
+          "anchor": "#have-questions-about-the-aim-framework",
           "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage y"
         },
         {
@@ -186,14 +99,14 @@
           "content": "Note: As Yule is a working lawyer, papers will generally include limited references but will provide sufficient information for you to further investigate and critique the framework's application to y"
         },
         {
-          "heading": "Why Collaborate on AIM?",
-          "anchor": "#why-collaborate-on-aim",
-          "content": "Most theories propose new mechanisms. AIM proposes new categories. It provides the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts, organizing existing evi"
+          "heading": "Why Collaborate on the AIM Framework?",
+          "anchor": "#why-collaborate-on-the-aim-framework",
+          "content": "Most theories propose new mechanisms. The AIM Framework proposes new categories. It provides the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts, organizin"
         },
         {
           "heading": "Collaboration Opportunities",
           "anchor": "#collaboration-opportunities",
-          "content": "AIM's tri-source model enables predictions about market failures, intervention backfires, and social dynamics escalation that no existing theory can make—providing a competitive advantage in research "
+          "content": "The AIM Framework's tri-source model enables predictions about market failures, intervention backfires, and social dynamics escalation that no existing theory can make—providing a competitive advantag"
         },
         {
           "heading": "Connect",
@@ -224,49 +137,65 @@
       ]
     },
     {
-      "title": "Glossary of the AIM Framework",
+      "title": "Glossary | The AIM Framework",
       "url": "/glossary",
       "sections": [
         {
-          "heading": "Glossary of the AIM Framework",
+          "heading": "Glossary | The AIM Framework",
           "anchor": "",
           "content": ""
         }
       ]
     },
     {
-      "title": "AIM Theory | A General Theory of Human Motivation",
+      "title": "The AIM Framework | A General Theory of Human Motivation",
       "url": "/",
       "sections": [
         {
-          "heading": "AIM Theory | A General Theory of Human Motivation",
+          "heading": "The AIM Framework | A General Theory of Human Motivation",
           "anchor": "",
-          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea: disease has a cause you can name. The AIM Framework is that idea for wanting. It is bas"
+          "content": "The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks what is rewarding to do for its own sake (Intrinsic Motivation). One tracks what stands out as valuable around you (Mimetic Desir"
+        },
+        {
+          "heading": "How the system works",
+          "anchor": "#how-the-system-works",
+          "content": "The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks what is rewarding to do for i"
         },
         {
           "heading": "Three sources of wanting",
           "anchor": "#three-sources-of-wanting",
-          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that wi"
+          "content": "A Body Manager (the homeostatic-deficit system) reports bodily deficit, a Thinker (the dopaminergic system) holds beliefs and pursues what is rewarding in the doing, and an Observer (the mirror neuron"
         },
         {
-          "heading": "What gets lost in the mix",
-          "anchor": "#what-gets-lost-in-the-mix",
-          "content": "The brain cannot act on three signals at once, so it integrates them into one value per option. That output records how much you want something but not why. The source tags are not hidden; they are go"
+          "heading": "Why it matters",
+          "anchor": "#why-it-matters",
+          "content": "The name Mimetic Desire points to its most familiar case, wanting what other people visibly want. The signal itself is simply Salience: this stands out as worth having. It works the same way for a lim"
         },
         {
           "heading": "Try the Two-Question Diagnostic",
           "anchor": "#try-the-two-question-diagnostic",
-          "content": "This is why asking people what they want, the foundation of consumer research, welfare economics and much of therapy, asks a question the architecture cannot reliably answer. Introspection cannot read"
+          "content": "Among everything else in the field, each person's Observer reads what the people around them are pursuing, so the same loop also runs between people. The framework builds outward from there without ad"
         },
         {
           "heading": "The framework itself",
           "anchor": "#the-framework-itself",
-          "content": "The architecture in seven short sections: sources, integration, opacity, confabulation, parasitism, satiation, and the patch. The premises everything is derived from, with what each one rests on and w"
+          "content": "Once the signals are merged, which source produced which part cannot be recovered. There are exactly three sources, each with its own satiation pattern; M, as Salience, never satiates. M adds value to"
         },
         {
           "heading": "Where to go next",
           "anchor": "#where-to-go-next",
-          "content": "The corpus behind the chat is the full Treatise and research archive, kept current. Specific questions get specific answers. AIM is the work of Yule Guttenbeil, a technology lawyer with a commerce deg"
+          "content": "The AIM Framework is a theory of motivation, not of all cognition, and it builds on Self-Determination Theory, behavioural economics and mimetic theory rather than replacing them. What it claims and d"
+        }
+      ]
+    },
+    {
+      "title": "Privacy",
+      "url": "/privacy",
+      "sections": [
+        {
+          "heading": "Privacy",
+          "anchor": "",
+          "content": "Ask the AI sends your question, the conversation so far, and the Treatise passages used to answer it to the provider whose key you saved: Anthropic, OpenAI, Google, or OpenRouter. That provider bills you under its own terms. Your key is stored encrypted on this site, is used only to make your own re"
         }
       ]
     },
@@ -315,13 +244,13 @@
       ]
     },
     {
-      "title": "The AIM Theory of Human Motivation Explained",
+      "title": "The AIM theory of motivation",
       "url": "/theory",
       "sections": [
         {
-          "heading": "The AIM Theory of Human Motivation Explained",
+          "heading": "The AIM theory of motivation",
           "anchor": "",
-          "content": "Part  Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself. The framework these pages summarise is stated in full in Chapter 4 and Appendix A."
+          "content": "Part  The AIM theory of motivation says wanting comes from three sources: Appetites, Intrinsic Motivation, and Mimetic Desire. Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself. The framework these pages summa"
         },
         {
           "heading": "",
