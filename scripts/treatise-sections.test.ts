@@ -258,4 +258,18 @@ assert(
   'a short heading is left whole'
 )
 
+const apostrophe = prepareTreatiseMarkdown(
+  "## 4.3.7 The Thinker's Default Priors\n\nText.\n"
+)
+assert(
+  apostrophe.headings.some(
+    heading => heading.text === "4.3.7 The Thinker's Default Priors"
+  ),
+  'an apostrophe in a heading stays an apostrophe in the menu'
+)
+assert(
+  !apostrophe.headings.some(heading => heading.text.includes('&#')),
+  'menu labels do not keep HTML entities'
+)
+
 console.log('treatise section tests passed')
