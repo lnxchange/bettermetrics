@@ -1,8 +1,10 @@
 import { cached } from '@/lib/cached'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
+import { GlossaryAliases } from '@/lib/glossary-aliases'
 
-export type GlossaryEntry = Database['public']['Tables']['glossary_entries']['Row']
+export type GlossaryEntry =
+  Database['public']['Tables']['glossary_entries']['Row']
 
 /** What the index page ships to the browser: enough to list, search and link. */
 export interface GlossaryIndexEntry {
@@ -27,7 +29,8 @@ function anonClient() {
 export function previewOf(definition: string, max = 140) {
   const flat = definition.replace(/\s+/g, ' ').trim()
   const sentence = flat.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? flat
-  const text = sentence.length <= max ? sentence : `${flat.slice(0, max - 1).trimEnd()}…`
+  const text =
+    sentence.length <= max ? sentence : `${flat.slice(0, max - 1).trimEnd()}…`
   return text
 }
 
@@ -69,28 +72,8 @@ export const loadGlossaryEntry = cached(
 )
 
 function glossaryLookupKeys(term: string) {
-  const keys = new Set<string>([term.toLowerCase()])
-  const axiom = term.match(/^Axiom\s+\d+\s*[-–:]\s*(.+)$/i)
-  if (axiom) {
-    keys.add(axiom[1].trim().toLowerCase())
-    const bare = axiom[1].replace(/\s*\([^)]*\)\s*$/, '').trim()
-    if (bare) keys.add(bare.toLowerCase())
-  }
-  const wrapped = term.match(/^(.*?)\s*\(([^)]+)\)\s*$/)
-  if (wrapped) {
-    const stem = wrapped[1].trim()
-    const inner = wrapped[2].trim()
-    if (stem) keys.add(stem.toLowerCase())
-    if (inner.length >= 3) keys.add(inner.toLowerCase())
-    const stemWithoutParen = stem.replace(/\s*\([^)]*\)\s*$/, '').trim()
-    if (stemWithoutParen) keys.add(stemWithoutParen.toLowerCase())
-  }
-  if (term.includes(',') && term.length < 40 && !term.includes('(')) {
-    for (const piece of term.split(',')) {
-      const item = piece.trim()
-      if (item) keys.add(item.toLowerCase())
-    }
-  }
+  const keys = new Set<string>()
+  for (const form of GlossaryAliases.forms(term)) keys.add(form.toLowerCase())
   return keys
 }
 
@@ -111,12 +94,16 @@ function crossReferenceKeys(name: string) {
     if (inner.length >= 3) keys.push(inner.toLowerCase())
   }
   const symbol = cleaned.match(/^[^\s()]+\s*\((.+)\)$/)
-  if (symbol && symbol[1].trim().length >= 3) keys.push(symbol[1].trim().toLowerCase())
+  if (symbol && symbol[1].trim().length >= 3)
+    keys.push(symbol[1].trim().toLowerCase())
   return keys
 }
 
 /** Match a Chapter 2 cross-reference to a glossary term, including parenthetical aliases. */
-export function resolveGlossaryName<T extends { term: string }>(name: string, entries: T[]): T | null {
+export function resolveGlossaryName<T extends { term: string }>(
+  name: string,
+  entries: T[]
+): T | null {
   const byKey = new Map<string, T>()
   for (const entry of entries) {
     for (const key of Array.from(glossaryLookupKeys(entry.term))) {

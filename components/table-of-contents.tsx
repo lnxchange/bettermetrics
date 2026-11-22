@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { HiMenu, HiX } from 'react-icons/hi'
 import { TocHeading } from '@/lib/hooks/use-table-of-contents'
+import { TreatiseOutline } from '@/lib/treatise-outline'
 
 interface TableOfContentsProps {
   headings: TocHeading[]
@@ -10,15 +11,26 @@ interface TableOfContentsProps {
   onHeadingClick: (id: string) => void
 }
 
-export function TableOfContents({ headings, activeId, onHeadingClick }: TableOfContentsProps) {
+export function TableOfContents({
+  headings,
+  activeId,
+  onHeadingClick
+}: TableOfContentsProps) {
   if (headings.length === 0) return null
 
   return (
     <nav className="space-y-1">
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">On this page</h3>
+      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        On this page
+      </h3>
       <ul className="space-y-1">
         {headings.map(heading => (
-          <li key={heading.id} className={heading.level >= 4 ? 'pl-6' : heading.level === 3 ? 'pl-3' : ''}>
+          <li
+            key={heading.id}
+            className={
+              heading.level >= 4 ? 'pl-6' : heading.level === 3 ? 'pl-3' : ''
+            }
+          >
             <button
               onClick={() => onHeadingClick(heading.id)}
               className={`block w-full text-left text-xs transition ${
@@ -27,7 +39,7 @@ export function TableOfContents({ headings, activeId, onHeadingClick }: TableOfC
                   : 'text-gray-600 hover:text-gray-900'
               } ${heading.level >= 3 ? 'text-[11px]' : ''}`}
             >
-              {heading.text}
+              {TreatiseOutline.display(heading.text)}
             </button>
           </li>
         ))}
@@ -68,7 +80,9 @@ export function TableOfContentsMobile({
           {/* Panel */}
           <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-white p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Table of Contents</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Table of Contents
+              </h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
@@ -83,7 +97,13 @@ export function TableOfContentsMobile({
                 {headings.map(heading => (
                   <li
                     key={heading.id}
-                    className={heading.level >= 4 ? 'pl-8' : heading.level === 3 ? 'pl-4' : ''}
+                    className={
+                      heading.level >= 4
+                        ? 'pl-8'
+                        : heading.level === 3
+                        ? 'pl-4'
+                        : ''
+                    }
                   >
                     <button
                       onClick={() => {
@@ -96,7 +116,7 @@ export function TableOfContentsMobile({
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
-                      {heading.text}
+                      {TreatiseOutline.display(heading.text)}
                     </button>
                   </li>
                 ))}
@@ -108,4 +128,3 @@ export function TableOfContentsMobile({
     </>
   )
 }
-

@@ -1,5 +1,6 @@
 import { Marked } from 'marked'
 import { restoreShieldedMath, shieldMath } from '@/lib/render-math'
+import { TreatiseOutline } from '@/lib/treatise-outline'
 import {
   anchorForHeading,
   bodyLabelId,
@@ -36,11 +37,15 @@ export function prepareTreatiseMarkdown(
   const headings: TreatiseHeading[] = []
   const used = new Set<string>()
   const shielded = shieldMath(stripLeadingH1(markdown))
+  const reserved = TreatiseOutline.headingSectionIds(shielded.markdown)
   const marked = new Marked()
   marked.use({
     renderer: {
       heading({ tokens, depth }) {
-        const text = restoreShieldedMath(this.parser.parseInline(tokens), shielded.slots)
+        const text = restoreShieldedMath(
+          this.parser.parseInline(tokens),
+          shielded.slots
+        )
         const plain = plainHeading(text)
         const id = uniqueAnchor(anchorForHeading(plain), used)
         // The page title is the only <h1>. Any further top-level headings in
@@ -52,18 +57,27 @@ export function prepareTreatiseMarkdown(
         return `<h${level} id="${id}" class="scroll-mt-24">${text}</h${level}>\n`
       },
       paragraph({ tokens }) {
-        const text = restoreShieldedMath(this.parser.parseInline(tokens), shielded.slots)
+        const text = restoreShieldedMath(
+          this.parser.parseInline(tokens),
+          shielded.slots
+        )
         const plain = plainHeading(text)
         const label = bodyLabelId(plain)
         if (!label) return `<p>${text}</p>\n`
+        // A chapter preview restates a later heading. It must not enter the
+        // menu or take that heading's id, or #4.1 lands on the preview.
+        if (reserved.has(label)) return `<p>${text}</p>\n`
         const id = uniqueAnchor(label, used)
-        headings.push({ id, text: plain, level: 5 })
+        headings.push({ id, text: TreatiseOutline.leadIn(plain), level: 5 })
         return `<p id="${id}" class="scroll-mt-24">${text}</p>\n`
       }
     }
   })
 
-  const linked = linkifyTreatiseMarkdown(shielded.markdown, index ? { index } : undefined)
+  const linked = linkifyTreatiseMarkdown(
+    shielded.markdown,
+    index ? { index } : undefined
+  )
   const parsed = marked.parse(linked, { async: false }) as string
   let html = restoreShieldedMath(parsed, shielded.slots)
   html = html
