@@ -34,8 +34,8 @@ export function AIMDefinitionsShort() {
           </h3>
           <p className="text-sm text-gray-700">
             What is rewarding in the doing: curiosity, mastery, play, care, creative work,
-            connection. It carries on in private with no audience or reward, and a finished
-            pursuit stays finished, felt as accomplishment.
+            connection. It carries on in private with no audience or reward, and deepens as
+            competence grows.
           </p>
           <p className="mt-2 text-xs italic text-gray-600">Signature: persists in private.</p>
         </div>
@@ -71,12 +71,12 @@ export function AIMIntegrationEquation() {
       <div className="space-y-2 text-sm text-gray-700">
         <p><strong>Where:</strong></p>
         <ul className="ml-6 list-disc space-y-1">
-        <li>weights: sum to 1, and set how much each source counts in this choice right now</li>
+        <li><MathText text="$\mathbf{w_A}$, $\mathbf{w_I}$, $\mathbf{w_M}$" />: sum to 1, and set how much each source counts in this choice right now</li>
         <li><MathText text="$U_A$" />: value from repairing a bodily deficit (ends when repaired, then recurs)</li>
         <li><MathText text="$U_I$" />: value from an engagement rewarding in itself</li>
         <li><MathText text="$U_M$" />: value from what the surroundings mark as valued (grows with visibility, never satisfied)</li>
-        <li><em>Each term can pull toward an option or push away from it.</em></li>
         </ul>
+        <p>Each term can pull toward an option or push away from it.</p>
       </div>
     </div>
   )

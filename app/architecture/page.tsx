@@ -175,54 +175,66 @@ export default function ArchitecturePage() {
                   </span>
                 </h3>
                 <p className="mt-2 text-base leading-relaxed text-gray-800">
-                  {component.text}
+                  {component.plain}
                 </p>
+                <details className="group mt-3">
+                  <summary className="cursor-pointer select-none text-sm font-medium text-blue-700 hover:underline">
+                    Formal definition
+                  </summary>
+                  <p className="mt-3 text-base leading-relaxed text-gray-800">
+                    {component.text}
+                  </p>
+                </details>
               </article>
             ))}
           </div>
 
           <p className="mb-4 mt-10 text-base leading-relaxed text-gray-800">
-            The four primary components and the Belief Register, with their
-            inputs, their outputs, their termination conditions, and their
-            AIM-instantiation identities, are summarised below.
+            The four primary components and the Belief Register are summarised
+            below.
           </p>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[44rem] border-collapse text-left text-sm text-gray-800">
-              <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="py-2 pr-3 font-semibold">Component</th>
-                  <th className="py-2 pr-3 font-semibold">Primary purpose</th>
-                  <th className="py-2 pr-3 font-semibold">Input</th>
-                  <th className="py-2 pr-3 font-semibold">Output</th>
-                  <th className="py-2 pr-3 font-semibold">Termination</th>
-                  <th className="py-2 font-semibold">AIM instantiation</th>
+          <table className="w-full table-fixed border-collapse text-left text-sm text-gray-800">
+            <thead>
+              <tr className="border-b border-gray-300">
+                <th className="w-[26%] py-2 pr-2 align-bottom font-semibold">
+                  Component
+                </th>
+                <th className="w-[42%] py-2 pr-2 align-bottom font-semibold">
+                  What it does
+                </th>
+                <th className="w-[32%] py-2 align-bottom font-semibold">
+                  How it stops
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {MinimalArchitecture.componentTable.map(row => (
+                <tr
+                  key={row.component}
+                  className="border-b border-gray-200 align-top"
+                >
+                  <th className="py-3 pr-2 font-medium">{row.component}</th>
+                  <td className="py-3 pr-2">{row.does}</td>
+                  <td className="py-3">{row.stops}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {MinimalArchitecture.componentTable.map(row => (
-                  <tr
-                    key={row.component}
-                    className="border-b border-gray-200 align-top"
-                  >
-                    <th className="py-3 pr-3 font-medium">{row.component}</th>
-                    <td className="py-3 pr-3">{row.purpose}</td>
-                    <td className="py-3 pr-3">{row.input}</td>
-                    <td className="py-3 pr-3">{row.output}</td>
-                    <td className="py-3 pr-3">{row.termination}</td>
-                    <td className="py-3">{row.instantiation}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600">
-            The Observer row is read subject to the Minimum Installation
-            Condition (4.3.3.1): in the social special case its output
-            terminates asymmetrically, positive-valence installation being
-            interminable in the M-channel until acquisition, which then re-ranks
-            the Object-field, and negative-valence installation terminating
-            pursuit while retaining monitoring-Salience. AIM Treatise, Chapter
-            4, Section 4.4.2.
+              ))}
+            </tbody>
+          </table>
+          <details className="group mt-3">
+            <summary className="cursor-pointer select-none text-sm font-medium text-blue-700 hover:underline">
+              Formal note
+            </summary>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600">
+              The Observer row is read subject to the Minimum Installation
+              Condition (4.3.3.1): in the social special case its output
+              terminates asymmetrically, positive-valence installation being
+              interminable in the M-channel until acquisition, which then re-ranks
+              the Object-field, and negative-valence installation terminating
+              pursuit while retaining monitoring-Salience.
+            </p>
+          </details>
+          <p className="mt-3 text-sm text-gray-500">
+            AIM Treatise, Chapter 4, Section 4.4.2.
           </p>
 
           <div className="mt-10 space-y-8">
@@ -300,38 +312,7 @@ export default function ArchitecturePage() {
             ))}
           </div>
 
-          <h2 className="mb-4 mt-12 text-2xl font-bold text-gray-900">
-            Where the Construction Premises are carried
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[32rem] border-collapse text-left text-sm text-gray-800">
-              <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="py-2 pr-4 font-semibold">
-                    Construction Premise
-                  </th>
-                  <th className="py-2 font-semibold">Carried by</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MinimalArchitecture.premises.map(premise => (
-                  <tr
-                    key={premise.number}
-                    className="border-b border-gray-200 align-top"
-                  >
-                    <th className="py-3 pr-4 font-medium">
-                      {premise.number}. {premise.title}
-                    </th>
-                    <td className="py-3">{premise.carriedBy}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-4 text-base leading-relaxed text-gray-800">
-            {MinimalArchitecture.premiseNine}
-          </p>
-          <p className="mt-3 text-sm text-gray-500">
+          <p className="mt-8 text-sm text-gray-500">
             AIM Treatise, Chapter 4, Sections 4.2.1 and 4.4.2.
           </p>
 

@@ -127,13 +127,14 @@ export default function TheoryPage() {
 
         <Section id="integration" number={2} title="One signal: the Decision Hub">
           <P>
-            The brain cannot act on three signals at once. A Body Manager (the
-            homeostatic-deficit system) reports bodily deficit, a Thinker (the dopaminergic
-            system) holds priors and pursues intrinsic engagement, and an Observer (the mirror
-            neuron system, a candidate substrate) continuously reads which objects the
-            surrounding field marks as valued. All three
-            feed a Decision Hub (the ventromedial prefrontal cortex and ventral striatum) that
-            converts them into one value per option and selects an action.
+            The brain cannot act on three signals at once. A Body Manager reports what the
+            body lacks, a Thinker holds beliefs and pursues what is rewarding in the doing, and
+            an Observer continuously reads which objects in the surrounding field stand out as
+            valuable. All three feed a Decision Hub, which converts them into one value per
+            option and selects an action. (Candidate brain systems: homeostatic signalling for
+            the Body Manager, the dopamine system for intrinsic engagement, the mirror neuron
+            system for the Observer, and the ventromedial prefrontal cortex and ventral
+            striatum for the Decision Hub.)
           </P>
           <DecisionHubDiagram />
           <AIMIntegrationEquation />
@@ -221,8 +222,9 @@ export default function TheoryPage() {
         <Section id="satiation" number={6} title="Why some wants end and one never does">
           <P>
             The three sources differ most in what happens after a want is met. Appetites
-            recur: eat, and hunger ends until the body runs short again. Intrinsic pursuits
-            close: the piece is learned, the chair is built, and it stays done. Mimetic Desire
+            recur: eat, and hunger ends until the body runs short again. Intrinsic Motivation
+            deepens rather than ending: each pursuit closes when it is done, felt as
+            accomplishment, and the interest carries on into the next. Mimetic Desire
             moves on: getting the object ends that want, and the Observer, still reading a
             field with no edge, settles on the next target. Reaching a status goal simply
             resets the comparison.
