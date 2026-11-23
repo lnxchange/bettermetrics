@@ -82,13 +82,15 @@ export const metadata: Metadata = {
     }
   },
   themeColor: '#ffffff',
+  // Every icon is listed once. app/favicon.ico and app/icon.png are absent:
+  // on the homepage Next 13.4 replaces this list with those file icons.
   icons: {
     icon: [
-      { url: '/aim-icon-16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/aim-icon-32.png', sizes: '32x32', type: 'image/png' }
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' }
     ],
-    shortcut: '/aim-icon-32.png',
-    apple: '/apple-touch-icon.png'
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }]
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION
