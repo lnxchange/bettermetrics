@@ -4,14 +4,18 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
   type RefObject
 } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
+import { GlossaryProseView } from '@/components/glossary-prose'
 import { GlossaryMarkup } from '@/lib/glossary-markup'
+import { type AnchorBox, GlossaryPopover } from '@/lib/glossary-popover'
 import { type GlossaryTermRef } from '@/lib/glossary-terms'
 
 const GlossaryTermsContext = createContext<GlossaryTermRef[] | null>(null)
@@ -19,9 +23,7 @@ const GlossaryTermsContext = createContext<GlossaryTermRef[] | null>(null)
 interface OpenTerm {
   slug: string
   label: string
-  narrow: boolean
-  top: number
-  left: number
+  box: AnchorBox
 }
 
 interface Lookup {
@@ -46,6 +48,7 @@ export function useGlossaryDecorate(
 export function GlossaryProvider({ children }: { children: ReactNode }) {
   const [terms, setTerms] = useState<GlossaryTermRef[] | null>(null)
   const [open, setOpen] = useState<OpenTerm | null>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     let cancel = false
@@ -70,18 +73,21 @@ export function GlossaryProvider({ children }: { children: ReactNode }) {
       const mark = target.closest('[data-glossary]')
       if (!(mark instanceof HTMLElement)) return
       const selection = window.getSelection()
-      if (selection && !selection.isCollapsed && selection.toString().trim()) return
+      if (selection && !selection.isCollapsed && selection.toString().trim())
+        return
       const slug = mark.dataset.glossary
       if (!slug) return
       event.preventDefault()
       const rect = mark.getBoundingClientRect()
-      const narrow = window.matchMedia('(max-width: 767px)').matches
       setOpen({
         slug,
         label: mark.textContent || '',
-        narrow,
-        top: rect.bottom + 8,
-        left: Math.min(rect.left, window.innerWidth - 24)
+        box: {
+          x: rect.left,
+          y: rect.top,
+          width: rect.width,
+          height: rect.height
+        }
       })
     }
     const onKey = (event: KeyboardEvent) => {
@@ -89,11 +95,18 @@ export function GlossaryProvider({ children }: { children: ReactNode }) {
     }
     document.addEventListener('click', onClick)
     document.addEventListener('keydown', onKey)
+    const onHash = () => setOpen(null)
+    window.addEventListener('hashchange', onHash)
     return () => {
       document.removeEventListener('click', onClick)
       document.removeEventListener('keydown', onKey)
+      window.removeEventListener('hashchange', onHash)
     }
   }, [])
+
+  useEffect(() => {
+    setOpen(null)
+  }, [pathname])
 
   return (
     <GlossaryTermsContext.Provider value={terms}>
@@ -103,12 +116,68 @@ export function GlossaryProvider({ children }: { children: ReactNode }) {
   )
 }
 
-function GlossaryCard({ open, onClose }: { open: OpenTerm; onClose: () => void }) {
+function GlossaryCard({
+  open,
+  onClose
+}: {
+  open: OpenTerm
+  onClose: () => void
+}) {
   const [entry, setEntry] = useState<Lookup | null>(null)
   const [error, setError] = useState(false)
+  const [narrow, setNarrow] = useState(
+    () => window.matchMedia('(max-width: 767px)').matches
+  )
+  const [placed, setPlaced] = useState(narrow)
+  const panel = useRef<HTMLDivElement>(null)
   const body = useRef<HTMLDivElement>(null)
-  const terms = useContext(GlossaryTermsContext)
-  useGlossaryDecorate(body, entry ? `${entry.slug}\n${entry.definition}\n${entry.explanation}` : '')
+  useGlossaryDecorate(
+    body,
+    entry ? `${entry.slug}\n${entry.definition}\n${entry.explanation}` : ''
+  )
+
+  useEffect(() => {
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [])
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)')
+    const apply = () => setNarrow(media.matches)
+    apply()
+    media.addEventListener('change', apply)
+    return () => media.removeEventListener('change', apply)
+  }, [])
+
+  useLayoutEffect(() => {
+    const node = panel.current
+    if (!node) return
+    if (narrow) {
+      node.style.left = ''
+      node.style.top = ''
+      node.style.width = ''
+      node.style.maxHeight = ''
+      setPlaced(true)
+      return
+    }
+    let live = true
+    const run = () => {
+      void GlossaryPopover.place(open.box, node).then(() => {
+        if (live) setPlaced(true)
+      })
+    }
+    run()
+    window.addEventListener('resize', run)
+    window.visualViewport?.addEventListener('resize', run)
+    return () => {
+      live = false
+      window.removeEventListener('resize', run)
+      window.visualViewport?.removeEventListener('resize', run)
+    }
+  }, [narrow, open.box, entry])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -129,9 +198,9 @@ function GlossaryCard({ open, onClose }: { open: OpenTerm; onClose: () => void }
     return () => controller.abort()
   }, [open.slug])
 
-  const place = open.narrow
-    ? 'inset-x-0 bottom-0 max-h-[70vh] rounded-t-2xl'
-    : 'max-h-80 w-[min(24rem,calc(100vw-1.5rem))] rounded-xl'
+  const frame = narrow
+    ? 'inset-x-0 bottom-0 max-h-[calc(100dvh-0.75rem)] rounded-t-2xl'
+    : 'rounded-xl'
 
   return (
     <>
@@ -142,20 +211,17 @@ function GlossaryCard({ open, onClose }: { open: OpenTerm; onClose: () => void }
         onClick={onClose}
       />
       <div
+        ref={panel}
         role="dialog"
+        aria-modal="true"
         aria-label={entry?.term || open.label}
-        className={`fixed z-50 overflow-y-auto border border-gray-200 bg-white p-4 shadow-lg ${place}`}
-        style={
-          open.narrow
-            ? undefined
-            : {
-                top: Math.max(16, Math.min(open.top, window.innerHeight - 240)),
-                left: Math.max(12, Math.min(open.left, window.innerWidth - 384 - 12))
-              }
-        }
+        className={`fixed z-50 flex flex-col overflow-hidden border border-gray-200 bg-white shadow-lg ${frame}`}
+        style={narrow || placed ? undefined : { visibility: 'hidden' }}
       >
-        <div className="flex items-start justify-between gap-3">
-          <h2 className="text-base font-semibold text-gray-900">{entry?.term || open.label}</h2>
+        <div className="flex shrink-0 items-start justify-between gap-3 px-4 pt-4">
+          <h2 className="text-base font-semibold text-gray-900">
+            {entry?.term || open.label}
+          </h2>
           <button
             type="button"
             onClick={onClose}
@@ -164,17 +230,39 @@ function GlossaryCard({ open, onClose }: { open: OpenTerm; onClose: () => void }
             Close
           </button>
         </div>
-        {error && <p className="mt-3 text-sm text-gray-600">This entry could not be loaded.</p>}
-        {!error && !entry && <p className="mt-3 text-sm text-gray-500">Loading the definition…</p>}
-        {entry && (
-          <div ref={body} className="mt-3 space-y-3 text-sm leading-relaxed text-gray-800">
-            {entry.definition && <p>{entry.definition}</p>}
-            {entry.explanation && <p>{entry.explanation}</p>}
-            <p>
-              <Link href={`/glossary/${entry.slug}`} className="font-medium text-primary-700 hover:underline">
-                Open the glossary entry
-              </Link>
+        <div
+          ref={body}
+          className="mt-3 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4"
+        >
+          {error && (
+            <p className="text-sm text-gray-600">
+              This entry could not be loaded.
             </p>
+          )}
+          {!error && !entry && (
+            <p className="text-sm text-gray-500">Loading the definition…</p>
+          )}
+          {entry && (
+            <div className="space-y-3">
+              <GlossaryProseView
+                text={entry.definition}
+                className="text-sm leading-relaxed text-gray-800"
+              />
+              <GlossaryProseView
+                text={entry.explanation}
+                className="text-sm leading-relaxed text-gray-800"
+              />
+            </div>
+          )}
+        </div>
+        {entry && (
+          <div className="shrink-0 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <Link
+              href={`/glossary/${entry.slug}`}
+              className="text-sm font-medium text-primary-700 hover:underline"
+            >
+              Open the glossary entry
+            </Link>
           </div>
         )}
       </div>

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi'
 import { AskAI } from '@/components/ask-ai'
+import { GlossaryProseView } from '@/components/glossary-prose'
 import { LicenceNotice } from '@/components/licence-notice'
-import { MathText } from '@/components/math-text'
 import { TreatiseCitation } from '@/components/treatise-citation'
 import { loadGlossaryContext, loadGlossaryEntry, previewOf } from '@/lib/glossary'
 import { SITE_OG_IMAGE, SITE_URL, metaDescription } from '@/lib/site'
@@ -117,26 +117,29 @@ export default async function GlossaryTermPage({ params }: GlossaryTermPageProps
 
         <section className="mb-8 rounded-lg border-l-4 border-blue-600 bg-blue-50 p-5">
           <h2 className="mb-2 text-xs font-semibold uppercase text-blue-700">Canonical definition</h2>
-          <p className="whitespace-pre-wrap text-base font-medium leading-relaxed text-gray-900">
-            <MathText text={entry.definition} />
-          </p>
+          <GlossaryProseView
+            text={entry.definition}
+            className="text-base font-medium leading-relaxed text-gray-900"
+          />
         </section>
 
         {entry.explanation && (
           <section className="mb-8">
             <h2 className="mb-2 text-lg font-semibold text-gray-900">Explanation</h2>
-            <p className="whitespace-pre-wrap text-base leading-relaxed text-gray-700">
-              <MathText text={entry.explanation} />
-            </p>
+            <GlossaryProseView
+              text={entry.explanation}
+              className="text-base leading-relaxed text-gray-700"
+            />
           </section>
         )}
 
         {entry.epistemic_status && (
           <section className="mb-8">
             <h2 className="mb-2 text-lg font-semibold text-gray-900">Epistemic status</h2>
-            <p className="text-base leading-relaxed text-gray-700">
-              <MathText text={entry.epistemic_status} />
-            </p>
+            <GlossaryProseView
+              text={entry.epistemic_status}
+              className="text-base leading-relaxed text-gray-700"
+            />
           </section>
         )}
 
@@ -152,9 +155,10 @@ export default async function GlossaryTermPage({ params }: GlossaryTermPageProps
         {entry.notes && (
           <section className="mb-8">
             <h2 className="mb-2 text-lg font-semibold text-gray-900">Also in the entry</h2>
-            <p className="whitespace-pre-wrap text-base leading-relaxed text-gray-700">
-              <MathText text={entry.notes} />
-            </p>
+            <GlossaryProseView
+              text={entry.notes}
+              className="text-base leading-relaxed text-gray-700"
+            />
           </section>
         )}
 
