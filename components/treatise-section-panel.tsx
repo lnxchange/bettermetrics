@@ -179,6 +179,7 @@ export function TreatiseSectionPanel({
         {payload?.html && (
           <ArticleContent
             html={payload.html}
+            skipHeadingGlossary
             className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-primary-600"
           />
         )}

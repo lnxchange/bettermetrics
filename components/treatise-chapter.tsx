@@ -142,6 +142,7 @@ export function TreatiseChapterView({
           <article className="min-w-0 flex-1">
             <ArticleContent
               html={html}
+              skipHeadingGlossary
               className="prose prose-lg max-w-none prose-headings:scroll-mt-24 prose-headings:font-bold prose-h2:text-xl prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl"
             />
             <nav className="mt-12 flex flex-col gap-3 border-t border-gray-200 pt-6 text-sm sm:flex-row sm:justify-between">

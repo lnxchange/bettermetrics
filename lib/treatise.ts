@@ -1,6 +1,7 @@
 import { cached } from '@/lib/cached'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
+import { loadGlossaryIndex } from '@/lib/glossary'
 import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
 import {
   buildCorpusIndex,
@@ -190,8 +191,15 @@ export const loadTreatiseChapter = cached(
       .maybeSingle()
     if (error) throw new Error(`Treatise query failed: ${error.message}`)
     if (!data) return null
-    const index = await loadCorpusIndex()
-    const prepared = prepareTreatiseMarkdown(data.markdown, index)
+    const [index, glossary] = await Promise.all([
+      loadCorpusIndex(),
+      loadGlossaryIndex()
+    ])
+    const prepared = prepareTreatiseMarkdown(
+      data.markdown,
+      index,
+      glossary.map(entry => ({ term: entry.term, slug: entry.slug }))
+    )
     return {
       ...summaryFromRow(data),
       markdown: data.markdown,

@@ -11,11 +11,10 @@ import {
 } from 'react'
 import Link from 'next/link'
 
-import { findGlossarySpans, type GlossaryTermRef } from '@/lib/glossary-terms'
+import { GlossaryMarkup } from '@/lib/glossary-markup'
+import { type GlossaryTermRef } from '@/lib/glossary-terms'
 
 const GlossaryTermsContext = createContext<GlossaryTermRef[] | null>(null)
-
-const SKIP_SELECTOR = 'a, code, pre, button, script, style, [data-glossary]'
 
 interface OpenTerm {
   slug: string
@@ -32,51 +31,16 @@ interface Lookup {
   explanation: string
 }
 
-function decorate(root: HTMLElement, terms: GlossaryTermRef[]) {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode(node) {
-      const parent = node.parentElement
-      if (!parent || parent.closest(SKIP_SELECTOR)) return NodeFilter.FILTER_REJECT
-      if (!node.textContent?.trim()) return NodeFilter.FILTER_REJECT
-      return NodeFilter.FILTER_ACCEPT
-    }
-  })
-  const nodes: Text[] = []
-  let current = walker.nextNode()
-  while (current) {
-    nodes.push(current as Text)
-    current = walker.nextNode()
-  }
-  for (const node of nodes) {
-    const text = node.textContent || ''
-    const spans = findGlossarySpans(text, terms)
-    if (!spans.length || !node.parentNode) continue
-    const fragment = document.createDocumentFragment()
-    let last = 0
-    for (const span of spans) {
-      if (span.start > last) fragment.append(text.slice(last, span.start))
-      const mark = document.createElement('span')
-      mark.dataset.glossary = span.slug
-      mark.className =
-        'glossary-term cursor-pointer underline decoration-dotted underline-offset-[0.15em]'
-      mark.textContent = span.text
-      fragment.append(mark)
-      last = span.end
-    }
-    if (last < text.length) fragment.append(text.slice(last))
-    node.parentNode.replaceChild(fragment, node)
-  }
-}
-
 export function useGlossaryDecorate(
   ref: RefObject<HTMLElement | null>,
-  revision: unknown
+  revision: unknown,
+  skipHeadings = false
 ) {
   const terms = useContext(GlossaryTermsContext)
   useEffect(() => {
     if (!ref.current || !terms?.length) return
-    decorate(ref.current, terms)
-  }, [terms, revision, ref])
+    GlossaryMarkup.element(ref.current, terms, skipHeadings)
+  }, [terms, revision, ref, skipHeadings])
 }
 
 export function GlossaryProvider({ children }: { children: ReactNode }) {

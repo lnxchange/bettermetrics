@@ -130,4 +130,54 @@ assert(
   'a comma-separated alias links to the entry'
 )
 
+const premiseSpans = findGlossarySpans(
+  'The Construction Premises hold, and one Construction Premise does too.',
+  [{ term: 'Construction Premise', slug: 'construction-premise' }]
+)
+assert(
+  premiseSpans.some(
+    span =>
+      span.text === 'Construction Premises' &&
+      span.slug === 'construction-premise'
+  ),
+  'Construction Premises matches the Construction Premise entry'
+)
+assert(
+  premiseSpans.filter(span => span.text === 'Construction Premise').length ===
+    1,
+  'the singular Construction Premise still matches on its own'
+)
+assert(
+  findGlossarySpans('The premises stay plain.', [
+    { term: 'Construction Premise', slug: 'construction-premise' }
+  ]).length === 0,
+  'a bare premises is not the Construction Premise plural'
+)
+
+const scalarTerms = [
+  {
+    term: 'Common-Currency Scalar (the Scalar)',
+    slug: 'common-currency-scalar-the-scalar'
+  }
+]
+const scalarSpans = findGlossarySpans(
+  'The Scalar resolves. the Scalar holds. A bare Scalar returns.',
+  scalarTerms
+)
+const scalarText = (label: string) =>
+  scalarSpans.filter(span => span.text === label)
+assert(
+  scalarText('The Scalar').length === 1 &&
+    scalarText('The Scalar')[0].slug === 'common-currency-scalar-the-scalar',
+  'a sentence-initial the Scalar keeps its capital'
+)
+assert(
+  scalarText('the Scalar').length === 1,
+  'the lowercase alias still matches'
+)
+assert(
+  scalarText('Scalar').length === 1,
+  'Scalar matches once, and not inside The Scalar'
+)
+
 console.log('glossary terms ok', found.join(', '))

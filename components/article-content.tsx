@@ -7,6 +7,8 @@ import { useGlossaryDecorate } from '@/components/glossary-lookup'
 interface ArticleContentProps {
   html: string
   className?: string
+  /** Treatise headings are the page menu, so they stay plain. */
+  skipHeadingGlossary?: boolean
 }
 
 type ArticlePart =
@@ -43,10 +45,14 @@ function splitDiagrams(html: string): ArticlePart[] {
  * Marked leaves ```mermaid fences as code blocks. Those are split out
  * before the HTML is inserted, so a re-render cannot drop the figure.
  */
-export function ArticleContent({ html, className }: ArticleContentProps) {
+export function ArticleContent({
+  html,
+  className,
+  skipHeadingGlossary = false
+}: ArticleContentProps) {
   const parts = useMemo(() => splitDiagrams(html), [html])
   const root = useRef<HTMLDivElement>(null)
-  useGlossaryDecorate(root, html)
+  useGlossaryDecorate(root, html, skipHeadingGlossary)
 
   return (
     <div ref={root} className={className}>

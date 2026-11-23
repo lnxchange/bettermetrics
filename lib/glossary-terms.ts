@@ -16,9 +16,19 @@ export interface GlossarySpan {
  * Case-sensitive matches of glossary headwords and their aliases.
  * The longest form wins, and a match must not sit inside a longer word.
  * A one-letter form is left alone, so a capital "I" or "A" stays unlinked.
+ *
+ * The pattern is compiled once. Rebuilding it for every text node is what
+ * cut chapter underlines off: Chapter 4 has thousands of text nodes, and
+ * compiling every headword for each of them ran long enough that the
+ * browser stopped the script before the later sections.
  */
 export class GlossaryMatcher {
-  static spans(text: string, terms: GlossaryTermRef[]): GlossarySpan[] {
+  private constructor(
+    private readonly expression: RegExp,
+    private readonly slugs: Map<string, string>
+  ) {}
+
+  static compile(terms: GlossaryTermRef[]): GlossaryMatcher | null {
     const seen = new Set<string>()
     const patterns: { text: string; slug: string }[] = []
     for (const term of terms) {
@@ -30,7 +40,7 @@ export class GlossaryMatcher {
         patterns.push({ text: form, slug })
       }
     }
-    if (!patterns.length || !text) return []
+    if (!patterns.length) return null
     patterns.sort(
       (a, b) => b.text.length - a.text.length || a.text.localeCompare(b.text)
     )
@@ -41,11 +51,24 @@ export class GlossaryMatcher {
         .join('|')})(?![\\p{L}\\p{N}])`,
       'gu'
     )
+    return new GlossaryMatcher(expression, slugs)
+  }
+
+  static spans(text: string, terms: GlossaryTermRef[]): GlossarySpan[] {
+    if (!text) return []
+    const matcher = GlossaryMatcher.compile(terms)
+    if (!matcher) return []
+    return matcher.spans(text)
+  }
+
+  spans(text: string): GlossarySpan[] {
+    if (!text) return []
+    this.expression.lastIndex = 0
     const spans: GlossarySpan[] = []
     let match: RegExpExecArray | null
-    while ((match = expression.exec(text))) {
+    while ((match = this.expression.exec(text))) {
       const found = match[0]
-      const slug = slugs.get(found)
+      const slug = this.slugs.get(found)
       if (slug) {
         spans.push({
           start: match.index,
@@ -54,7 +77,7 @@ export class GlossaryMatcher {
           text: found
         })
       }
-      if (found.length === 0) expression.lastIndex += 1
+      if (found.length === 0) this.expression.lastIndex += 1
     }
     return spans
   }
