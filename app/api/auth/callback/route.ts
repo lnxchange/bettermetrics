@@ -3,6 +3,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+import { LegalConsent } from '@/lib/legal-consent'
+
 export async function GET(request: Request) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
   // by the Auth Helpers package. It exchanges an auth code for the user's session.
@@ -15,7 +17,8 @@ export async function GET(request: Request) {
     const supabase = createRouteHandlerClient({
       cookies: () => cookieStore
     })
-    await supabase.auth.exchangeCodeForSession(code)
+    const { data } = await supabase.auth.exchangeCodeForSession(code)
+    if (data.user) await LegalConsent.persistFromMetadata(data.user)
   }
 
   // URL to redirect to after sign in process completes

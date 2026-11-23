@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { syncContactMessage } from '@/lib/crm/sync'
+import { SiteMail } from '@/lib/site-mail'
 
 const NOTIFY_TO = 'yule@attune.legal'
-const NOTIFY_FROM = 'Use Better Metrics <notifications@lexnova.com.au>'
 
 function escapeHtml(value: string) {
   return value
@@ -91,8 +91,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Notify by email. The sending domain is Lex Nova; the subject and body
-    // name aimtheory.org so the message is identifiable.
+    // Notify by email. The subject and body name aimtheory.org so the message is identifiable.
     let emailSent = false
     if (process.env.RESEND_API_KEY) {
       try {
@@ -159,7 +158,7 @@ export async function POST(req: NextRequest) {
 
         const { error: sendError } = await resend.emails.send(
           {
-            from: NOTIFY_FROM,
+            from: SiteMail.from(),
             to: [NOTIFY_TO],
             replyTo: email,
             subject: emailSubject,

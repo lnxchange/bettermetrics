@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArticleContent } from '@/components/article-content'
+import { LicenceNotice } from '@/components/licence-notice'
 import { TableOfContents, TableOfContentsMobile } from '@/components/table-of-contents'
 import { TreatiseHeading } from '@/lib/treatise-citations'
 
@@ -145,6 +146,7 @@ export function TreatiseChapterView({
               skipHeadingGlossary
               className="prose prose-lg max-w-none prose-headings:scroll-mt-24 prose-headings:font-bold prose-h2:text-xl prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl"
             />
+            <LicenceNotice />
             <nav className="mt-12 flex flex-col gap-3 border-t border-gray-200 pt-6 text-sm sm:flex-row sm:justify-between">
               {previous ? (
                 <Link href={withReturn(previous.href, returnTo)} className="text-primary-700 hover:underline">

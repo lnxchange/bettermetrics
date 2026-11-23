@@ -4,24 +4,17 @@ const { RetiredRoutes } = require('./scripts/retired-routes')
 module.exports = {
   reactStrictMode: true,
   experimental: {
-    serverActions: true
+    serverActions: true,
+    outputFileTracingIncludes: {
+      '/terms': ['./content/legal/**/*'],
+      '/privacy': ['./content/legal/**/*']
+    }
   },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**.githubusercontent.com'
-      }
-    ]
-  },
-  async headers() {
-    return [
-      {
-        // Preview and legacy *.vercel.app hosts serve the same content as
-        // aimtheory.org. Keep them reachable but out of search indexes.
-        source: '/:path*',
-        has: [{ type: 'host', value: '(?<host>.*\\.vercel\\.app)' }],
-        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
       }
     ]
   },

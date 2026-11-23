@@ -19,8 +19,7 @@ import { IS_CI, SITE_URL, hasFlag, isoDate, outPath, readJson, writeJson, writeT
 import type { FixesOutput } from './fix-articles'
 import type { PingOutput } from './ping'
 import type { TrafficOutput } from './traffic'
-
-const REPORT_FROM = process.env.SEO_REPORT_FROM || 'AIM Theory SEO monitor <notifications@lexnova.com.au>'
+import { SiteMail } from '../../lib/site-mail'
 
 interface LighthouseRun {
   url: string
@@ -279,7 +278,7 @@ async function sendEmail(subject: string, markdown: string) {
     : null
   const text = runUrl ? `${markdown}\n\nFull run: ${runUrl}` : markdown
   const { error } = await resend.emails.send({
-    from: REPORT_FROM,
+    from: SiteMail.from(),
     to: to.split(',').map(s => s.trim()).filter(Boolean),
     subject,
     text

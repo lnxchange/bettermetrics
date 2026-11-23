@@ -52,14 +52,14 @@ export class VectorSearch {
         })
 
         if (error) {
-          console.error('match_documents function error:', error)
+          console.error('match_documents function error')
           throw new Error(`match_documents function failed: ${error.message}`)
         }
 
         console.log('match_documents results:', data?.length || 0, 'results')
         return data || []
       } catch (rpcError) {
-        console.error('RPC function failed, trying direct query:', rpcError)
+        console.error('RPC function failed, trying direct query')
         
         // Fallback: Direct query to document_embeddings table
         // Fetch more documents (up to 500) to have a meaningful sample for similarity calculation
@@ -97,7 +97,7 @@ export class VectorSearch {
         const { data: embeddings, error: directError } = await queryBuilder
 
         if (directError) {
-          console.error('Direct query error:', directError)
+          console.error('Direct query error')
           throw new Error(`Direct query failed: ${directError.message}`)
         }
 
@@ -123,7 +123,7 @@ export class VectorSearch {
                 const cleanString = row.embedding.replace(/[\[\]]/g, '')
                 embeddingArray = cleanString.split(',').map(Number)
               } catch (e) {
-                console.error('Error parsing embedding string:', e)
+                console.error('Error parsing embedding string')
                 return null
               }
             } else if (Array.isArray(row.embedding)) {
@@ -173,7 +173,7 @@ export class VectorSearch {
         return results
       }
     } catch (error) {
-      console.error('Error in similarity search:', error)
+      console.error('Error in similarity search')
       throw error
     }
   }
@@ -226,7 +226,7 @@ export class VectorSearch {
 
       return `Relevant context from research documents:\n\n${context}`
     } catch (error) {
-      console.error('Error generating context:', error)
+      console.error('Error generating context')
       return ''
     }
   }

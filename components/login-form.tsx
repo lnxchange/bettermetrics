@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
+import { ConsentFields } from '@/components/consent-fields'
 import { Button } from '@/components/ui/button'
 import { IconSpinner } from '@/components/ui/icons'
 import { Input } from './ui/input'
@@ -26,11 +27,12 @@ export function LoginForm({
   const supabase = createClientComponentClient()
 
   const [formState, setFormState] = React.useState({
-    firstName: '',
-    lastName: '',
+    displayName: '',
     email: '',
     password: ''
   })
+  const [accepted, setAccepted] = React.useState(false)
+  const [updates, setUpdates] = React.useState(false)
 
   const signIn = async () => {
     const { email, password } = formState
@@ -42,31 +44,21 @@ export function LoginForm({
   }
 
   const signUp = async () => {
-    const { email, password, firstName, lastName } = formState
-    const { error, data } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/api/auth/callback`,
-        data: {
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          name: `${firstName.trim()} ${lastName.trim()}`
-        }
-      }
-    })
-
-    if (!error && data.session) {
-      await fetch('/api/account/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName })
+    const response = await fetch('/api/account/sign-up', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        displayName: formState.displayName,
+        email: formState.email,
+        password: formState.password,
+        accepted,
+        updatesOptIn: updates
       })
-    }
-
-    if (!error && !data.session)
-      toast.success('Check your inbox to confirm your email address!')
-    return error
+    })
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) return { message: data.error || 'Could not create the account.' }
+    if (data.needsConfirmation) toast.success('Check your inbox to confirm your email address!')
+    return null
   }
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,20 +81,15 @@ export function LoginForm({
     <form onSubmit={handleOnSubmit} {...props}>
       {action === 'sign-up' && (
         <>
-          <Label>First name</Label>
+          <Label htmlFor="displayName">Display name</Label>
           <Input
-            name="firstName"
-            value={formState.firstName}
-            onChange={e => setFormState(prev => ({ ...prev, firstName: e.target.value }))}
+            id="displayName"
+            name="displayName"
+            value={formState.displayName}
+            onChange={e => setFormState(prev => ({ ...prev, displayName: e.target.value }))}
             required
           />
-          <Label>Last name</Label>
-          <Input
-            name="lastName"
-            value={formState.lastName}
-            onChange={e => setFormState(prev => ({ ...prev, lastName: e.target.value }))}
-            required
-          />
+          <p className="mb-3 text-xs text-slate-500">Doesn&apos;t need to be your real name.</p>
         </>
       )}
       <Label>Email</Label>
@@ -138,7 +125,13 @@ export function LoginForm({
         </div>
       )}
 
-      <Button disabled={isLoading}>
+      {action === 'sign-up' && (
+        <div className="my-4">
+          <ConsentFields accepted={accepted} updates={updates} onAccepted={setAccepted} onUpdates={setUpdates} />
+        </div>
+      )}
+
+      <Button disabled={isLoading || (action === 'sign-up' && !accepted)}>
         {isLoading && <IconSpinner className="mr-2 animate-spin" />}
         {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
       </Button>

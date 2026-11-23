@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 
+import Link from 'next/link'
+
 import { ByokNotice } from '@/components/byok-notice'
 import { BYOK_NOTICE } from '@/lib/chat-notice'
 import {
@@ -185,9 +187,18 @@ export function AccountApiKey() {
           }}
           placeholder={PROVIDER_INFO[provider].placeholder}
         />
+        <span className="mt-2 block text-xs leading-relaxed text-slate-600">
+          Your key is sent to your provider with each question, and your provider bills you directly. Set a spending limit with your provider and use a key created only for this site. On Google&apos;s free Gemini tier, Google may use your questions to improve its products; use a paid-tier key if that matters to you.{' '}
+          <Link href="/privacy#6-your-api-key" className="underline">How your key is handled</Link>.
+        </span>
       </label>
       {error && <p className="text-sm text-red-700">{error}</p>}
       {saved && <p className="text-sm text-emerald-700">{saved}</p>}
+      <p className="text-xs leading-relaxed text-slate-600">
+        By saving a key, you confirm your use complies with your provider&apos;s terms (
+        <Link href="/terms#4-your-api-key" className="underline">Terms of Use, clause 4</Link>
+        ).
+      </p>
       <button
         className="rounded-md bg-[#1E3A8A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
         type="submit"
