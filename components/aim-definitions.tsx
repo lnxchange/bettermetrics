@@ -3,7 +3,7 @@ import { MathText } from '@/components/math-text'
 /**
  * Canonical AIM Framework Definitions Component
  *
- * Definitions follow the AIM Treatise, Chapter 4, Section 4.3.1 (Axiom 1).
+ * Definitions follow the AIM Treatise, Chapter 4, Section 4.3.
  * Keep this the single place the three sources are described on the site.
  *
  * COLOUR SCHEME, one colour per letter:

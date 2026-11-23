@@ -34,23 +34,27 @@ export default function HomePage() {
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             A General Theory of Human Motivation
           </h1>
-          <p className="mb-5 max-w-3xl text-xl text-blue-100">
+          <p className="max-w-3xl text-xl text-blue-100">
             The AIM Framework is a model of the system that produces wanting. Three systems in
-            the brain each produce a signal. One tracks what the body needs (Appetites). One
-            tracks what is rewarding to do for its own sake (Intrinsic Motivation). One tracks
-            what stands out as valuable around you (Mimetic Desire). A Decision Hub merges them
-            into a single sense of how much you want something, and acts on it.
+            the brain each produce a signal. One tracks what the body needs (<Link
+              href="/glossary/appetites-a"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Appetites</Link>). One
+            tracks conscious awareness, problem solving and what is rewarding to do for its own
+            sake (<Link
+              href="/glossary/intrinsic-motivation-i"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Intrinsic Motivation</Link>). One
+            tracks what stands out as salient around you (<Link
+              href="/glossary/mimetic-desire-m"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Mimetic Desire</Link>). A <Link
+              href="/glossary/decision-hub"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Decision Hub</Link> merges
+            them into a single sense of how much you want something, and acts on it.
           </p>
-          <p className="max-w-3xl text-lg text-blue-200">
-            The framework is built from{' '}
-            <Link href="/axioms" className="font-semibold text-white underline hover:text-blue-100">
-              nine stated axioms
-            </Link>
-            . Five are taken from established research, one follows mathematically, and three
-            are the framework&apos;s own claims. The architecture and its consequences are
-            worked out from them, and the framework is falsifiable.
-          </p>
-          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
             <AskAI
               variant="button"
               question="Explain the AIM Framework to me in plain terms, as if I have never heard of it."
@@ -62,6 +66,13 @@ export default function HomePage() {
               className="inline-flex items-center rounded-lg border-2 border-white px-5 py-3 text-base font-semibold text-white transition hover:bg-white/10"
             >
               Read the theory
+              <HiArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link
+              href="/architecture"
+              className="inline-flex items-center rounded-lg border-2 border-white px-5 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+            >
+              The minimal architecture
               <HiArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
@@ -250,12 +261,13 @@ export default function HomePage() {
               </span>
             </Link>
             <Link
-              href="/axioms"
+              href="/architecture"
               className="group rounded-xl border border-gray-200 bg-white p-6 transition hover:border-blue-400 hover:shadow-md"
             >
-              <h3 className="mb-2 text-lg font-bold text-gray-900">The nine axioms</h3>
+              <h3 className="mb-2 text-lg font-bold text-gray-900">The minimal architecture</h3>
               <p className="mb-3 text-sm text-gray-600">
-                The premises everything is derived from, and what each one rests on.
+                The Framework rests on the architecture (4.3 to 4.4.2), and every claim in the
+                chapters that follow is derived from it.
               </p>
               <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
                 Read <HiArrowRight className="ml-1 h-4 w-4" />

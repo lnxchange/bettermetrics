@@ -16,7 +16,7 @@ const CACHE_SECONDS = 3600
 const STATIC_ROUTES = [
   '/',
   '/theory',
-  '/axioms',
+  '/architecture',
   '/glossary',
   '/treatise',
   '/articles',

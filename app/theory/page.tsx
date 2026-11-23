@@ -136,13 +136,14 @@ export default function TheoryPage() {
           <AIMIntegrationEquation />
           <AskAIGroup
             questions={[
-              'What are the four components of the AIM Framework architecture and what does each do?',
+              'What are the four primary components of the AIM Framework architecture and what does each do?',
               'What is the Belief Register and how does it condition the Observer?'
             ]}
           />
         </Section>
 
         <Section id="opacity" number={3} title="Source Opacity">
+          <P>Source Opacity is derived from the architecture.</P>
           <P>
             Summing three quantities into one is a many-to-one map. Whatever the sum, a whole
             family of A, I, M combinations could have produced it, so no process downstream of
@@ -165,6 +166,7 @@ export default function TheoryPage() {
         </Section>
 
         <Section id="confabulation" number={4} title="Confabulation, and why it points at people">
+          <P>Confabulation is derived from the architecture.</P>
           <P>
             Asked why, the brain does not report &ldquo;no data.&rdquo; It constructs a
             plausible narrative from available material and presents it as the true reason.
@@ -188,6 +190,7 @@ export default function TheoryPage() {
         </Section>
 
         <Section id="parasitism" number={5} title="Object Parasitism and the Mimetic Premium">
+          <P>Object Parasitism is derived from the architecture.</P>
           <P>
             Mimetic Desire does not invent its own objects. It attaches to things that already
             serve the body or an intrinsic pursuit and inflates their value by a Mimetic
@@ -285,10 +288,10 @@ export default function TheoryPage() {
         <div className="border-t border-gray-100 py-12">
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/axioms"
+              href="/architecture"
               className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-blue-700"
             >
-              The nine axioms
+              The minimal architecture
               <HiArrowRight className="ml-2 h-4 w-4" />
             </Link>
             <Link

@@ -19,7 +19,7 @@ interface HeaderProps {
 
 const navLinks = [
   { href: '/theory', label: 'The Theory' },
-  { href: '/axioms', label: 'Axioms' },
+  { href: '/architecture', label: 'Architecture' },
   { href: '/treatise', label: 'Treatise' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/articles', label: 'Articles' },
