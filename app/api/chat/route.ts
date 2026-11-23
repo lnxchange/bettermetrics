@@ -10,6 +10,8 @@ import { extendContextSnapshot, treatiseContext } from '@/lib/rag/treatise-conte
 import { ChatProvider } from '@/lib/chat-provider-ids'
 import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
 import { generate, LlmError, readerMessage } from '@/lib/llm'
+import { ChatAudit } from '@/lib/chat-audit'
+import { LegalConsent } from '@/lib/legal-consent'
 import { readActiveKey } from '@/lib/user-api-keys'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { createHash } from 'crypto'
@@ -205,7 +207,7 @@ export async function POST(req: Request) {
     
     // Check if Supabase is configured
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.log('Supabase not configured - returning service unavailable')
+      ChatAudit.failed()
       return new Response('Service unavailable - Supabase not configured', { status: 503 })
     }
     
@@ -216,7 +218,7 @@ export async function POST(req: Request) {
         cookies: () => cookieStore
       })
     } catch (error) {
-      console.error('Supabase client creation error:', error)
+      ChatAudit.failed()
       return new Response('Service unavailable', { status: 503 })
     }
     
@@ -234,20 +236,25 @@ export async function POST(req: Request) {
     // Guests are refused. Only an admin with no saved key is billed to a site key.
     const session = await auth({ cookieStore })
     const userId: string | null = session?.user?.id ?? null
-    const isGuest = !userId
     const isAdmin = isSiteAdmin(session?.user)
 
-    if (isGuest) {
-      console.warn('Chat refused: account required', {
-        country: req.headers.get('x-vercel-ip-country'),
-        userAgent: req.headers.get('user-agent')
-      })
+    if (!userId) {
       return new Response(
         JSON.stringify({
           error: 'auth_required',
           message: 'Create an account to ask the assistant.'
         }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    if (!(await LegalConsent.allows(userId))) {
+      return new Response(
+        JSON.stringify({
+          error: 'terms_required',
+          message: 'Accept the Terms of Use and Privacy Policy to continue.'
+        }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
@@ -370,7 +377,7 @@ export async function POST(req: Request) {
     try {
       // Check if required environment variables are available for RAG
       if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-        console.log('Missing environment variables for RAG - skipping vector search')
+        ChatAudit.failed()
         ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
       } else {
         const vectorSearch = new VectorSearch()
@@ -379,7 +386,7 @@ export async function POST(req: Request) {
         // A named glossary term brings its definition and chapter. Search would
         // let other passages compete with that definition, so it stays out.
         const treatise = await treatiseContext(retrievalQuery, settings.treatiseContextMaxChars).catch(error => {
-          console.error('Treatise context error:', error)
+          ChatAudit.failed()
           return { text: '', grounded: false, sectionIds: [] as string[] }
         })
         if (savedSnapshot?.text) {
@@ -392,7 +399,7 @@ export async function POST(req: Request) {
             : await vectorSearch
                 .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
                 .catch(error => {
-                  console.error('Vector search error:', error)
+                  ChatAudit.failed()
                   return []
                 })
           hasRagResults = results.length > 0 || treatise.text.length > 0
@@ -423,7 +430,7 @@ export async function POST(req: Request) {
         }
       }
     } catch (error) {
-      console.error('RAG search error:', error)
+      ChatAudit.failed()
       // Continue without context if RAG fails - but with strict grounding
       ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
     }
@@ -456,16 +463,13 @@ export async function POST(req: Request) {
       )
     }
 
-    console.log('Making chat request:', {
+    ChatAudit.requested({
       provider,
       payer,
       model,
       userId,
       messageCount: chatMessages.length,
-      contextChars: ragContext.length,
-      country: req.headers.get('x-vercel-ip-country'),
-      userAgent: req.headers.get('user-agent'),
-      timestamp: new Date().toISOString()
+      contextChars: ragContext.length
     })
 
     let fullContent = ''
@@ -491,14 +495,12 @@ export async function POST(req: Request) {
       cachedTokens = result.cachedTokens
     } catch (error) {
       const code = error instanceof LlmError ? error.code : 'unavailable'
-      console.error('Chat provider error:', {
+      ChatAudit.providerFailed({
         code,
         provider,
         model,
         userId,
-        chatId: json.id,
-        messageCount: messages.length,
-        timestamp: new Date().toISOString()
+        messageCount: messages.length
       })
       await recordChatUsage({
         userId,
@@ -517,7 +519,7 @@ export async function POST(req: Request) {
       )
     }
 
-    console.log('Chat response received', {
+    ChatAudit.answered({
       provider,
       model,
       userId,
@@ -552,20 +554,18 @@ export async function POST(req: Request) {
           ]
         }
 
-        console.log('Saving chat to database:', { id, userId, title, messageCount: payload.messages.length })
+        ChatAudit.saved({ id, userId, messageCount: payload.messages.length })
         await supabase.from('chats').upsert({
           id,
           payload,
           user_id: userId
         }).throwOnError()
 
-        console.log(`Chat saved to database: ${id}`)
-
         // Revalidate chat pages so sidebar updates with new chat
         revalidatePath('/chat')
         revalidatePath(`/chat/${id}`)
       } catch (error) {
-        console.error('Error saving chat to database:', error)
+        ChatAudit.failed()
         // Continue to return response even if save fails
       }
     }
@@ -608,31 +608,10 @@ export async function POST(req: Request) {
       }
     })
   } catch (error) {
-    // Comprehensive error logging for debugging
-    console.error('=== CHAT API GENERAL ERROR ===')
-    console.error('Error type:', error instanceof Error ? error.name : typeof error)
-    console.error('Error message:', error instanceof Error ? error.message : String(error))
-    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
-    console.error('Context:', {
-      userId: 'unknown', // session not available in catch block
-      chatId: 'unknown', // json not available in catch block
-      messageCount: 0, // messages not available in catch block
-      apiUsed: 'Claude',
-      hasSupabaseConfig: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30),
-      timestamp: new Date().toISOString(),
-      userAgent: req.headers.get('user-agent'),
-      url: req.url,
-      method: req.method,
-      contentType: req.headers.get('content-type')
-    })
-    console.error('==============================')
-    
+    ChatAudit.failed()
     return new Response(JSON.stringify({
       error: 'Chat request failed',
-      message: error instanceof Error ? error.message : 'Unknown error occurred',
-      details: 'Please check server logs for more information',
-      timestamp: new Date().toISOString()
+      message: 'The model could not answer. Try again in a moment.'
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

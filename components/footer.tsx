@@ -25,7 +25,8 @@ const links = [
   { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
-  { href: '/privacy', label: 'Privacy' }
+  { href: '/terms', label: 'Terms of Use' },
+  { href: '/privacy', label: 'Privacy Policy' }
 ]
 
 export function Footer() {

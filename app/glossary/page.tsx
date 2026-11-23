@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { GlossaryIndex } from '@/components/glossary-index'
+import { LicenceNotice } from '@/components/licence-notice'
 import { loadGlossaryIndex } from '@/lib/glossary'
 import { SITE_OG_IMAGE, SITE_URL } from '@/lib/site'
 
@@ -57,6 +58,9 @@ export default async function GlossaryPage() {
     <>
       <GlossaryJsonLd count={entries.length} />
       <GlossaryIndex entries={entries} />
+      <div className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8">
+        <LicenceNotice />
+      </div>
     </>
   )
 }

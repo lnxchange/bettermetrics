@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { auth } from '@/auth'
+import { LicenceNotice } from '@/components/licence-notice'
 import PDFDownloadButton from '@/components/PDFDownloadButton'
 import Link from 'next/link'
 import { marked } from 'marked'
@@ -303,6 +304,7 @@ export default async function ArticlePage({
             html={htmlContent}
             className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-xl md:prose-h2:text-3xl prose-h3:text-lg md:prose-h3:text-2xl prose-a:text-primary-600 prose-a:hover:text-primary-700"
           />
+          <LicenceNotice />
         </div>
 
         {/* Article Footer */}

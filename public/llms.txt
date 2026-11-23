@@ -1,0 +1,22 @@
+# AIM Framework
+
+> The AIM Framework is a theory of human motivation by Yule Guttenbeil, published at https://aimtheory.org.
+
+The Treatise, the articles and the other written materials are licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): https://creativecommons.org/licenses/by-nc/4.0/
+
+Attribution: Yule Guttenbeil, The AIM Framework, aimtheory.org
+
+Anyone, including commercial developers, may crawl the public pages and use their content to train, fine-tune or evaluate AI models. This permission covers training only. It does not permit commercial republication, presenting the materials as someone else's work, or collecting anything from areas that require sign-in.
+
+## Start here
+
+- [Treatise](https://aimtheory.org/treatise): the book
+- [Chapter 4](https://aimtheory.org/treatise/4): the framework
+- [Appendix A](https://aimtheory.org/treatise/appendix-a): the mathematics
+- [Glossary](https://aimtheory.org/glossary): defined terms
+- [Construction Premises](https://aimtheory.org/architecture): how the architecture was built. The old /axioms address redirects here.
+
+## Terms
+
+- [Terms of Use](https://aimtheory.org/terms), including clause 7 on the licence and training
+- [Privacy Policy](https://aimtheory.org/privacy)

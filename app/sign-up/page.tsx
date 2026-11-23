@@ -20,7 +20,7 @@ export default async function SignUpPage({
   // Check if Supabase is configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return (
-      <div className="flex h-[calc(100vh-theme(spacing.16))] flex-col items-center justify-center py-10">
+      <div className="flex min-h-[calc(100vh-theme(spacing.16))] flex-col items-center justify-center overflow-y-auto py-10">
         <div className="w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             Authentication Not Available
@@ -48,7 +48,7 @@ export default async function SignUpPage({
   const fromChat =
     searchParams?.reason === 'chat' || searchParams?.redirectedFrom?.startsWith('/chat')
   return (
-    <div className="flex h-[calc(100vh-theme(spacing.16))] flex-col items-center justify-center py-10">
+    <div className="flex min-h-[calc(100vh-theme(spacing.16))] flex-col items-center justify-center overflow-y-auto py-10">
       <div className={fromChat ? 'w-full max-w-xl' : 'w-full max-w-sm'}>
         {fromChat && (
           <div className="mb-4">

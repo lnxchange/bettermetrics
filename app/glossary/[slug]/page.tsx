@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi'
 import { AskAI } from '@/components/ask-ai'
+import { LicenceNotice } from '@/components/licence-notice'
 import { MathText } from '@/components/math-text'
 import { TreatiseCitation } from '@/components/treatise-citation'
 import { loadGlossaryContext, loadGlossaryEntry, previewOf } from '@/lib/glossary'
@@ -185,6 +186,8 @@ export default async function GlossaryTermPage({ params }: GlossaryTermPageProps
             label={`Ask the AI to explain "${entry.term}" in context`}
           />
         </div>
+
+        <LicenceNotice />
 
         <nav className="flex flex-col gap-3 border-t border-gray-200 pt-6 sm:flex-row sm:justify-between" aria-label="Adjacent terms">
           {context.previous ? (

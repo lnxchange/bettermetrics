@@ -7,6 +7,8 @@ import { isChatProvider, keyMatchesProvider, detectProvider, PROVIDER_INFO, type
 import { loadChatSettings } from '@/lib/chat-settings'
 import { validateProviderKey } from '@/lib/llm/validate'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
+import { KeyAudit } from '@/lib/chat-audit'
+import { LegalConsent } from '@/lib/legal-consent'
 import {
   activateUserKey,
   consumeKeySave,
@@ -40,6 +42,9 @@ function ipHash(req: NextRequest) {
 export async function GET() {
   const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await LegalConsent.allows(id))) {
+    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
+  }
   const keys = await listUserKeys(id)
   const settings = await loadChatSettings()
   return NextResponse.json({
@@ -53,6 +58,9 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await LegalConsent.allows(id))) {
+    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
+  }
   if (!admin) {
     const gate = await consumeKeySave(id, ipHash(req))
     if (gate === 'limited') {
@@ -103,7 +111,7 @@ export async function PUT(req: NextRequest) {
     await saveUserChatKey(id, provider, apiKey)
     return NextResponse.json({ keys: await listUserKeys(id), links: LINKS })
   } catch (error) {
-    console.error('Saving an API key failed')
+    KeyAudit.failed('save')
     const unavailable = error instanceof Error && error.message.includes('service role')
     return NextResponse.json(
       {
@@ -119,6 +127,9 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { id } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await LegalConsent.allows(id))) {
+    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
+  }
   const body = await req.json().catch(() => null)
   const provider = isChatProvider(body?.provider) ? body.provider : null
   if (!provider) return NextResponse.json({ error: 'Choose a provider to remove.' }, { status: 400 })
@@ -126,7 +137,7 @@ export async function DELETE(req: NextRequest) {
     await deleteUserChatKey(id, provider)
     return NextResponse.json({ keys: await listUserKeys(id), links: LINKS })
   } catch {
-    console.error('Removing an API key failed')
+    KeyAudit.failed('remove')
     return NextResponse.json({ error: 'Could not remove that key.' }, { status: 503 })
   }
 }

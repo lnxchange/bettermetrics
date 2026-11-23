@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, type User } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { auth } from '@/auth'
+import { AccountDeletion } from '@/lib/account-deletion'
 import { upsertSyncedContact } from '@/lib/crm/sync'
 
 function serviceClient() {
@@ -184,11 +185,15 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'You cannot delete your own account here' }, { status: 400 })
     }
 
-    const { error } = await serviceClient().auth.admin.deleteUser(id)
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
+    const existing = await serviceClient().auth.admin.getUserById(id)
+    if (existing.error || !existing.data.user?.email) {
+      return NextResponse.json({ error: existing.error?.message || 'User not found' }, { status: 404 })
     }
-    return NextResponse.json({ message: 'Account deleted. The CRM contact was left in place.' })
+    const removed = await AccountDeletion.delete(id, existing.data.user.email)
+    if (!removed) {
+      return NextResponse.json({ error: 'Could not delete the account.' }, { status: 500 })
+    }
+    return NextResponse.json({ message: 'Account deleted.' })
   } catch (error) {
     console.error('Admin user delete error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

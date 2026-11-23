@@ -2,19 +2,28 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { auth } from '@/auth'
-import { upsertSyncedContact } from '@/lib/crm/sync'
+import { LegalConsent } from '@/lib/legal-consent'
+import { MailingList } from '@/lib/crm/mailing'
+
+function displayNameOf(metadata: Record<string, unknown>, email: string) {
+  if (typeof metadata.display_name === 'string' && metadata.display_name.trim()) return metadata.display_name.trim()
+  if (typeof metadata.name === 'string' && metadata.name.trim()) return metadata.name.trim()
+  const first = typeof metadata.first_name === 'string' ? metadata.first_name.trim() : ''
+  const last = typeof metadata.last_name === 'string' ? metadata.last_name.trim() : ''
+  return `${first} ${last}`.trim() || email
+}
 
 export async function GET() {
   const session = await auth({ cookieStore: cookies() })
-  if (!session?.user) {
+  if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const metadata = session.user.user_metadata || {}
+  const metadata = (session.user.user_metadata || {}) as Record<string, unknown>
+  const consent = await LegalConsent.read(session.user.id)
   return NextResponse.json({
     email: session.user.email,
-    firstName: metadata.first_name || '',
-    lastName: metadata.last_name || '',
-    organization: metadata.organization || ''
+    displayName: displayNameOf(metadata, session.user.email),
+    updatesOptIn: consent?.updates_opt_in === true
   })
 }
 
@@ -24,16 +33,17 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  if (!(await LegalConsent.allows(session.user.id))) {
+    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
+  }
 
   const body = await req.json()
-  const firstName = String(body.firstName || '').trim()
-  const lastName = String(body.lastName || '').trim()
-  const organization = String(body.organization || '').trim()
+  const displayName = String(body.displayName || '').trim()
   const email = String(body.email || session.user.email).trim()
   const password = typeof body.password === 'string' ? body.password : ''
 
-  if (!firstName || !lastName) {
-    return NextResponse.json({ error: 'First and last name are required' }, { status: 400 })
+  if (!displayName || displayName.length > 80) {
+    return NextResponse.json({ error: 'Enter a display name.' }, { status: 400 })
   }
   if (!email.includes('@')) {
     return NextResponse.json({ error: 'Enter a valid email address' }, { status: 400 })
@@ -47,10 +57,8 @@ export async function POST(req: NextRequest) {
   const { data, error } = await supabase.auth.updateUser(
     {
       data: {
-        first_name: firstName,
-        last_name: lastName,
-        name: `${firstName} ${lastName}`,
-        organization
+        display_name: displayName,
+        name: displayName
       },
       ...(emailChanged ? { email } : {}),
       ...(password ? { password } : {})
@@ -61,17 +69,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
-  await upsertSyncedContact({
-    email: session.user.email,
-    firstName,
-    lastName,
-    companyName: organization || null,
-    source: 'website-signup',
-    externalId: `site-user:${session.user.id}`,
-    tagNames: ['site-user'],
-    siteUserId: session.user.id,
-    askPolicy: 'may-ask-to-validate'
-  })
+  const consent = await LegalConsent.read(session.user.id)
+  if (consent?.updates_opt_in) {
+    await MailingList.optIn({
+      email: session.user.email,
+      displayName,
+      userId: session.user.id
+    })
+  }
 
   const pendingEmail = data.user?.new_email || (emailChanged ? email : '')
   return NextResponse.json({

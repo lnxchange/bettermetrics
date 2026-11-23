@@ -22,7 +22,8 @@ const STATIC_ROUTES = [
   '/articles',
   '/about',
   '/diagnostic',
-  '/contact'
+  '/contact',
+  '/terms'
 ]
 
 interface Entry {

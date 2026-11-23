@@ -67,7 +67,7 @@ export async function consumeGuestQuestion(req: Request): Promise<GuestLimitResu
     }
     return { allowed: false, reason: 'unavailable' }
   } catch (error) {
-    console.error('Guest rate limit check failed:', error)
+    console.error('Guest rate limit check failed')
     return { allowed: false, reason: 'unavailable' }
   }
 }

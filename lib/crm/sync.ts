@@ -6,6 +6,7 @@ import {
   splitName,
   tagsForInterest
 } from './config'
+import { MailingList } from './mailing'
 
 export type SyncedContact = {
   email?: string | null
@@ -95,23 +96,22 @@ export async function syncSiteUsers(site: SupabaseClient): Promise<number> {
     for (const user of users) {
       if (!user.email) continue
       const metadata = user.user_metadata || {}
-      const ok = await upsertSyncedContact({
-        email: user.email,
-        firstName: typeof metadata.first_name === 'string' ? metadata.first_name : null,
-        lastName: typeof metadata.last_name === 'string' ? metadata.last_name : null,
-        fullName:
-          typeof metadata.first_name === 'string'
-            ? null
-            : typeof metadata.name === 'string'
-              ? metadata.name
-              : user.email,
-        source: 'website-signup',
-        externalId: `site-user:${user.id}`,
-        tagNames: ['site-user'],
-        siteUserId: user.id,
-        askPolicy: 'may-ask-to-validate',
-        companyName: typeof metadata.organization === 'string' ? metadata.organization : null
-      })
+      const { data: consent } = await site
+        .from('user_legal_consents')
+        .select('updates_opt_in')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      if (consent?.updates_opt_in !== true) {
+        await MailingList.optOut(user.email, user.id)
+        continue
+      }
+      const displayName =
+        typeof metadata.display_name === 'string' && metadata.display_name.trim()
+          ? metadata.display_name.trim()
+          : typeof metadata.name === 'string' && metadata.name.trim()
+            ? metadata.name.trim()
+            : user.email
+      const ok = await MailingList.optIn({ email: user.email, displayName, userId: user.id })
       if (ok) synced += 1
     }
     if (users.length < 200) break
