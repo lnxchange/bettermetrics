@@ -63,18 +63,22 @@ assert.equal(logged.includes(MARKER), false)
 assert.equal(logged.includes('[redacted]'), true)
 assert.equal(logged.includes('chat-1'), true)
 assert.equal(source('app/api/chat/route.ts').includes('ChatAudit.saved({ id, userId, messageCount'), true)
+assert.equal(source('app/api/chat/route.ts').includes('terms_required'), false)
+assert.equal(source('middleware.ts').includes('/accept-terms'), false)
+assert.equal(source('app/api/account/api-key/route.ts').includes('Accept the Terms of Use'), false)
+assert.equal(source('app/api/account/profile/route.ts').includes('Accept the Terms of Use'), false)
+const filter = MailingList.newsletterContains('Ada@Example.com')
+assert.equal(filter, '[{"email":"ada@example.com"}]')
+assert.equal(`cs.${filter}`.includes('[object Object]'), false)
 
 for (const file of ['app/api/chat/route.ts', 'app/api/account/api-key/route.ts']) {
   assert.equal(source(file).includes('console.'), false, `${file} still logs directly`)
 }
 
-const rejected = SignUp.parse({ displayName: 'Ada', email: 'ada@example.com', password: 'secret', accepted: false })
-assert.equal(rejected.ok, false)
 const withoutUpdates = SignUp.parse({
   displayName: 'Ada',
   email: 'ada@example.com',
-  password: 'secret',
-  accepted: true
+  password: 'secret'
 })
 assert.equal(withoutUpdates.ok, true)
 if (withoutUpdates.ok) assert.equal(withoutUpdates.value.updatesOptIn, false)
@@ -82,7 +86,6 @@ const withUpdates = SignUp.parse({
   displayName: 'Ada',
   email: 'ada@example.com',
   password: 'secret',
-  accepted: true,
   updatesOptIn: true
 })
 assert.equal(withUpdates.ok, true)

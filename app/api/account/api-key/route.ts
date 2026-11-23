@@ -8,7 +8,6 @@ import { loadChatSettings } from '@/lib/chat-settings'
 import { validateProviderKey } from '@/lib/llm/validate'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { KeyAudit } from '@/lib/chat-audit'
-import { LegalConsent } from '@/lib/legal-consent'
 import {
   activateUserKey,
   consumeKeySave,
@@ -42,9 +41,6 @@ function ipHash(req: NextRequest) {
 export async function GET() {
   const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!(await LegalConsent.allows(id))) {
-    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
-  }
   const keys = await listUserKeys(id)
   const settings = await loadChatSettings()
   return NextResponse.json({
@@ -58,9 +54,6 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   const { id, admin } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!(await LegalConsent.allows(id))) {
-    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
-  }
   if (!admin) {
     const gate = await consumeKeySave(id, ipHash(req))
     if (gate === 'limited') {
@@ -127,9 +120,6 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { id } = await viewer()
   if (!id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!(await LegalConsent.allows(id))) {
-    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
-  }
   const body = await req.json().catch(() => null)
   const provider = isChatProvider(body?.provider) ? body.provider : null
   if (!provider) return NextResponse.json({ error: 'Choose a provider to remove.' }, { status: 400 })

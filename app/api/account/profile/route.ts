@@ -33,9 +33,6 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  if (!(await LegalConsent.allows(session.user.id))) {
-    return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
-  }
 
   const body = await req.json()
   const displayName = String(body.displayName || '').trim()

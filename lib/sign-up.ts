@@ -8,9 +8,6 @@ export type SignUpInput = {
 export class SignUp {
   static parse(body: unknown): { ok: true; value: SignUpInput } | { ok: false; error: string } {
     const record = body && typeof body === 'object' ? (body as Record<string, unknown>) : {}
-    if (record.accepted !== true) {
-      return { ok: false, error: 'Tick the box to agree to the Terms of Use and Privacy Policy.' }
-    }
     const displayName = typeof record.displayName === 'string' ? record.displayName.trim() : ''
     const email = typeof record.email === 'string' ? record.email.trim() : ''
     const password = typeof record.password === 'string' ? record.password : ''
