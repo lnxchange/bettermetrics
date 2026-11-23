@@ -11,6 +11,7 @@ const SKIP_TAGS = new Set([
   'button',
   'script',
   'style',
+  'math',
   'h1',
   'h2',
   'h3',
@@ -45,7 +46,7 @@ export class GlossaryMarkup {
     'glossary-term cursor-pointer underline decoration-dotted underline-offset-[0.15em]'
 
   static readonly skipSelector =
-    'a, code, pre, button, script, style, [data-glossary]'
+    'a, code, pre, button, script, style, math, [data-glossary]'
 
   /** Chapter HTML, with one span per occurrence outside the skip list and headings. */
   static html(source: string, terms: GlossaryTermRef[]): string {

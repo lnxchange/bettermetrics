@@ -194,4 +194,11 @@ assert(
   'an existing glossary span is not wrapped again'
 )
 
+const math = GlossaryMarkup.html(
+  '<p>Thinker wrote <math><mi>Thinker</mi></math> in the formula.</p>',
+  terms
+)
+assert(occurrences(math, 'thinker') === 1, 'a term inside math is not wrapped')
+assert(math.includes('<mi>Thinker</mi>'), 'math text stays intact')
+
 console.log('glossary decorate tests passed', thinkerSpans)
