@@ -11,7 +11,6 @@ import { ChatProvider } from '@/lib/chat-provider-ids'
 import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
 import { generate, LlmError, readerMessage } from '@/lib/llm'
 import { ChatAudit } from '@/lib/chat-audit'
-import { LegalConsent } from '@/lib/legal-consent'
 import { readActiveKey } from '@/lib/user-api-keys'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { createHash } from 'crypto'
@@ -245,16 +244,6 @@ export async function POST(req: Request) {
           message: 'Create an account to ask the assistant.'
         }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
-      )
-    }
-
-    if (!(await LegalConsent.allows(userId))) {
-      return new Response(
-        JSON.stringify({
-          error: 'terms_required',
-          message: 'Accept the Terms of Use and Privacy Policy to continue.'
-        }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
       )
     }
 

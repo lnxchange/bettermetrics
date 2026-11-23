@@ -44,9 +44,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true })
   }
   if (typeof body?.updatesOptIn === 'boolean') {
-    if (!(await LegalConsent.allows(session.user.id))) {
-      return NextResponse.json({ error: 'Accept the Terms of Use and Privacy Policy first.' }, { status: 403 })
-    }
     const saved = await LegalConsent.setUpdates({
       userId: session.user.id,
       email: session.user.email,

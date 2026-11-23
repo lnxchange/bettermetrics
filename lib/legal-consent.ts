@@ -77,10 +77,14 @@ export class LegalConsent {
   ): Promise<boolean> {
     if (!client) return false
     const now = new Date().toISOString()
-    const { error } = await client
-      .from('user_legal_consents')
-      .update({ updates_opt_in: input.updatesOptIn, updates_opt_in_at: now })
-      .eq('user_id', input.userId)
+    const { error } = await client.from('user_legal_consents').upsert(
+      {
+        user_id: input.userId,
+        updates_opt_in: input.updatesOptIn,
+        updates_opt_in_at: now
+      },
+      { onConflict: 'user_id' }
+    )
     if (error) return false
     return LegalConsent.syncMailing(input)
   }

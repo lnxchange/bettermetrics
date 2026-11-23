@@ -72,7 +72,8 @@ module.exports = {
       { source: '/research/hypothesis', destination: '/about#research', permanent: true },
       { source: '/research-resources', destination: '/about#research', permanent: true },
       { source: '/understand-your-motivations', destination: '/#diagnostic', permanent: true },
-      { source: '/understand-yourself', destination: '/#diagnostic', permanent: true }
+      { source: '/understand-yourself', destination: '/#diagnostic', permanent: true },
+      { source: '/accept-terms', destination: '/', permanent: false }
     ]
   }
 }

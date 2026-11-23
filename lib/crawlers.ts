@@ -16,7 +16,6 @@ export class CrawlerPolicy {
 
   static readonly disallow = [
     '/account',
-    '/accept-terms',
     '/admin',
     '/api/',
     '/chat',

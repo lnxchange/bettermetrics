@@ -59,7 +59,7 @@ function livePort(): MailingPort {
       const { error } = await client
         .from('contacts')
         .update({ has_newsletter: true })
-        .contains('email_jsonb', [{ email: email.trim().toLowerCase() }])
+        .contains('email_jsonb', MailingList.newsletterContains(email))
       if (error) {
         console.error('CRM newsletter flag could not be set')
         return false
@@ -70,6 +70,14 @@ function livePort(): MailingPort {
 }
 
 export class MailingList {
+  /**
+   * PostgREST `cs` for a jsonb column. A JavaScript array is encoded as a
+   * Postgres array (`cs.{[object Object]}`) and the API rejects it with 400.
+   */
+  static newsletterContains(email: string): string {
+    return JSON.stringify([{ email: email.trim().toLowerCase() }])
+  }
+
   static contact(input: {
     email: string
     displayName: string

@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
 
-import { LegalVersion } from '@/lib/legal-version'
-
 // Old article URLs still indexed from usebettermetrics.com carried file
 // extensions and mixed case ("/articles/Report-14-The-Easterlin-Paradox.md").
 // Normalise them to the slug form with a permanent redirect so they resolve
@@ -22,19 +20,6 @@ function normaliseArticlePath(pathname: string): string | null {
     .replace(/^-+|-+$/g, '')
   if (!slug || slug === raw) return null
   return `/articles/${slug}`
-}
-
-function legalExempt(pathname: string) {
-  return (
-    pathname.startsWith('/accept-terms') ||
-    pathname.startsWith('/terms') ||
-    pathname.startsWith('/privacy') ||
-    pathname.startsWith('/sign-in') ||
-    pathname.startsWith('/sign-up') ||
-    pathname.startsWith('/reset-password') ||
-    pathname.startsWith('/update-password') ||
-    pathname.startsWith('/unsubscribe')
-  )
 }
 
 export async function middleware(req: NextRequest) {
@@ -71,31 +56,8 @@ export async function middleware(req: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     )
 
-    // Signed-in readers accept the current terms before they continue.
-    // Public pages stay open for visitors who are not signed in.
-    if (!requiresAuth) {
-      if (!supabaseConfigured || legalExempt(req.nextUrl.pathname)) return res
-      try {
-        const supabase = createMiddlewareClient({ req, res })
-        const {
-          data: { session }
-        } = await supabase.auth.getSession()
-        if (!session?.user?.id) return res
-        const { data, error } = await supabase
-          .from('user_legal_consents')
-          .select('accepted_at, terms_version, privacy_version')
-          .eq('user_id', session.user.id)
-          .maybeSingle()
-        if (error || LegalVersion.matches(data)) return res
-        const redirectUrl = req.nextUrl.clone()
-        redirectUrl.pathname = '/accept-terms'
-        redirectUrl.search = ''
-        redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname + req.nextUrl.search)
-        return NextResponse.redirect(redirectUrl)
-      } catch {
-        return res
-      }
-    }
+    // Public pages stay open. Terms apply by using the site; nobody is stopped to accept them.
+    if (!requiresAuth) return res
 
     // Check if Supabase is configured
     if (!supabaseConfigured) {
@@ -123,21 +85,6 @@ export async function middleware(req: NextRequest) {
     const {
       data: { session }
     } = await supabase.auth.getSession()
-
-    if (session?.user?.id && !legalExempt(req.nextUrl.pathname)) {
-      const { data, error } = await supabase
-        .from('user_legal_consents')
-        .select('accepted_at, terms_version, privacy_version')
-        .eq('user_id', session.user.id)
-        .maybeSingle()
-      if (!error && !LegalVersion.matches(data)) {
-        const redirectUrl = req.nextUrl.clone()
-        redirectUrl.pathname = '/accept-terms'
-        redirectUrl.search = ''
-        redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname + req.nextUrl.search)
-        return NextResponse.redirect(redirectUrl)
-      }
-    }
 
     // Handle download attempts - redirect to sign-in
     if (req.url.includes('/api/documents/download') && !session) {

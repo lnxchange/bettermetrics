@@ -31,7 +31,6 @@ export function LoginForm({
     email: '',
     password: ''
   })
-  const [accepted, setAccepted] = React.useState(false)
   const [updates, setUpdates] = React.useState(false)
 
   const signIn = async () => {
@@ -51,7 +50,6 @@ export function LoginForm({
         displayName: formState.displayName,
         email: formState.email,
         password: formState.password,
-        accepted,
         updatesOptIn: updates
       })
     })
@@ -127,11 +125,11 @@ export function LoginForm({
 
       {action === 'sign-up' && (
         <div className="my-4">
-          <ConsentFields accepted={accepted} updates={updates} onAccepted={setAccepted} onUpdates={setUpdates} />
+          <ConsentFields updates={updates} onUpdates={setUpdates} />
         </div>
       )}
 
-      <Button disabled={isLoading || (action === 'sign-up' && !accepted)}>
+      <Button disabled={isLoading}>
         {isLoading && <IconSpinner className="mr-2 animate-spin" />}
         {action === 'sign-in' ? 'Sign In' : 'Sign Up'}
       </Button>
