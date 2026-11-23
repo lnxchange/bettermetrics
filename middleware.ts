@@ -135,8 +135,9 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * - favicon.ico, apple-icon and the sized PNG icons
+     * - manifest.webmanifest
      */
-    '/((?!share|api|_next/static|_next/image|favicon.ico).*)'
+    '/((?!share|api|_next/static|_next/image|favicon.ico|apple-icon.png|icon-16.png|icon-32.png|icon-192.png|icon-512.png|manifest.webmanifest).*)'
   ]
 }
