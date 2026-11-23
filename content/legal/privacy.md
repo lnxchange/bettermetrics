@@ -24,7 +24,7 @@ You can read the Site without an account and without giving me any personal info
 - **Account details:** your email address and display name, your sign-in credentials (passwords are stored only in hashed form by Supabase), your sign-up date, and your choices about these documents and about updates.
 - **Your API key:** the key itself (encrypted, see section 6), which provider it is for, and whether the provider accepted it.
 - **Your questions and answers:** Conversations are stored only so that you can see your own history. You can delete them, and they are deleted when you close your account.
-- **Technical information:** server logs (IP address, browser type, time of request and errors), used to keep the Site secure and working. These logs do not record API keys or the content of questions.
+- **Technical information:** server logs (IP address, browser type, time of request and errors), used to keep the Site secure and working and kept for 1 day. These logs do not record API keys or the content of questions.
 - **Analytics and cookies:** Vercel Web Analytics counts visits. It identifies a visit with a hash of the request rather than a third-party cookie, and discards that session after 24 hours. Vercel Speed Insights records anonymous loading measurements, including the page, browser, device, country and a web vital. Google Analytics is also used (measurement ID G-8FH4WH9DQH) and sets its own cookies. Sign-in uses essential cookies from Supabase.
 - **Messages you send me** by email or through the contact form.
 

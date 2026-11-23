@@ -8,6 +8,7 @@ import { LegalDocument } from '../lib/legal-document'
 import { MailingList, type MailingPort } from '../lib/crm/mailing'
 import { SafeLog } from '../lib/safe-log'
 import { SignUp } from '../lib/sign-up'
+import { SiteMail } from '../lib/site-mail'
 
 const DUMMY_KEY = 'sk-ant-api03-DUMMYKEY-yule-legal-261123'
 const MARKER = 'MARKERPHRASE-yule-legal-261123'
@@ -31,6 +32,8 @@ assert.equal(privacy.includes('Washington, D.C.'), true)
 assert.equal(privacy.includes('Mumbai, India'), true)
 assert.equal(privacy.includes('Sydney, Australia'), true)
 assert.equal(privacy.includes('G-8FH4WH9DQH'), true)
+assert.equal(privacy.includes('kept for 1 day'), true)
+assert.equal(privacy.includes('until those backups are overwritten'), true)
 assert.equal(privacy.toLowerCase().includes('not stored'), false)
 
 const lines: string[] = []
@@ -124,12 +127,18 @@ assert.equal(gpt.disallow.includes('/chat'), true)
 assert.equal(gpt.disallow.includes('/'), false)
 
 process.env.UNSUBSCRIBE_SECRET = 'legal-test-secret'
+delete process.env.RESEND_FROM
+assert.equal(SiteMail.from(), 'AIM Theory <notifications@aimtheory.org>')
+process.env.RESEND_FROM = 'AIM Theory <override@aimtheory.org>'
+assert.equal(SiteMail.from(), 'AIM Theory <override@aimtheory.org>')
+delete process.env.RESEND_FROM
 const message = FrameworkUpdates.message({
   to: 'ada@example.com',
   userId: 'user-1',
   subject: 'A chapter',
   text: 'The chapter is up.'
 })
+assert.equal(message.from, 'AIM Theory <notifications@aimtheory.org>')
 assert.equal(message.text.includes('Yule Guttenbeil, aimtheory.org'), true)
 assert.equal(message.headers['List-Unsubscribe-Post'], 'List-Unsubscribe=One-Click')
 assert.equal(message.html.includes('/unsubscribe?token='), true)

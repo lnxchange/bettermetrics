@@ -1,7 +1,6 @@
 import { SITE_URL } from '@/lib/site'
+import { SiteMail } from '@/lib/site-mail'
 import { UnsubscribeToken } from '@/lib/unsubscribe-token'
-
-const FROM = 'Yule Guttenbeil <notifications@lexnova.com.au>'
 
 export class FrameworkUpdates {
   static message(input: { to: string; userId: string; subject: string; text: string }) {
@@ -12,7 +11,7 @@ export class FrameworkUpdates {
     const text = `${intro}\n\n${input.text.trim()}\n\nUnsubscribe: ${unsubscribe}\n`
     const html = `<p>${intro}</p><p>${input.text.trim().replace(/\n/g, '<br>')}</p><p><a href="${unsubscribe}">Unsubscribe</a></p>`
     return {
-      from: FROM,
+      from: SiteMail.from(),
       to: [input.to],
       subject: input.subject,
       text,

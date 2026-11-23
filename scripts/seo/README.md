@@ -100,6 +100,6 @@ build: the sitemap lists production URLs, so `crawl.ts` rewrites them to
 | `SEO_SITE_URL` | all | override the site under test |
 | `SEO_FIX_APPLY`, `SEO_FIX_LIMIT`, `SEO_CLAUDE_MODEL` | fix-articles | optional |
 | `SEO_GOOGLE_INDEXING` | ping | set `true` to also call the Indexing API |
-| `SEO_REPORT_FROM` | report | optional sender override |
+| `RESEND_FROM` | report, contact form, framework updates | optional sender override. Defaults to `AIM Theory <notifications@aimtheory.org>` |
 
 Service-account JSON may be pasted raw or base64-encoded.
