@@ -1,4 +1,6 @@
 import { Marked } from 'marked'
+import { GlossaryMarkup } from '@/lib/glossary-markup'
+import { type GlossaryTermRef } from '@/lib/glossary-terms'
 import { restoreShieldedMath, shieldMath } from '@/lib/render-math'
 import { TreatiseOutline } from '@/lib/treatise-outline'
 import {
@@ -52,7 +54,8 @@ export function stripLeadingH1(markdown: string) {
 
 export function prepareTreatiseMarkdown(
   markdown: string,
-  index?: CorpusIndex
+  index?: CorpusIndex,
+  terms?: GlossaryTermRef[]
 ): {
   html: string
   headings: TreatiseHeading[]
@@ -106,5 +109,6 @@ export function prepareTreatiseMarkdown(
   html = html
     .replace(/<table>/g, '<div class="overflow-x-auto my-6"><table>')
     .replace(/<\/table>/g, '</table></div>')
+  if (terms?.length) html = GlossaryMarkup.html(html, terms)
   return { html, headings }
 }
