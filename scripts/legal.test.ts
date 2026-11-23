@@ -33,7 +33,10 @@ assert.equal(privacy.includes('Mumbai, India'), true)
 assert.equal(privacy.includes('Sydney, Australia'), true)
 assert.equal(privacy.includes('G-8FH4WH9DQH'), true)
 assert.equal(privacy.includes('kept for 1 day'), true)
-assert.equal(privacy.includes('until those backups are overwritten'), true)
+assert.equal(privacy.includes('including from backups within 7 days'), true)
+assert.equal(privacy.includes('for up to 7 days before it is overwritten'), true)
+assert.equal(privacy.includes('23 November 2026'), true)
+assert.equal(terms.includes('23 November 2026'), true)
 assert.equal(privacy.toLowerCase().includes('not stored'), false)
 
 const lines: string[] = []

@@ -53,7 +53,7 @@ Your key is encrypted before it is stored, and the encryption key is held separa
 
 Because the Site has to decrypt your key to use it, your key is not beyond the reach of the Site's own systems. For that reason, I recommend a spending limit with your provider and a key created only for this Site.
 
-Your key is deleted when you remove it or close your account.
+Your key is deleted when you remove it or close your account, including from backups within 7 days.
 
 ## 7. Your questions and your AI provider
 
@@ -98,7 +98,7 @@ If I become aware that keys or account information have been accessed without au
 
 ## 13. Keeping and deleting information
 
-When you close your account, I delete your account details, your stored key, your stored conversations and your record in my contact database. I keep only your email address on a do-not-contact list, so that you are not emailed again. Deleted information may remain in backups until those backups are overwritten.
+When you close your account, I delete your account details, your stored key, your stored conversations and your record in my contact database. I keep only your email address on a do-not-contact list, so that you are not emailed again. Deleted information may remain in backups for up to 7 days before it is overwritten.
 
 When I no longer need personal information and am not required by law to keep it, I take reasonable steps to destroy it or de-identify it.
 

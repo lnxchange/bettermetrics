@@ -1,12 +1,11 @@
 /**
  * The version of the Terms of Use and the Privacy Policy.
  *
- * Set `publicationDate` to the go-live date before these pages are published,
- * in the form "23 November 2026". Acceptance records store this string.
- * Leave it empty until that date is chosen. Do not put the date anywhere else.
+ * `publicationDate` is the go-live date. Acceptance records store this string.
+ * Do not put the date anywhere else.
  */
 export class LegalVersion {
-  static readonly publicationDate = ''
+  static readonly publicationDate = '23 November 2026'
 
   static matches(
     row: {
