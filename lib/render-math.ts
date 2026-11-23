@@ -1,6 +1,6 @@
 import katex from 'katex'
 
-const MATH_PATTERN =
+export const MATH_PATTERN =
   /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|(?<!\\)\$(?![\d\s])((?:\\.|[^$\n])+?)\$/g
 
 function escapeHtml(value: string) {

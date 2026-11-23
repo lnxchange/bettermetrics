@@ -27,6 +27,7 @@ import {
   unresolvedCitations
 } from '../lib/treatise-citations'
 import { Database, Json } from '../lib/db_types'
+import { GlossaryText } from '../lib/glossary-text'
 
 config({ path: path.join(process.cwd(), '.env.local') })
 
@@ -154,10 +155,7 @@ function cleanCrossReference(value: string) {
 }
 
 function definitionFrom(raw: string, term: string) {
-  const text = collapse(raw).replace(/\*\*/g, '').trim()
-  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const labelled = text.match(new RegExp(`^${escaped}\\s*[:.]\\s+([\\s\\S]+)$`, 'i'))
-  return labelled ? labelled[1].trim() : text
+  return GlossaryText.richDefinition(raw, term)
 }
 
 export function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
@@ -395,6 +393,12 @@ async function main() {
   const supabase = createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false }
   })
+
+  if (process.argv.includes('--glossary-only')) {
+    await syncGlossaryDerivations(supabase, directory)
+    console.log('glossary only')
+    return
+  }
 
   const incoming: {
     slug: string
