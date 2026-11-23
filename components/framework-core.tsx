@@ -27,10 +27,13 @@ const defaults = [
 
 export function FrameworkCore({
   chapters,
-  className
+  className,
+  lead
 }: {
   chapters?: FrameworkChapter[]
   className?: string
+  /** Replaces the default lead. Other pages keep that lead. */
+  lead?: string
 }) {
   const items = defaults.map(item => {
     const loaded = chapters?.find(chapter => chapter.slug === item.slug)
@@ -40,10 +43,14 @@ export function FrameworkCore({
   return (
     <div className={className}>
       <p className="mb-5 max-w-3xl text-lg text-gray-700">
-        The framework itself is Chapter 4 and Appendix A, taken together.
-        Chapter 4 states the minimal architecture and how it was constructed.
-        Appendix A is the mathematics of that system. The rest of the treatise
-        explains what the framework is and how it plays out.
+        {lead ?? (
+          <>
+            The framework itself is Chapter 4 and Appendix A, taken together.
+            Chapter 4 states the minimal architecture and how it was constructed.
+            Appendix A is the mathematics of that system. The rest of the treatise
+            explains what the framework is and how it plays out.
+          </>
+        )}
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {items.map(item => (
