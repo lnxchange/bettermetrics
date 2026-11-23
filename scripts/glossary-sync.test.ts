@@ -177,6 +177,46 @@ assert(
   'the plain reading of a wrapped label has no markers'
 )
 
+function dollarsBalanced(value: string) {
+  return (value.split('$').length - 1) % 2 === 0
+}
+
+const typeset = previewOf(
+  '**Critical Loop Gain ($G_{crit}$).** The Critical Loop Gain $G_{crit}$ is the threshold value of the internal loop gain $G = \\kappa_S \\cdot \\beta \\cdot \\gamma \\cdot \\sigma\'(V^{*})$.',
+  90
+)
+assert(
+  typeset === 'Critical Loop Gain ($G_{crit}$).',
+  'a short formula stays whole in the preview'
+)
+assert(!typeset.includes('**') && dollarsBalanced(typeset), 'that preview has no markers')
+
+const internal = previewOf(
+  "**Internal Loop Gain is the quantity $G \\equiv \\kappa_S\\cdot\\beta\\cdot\\gamma\\cdot\\sigma'(V^{*})$ defined in Appendix A.5, being the product of the three couplings.**",
+  90
+)
+assert(
+  internal === 'Internal Loop Gain is the quantity…',
+  'a formula that does not fit is left out instead of being sliced open'
+)
+assert(!internal.includes('**') && !internal.includes('$'), 'the shortened preview has no markers')
+
+const joint = previewOf(
+  'The Joint Stability Condition is $G_{joint} = G_{eff} + G_{slow} + G_{cross} < G_{crit}^{joint}$, where $G_{eff}$ is the fast layer.',
+  90
+)
+assert(
+  joint === 'The Joint Stability Condition is…',
+  'the joint-stability preview does not open a dollar it cannot close'
+)
+assert(dollarsBalanced(joint), 'the joint-stability preview keeps formulas whole')
+
+const ratio = previewOf('The ratio is $1.5$ exactly today.', 140)
+assert(
+  ratio === 'The ratio is $1.5$ exactly today.',
+  'a decimal point inside a formula is not the end of the sentence'
+)
+
 const entries = parsed.map(entry => ({ term: entry.term, slug: entry.term }))
 assert(
   resolveGlossaryName('A-floors', entries)?.term ===
@@ -261,6 +301,13 @@ if (chapterPath) {
     'plain definitions have no bold markers'
   )
   assert(
+    chapter.every(entry => {
+      const preview = previewOf(entry.definition, 90)
+      return !preview.includes('**') && dollarsBalanced(preview)
+    }),
+    'index previews have no bold markers and no sliced formulas'
+  )
+  assert(
     chapter.some(entry => entry.definition.includes('**')),
     'stored definitions keep markdown bold'
   )
@@ -279,6 +326,7 @@ if (chapterPath) {
     'G_slow',
     'M as Amplifier (Chapter 4, Section 4.5.3)',
     'Satiation (A)',
+    'Section 13.5',
     'Section 14.5',
     'Type II (Prior Dominance)',
     'κ_self'

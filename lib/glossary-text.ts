@@ -64,25 +64,26 @@ export class GlossaryText {
    * typeset `$G_{crit}$`.
    */
   static plain(value: string) {
-    const slots: string[] = []
-    const mask = (match: string) => {
-      slots.push(match)
-      return `MATHSLOT${slots.length - 1}ENDSLOT`
-    }
-    let text = value.replace(/```[\s\S]*?```|`[^`\n]*`/g, mask)
-    text = text.replace(
-      new RegExp(MATH_PATTERN.source, MATH_PATTERN.flags),
-      mask
-    )
-    text = text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
-    text = text.replace(/\*\*([\s\S]+?)\*\*/g, '$1')
-    text = text.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '$1')
-    text = text.replace(/\*\*/g, '')
-    text = text.replace(
-      /MATHSLOT(\d+)ENDSLOT/g,
-      (_, index) => slots[Number(index)] ?? ''
-    )
-    return text.replace(/\s+/g, ' ').trim()
+    const { text, slots } = GlossaryText.mask(value)
+    const stripped = text
+      .replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1')
+      .replace(/\*\*([\s\S]+?)\*\*/g, '$1')
+      .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '$1')
+      .replace(/\*\*/g, '')
+    return GlossaryText.unmask(stripped, slots).replace(/\s+/g, ' ').trim()
+  }
+
+  /**
+   * A search snippet. Markers are gone, and a cap never slices through a
+   * formula, so the index cannot show `**` or a dangling `$`.
+   */
+  static preview(value: string, max = 140) {
+    const flat = GlossaryText.plain(value)
+    const sentence = GlossaryText.firstSentence(flat)
+    const chosen = sentence.length <= max ? sentence : flat
+    const limit = sentence.length <= max ? chosen.length : max
+    if (chosen.length <= limit) return chosen
+    return GlossaryText.fit(chosen, limit)
   }
 
   /** Plain text for meta descriptions and JSON-LD: no markers and no TeX delimiters. */
@@ -98,6 +99,70 @@ export class GlossaryText {
       }
     )
     return reading.replace(/\s+/g, ' ').trim()
+  }
+
+  private static mask(value: string) {
+    const slots: string[] = []
+    const take = (match: string) => {
+      slots.push(match)
+      return `MATHSLOT${slots.length - 1}ENDSLOT`
+    }
+    let text = value.replace(/```[\s\S]*?```|`[^`\n]*`/g, take)
+    text = text.replace(
+      new RegExp(MATH_PATTERN.source, MATH_PATTERN.flags),
+      take
+    )
+    return { text, slots }
+  }
+
+  private static unmask(value: string, slots: string[]) {
+    return value.replace(
+      /MATHSLOT(\d+)ENDSLOT/g,
+      (_, index) => slots[Number(index)] ?? ''
+    )
+  }
+
+  /** First sentence, treating a formula as a word so `$1.5$` is not a stop. */
+  private static firstSentence(value: string) {
+    const { text, slots } = GlossaryText.mask(value)
+    const sentence = text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text
+    return GlossaryText.unmask(sentence, slots)
+  }
+
+  /** Shorten to `max` characters without opening a formula that is not closed. */
+  private static fit(value: string, max: number) {
+    const pattern = new RegExp(MATH_PATTERN.source, MATH_PATTERN.flags)
+    const parts: { text: string; atomic: boolean }[] = []
+    let last = 0
+    let match: RegExpExecArray | null
+    while ((match = pattern.exec(value)) !== null) {
+      if (match.index > last)
+        parts.push({ text: value.slice(last, match.index), atomic: false })
+      parts.push({ text: match[0], atomic: true })
+      last = match.index + match[0].length
+    }
+    if (last < value.length)
+      parts.push({ text: value.slice(last), atomic: false })
+
+    let result = ''
+    let cut = false
+    for (const part of parts) {
+      if (result.length + part.text.length <= max) {
+        result += part.text
+        continue
+      }
+      cut = true
+      if (!part.atomic) {
+        const room = max - result.length
+        if (room > 1) result += part.text.slice(0, room - 1).trimEnd()
+      } else if (result.trim() === '') {
+        result = part.text
+        cut = false
+      }
+      break
+    }
+    if (!cut) return result.trim()
+    return `${result.trimEnd()}…`
   }
 
   private static readTex(tex: string) {

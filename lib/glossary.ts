@@ -28,13 +28,12 @@ function anonClient() {
 
 /** First sentence of a definition, capped so 680 previews stay under ~100 KB. */
 export function previewOf(definition: string, max = 140) {
-  const flat = GlossaryText.plain(definition)
-  const sentence = flat.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? flat
-  const text =
-    sentence.length <= max ? sentence : `${flat.slice(0, max - 1).trimEnd()}…`
-  return text
+  return GlossaryText.preview(definition, max)
 }
 
+// The key is versioned. The previous entry stored previews from before
+// markers were stripped, and that payload survived the deploy that added
+// GlossaryText.plain.
 export const loadGlossaryIndex = cached(
   async (): Promise<GlossaryIndexEntry[]> => {
     const supabase = anonClient()
@@ -52,7 +51,7 @@ export const loadGlossaryIndex = cached(
       preview: previewOf(row.definition, 90)
     }))
   },
-  ['glossary-index'],
+  ['glossary-index-v2'],
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 
@@ -68,7 +67,7 @@ export const loadGlossaryEntry = cached(
     if (error) throw new Error(`Glossary query failed: ${error.message}`)
     return data ?? null
   },
-  ['glossary-entry'],
+  ['glossary-entry-v2'],
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 

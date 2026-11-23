@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import { GlossaryProse } from '../lib/glossary-prose'
 import { GlossaryPopover } from '../lib/glossary-popover'
 
@@ -66,6 +67,29 @@ assert(
 assert(
   explained.includes('<em>develop a capacity</em>'),
   'explanation italics are kept'
+)
+
+const critical = GlossaryProse.html(
+  '**Critical Loop Gain ($G_{crit}$).** The Critical Loop Gain $G_{crit}$ is the threshold value of the internal loop gain $G = \\kappa_S \\cdot \\beta \\cdot \\gamma \\cdot \\sigma\'(V^{*})$.'
+)
+assert(critical.includes('<strong>'), 'the term page bold is the same markup as the pop-up')
+assert(
+  critical.includes('<math') && critical.includes('G_{crit}'),
+  'the term page typesets G_crit as MathML'
+)
+assert(!critical.includes('**') && !critical.includes('$G_'), 'rendered prose has no raw markers')
+
+const termPage = readFileSync('app/glossary/[slug]/page.tsx', 'utf8')
+const popup = readFileSync('components/glossary-lookup.tsx', 'utf8')
+assert(
+  termPage.includes('<GlossaryProseView') &&
+    termPage.includes('text={entry.definition}'),
+  'the term page renders the stored definition with GlossaryProse'
+)
+assert(
+  popup.includes('<GlossaryProseView') &&
+    popup.includes('text={entry.definition}'),
+  'the pop-up renders the stored definition with GlossaryProse'
 )
 
 const box = GlossaryPopover.reference({ x: 12, y: 640, width: 80, height: 18 })

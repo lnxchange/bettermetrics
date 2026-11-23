@@ -352,6 +352,23 @@ async function syncGlossaryDerivations(
   console.log(
     `glossary  ${file.date}  ${updated} entries updated, ${inserted} entries added, ${parsed.length} in Chapter 2`
   )
+  await refreshGlossaryCache()
+}
+
+/** Drop the cached index and term pages after the rows change. */
+async function refreshGlossaryCache() {
+  const secret = process.env.REVALIDATE_SECRET
+  if (!secret) {
+    console.log('glossary cache: REVALIDATE_SECRET not set, skipped')
+    return
+  }
+  const site = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org').replace(/\/$/, '')
+  const response = await fetch(`${site}/api/revalidate`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${secret}` }
+  })
+  if (!response.ok) throw new Error(`glossary cache: ${response.status}`)
+  console.log('glossary cache revalidated')
 }
 
 function citesSection(markdown: string, sectionId: string) {
