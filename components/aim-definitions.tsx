@@ -21,9 +21,9 @@ export function AIMDefinitionsShort() {
             Appetites <span className="text-appetites">(A)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            What the body and basic security need: food, rest, warmth, safety, shelter, a
-            floor of income. Urgent while active; fades once met; returns when the deficit
-            does.
+            The body&apos;s signals that something physical needs repair: hunger, thirst,
+            breathlessness, cold, tiredness, pain. Urgent while the deficit lasts, quiet once
+            it is repaired, back when the body runs short again.
           </p>
           <p className="mt-2 text-xs italic text-gray-600">Signature: satiates, then recurs.</p>
         </div>
@@ -34,8 +34,8 @@ export function AIMDefinitionsShort() {
           </h3>
           <p className="text-sm text-gray-700">
             What is rewarding in the doing: curiosity, mastery, play, care, creative work,
-            genuine connection. Continues in private with no audience or reward, and deepens
-            as competence grows.
+            connection. It carries on in private with no audience or reward, and deepens as
+            competence grows.
           </p>
           <p className="mt-2 text-xs italic text-gray-600">Signature: persists in private.</p>
         </div>
@@ -45,12 +45,13 @@ export function AIMDefinitionsShort() {
             Mimetic Desire <span className="text-mimetic">(M)</span>
           </h3>
           <p className="text-sm text-gray-700">
-            A Salience signal: what stands out as valuable in the surroundings. What other
-            people visibly want is the most familiar case, but anything that stands out in the
-            environment registers the same way. Prone to rivalry when people converge on the
-            same targets.
+            A reading of what stands out as valuable in the surroundings. What other people
+            visibly want is the most familiar case, but anything that stands out registers the
+            same way. It records no lack, so getting the object never satisfies it.
           </p>
-          <p className="mt-2 text-xs italic text-gray-600">Signature: interest evaporates once novelty is worn off.</p>
+          <p className="mt-2 text-xs italic text-gray-600">
+            Signature: the want ends on getting the thing, and moves on.
+          </p>
         </div>
       </div>
     </div>
@@ -70,11 +71,12 @@ export function AIMIntegrationEquation() {
       <div className="space-y-2 text-sm text-gray-700">
         <p><strong>Where:</strong></p>
         <ul className="ml-6 list-disc space-y-1">
-        <li><MathText text="$\mathbf{w_A}$, $\mathbf{w_I}$, $\mathbf{w_M}$" />: weights that sum to 1, for how much each source influences this choice right now</li>
-        <li><MathText text="$U_A$" />: utility from appetite satisfaction (cyclical, terminally satisfiable)</li>
-        <li><MathText text="$U_I$" />: utility from intrinsic engagement (persistent, autonomous)</li>
-        <li><MathText text="$U_M$" />: utility from mimetic desire (amplified by social visibility)</li>
+        <li><MathText text="$\mathbf{w_A}$, $\mathbf{w_I}$, $\mathbf{w_M}$" />: sum to 1, and set how much each source counts in this choice right now</li>
+        <li><MathText text="$U_A$" />: value from repairing a bodily deficit (ends when repaired, then recurs)</li>
+        <li><MathText text="$U_I$" />: value from an engagement rewarding in itself</li>
+        <li><MathText text="$U_M$" />: value from what the surroundings mark as valued (grows with visibility, never satisfied)</li>
         </ul>
+        <p>Each term can pull toward an option or push away from it.</p>
       </div>
     </div>
   )
@@ -196,8 +198,8 @@ export function MimeticPremium() {
         </ul>
       </div>
       <p className="mt-4 text-xs text-gray-600">
-        The premium is not set by any one model; it is the internalised network average of a
-        reference group&apos;s valuations, each of which its holder experiences as their own.
+        The premium is not set by any one person; it is the average of what a reference group
+        values, absorbed so thoroughly that each holder feels it as their own.
       </p>
     </div>
   )

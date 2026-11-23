@@ -59,7 +59,7 @@ export function AIMJsonLd() {
             "@type": "DefinedTerm",
             "@id": "https://aimtheory.org/#IntrinsicMotivation",
             "name": "Intrinsic Motivation (I)",
-            "description": "Persistent engagement in activities valued for their own sake, not terminally satisfiable. Mediated through VTA dopamine → hippocampus → prefrontal cortex pathways. Aligns with Self-Determination Theory's autonomy, competence, and relatedness needs.",
+            "description": "Persistent engagement in activities valued for their own sake. Mediated through VTA dopamine → hippocampus → prefrontal cortex pathways. Aligns with Self-Determination Theory's autonomy, competence, and relatedness needs.",
             "inDefinedTermSet": "https://aimtheory.org/#AIMFramework",
             "termCode": "I",
             "sameAs": "https://selfdeterminationtheory.org/"

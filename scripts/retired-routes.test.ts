@@ -164,7 +164,7 @@ async function main() {
   const heroText = heroBody.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
   assert(
     heroText ===
-      'The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks conscious awareness, problem solving and what is rewarding to do for its own sake (Intrinsic Motivation). One tracks what stands out as salient around you (Mimetic Desire). A Decision Hub merges them into a single sense of how much you want something, and acts on it.',
+      'The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One runs thinking and problem-solving, and rewards what is worth doing for its own sake (Intrinsic Motivation). One tracks what stands out as salient around you (Mimetic Desire). A Decision Hub merges them into a single sense of how much you want something, and acts on it.',
     'the hero uses Lex\'s replacement sentence'
   )
   assert(
@@ -193,12 +193,19 @@ async function main() {
     'the hero area links once to /architecture, on the minimal architecture CTA'
   )
   assert(
-    MinimalArchitecture.lead[0].includes('four primary components'),
-    'the architecture intro names four primary components'
+    MinimalArchitecture.lead[0] ===
+      'The AIM Framework describes the system that produces wanting as four working parts and one store of beliefs. The Body Manager reports what the body lacks. The Observer reads what stands out around you. The Thinker holds your beliefs and works out what a want is about. The Decision Hub combines all three into one value and picks an action. The Belief Register holds what the Thinker has concluded, so the Observer can use it instantly.',
+    'the architecture intro is the plain paragraph'
   )
   assert(
-    MinimalArchitecture.lead[1].includes('not a fifth processing component'),
-    'the Belief Register stays off the processing count'
+    MinimalArchitecture.lead.length === 1,
+    'the architecture intro is one paragraph'
+  )
+  assert(
+    MinimalArchitecture.components
+      .find(component => component.name === 'Belief Register')
+      ?.text.includes('not a fifth processing component') === true,
+    'the Belief Register formal definition stays off the processing count'
   )
 
   const prompt = readFileSync('app/api/chat/route.ts', 'utf8')

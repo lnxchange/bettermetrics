@@ -40,7 +40,7 @@ export default function HomePage() {
               href="/glossary/appetites-a"
               className="font-semibold text-white underline hover:text-blue-100"
             >Appetites</Link>). One
-            tracks conscious awareness, problem solving and what is rewarding to do for its own
+            runs thinking and problem-solving, and rewards what is worth doing for its own
             sake (<Link
               href="/glossary/intrinsic-motivation-i"
               className="font-semibold text-white underline hover:text-blue-100"
@@ -84,13 +84,13 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-4 text-3xl font-bold text-gray-900">How the system works</h2>
           <p className="mb-6 text-lg text-gray-700">
-            A Body Manager (the homeostatic-deficit system) reports bodily deficit, a Thinker
-            (the dopaminergic system) holds beliefs and pursues what is rewarding in the doing,
-            and an Observer
-            (the mirror neuron system) continuously reads which objects in the surrounding
-            field stand out as valuable. All three feed a Decision Hub (the ventromedial prefrontal
-            cortex and ventral striatum), which converts them into one value per option and
-            selects an action.
+            A Body Manager reports what the body lacks, a Thinker holds beliefs and pursues
+            what is rewarding in the doing, and an Observer continuously reads which objects in
+            the surrounding field stand out as valuable. All three feed a Decision Hub, which
+            converts them into one value per option and selects an action. (Candidate brain
+            systems: homeostatic signalling for the Body Manager, the dopamine system for
+            intrinsic engagement, the mirror neuron system for the Observer, and the
+            ventromedial prefrontal cortex and ventral striatum for the Decision Hub.)
           </p>
           <DecisionHubDiagram />
 
@@ -116,9 +116,9 @@ export default function HomePage() {
 
           <h3 className="mb-3 mt-8 text-2xl font-bold text-gray-900">What the merge loses</h3>
           <p className="mb-4 text-lg text-gray-700">
-            The Hub weighs the three signals and adds them into one value. A want of strength 6 could be
+            The Decision Hub weighs the three signals and adds them into one value. A want of strength 6 could be
             2&nbsp;+&nbsp;1&nbsp;+&nbsp;3 or 0&nbsp;+&nbsp;0&nbsp;+&nbsp;6, and nothing that sees
-            only the 6 can tell which. Because the Hub has only one category to receive them
+            only the 6 can tell which. Because the Decision Hub has only one category to receive them
             in, a Salience reading is felt as a deficit. That is why the part of a want that
             came from Salience is not satisfied by getting the thing: there was no deficit to
             close.
@@ -178,7 +178,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-2 text-3xl font-bold text-gray-900">Three sources of wanting</h2>
           <p className="mb-8 max-w-3xl text-lg text-gray-600">
-            Each has its own neural pathway, its own satiation pattern, and its own tell.
+            Each has its own satiation pattern and its own tell.
           </p>
           <AIMDefinitionsShort />
           <AskAIGroup
@@ -204,14 +204,12 @@ export default function HomePage() {
           </p>
           <p className="mb-4 text-lg text-gray-700">
             So asking people what they want, or watching what they choose, tells you how much
-            they want something but not why. Consumer research, welfare economics and much of
-            therapy rely on one or the other as if it told them both.
+            they want something but not why. Consumer research, welfare economics and therapy
+            often have only these two to go on, and neither shows why.
           </p>
           <p className="text-lg text-gray-700">
-            If that is right, the human sciences stand roughly where medicine stood in 1850.
-            Doctors could describe diseases in detail but could not say why they occurred or
-            which treatments would work. Germ theory changed that by naming a cause. The AIM
-            Framework aims to do the same for wanting.
+            Naming the cause is what turned description into treatment in medicine. The AIM
+            Framework proposes a cause for wanting, stated so it can be tested.
           </p>
           <AskAIGroup
             questions={[

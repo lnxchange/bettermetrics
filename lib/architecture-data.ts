@@ -32,6 +32,9 @@ export interface ArchitectureComponent {
   name: string
   slug: string
   section: string
+  /** Page line, shown under the heading. */
+  plain: string
+  /** Treatise definition, behind the Formal definition disclosure. */
   text: string
 }
 
@@ -50,8 +53,7 @@ export class MinimalArchitecture {
     'The framework rests on a minimal architecture of four primary components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable.'
 
   static readonly lead = [
-    'For ease of reference, the four primary components specified in this section are referred to throughout by reader-facing names. The homeostatic-deficit signaller is the Body Manager. The prior-maintainer and Bayesian ground-resolver, the component that performs deliberative inference, is the Thinker. The continuous conditional Object-field Salience assessor is the Observer. The integrator and action-selector is the Decision Hub.',
-    'The Belief Register is the architecture\u2019s state component: the persistent store over the Hypothesis Space, written only by the Thinker, read by the Observer, and computing nothing. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four.'
+    'The AIM Framework describes the system that produces wanting as four working parts and one store of beliefs. The Body Manager reports what the body lacks. The Observer reads what stands out around you. The Thinker holds your beliefs and works out what a want is about. The Decision Hub combines all three into one value and picks an action. The Belief Register holds what the Thinker has concluded, so the Observer can use it instantly.'
   ]
 
   static readonly components: ArchitectureComponent[] = [
@@ -59,38 +61,47 @@ export class MinimalArchitecture {
       name: 'Decision Hub',
       slug: 'decision-hub',
       section: '4.3.4',
+      plain:
+        'Combines the three signals into one value for each option and selects the action.',
       text: 'The Decision Hub is the component whose primary function is action-selection. The Decision Hub receives valuation inputs from the other three components, integrates them into a single Common-Currency Scalar, and emits a selected action for execution.'
     },
     {
       name: 'Body Manager',
       slug: 'body-manager',
       section: '4.3.1',
+      plain:
+        'Signals when the body is short of something (food, water, warmth, rest, relief from pain) and goes quiet once the shortfall is repaired.',
       text: 'The Body Manager is the component whose primary function is homeostatic deficit signalling and deficit-repair termination. The Body Manager produces valuation signals scaled to the deficit states of the body or body-analogous system it monitors, and terminates those signals on consumption or repair.'
     },
     {
       name: 'Thinker',
       slug: 'thinker',
       section: '4.3.2',
+      plain:
+        'Holds what you believe about the world and yourself, and works out explanations, including what a given want is about.',
       text: 'The Thinker is the component whose two architecturally inseparable primary functions are, first, continuous maintenance of the priors that make assessment, recognition, and resolution possible for the whole system, and, second, Ground-Resolution, the evaluative operation that resolves whatever the Thinker is attending to into its best-supported explanation by redistributing probability mass across the Hypothesis Space, of which the resolution of the Decision Hub\u2019s tag-stripped Scalar into a ground-attribution (an answer to what the value is grounded in) is the source-attribution special case.'
     },
     {
       name: 'Observer',
       slug: 'observer',
       section: '4.3.3',
+      plain:
+        'Continuously reads which things around you stand out as worth pursuing or avoiding, shaped by what you already believe.',
       text: 'The Observer is the component whose primary function is continuous conditional Salience assessment over the perceived Object field, conditioned on priors maintained by the Thinker.'
     },
     {
       name: 'Belief Register',
       slug: 'belief-register',
       section: '4.3.6',
+      plain:
+        'Holds the Thinker\u2019s current conclusions so the Observer can use them instantly. It stores; it does not compute.',
       text: 'The Belief Register is the architectural form in which the Thinker\u2019s current posteriors and Salience-conditioning templates are made available for downstream access at timescales shorter than the Thinker\u2019s deliberative cycle permits. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four.'
     }
   ]
 
   static readonly loop = [
     'Together the components form one loop: the Body Manager reports a deficit, the Observer marks Objects in the field, the Thinker contributes its last resolution, the Decision Hub adds the three signals into one signed value and selects an action, and where that value poses an open question the Thinker works out an explanation of it and writes the result to the Belief Register, which shapes what the Observer marks next.',
-    'At each cycle: the Body Manager reports its current deficit state; the Observer, conditioned on the Belief Register\u2019s current state, performs continuous assessment over the perceived Object field using its distinctive input stream; the Thinker\u2019s ground-resolution output from the previous cycle contributes its direct input; these three streams enter the Decision Hub; the Decision Hub compresses them into a tag-stripped Scalar and selects an action.',
-    'Remove any component and the system cannot produce the observed outputs. Remove the Observer and the social world cannot enter Salience computation. Remove the Thinker and priors collapse, leaving the Observer with nothing to condition its assessment on and leaving integrated valuations with no resolver. Remove the Body Manager and deficit-repair termination is unavailable. Remove the Decision Hub and the signals cannot be integrated for action-selection. Remove the Belief Register and the Thinker\u2019s posteriors cannot condition the Observer\u2019s live computation, severing the slow path from the fast path.'
+    'Remove any component and the system cannot produce the observed outputs. Remove the Observer and nothing in the surroundings, other people included, can enter valuation. Remove the Thinker and priors collapse, leaving the Observer with nothing to condition its assessment on and leaving integrated valuations with no resolver. Remove the Body Manager and deficit-repair termination is unavailable. Remove the Decision Hub and the signals cannot be integrated for action-selection. Remove the Belief Register and the Thinker\u2019s posteriors cannot condition the Observer\u2019s live computation, severing the slow path from the fast path.'
   ]
 
   static readonly appendix =
@@ -293,71 +304,36 @@ export class MinimalArchitecture {
     }
   ]
 
-  /** Section 4.4.2 summary table, in the Treatise's row order. */
+  /** Plain summary. The treatise row detail stays in each component's formal definition. */
   static readonly componentTable: {
     component: string
-    purpose: string
-    input: string
-    output: string
-    termination: string
-    instantiation: string
+    does: string
+    stops: string
   }[] = [
     {
-      component: 'Decision Hub (integrator and action-selector)',
-      purpose:
-        'Action-selection from integrated valuation, the Scalar to the Thinker',
-      input:
-        'Body Manager\u2019s output, Observer\u2019s output, Thinker\u2019s ground-resolution output',
-      output:
-        'Action selection plus tag-stripped integrated Scalar fed back to the Thinker',
-      termination: 'Continuous selector, no termination condition',
-      instantiation:
-        'Decision Hub (vmPFC and ventral striatum, per Section 4.3.4)'
+      component: 'Decision Hub',
+      does: 'Combines the three signals into one value, selects an action, and passes the value, without source labels, back to the Thinker',
+      stops: 'It does not; it selects continuously'
     },
     {
-      component: 'Body Manager (homeostatic-deficit signaller)',
-      purpose: 'Homeostatic deficit signalling and deficit-repair termination',
-      input: 'Internal physiological state',
-      output: 'Deficit-scaled valuation signals',
-      termination: 'Consumption or repair satiates (per Section 4.3.1)',
-      instantiation: 'Emits A, Appetites (per Section 4.3)'
+      component: 'Body Manager',
+      does: 'Signals bodily shortfalls (emits A, Appetites)',
+      stops: 'When the shortfall is repaired'
     },
     {
-      component: 'Thinker (prior-maintainer and Bayesian ground-resolver)',
-      purpose:
-        'Prior-maintenance (about Body Manager, itself, Observer, Object field), deliberative inference, and Bayesian ground-resolution on the Scalar',
-      input:
-        'Experience, diagnostic evidence, structural knowledge (for priors); tag-stripped Scalar (for resolution)',
-      output:
-        'Posteriors written to the Belief Register; ground-attribution fed back to Decision Hub',
-      termination:
-        'Endogenous termination of engagement, or interruption (per Section 4.3.2)',
-      instantiation: 'Emits I, Intrinsic Motivation (per Section 4.3)'
+      component: 'Thinker',
+      does: 'Maintains beliefs, reasons, and works out what a value is about (emits I, Intrinsic Motivation)',
+      stops: 'Each pursuit ends when complete or interrupted'
     },
     {
-      component:
-        'Observer (continuous conditional Object-field Salience assessor)',
-      purpose: 'Continuous conditional Object-field Salience assessment',
-      input:
-        'Belief Register (current state) plus the distinctive input stream (observed pursuits, observed valuations, comparative-position data)',
-      output: 'Salience and value signals over Objects',
-      termination:
-        'No termination condition (architectural; per Section 4.3.3)',
-      instantiation:
-        'Emits M, the Mimetic input (per Sections 4.3, 4.5.3 and 4.3.3); Mimetic Desire is the emergent phenomenological output of M-signal integration, tag-stripping, and mis-resolution under an impoverished M-Hypothesis'
+      component: 'Observer',
+      does: 'Reads what stands out in the surroundings, shaped by the Belief Register (emits M, the Mimetic input)',
+      stops: 'It does not, while perception continues'
     },
     {
-      component: 'Belief Register (state component)',
-      purpose:
-        'Persistent storage of the Thinker\u2019s committed posteriors, and Salience-conditioning of the Observer',
-      input:
-        'Belief-Register Updates written by the Thinker following Ground-Resolution',
-      output:
-        'Current posteriors over the Hypothesis Space, supplied to the Observer as Salience-conditioning configuration',
-      termination:
-        'No termination condition; the Belief Register holds state and computes nothing',
-      instantiation:
-        'Emits no source signal; the store through which the Thinker\u2019s posteriors reach the Observer\u2019s live computation'
+      component: 'Belief Register',
+      does: 'Stores the Thinker\u2019s conclusions for the Observer\u2019s use',
+      stops: 'It holds state and computes nothing'
     }
   ]
 }

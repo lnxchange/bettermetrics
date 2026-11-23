@@ -37,7 +37,7 @@ const sections = [
 
 const applications: { domain: string; question: string }[] = [
   { domain: 'Economics', question: 'How does the AIM Framework explain the Easterlin Paradox and Veblen goods?' },
-  { domain: 'Money and debt', question: 'Why does the AIM Treatise describe interest as a pure Mimetic Premium?' },
+  { domain: 'Money and debt', question: 'Why does the AIM Treatise treat the part of interest above bounded cost as a Mimetic Premium?' },
   { domain: 'Law and justice', question: 'How does the AIM Framework define freedom, coercion and justice without importing moral premises?' },
   { domain: 'Psychology', question: 'How does the AIM Framework relate to Self-Determination Theory, and where do they differ?' },
   { domain: 'Organisations', question: 'What does the AIM Framework say about status tournaments at work and how to protect intrinsic motivation?' },
@@ -84,12 +84,16 @@ export default function TheoryPage() {
           </h1>
           <p className="text-lg text-gray-700">
             The AIM theory of motivation says wanting comes from three sources: Appetites,
-            Intrinsic Motivation, and Mimetic Desire. Enough of the architecture to know what
-            question you want to ask. Each part ends with questions the chat can answer from
-            the Treatise itself. The framework these pages summarise is stated in full in
-            Chapter 4 and Appendix A.
+            Intrinsic Motivation, and Mimetic Desire. The brain adds all three into a single
+            feeling of wanting, and in doing so loses track of which source each want came
+            from. Most of what the theory explains follows from that one loss: why some wants
+            end and others never do, why people misread their own motives, and why a group
+            under strain looks for someone to blame.
           </p>
-          <FrameworkCore className="mt-8" />
+          <FrameworkCore
+            className="mt-8"
+            lead="The eight short parts below walk through it. The full statement is Chapter 4, which sets out the architecture, and Appendix A, which gives its mathematics."
+          />
           <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label="Sections">
             {sections.map(s => (
               <a
@@ -107,11 +111,10 @@ export default function TheoryPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <Section id="sources" number={1} title="Three sources of wanting">
           <P>
-            Every motivational signal entering the brain&apos;s decision system comes from one
-            of three sources. They are distinct neural systems with different properties, and
-            the same object can carry weight from all three at once: a meal addresses hunger
-            (A), can be a pleasure in the eating (I), and can signal status through what it
-            cost (M).
+            Every want the brain acts on draws on one or more of three sources. Each behaves
+            in its own recognisable way, and one object can draw on all three at once: a meal
+            answers hunger (A), can be a pleasure to cook and eat (I), and can signal status
+            through what it cost (M).
           </P>
           <AIMDefinitionsShort />
           <AskAIGroup
@@ -124,13 +127,14 @@ export default function TheoryPage() {
 
         <Section id="integration" number={2} title="One signal: the Decision Hub">
           <P>
-            The brain cannot act on three signals at once. A Body Manager (the
-            homeostatic-deficit system) reports bodily deficit, a Thinker (the dopaminergic
-            system) holds priors and pursues intrinsic engagement, and an Observer (the mirror
-            neuron system) continuously reads which objects the surrounding field marks as
-            valued. All three
-            feed a Decision Hub (the ventromedial prefrontal cortex and ventral striatum) that
-            converts them into one value per option and selects an action.
+            The brain cannot act on three signals at once. A Body Manager reports what the
+            body lacks, a Thinker holds beliefs and pursues what is rewarding in the doing, and
+            an Observer continuously reads which objects in the surrounding field stand out as
+            valuable. All three feed a Decision Hub, which converts them into one value per
+            option and selects an action. (Candidate brain systems: homeostatic signalling for
+            the Body Manager, the dopamine system for intrinsic engagement, the mirror neuron
+            system for the Observer, and the ventromedial prefrontal cortex and ventral
+            striatum for the Decision Hub.)
           </P>
           <DecisionHubDiagram />
           <AIMIntegrationEquation />
@@ -145,17 +149,18 @@ export default function TheoryPage() {
         <Section id="opacity" number={3} title="Source Opacity">
           <P>Source Opacity is derived from the architecture.</P>
           <P>
-            Summing three quantities into one is a many-to-one map. Whatever the sum, a whole
-            family of A, I, M combinations could have produced it, so no process downstream of
-            the sum can recover which one did. Introspection reads the sum. The loss is not a
-            failure of self-awareness; it is information theory.
+            Summing three quantities into one is a many-to-one map. Whatever the sum, many
+            combinations of A, I and M could have produced it, so nothing downstream can
+            recover which one did. Introspection reads only the sum. That is not a failure of
+            self-awareness; it is a mathematical property of adding things together.
           </P>
           <P>
-            It is worse than losing a label. Two of the inputs report a deficit that an object
-            would close. The third, the Observer&apos;s, reports where value sits in the field
-            and carries no termination condition at all. After integration the Hub has only one
-            category to receive them in, so a pointer to where value is located arrives feeling
-            like a lack. Acquiring the object then closes nothing, because nothing was open.
+            The cost falls hardest on Mimetic Desire. Appetites and Intrinsic Motivation each
+            report a gap that some object would close. The Observer reports only where value
+            sits, and carries no stopping point. Once mixed into the single value it can only
+            be felt the way the other two are, as a lack. So getting the object closes
+            nothing, because nothing was open. The source cannot be seen in the moment, but it
+            can be inferred from how a want behaves over time (Part 7).
           </P>
           <AskAIGroup
             questions={[
@@ -175,11 +180,12 @@ export default function TheoryPage() {
             scrutiny rather than correcting.
           </P>
           <P>
-            The stories have a characteristic shape. Causal cognition is built to track
-            agents, who generate dense, fast-changing evidence; systemic causes generate almost
-            none and have to be constructed deliberately. So the gap is filled with an author:
-            &ldquo;I chose this because of who I am,&rdquo; or, when a population is in
-            distress, &ldquo;they did this to us.&rdquo; The scapegoat mechanism follows.
+            The stories have a characteristic shape. The mind learns about causes in a world
+            full of other people, whose actions are vivid and easy to see; systemic causes are
+            slow and diffuse, and have to be worked out deliberately. So the gap is filled
+            with an author: &ldquo;I chose this because of who I am,&rdquo; or, when a
+            population is in distress, &ldquo;they did this to us.&rdquo; That is the root of
+            scapegoating.
           </P>
           <AskAIGroup
             questions={[
@@ -201,8 +207,8 @@ export default function TheoryPage() {
           <P>
             Every price can therefore be decomposed into an A-functional price, an I-adequate
             price, and a Mimetic Premium. The premium is paid as though status could be bought,
-            but status is computed in other people&apos;s minds, is zero-sum across the group,
-            and is not for sale.
+            but status exists only in how others value you, one person&apos;s gain in it is
+            another&apos;s loss, and no one can buy how others value them.
           </P>
           <MimeticPremium />
           <AskAIGroup
@@ -215,17 +221,19 @@ export default function TheoryPage() {
 
         <Section id="satiation" number={6} title="Why some wants end and one never does">
           <P>
-            Appetites satiate and recur: eat, and hunger ends until it returns. Intrinsic
-            engagement deepens rather than ending: mastery opens new frontiers, though the
-            tools it needs do satiate once they are adequate. Mimetic Desire has no stopping
-            point, because the Observer is reading an unbounded field, not measuring an
-            internal shortfall. Achieving a status goal simply resets the comparison.
+            The three sources differ most in what happens after a want is met. Appetites
+            recur: eat, and hunger ends until the body runs short again. Intrinsic Motivation
+            deepens rather than ending: each pursuit closes when it is done, felt as
+            accomplishment, and the interest carries on into the next. Mimetic Desire
+            moves on: getting the object ends that want, and the Observer, still reading a
+            field with no edge, settles on the next target. Reaching a status goal simply
+            resets the comparison.
           </P>
           <P>
-            This is why societies can reach material abundance without reaching widespread
-            wellbeing. Surplus flows into status competition rather than intrinsic engagement,
-            spending rises, and welfare plateaus. It is also, in the formal treatment, why
-            mimetic crises crash rather than oscillate.
+            This is why societies can reach material abundance without widespread wellbeing:
+            surplus flows into status competition, spending rises, and welfare plateaus. It is
+            also why a mimetic crisis, past a tipping point, flips suddenly rather than
+            swinging back and forth: only the Mimetic channel has no brake of its own.
           </P>
           <AskAIGroup
             questions={[
@@ -239,8 +247,8 @@ export default function TheoryPage() {
           <P>
             If the source cannot be read by introspection, it can still be inferred from how a
             want behaves across contexts. The Treatise&apos;s intervention, the Knowledge Patch,
-            is seven operations that work by generating doubt where a belief system has settled
-            on a false prior:
+            is seven operations that work by reopening questions the mind has closed too early
+            on a wrong answer:
           </P>
           <ol className="mb-4 list-decimal space-y-1.5 pl-6 text-gray-700">
             <li><strong>AIM Vocabulary Acquisition</strong>, so the mimetic hypothesis is even representable.</li>
