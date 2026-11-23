@@ -154,14 +154,43 @@ async function main() {
       'The architecture and its formal results stand without Premise 9, whose default depends also on what fills the perceived field.',
     'premise 9 keeps the approved line'
   )
+  const homepage = readFileSync('app/page.tsx', 'utf8')
+  const heroSection = homepage.slice(0, homepage.indexOf('How the system works'))
+  const heroParagraph = heroSection.match(
+    /<p className="max-w-3xl text-xl text-blue-100">([\s\S]*?)<\/p>/
+  )
+  if (!heroParagraph) throw new Error('the homepage hero paragraph is present')
+  const heroBody = heroParagraph[1]
+  const heroText = heroBody.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
   assert(
-    MinimalArchitecture.hero ===
-      'The framework rests on a minimal architecture of four primary components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable.',
-    'the hero names four primary components'
+    heroText ===
+      'The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks conscious awareness, problem solving and what is rewarding to do for its own sake (Intrinsic Motivation). One tracks what stands out as salient around you (Mimetic Desire). A Decision Hub merges them into a single sense of how much you want something, and acts on it.',
+    'the hero uses Lex\'s replacement sentence'
   )
   assert(
-    MinimalArchitecture.hero.split('a minimal architecture').length === 2,
-    'the hero links on a minimal architecture'
+    !heroSection.includes('four primary components') &&
+      !heroSection.includes('The framework rests on'),
+    'the old hero sentence is gone'
+  )
+  for (const [term, slug] of [
+    ['Appetites', '/glossary/appetites-a'],
+    ['Intrinsic Motivation', '/glossary/intrinsic-motivation-i'],
+    ['Mimetic Desire', '/glossary/mimetic-desire-m'],
+    ['Decision Hub', '/glossary/decision-hub']
+  ] as const) {
+    assert(
+      heroBody.includes(`href="${slug}"`) && heroBody.includes(`>${term}</Link>`),
+      `the hero links ${term} to ${slug}`
+    )
+  }
+  assert(
+    !heroBody.includes('href="/architecture"'),
+    'Decision Hub is not linked to /architecture'
+  )
+  assert(
+    (heroSection.match(/href="\/architecture"/g) ?? []).length === 1 &&
+      heroSection.includes('The minimal architecture'),
+    'the hero area links once to /architecture, on the minimal architecture CTA'
   )
   assert(
     MinimalArchitecture.lead[0].includes('four primary components'),

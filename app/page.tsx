@@ -34,22 +34,27 @@ export default function HomePage() {
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             A General Theory of Human Motivation
           </h1>
-          <p className="mb-5 max-w-3xl text-xl text-blue-100">
+          <p className="max-w-3xl text-xl text-blue-100">
             The AIM Framework is a model of the system that produces wanting. Three systems in
-            the brain each produce a signal. One tracks what the body needs (Appetites). One
-            tracks what is rewarding to do for its own sake (Intrinsic Motivation). One tracks
-            what stands out as valuable around you (Mimetic Desire). A Decision Hub merges them
-            into a single sense of how much you want something, and acts on it.
+            the brain each produce a signal. One tracks what the body needs (<Link
+              href="/glossary/appetites-a"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Appetites</Link>). One
+            tracks conscious awareness, problem solving and what is rewarding to do for its own
+            sake (<Link
+              href="/glossary/intrinsic-motivation-i"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Intrinsic Motivation</Link>). One
+            tracks what stands out as salient around you (<Link
+              href="/glossary/mimetic-desire-m"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Mimetic Desire</Link>). A <Link
+              href="/glossary/decision-hub"
+              className="font-semibold text-white underline hover:text-blue-100"
+            >Decision Hub</Link> merges
+            them into a single sense of how much you want something, and acts on it.
           </p>
-          <p className="max-w-3xl text-lg text-blue-200">
-            The framework rests on{' '}
-            <Link href="/architecture" className="font-semibold text-white underline hover:text-blue-100">
-              a minimal architecture
-            </Link>{' '}
-            of four primary components and the loop that couples them, worked out mathematically. Its
-            central results follow from that architecture, and the framework is falsifiable.
-          </p>
-          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
             <AskAI
               variant="button"
               question="Explain the AIM Framework to me in plain terms, as if I have never heard of it."
@@ -61,6 +66,13 @@ export default function HomePage() {
               className="inline-flex items-center rounded-lg border-2 border-white px-5 py-3 text-base font-semibold text-white transition hover:bg-white/10"
             >
               Read the theory
+              <HiArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link
+              href="/architecture"
+              className="inline-flex items-center rounded-lg border-2 border-white px-5 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+            >
+              The minimal architecture
               <HiArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
