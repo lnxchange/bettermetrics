@@ -13,10 +13,13 @@ export class GlossaryAliases {
       forms.push(text)
     }
     add(term)
-    const axiom = term.match(/^Axiom\s+\d+\s*[-–:]\s*(.+)$/i)
-    if (axiom) {
-      add(axiom[1])
-      add(axiom[1].replace(/\s*\([^)]*\)\s*$/, ''))
+    const labelled = term.match(
+      /^((?:Axiom|Construction\s+Premise)\s+\d+)\s*[-–:]\s*(.+)$/i
+    )
+    if (labelled) {
+      add(labelled[1])
+      add(labelled[2])
+      add(labelled[2].replace(/\s*\([^)]*\)\s*$/, ''))
     }
     const wrapped = term.match(/^(.*?)\s*\(([^)]+)\)\s*$/)
     if (wrapped) {

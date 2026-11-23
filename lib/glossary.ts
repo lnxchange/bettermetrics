@@ -84,8 +84,8 @@ function crossReferenceKeys(name: string) {
     .replace(/\.$/, '')
     .trim()
   const keys = [cleaned.toLowerCase()]
-  const axiomTail = cleaned.match(/^(.*?)\s*\(Axiom\s+\d+\)\s*$/i)
-  if (axiomTail) keys.push(axiomTail[1].trim().toLowerCase())
+  const labelledTail = cleaned.match(/^(.*?)\s*\((?:Axiom|Construction\s+Premise)\s+\d+\)\s*$/i)
+  if (labelledTail) keys.push(labelledTail[1].trim().toLowerCase())
   const trailing = cleaned.match(/^(.*)\s+\(([^)]+)\)\s*$/)
   if (trailing) {
     const stem = trailing[1].trim()

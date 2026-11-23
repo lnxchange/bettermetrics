@@ -42,7 +42,7 @@ const nonClaims = [
 ]
 
 const partOne = [
-  'Introduction', 'Definitions and Glossary', 'System Scope and OCEP', 'The Axiomatic and Architectural Foundation of AIM',
+  'Introduction', 'Definitions and Glossary', 'System Scope and OCEP', 'The Minimal Architecture of AIM and Its Construction',
   'Why Motivation Requires Disaggregation', 'Appetites', 'Intrinsic Motivation', 'Mimetic Desire',
   'Neural Integration and Source Opacity', 'The Evolutionary Mismatch Hypothesis', 'Confabulation, Projection and the Scapegoat Mechanism',
   'Money, Debt and the Architecture of Mimetic Extraction', 'Bayesian Belief Dynamics', 'Quantum Epistemology'

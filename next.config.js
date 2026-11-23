@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const { RetiredRoutes } = require('./scripts/retired-routes')
+
 module.exports = {
   reactStrictMode: true,
   experimental: {
@@ -60,6 +62,9 @@ module.exports = {
       // An old article copy of Treatise Chapter 2, which is served at /glossary.
       // Also skipped in app/sitemap.xml/route.ts.
       { source: '/articles/260106-chapter-2', destination: '/glossary', permanent: true },
+      // The retired premises page, and the Chapter 2 headings retired with it.
+      // Numbered fragments are handled on /architecture.
+      ...RetiredRoutes.all(),
       { source: '/research', destination: '/theory#applications', permanent: true },
       { source: '/research/definitions', destination: '/theory', permanent: true },
       { source: '/research/theories', destination: '/theory', permanent: true },

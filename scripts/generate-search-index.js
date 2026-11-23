@@ -9,14 +9,53 @@ const OUTPUT_FILE = path.join(__dirname, '..', 'public', 'search-index.json');
 // wrapper). Headings and paragraphs are read from the component instead.
 const CONTENT_SOURCES = {
   '/contact': path.join(__dirname, '..', 'components', 'contact-page.tsx'),
-  '/diagnostic': path.join(__dirname, '..', 'components', 'diagnostic-page.tsx')
+  '/diagnostic': path.join(__dirname, '..', 'components', 'diagnostic-page.tsx'),
+  // Canonical statements live in this module and are rendered into <p> tags.
+  '/architecture': path.join(__dirname, '..', 'lib', 'architecture-data.ts')
 };
+
+/** Single-quoted strings long enough to be page prose, with simple escapes undone. */
+function stringLiterals(source) {
+  const texts = [];
+  for (let i = 0; i < source.length; i++) {
+    const quote = source[i];
+    if (quote !== "'" && quote !== '"') continue;
+    let buf = '';
+    let j = i + 1;
+    let closed = false;
+    for (; j < source.length; j++) {
+      if (source[j] === '\\') {
+        const next = source[j + 1];
+        if (next === 'u' && /^[0-9a-fA-F]{4}/.test(source.slice(j + 2, j + 6))) {
+          buf += String.fromCharCode(parseInt(source.slice(j + 2, j + 6), 16));
+          j += 5;
+          continue;
+        }
+        buf += next === 'n' ? ' ' : next || '';
+        j += 1;
+        continue;
+      }
+      if (source[j] === quote) {
+        closed = true;
+        break;
+      }
+      if (source[j] === '\n') break;
+      buf += source[j];
+    }
+    if (closed && buf.length >= 40) texts.push(buf.replace(/\s+/g, ' ').trim());
+    i = j;
+  }
+  return texts;
+}
 
 function extractContent(filePath, url) {
   const pageSource = fs.readFileSync(filePath, 'utf8');
   const componentPath = CONTENT_SOURCES[url];
-  const content = componentPath && fs.existsSync(componentPath)
-    ? pageSource + '\n' + fs.readFileSync(componentPath, 'utf8')
+  const companion = componentPath && fs.existsSync(componentPath)
+    ? fs.readFileSync(componentPath, 'utf8')
+    : '';
+  const content = companion && !componentPath.endsWith('.ts')
+    ? pageSource + '\n' + companion
     : pageSource;
   
   // Extract metadata title
@@ -40,7 +79,10 @@ function extractContent(filePath, url) {
   
   // Extract paragraph content (limit to avoid huge index)
   const pMatches = [...content.matchAll(/<p[^>]*>(.*?)<\/p>/gs)];
-  const paragraphs = pMatches.slice(0, 20).map(m => cleanText(m[1]));
+  const paragraphs = pMatches.slice(0, 20).map(m => cleanText(m[1])).filter(Boolean);
+  if (companion && componentPath.endsWith('.ts')) {
+    paragraphs.push(...stringLiterals(companion));
+  }
   
   return { title, h1s, h2s, h3s, paragraphs };
 }
@@ -121,7 +163,7 @@ function generateSearchIndex() {
       sections.push({
         heading: pageTitle,
         anchor: '',
-        content: paragraphs.slice(0, 3).join(' ').substring(0, 300)
+        content: (url === '/architecture' ? paragraphs.join(' ') : paragraphs.slice(0, 3).join(' ')).substring(0, url === '/architecture' ? 12000 : 300)
       });
       
       // Add H2 sections

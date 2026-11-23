@@ -152,7 +152,7 @@ export function AIMJsonLd() {
           {
             "@type": "Chapter",
             "name": "Chapter 2: General Theory of Motivation",
-            "description": "Defines the core constructs, axioms, theorems, and glossary of the AIM Framework.",
+            "description": "Defines the core constructs, results and glossary of the AIM Framework.",
             "position": 2,
             "url": "https://aimtheory.org/glossary"
           }

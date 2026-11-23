@@ -7,12 +7,12 @@
         {
           "heading": "About the Author and the AIM Framework",
           "anchor": "",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of aimtheory.org. The purpose of this website and the AIM Framework is to explain how recent neuroscienti"
+          "content": "The author, the book, and what it claims and does not claim. I'm Yule Guttenbeil, the person who formulated the AIM Framework and creator of aimtheory.org. The purpose of this website and the AIM Framework is to explain how recent neuroscientific discoveries shed light on where our motivations come "
         },
         {
           "heading": "Yule Guttenbeil",
           "anchor": "#yule-guttenbeil",
-          "content": "The author, the book, what it claims and does not claim, and where it can be challenged. I'm Yule Guttenbeil, the person who formulated the AIM Motivation Framework (\"AIM Framework\") and creator of ai"
+          "content": "The author, the book, and what it claims and does not claim. I'm Yule Guttenbeil, the person who formulated the AIM Framework and creator of aimtheory.org."
         },
         {
           "heading": "The book",
@@ -20,112 +20,56 @@
           "content": "The purpose of this website and the AIM Framework is to explain how recent neuroscientific discoveries shed light on where our motivations come from in the brain. These discoveries make it easier to u"
         },
         {
-          "heading": "What AIM claims, and does not",
-          "anchor": "#what-aim-claims-and-does-not",
+          "heading": "What the AIM Framework claims, and does not",
+          "anchor": "#what-the-aim-framework-claims-and-does-not",
           "content": "While it might seem unusual for a lawyer to develop a framework of human motivation, my professional background, particularly in writing and analysing contracts, has given me a unique ability when ass"
-        },
-        {
-          "heading": "How to challenge it",
-          "anchor": "#how-to-challenge-it",
-          "content": "Contracts exist to manage rivalry; they make implicit expectations explicit and help prevent conflict by clearly defining boundaries and roles. Without them, confusion and disputes arise because compe"
         },
         {
           "heading": "Get in touch",
           "anchor": "#get-in-touch",
-          "content": "The AIM Motivation Framework is a synthetic theory. It provides a basis for hypothesising predictions and tightly boundered tests in order to validate its premise. I am not a professional psychologist"
+          "content": "My work as a sound engineer and music producer is what enabled me to apply engineering concepts to that issue. Summing stereo to mono means you cannot recover the stereo mix from the mono mix afterwar"
         }
       ]
     },
     {
-      "title": "Article Management",
-      "url": "/admin/articles",
+      "title": "Your profile",
+      "url": "/account",
       "sections": [
         {
-          "heading": "Article Management",
+          "heading": "Your profile",
           "anchor": "",
-          "content": "Manage your published articles and drafts No articles found Create your first article to get started"
+          "content": "Loading your profile… Your name and email are how we reach you. A new email needs a confirmation from your inbox before it replaces the current one."
         }
       ]
     },
     {
-      "title": "Document Management",
-      "url": "/admin/documents",
+      "title": "The Minimal Architecture | The AIM Framework",
+      "url": "/architecture",
       "sections": [
         {
-          "heading": "Document Management",
+          "heading": "The Minimal Architecture | The AIM Framework",
           "anchor": "",
-          "content": ""
-        }
-      ]
-    },
-    {
-      "title": "Inbox",
-      "url": "/admin/inbox",
-      "sections": [
-        {
-          "heading": "Inbox",
-          "anchor": "",
-          "content": "unread message$` : messages.length > 0 ? 'No unread messages' : 'No messages yet'}  "
-        }
-      ]
-    },
-    {
-      "title": "Create New Article",
-      "url": "/admin/new-article",
-      "sections": [
-        {
-          "heading": "Create New Article",
-          "anchor": "",
-          "content": "Write or upload content to publish on the AIM Framework website /120 characters Auto-generated from title. URL: /articles/"
-        }
-      ]
-    },
-    {
-      "title": "Admin Dashboard",
-      "url": "/admin",
-      "sections": [
-        {
-          "heading": "Admin Dashboard",
-          "anchor": "",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page. Edit articles, upload featured images, write social media posts, and publish content. Import reports from markdown files and"
+          "content": "Carried by: AIM Treatise, Chapter 4, Section 4.2.1 AIM Treatise, Chapter 4, Sections 4.3 and 4.3.6. The four processing components and the Belief Register, with their inputs, their outputs, their termination conditions, and their AIM-instantiation identities, are summarised below. The Observer row is read subject to the Minimum Installation Condition (4.3.3.1): in the social special case its output terminates asymmetrically, positive-valence installation being interminable in the M-channel until acquisition, which then re-ranks the Object-field, and negative-valence installation terminating pursuit while retaining monitoring-Salience. AIM Treatise, Chapter 4, Section 4.4.2. Appendix A AIM Treatise, Chapter 4, Sections 4.4 and 4.6.6. AIM Treatise, Chapter 4, Sections 4.2.1 and 4.4.2. The architecture and its formal results stand without Premise 9, whose default depends also on what fills the perceived field. The framework rests on a minimal architecture of four components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable. For ease of reference, the four components specified in this section are referred to throughout by reader-facing names. The homeostatic-deficit signaller is the Body Manager. The prior-maintainer and Bayesian ground-resolver, the component that performs deliberative inference, is the Thinker. The continuous conditional Object-field Salience assessor is the Observer. The integrator and action-selector is the Decision Hub. The Belief Register is the architecture’s state component: the persistent store over the Hypothesis Space, written only by the Thinker, read by the Observer, and computing nothing. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four. The Decision Hub is the component whose primary function is action-selection. The Decision Hub receives valuation inputs from the other three components, integrates them into a single Common-Currency Scalar, and emits a selected action for execution. The Body Manager is the component whose primary function is homeostatic deficit signalling and deficit-repair termination. The Body Manager produces valuation signals scaled to the deficit states of the body or body-analogous system it monitors, and terminates those signals on consumption or repair. The Thinker is the component whose two architecturally inseparable primary functions are, first, continuous maintenance of the priors that make assessment, recognition, and resolution possible for the whole system, and, second, Ground-Resolution, the evaluative operation that resolves whatever the Thinker is attending to into its best-supported explanation by redistributing probability mass across the Hypothesis Space, of which the resolution of the Decision Hub’s tag-stripped Scalar into a ground-attribution (an answer to what the value is grounded in) is the source-attribution special case. The Observer is the component whose primary function is continuous conditional Salience assessment over the perceived Object field, conditioned on priors maintained by the Thinker. The Belief Register is the architectural form in which the Thinker’s current posteriors and Salience-conditioning templates are made available for downstream access at timescales shorter than the Thinker’s deliberative cycle permits. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four. Together the components form one loop: the Body Manager reports a deficit, the Observer marks Objects in the field, the Thinker contributes its last resolution, the Decision Hub adds the three signals into one signed value and selects an action, and where that value poses an open question the Thinker works out an explanation of it and writes the result to the Belief Register, which shapes what the Observer marks next. At each cycle: the Body Manager reports its current deficit state; the Observer, conditioned on the Belief Register’s current state, performs continuous assessment over the perceived Object field using its distinctive input stream; the Thinker’s ground-resolution output from the previous cycle contributes its direct input; these three streams enter the Decision Hub; the Decision Hub compresses them into a tag-stripped Scalar and selects an action. Remove any component and the system cannot produce the observed outputs. Remove the Observer and the social world cannot enter Salience computation. Remove the Thinker and priors collapse, leaving the Observer with nothing to condition its assessment on and leaving integrated valuations with no resolver. Remove the Body Manager and deficit-repair termination is unavailable. Remove the Decision Hub and the signals cannot be integrated for action-selection. Remove the Belief Register and the Thinker’s posteriors cannot condition the Observer’s live computation, severing the slow path from the fast path. Readers with a mathematical, engineering, economic, or formal-modelling background who wish to see the operation of the architecture at each level expressed in formal terms are directed to Appendix A, which provides the formal treatment. The derivation fixed nine premises, the Construction Premises: the empirically grounded commitments from which the Minimal Architecture Specification was built, and the minimal set the construction required. With the components specified, each premise can be located in the architecture: five are carried by its components and four are derived from it. The Construction Premises are where the architecture’s construction started, not what the AIM Framework rests on. The Framework rests on the architecture (4.3 to 4.4.2), and every claim in the chapters that follow is derived from it. Human motivation arises from exactly three functionally distinct sources (Appetites, Intrinsic Motivation, and Mimetic Desire), distinguished by what each encodes and by how each terminates, and no additional source is required for a parsimonious, falsifiable account of human motivation. The Three-Source Taxonomy is the claim that motivation has three sources and no more. Appetites (A) are the signals the body sends when it departs from a set-point, such as hunger, thirst and the drive to breathe, and they end when the deficit is repaired. Intrinsic Motivation (I) is engagement that is rewarding in the doing; it deepens rather than ending, though each process it sets closes when the state it was for is reached. Mimetic Desire (M) is the reading of which Objects in the perceived field stand out as mattering, with the wanting taken up from what others are seen to want as its social special case; acquiring the Object closes no deficit, so it has no end. Cannon, W.B. (1932). The Wisdom of the Body. W.W. Norton & Co. Deci, E.L. & Ryan, R.M. (1985). Intrinsic Motivation and Self-Determination in Human Behavior. Plenum. Girard, R. (1965). Deceit, Desire, and the Novel: Self and Other in Literary Structure. Johns Hopkins University Press. (Original work published 1961) the Body Manager (4.3.1), the Thinker (4.3.2) and the Observer (4.3.3), the three components whose signals the Decision Hub integrates. Why does the AIM Framework say there are exactly three sources of motivation and not four? Is loneliness an Appetite, Intrinsic Motivation, or Mimetic Desire? The three motivational sources converge in a Common-Currency valuation that assigns each Object a single scalar subjective value, converting unlike inputs into one comparable metric, and action-selection runs on that value. The best-current localisation of the valuation is the ventromedial prefrontal cortex (vmPFC) and the ventral striatum. Levy, D.J. & Glimcher, P.W. (2012). The root of all value: a neural common currency for choice. Current Opinion in Neurobiology, 22(6), 1027–1038. Chib, V.S., Rangel, A., Shimojo, S. & O’Doherty, J.P. (2009). Evidence for a common representation of decision values for dissimilar goods in human ventromedial prefrontal cortex. Journal of Neuroscience, 29(39), 12315–12320. Bartra, O., McGuire, J.T. & Kable, J.W. (2013). The valuation system: A coordinate-based meta-analysis of BOLD fMRI experiments examining neural correlates of subjective value. NeuroImage, 76, 412–427. What is the Integration Equation in the AIM Framework and what do the weights mean? How does the wanting-liking dissociation support common-currency integration? After Common-Currency Integration, the source decomposition is not preserved in the output signal: the integrated value does not determine how much each source contributed to it. Downstream circuits, including those supporting conscious introspection, read the integrated value and not the inputs that produced it (Scalar-Only Delivery), and so cannot recover the decomposition from it. Source Opacity does not rest on the studies listed here. It follows from the many-to-one integration of Construction Premise 2: once three contributions are summed into one value, no reading of that value recovers the three, and introspection reads the value (Scalar-Only Delivery). Nisbett, R.E. & Wilson, T.D. (1977). Telling more than we can know: Verbal reports on mental processes. Psychological Review, 84(3), 231–259. Lebreton, M., Kawa, S., Forgeot d’Arc, B., Daunizeau, J. & Pessiglione, M. (2012). Your goal is mine: Unraveling mimetic desires in the human brain. Journal of Neuroscience, 32(21), 7146–7157. Cantor, J.R., Zillmann, D. & Bryant, J. (1975). Enhancement of experienced sexual arousal in response to erotic stimuli through misattribution of unrelated residual excitation. Journal of Personality and Social Psychology, 32(1), 69–75. derived from the Decision Hub’s many-to-one integration, in which three inputs yield one output (4.5.1). If introspection cannot tell me where a want came from, how can I ever find out? What is the Salience-Deficit Conflation Principle? When the Individual is moved to explain something whose cause it cannot read, its default is to settle on an explanation rather than register that none is available, and the explanation it settles on is the most plausible one among those it can form, whether or not that explanation is true. Where the thing to be explained is the Individual’s own wanting, the cause it cannot read is the source decomposition (Construction Premise 3), so every source-attribution introspection offers is constructed rather than read. Confabulation is a sincere but wrong explanation: sincere because the Individual has no introspective access to its wrongness, wrong because it fails to correspond to the state of affairs it concerns. Gazzaniga, M.S. (2000). Cerebral specialization and interhemispheric communication: Does the corpus callosum enable the human condition? Brain, 123(7), 1293–1326. Wegner, D.M. (2002). The Illusion of Conscious Will. MIT Press. Johansson, P., Hall, L., Sikström, S. & Olsson, A. (2005). Failure to detect mismatches between intention and outcome in a simple decision task. Science, 310(5745), 116–119. derived: Source Opacity combined with the Individual’s need to give an account of their own behaviour, resolved by the Thinker (4.5.2). What is the Romantic Lie and how does it relate to Confabulation? Why does challenging someone’s reasons make them more certain, not less? Mimetic Desire does not generate its own independent Object-category. Its Salience reading falls on Objects that already carry A- or I-functional roles, and integration renders that reading as additional value attached to them, a Mimetic Premium experienced as intrinsic to the Object rather than as socially added. Object Parasitism is the pattern in which the Mimetic reading of what others value is mis-attributed to a bodily deficit or an engagement opportunity, so that the acquisition it drives never meets the conditions that w"
         },
         {
-          "heading": "Quick Stats",
-          "anchor": "#quick-stats",
-          "content": "Manage articles, research documents, and RAG system for the AIM Framework All contact form messages are stored here. Read, reply, and manage submissions from the contact page."
-        }
-      ]
-    },
-    {
-      "title": "RAG Documents",
-      "url": "/admin/rag-documents",
-      "sections": [
+          "heading": "The four components and the Belief Register",
+          "anchor": "#the-four-components-and-the-belief-register",
+          "content": "Carried by: AIM Treatise, Chapter 4, Section 4.2.1"
+        },
         {
-          "heading": "RAG Documents",
-          "anchor": "",
-          "content": "Manage documents used by the AIM chatbot's knowledge base Supported formats: TXT, MD, DOCX Select multiple files. Supported formats: TXT, MD, DOCX"
-        }
-      ]
-    },
-    {
-      "title": "Research Documents",
-      "url": "/admin/research-documents",
-      "sections": [
+          "heading": "The operational loop",
+          "anchor": "#the-operational-loop",
+          "content": "AIM Treatise, Chapter 4, Sections 4.3 and 4.3.6. The four processing components and the Belief Register, with their inputs, their outputs, their termination conditions, and their AIM-instantiation ide"
+        },
         {
-          "heading": "Research Documents",
-          "anchor": "",
-          "content": "Manage research documents that are publicly accessible Upload a single file Select multiple files for batch upload (titles will be auto-generated from filenames)"
-        }
-      ]
-    },
-    {
-      "title": "Users",
-      "url": "/admin/users",
-      "sections": [
+          "heading": "What it was built from",
+          "anchor": "#what-it-was-built-from",
+          "content": "The Observer row is read subject to the Minimum Installation Condition (4.3.3.1): in the social special case its output terminates asymmetrically, positive-valence installation being interminable in t"
+        },
         {
-          "heading": "Users",
-          "anchor": "",
-          "content": "View user email addresses and signup dates"
+          "heading": "Where the Construction Premises are carried",
+          "anchor": "#where-the-construction-premises-are-carried",
+          "content": "AIM Treatise, Chapter 4, Sections 4.4 and 4.6.6. AIM Treatise, Chapter 4, Sections 4.2.1 and 4.4.2."
         }
       ]
     },
@@ -136,33 +80,12 @@
         {
           "heading": "Articles Applying the AIM Framework",
           "anchor": "",
-          "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet. "
+          "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet."
         },
         {
           "heading": "",
           "anchor": "#",
           "content": "Applying the AIM Framework to economics, psychology, law, organisations, and everyday life. No articles published yet."
-        }
-      ]
-    },
-    {
-      "title": "The Nine Axioms of Human Motivation",
-      "url": "/axioms",
-      "sections": [
-        {
-          "heading": "The Nine Axioms of Human Motivation",
-          "anchor": "",
-          "content": "  "
-        },
-        {
-          "heading": "",
-          "anchor": "#",
-          "content": " "
-        },
-        {
-          "heading": "How they fit together",
-          "anchor": "#how-they-fit-together",
-          "content": " AIM Treatise, Chapter 4, Section 4.3."
         }
       ]
     },
@@ -173,11 +96,11 @@
         {
           "heading": "Contact Yule Guttenbeil",
           "anchor": "",
-          "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage you to try our AIM Chat AI assistant first. It has access to the latest versions of our research docu"
+          "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage you to try the AIM Framework AI assistant first. It has access to the latest versions of our research"
         },
         {
-          "heading": "Have Questions About AIM?",
-          "anchor": "#have-questions-about-aim",
+          "heading": "Have Questions About the AIM Framework?",
+          "anchor": "#have-questions-about-the-aim-framework",
           "content": "Whether you're a researcher, practitioner, organization, or journalist—we'd love to hear from you. For questions about the AIM Framework, testable predictions, or research applications, we encourage y"
         },
         {
@@ -186,14 +109,14 @@
           "content": "Note: As Yule is a working lawyer, papers will generally include limited references but will provide sufficient information for you to further investigate and critique the framework's application to y"
         },
         {
-          "heading": "Why Collaborate on AIM?",
-          "anchor": "#why-collaborate-on-aim",
-          "content": "Most theories propose new mechanisms. AIM proposes new categories. It provides the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts, organizing existing evi"
+          "heading": "Why Collaborate on the AIM Framework?",
+          "anchor": "#why-collaborate-on-the-aim-framework",
+          "content": "Most theories propose new mechanisms. The AIM Framework proposes new categories. It provides the first neuroscientific basis for cross-disciplinary definitions of fundamental human concepts, organizin"
         },
         {
           "heading": "Collaboration Opportunities",
           "anchor": "#collaboration-opportunities",
-          "content": "AIM's tri-source model enables predictions about market failures, intervention backfires, and social dynamics escalation that no existing theory can make—providing a competitive advantage in research "
+          "content": "The AIM Framework's tri-source model enables predictions about market failures, intervention backfires, and social dynamics escalation that no existing theory can make—providing a competitive advantag"
         },
         {
           "heading": "Connect",
@@ -219,54 +142,70 @@
         {
           "heading": "Important Context",
           "anchor": "#important-context",
-          "content": " Please answer all questions to see results"
+          "content": "Please answer all questions to see results What to do:"
         }
       ]
     },
     {
-      "title": "Glossary of the AIM Framework",
+      "title": "Glossary | The AIM Framework",
       "url": "/glossary",
       "sections": [
         {
-          "heading": "Glossary of the AIM Framework",
+          "heading": "Glossary | The AIM Framework",
           "anchor": "",
           "content": ""
         }
       ]
     },
     {
-      "title": "AIM Theory | A General Theory of Human Motivation",
+      "title": "The AIM Framework | A General Theory of Human Motivation",
       "url": "/",
       "sections": [
         {
-          "heading": "AIM Theory | A General Theory of Human Motivation",
+          "heading": "The AIM Framework | A General Theory of Human Motivation",
           "anchor": "",
-          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that with one idea: disease has a cause you can name. The AIM Framework is that idea for wanting. It is bas"
+          "content": "The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks what is rewarding to do for its own sake (Intrinsic Motivation). One tracks what stands out as valuable around you (Mimetic Desir"
+        },
+        {
+          "heading": "How the system works",
+          "anchor": "#how-the-system-works",
+          "content": "The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One tracks what is rewarding to do for i"
         },
         {
           "heading": "Three sources of wanting",
           "anchor": "#three-sources-of-wanting",
-          "content": "The human sciences stand roughly where medicine stood in 1850. Doctors could describe diseases in detail but could not say why they occurred or which treatments would work. Germ theory changed that wi"
+          "content": "A Body Manager (the homeostatic-deficit system) reports bodily deficit, a Thinker (the dopaminergic system) holds beliefs and pursues what is rewarding in the doing, and an Observer (the mirror neuron"
         },
         {
-          "heading": "What gets lost in the mix",
-          "anchor": "#what-gets-lost-in-the-mix",
-          "content": "The brain cannot act on three signals at once, so it integrates them into one value per option. That output records how much you want something but not why. The source tags are not hidden; they are go"
+          "heading": "Why it matters",
+          "anchor": "#why-it-matters",
+          "content": "The name Mimetic Desire points to its most familiar case, wanting what other people visibly want. The signal itself is simply Salience: this stands out as worth having. It works the same way for a lim"
         },
         {
           "heading": "Try the Two-Question Diagnostic",
           "anchor": "#try-the-two-question-diagnostic",
-          "content": "This is why asking people what they want, the foundation of consumer research, welfare economics and much of therapy, asks a question the architecture cannot reliably answer. Introspection cannot read"
+          "content": "Among everything else in the field, each person's Observer reads what the people around them are pursuing, so the same loop also runs between people. The framework builds outward from there without ad"
         },
         {
           "heading": "The framework itself",
           "anchor": "#the-framework-itself",
-          "content": "The architecture in seven short sections: sources, integration, opacity, confabulation, parasitism, satiation, and the patch. The premises everything is derived from, with what each one rests on and w"
+          "content": "Once the signals are merged, which source produced which part cannot be recovered. There are exactly three sources, each with its own satiation pattern; M, as Salience, never satiates. M adds value to"
         },
         {
           "heading": "Where to go next",
           "anchor": "#where-to-go-next",
-          "content": "The corpus behind the chat is the full Treatise and research archive, kept current. Specific questions get specific answers. AIM is the work of Yule Guttenbeil, a technology lawyer with a commerce deg"
+          "content": "The AIM Framework is a theory of motivation, not of all cognition, and it builds on Self-Determination Theory, behavioural economics and mimetic theory rather than replacing them. What it claims and d"
+        }
+      ]
+    },
+    {
+      "title": "Privacy",
+      "url": "/privacy",
+      "sections": [
+        {
+          "heading": "Privacy",
+          "anchor": "",
+          "content": "Ask the AI sends your question, the conversation so far, and the Treatise passages used to answer it to the provider whose key you saved: Anthropic, OpenAI, Google, or OpenRouter. That provider bills you under its own terms. Your key is stored encrypted on this site, is used only to make your own re"
         }
       ]
     },
@@ -315,18 +254,18 @@
       ]
     },
     {
-      "title": "The AIM Theory of Human Motivation Explained",
+      "title": "The AIM theory of motivation",
       "url": "/theory",
       "sections": [
         {
-          "heading": "The AIM Theory of Human Motivation Explained",
+          "heading": "The AIM theory of motivation",
           "anchor": "",
-          "content": "Part  Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself. The framework these pages summarise is stated in full in Chapter 4 and Appendix A."
+          "content": "Part The AIM theory of motivation says wanting comes from three sources: Appetites, Intrinsic Motivation, and Mimetic Desire. Enough of the architecture to know what question you want to ask. Each part ends with questions the chat can answer from the Treatise itself. The framework these pages summar"
         },
         {
           "heading": "",
           "anchor": "#",
-          "content": "Part "
+          "content": "Part The AIM theory of motivation says wanting comes from three sources: Appetites, Intrinsic Motivation, and Mimetic Desire. Enough of the architecture to know what question you want to ask. Each par"
         }
       ]
     },

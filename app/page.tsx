@@ -42,13 +42,12 @@ export default function HomePage() {
             into a single sense of how much you want something, and acts on it.
           </p>
           <p className="max-w-3xl text-lg text-blue-200">
-            The framework is built from{' '}
-            <Link href="/axioms" className="font-semibold text-white underline hover:text-blue-100">
-              nine stated axioms
-            </Link>
-            . Five are taken from established research, one follows mathematically, and three
-            are the framework&apos;s own claims. The architecture and its consequences are
-            worked out from them, and the framework is falsifiable.
+            The framework rests on{' '}
+            <Link href="/architecture" className="font-semibold text-white underline hover:text-blue-100">
+              a minimal architecture
+            </Link>{' '}
+            of four components and the loop that couples them, worked out mathematically. Its
+            central results follow from that architecture, and the framework is falsifiable.
           </p>
           <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
             <AskAI
@@ -250,12 +249,13 @@ export default function HomePage() {
               </span>
             </Link>
             <Link
-              href="/axioms"
+              href="/architecture"
               className="group rounded-xl border border-gray-200 bg-white p-6 transition hover:border-blue-400 hover:shadow-md"
             >
-              <h3 className="mb-2 text-lg font-bold text-gray-900">The nine axioms</h3>
+              <h3 className="mb-2 text-lg font-bold text-gray-900">The minimal architecture</h3>
               <p className="mb-3 text-sm text-gray-600">
-                The premises everything is derived from, and what each one rests on.
+                The Framework rests on the architecture (4.3 to 4.4.2), and every claim in the
+                chapters that follow is derived from it.
               </p>
               <span className="inline-flex items-center text-sm text-blue-600 group-hover:underline">
                 Read <HiArrowRight className="ml-1 h-4 w-4" />
