@@ -47,10 +47,10 @@ export class MinimalArchitecture {
 
   /** Approved homepage hero (I-06). The linked words are "a minimal architecture". */
   static readonly hero =
-    'The framework rests on a minimal architecture of four components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable.'
+    'The framework rests on a minimal architecture of four primary components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable.'
 
   static readonly lead = [
-    'For ease of reference, the four components specified in this section are referred to throughout by reader-facing names. The homeostatic-deficit signaller is the Body Manager. The prior-maintainer and Bayesian ground-resolver, the component that performs deliberative inference, is the Thinker. The continuous conditional Object-field Salience assessor is the Observer. The integrator and action-selector is the Decision Hub.',
+    'For ease of reference, the four primary components specified in this section are referred to throughout by reader-facing names. The homeostatic-deficit signaller is the Body Manager. The prior-maintainer and Bayesian ground-resolver, the component that performs deliberative inference, is the Thinker. The continuous conditional Object-field Salience assessor is the Observer. The integrator and action-selector is the Decision Hub.',
     'The Belief Register is the architecture\u2019s state component: the persistent store over the Hypothesis Space, written only by the Thinker, read by the Observer, and computing nothing. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four.'
   ]
 

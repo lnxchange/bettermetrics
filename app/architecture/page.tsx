@@ -42,7 +42,7 @@ function ArchitectureJsonLd() {
       {
         '@type': 'ItemList',
         '@id': 'https://aimtheory.org/architecture#components',
-        name: 'The four components and the Belief Register',
+        name: 'The four primary components and the Belief Register',
         numberOfItems: MinimalArchitecture.components.length,
         itemListElement: MinimalArchitecture.components.map(
           (component, index) => ({
@@ -159,7 +159,7 @@ export default function ArchitecturePage() {
       <section className="py-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">
-            The four components and the Belief Register
+            The four primary components and the Belief Register
           </h2>
           <div className="space-y-6">
             {MinimalArchitecture.components.map(component => (
@@ -182,7 +182,7 @@ export default function ArchitecturePage() {
           </div>
 
           <p className="mb-4 mt-10 text-base leading-relaxed text-gray-800">
-            The four processing components and the Belief Register, with their
+            The four primary components and the Belief Register, with their
             inputs, their outputs, their termination conditions, and their
             AIM-instantiation identities, are summarised below.
           </p>
@@ -338,7 +338,7 @@ export default function ArchitecturePage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <AskAI
               variant="button"
-              question="Walk me through how the four components, the Belief Register and the operational loop fit together."
+              question="Walk me through how the four primary components, the Belief Register and the operational loop fit together."
               label="Ask how the architecture fits together"
             />
             <Link

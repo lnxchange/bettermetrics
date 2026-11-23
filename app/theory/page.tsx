@@ -136,7 +136,7 @@ export default function TheoryPage() {
           <AIMIntegrationEquation />
           <AskAIGroup
             questions={[
-              'What are the four components of the AIM Framework architecture and what does each do?',
+              'What are the four primary components of the AIM Framework architecture and what does each do?',
               'What is the Belief Register and how does it condition the Observer?'
             ]}
           />

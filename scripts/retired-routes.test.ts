@@ -154,6 +154,23 @@ async function main() {
       'The architecture and its formal results stand without Premise 9, whose default depends also on what fills the perceived field.',
     'premise 9 keeps the approved line'
   )
+  assert(
+    MinimalArchitecture.hero ===
+      'The framework rests on a minimal architecture of four primary components and the loop that couples them, worked out mathematically. Its central results follow from that architecture, and the framework is falsifiable.',
+    'the hero names four primary components'
+  )
+  assert(
+    MinimalArchitecture.hero.split('a minimal architecture').length === 2,
+    'the hero links on a minimal architecture'
+  )
+  assert(
+    MinimalArchitecture.lead[0].includes('four primary components'),
+    'the architecture intro names four primary components'
+  )
+  assert(
+    MinimalArchitecture.lead[1].includes('not a fifth processing component'),
+    'the Belief Register stays off the processing count'
+  )
 
   const prompt = readFileSync('app/api/chat/route.ts', 'utf8')
   assert(
@@ -168,6 +185,28 @@ async function main() {
     prompt.includes('reason from the Minimal Architecture'),
     'the prompt reasons from the Minimal Architecture'
   )
+  assert(
+    prompt.includes('four primary components'),
+    'the prompt names four primary components'
+  )
+  assert(
+    prompt.includes('not a fifth processing component'),
+    'the prompt keeps the Belief Register off the processing count'
+  )
+  for (const file of [
+    'app/page.tsx',
+    'app/architecture/page.tsx',
+    'app/theory/page.tsx',
+    'app/about/page.tsx',
+    'app/api/chat/route.ts',
+    'lib/architecture-data.ts',
+    'components/aim-jsonld.tsx'
+  ]) {
+    assert(
+      !readFileSync(file, 'utf8').includes('four components'),
+      `${file} does not say four components`
+    )
+  }
   assert(
     prompt.includes('CONSTRUCTION PREMISES'),
     'the prompt names the Construction Premises'

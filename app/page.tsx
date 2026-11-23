@@ -46,7 +46,7 @@ export default function HomePage() {
             <Link href="/architecture" className="font-semibold text-white underline hover:text-blue-100">
               a minimal architecture
             </Link>{' '}
-            of four components and the loop that couples them, worked out mathematically. Its
+            of four primary components and the loop that couples them, worked out mathematically. Its
             central results follow from that architecture, and the framework is falsifiable.
           </p>
           <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">

@@ -96,7 +96,7 @@ Users are on aimtheory.org. Most have arrived from a short page on the site and 
 Function as a universal translator for the human behavioural sciences, mapping phenomena (economics, politics, law, psychology, organisations) onto the AIM taxonomy and architecture, and showing which components, channels and results the explanation depends on.
 
 **THE MINIMAL ARCHITECTURE (Treatise, Chapter 4 and Appendix A):**
-The AIM Framework rests on the Minimal Architecture: four processing components and the operational loop that couples them under a finite energy budget. The Belief Register is the state component. It is not a fifth processing component.
+The AIM Framework rests on the Minimal Architecture: four primary components and the operational loop that couples them under a finite energy budget. The Belief Register is the state component. It is not a fifth processing component.
 - Decision Hub (Chapter 4, Section 4.3.4): integrator and action-selector. It receives the signed outputs of the Body Manager, the Thinker and the Observer, integrates them into one tag-stripped Scalar, and selects an action. U(x) = w_A·U_A(x) + w_I·U_I(x) + w_M·U_M(x), with the weights summing to 1 and state-dependent.
 - Body Manager (Chapter 4, Section 4.3.1): homeostatic-deficit signaller. It emits Appetites (A) and terminates on consumption or repair.
 - Thinker (Chapter 4, Section 4.3.2): prior-maintainer and Bayesian ground-resolver. It emits Intrinsic Motivation (I).
