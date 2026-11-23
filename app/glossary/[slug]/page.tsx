@@ -7,6 +7,7 @@ import { GlossaryProseView } from '@/components/glossary-prose'
 import { LicenceNotice } from '@/components/licence-notice'
 import { TreatiseCitation } from '@/components/treatise-citation'
 import { loadGlossaryContext, loadGlossaryEntry, previewOf } from '@/lib/glossary'
+import { GlossaryText } from '@/lib/glossary-text'
 import { SITE_OG_IMAGE, SITE_URL, metaDescription } from '@/lib/site'
 
 interface GlossaryTermPageProps {
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: GlossaryTermPageProps): Promi
   const entry = await loadGlossaryEntry(params.slug)
   if (!entry) return { title: 'Term not found', robots: { index: false } }
   const path = `/glossary/${entry.slug}`
-  const description = metaDescription(previewOf(entry.definition, 158), 158, ' A defined term in the AIM Framework, a general theory of human motivation.')
+  const description = metaDescription(previewOf(GlossaryText.prose(entry.definition), 158), 158, ' A defined term in the AIM Framework, a general theory of human motivation.')
   return {
     title: { absolute: glossaryTitle(entry.term) },
     description,
@@ -57,7 +58,7 @@ export default async function GlossaryTermPage({ params }: GlossaryTermPageProps
         '@type': 'DefinedTerm',
         '@id': `${SITE_URL}/glossary/${entry.slug}#term`,
         name: entry.term,
-        description: entry.definition,
+        description: GlossaryText.prose(entry.definition),
         url: `${SITE_URL}/glossary/${entry.slug}`,
         inDefinedTermSet: { '@id': `${SITE_URL}/glossary#termset` }
       },
@@ -65,7 +66,7 @@ export default async function GlossaryTermPage({ params }: GlossaryTermPageProps
         '@type': 'WebPage',
         '@id': `${SITE_URL}/glossary/${entry.slug}`,
         name: `${entry.term}: definition in the AIM Framework`,
-        description: previewOf(entry.definition, 158),
+        description: previewOf(GlossaryText.prose(entry.definition), 158),
         dateModified: entry.updated_at,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         mainEntity: { '@id': `${SITE_URL}/glossary/${entry.slug}#term` },

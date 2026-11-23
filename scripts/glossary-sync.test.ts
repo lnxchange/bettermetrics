@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'fs'
 import path from 'path'
-import { resolveGlossaryName } from '../lib/glossary'
+import { previewOf, resolveGlossaryName } from '../lib/glossary'
+import { GlossaryText } from '../lib/glossary-text'
 import {
   parseGlossaryEntries,
   splitCrossReferences
@@ -75,8 +76,23 @@ const duties = parsed.find(entry => entry.term === 'A-Duties')
 assert(!!duties, 'A-Duties is parsed')
 assert(
   duties?.definition ===
+    '**A-duties are corresponding obligations, distributed by a cascading structure.**',
+  'a fully bold definition keeps its markdown'
+)
+assert(
+  GlossaryText.plain(duties?.definition ?? '') ===
     'A-duties are corresponding obligations, distributed by a cascading structure.',
-  'a fully bold definition is kept'
+  'the plain reading of a fully bold definition has no markers'
+)
+assert(
+  previewOf(duties?.definition ?? '') ===
+    'A-duties are corresponding obligations, distributed by a cascading structure.',
+  'the search preview of a fully bold definition has no markers'
+)
+assert(
+  GlossaryText.prose(duties?.definition ?? '') ===
+    'A-duties are corresponding obligations, distributed by a cascading structure.',
+  'meta text of a fully bold definition has no markers'
 )
 assert(
   duties?.cross_references.includes('AIM Weights (wA, wI, wM)') === true,
@@ -91,6 +107,74 @@ const floor = parsed.find(entry => entry.term === 'A-Floor')
 assert(
   floor?.definition === 'The A-Floor is the level of Appetitive provision.',
   'a bold label repeating the term is removed'
+)
+assert(
+  GlossaryText.plain(floor?.definition ?? '') ===
+    'The A-Floor is the level of Appetitive provision.',
+  'a removed label leaves no markers in the plain reading'
+)
+
+const marked = parseGlossaryEntries(`
+### Loop Gain
+
+**Loop Gain.** The gain is **critical** when $G_{crit}$ exceeds *one*.
+
+***
+
+### Critical Loop Gain
+
+**Critical Loop Gain (G_crit).** The Critical Loop Gain $G_{crit}$ is the threshold.
+
+***
+
+### Wrapped Label
+
+**Wrapped Label. The rest stays bold.**
+
+***
+`)
+const loop = marked.find(entry => entry.term === 'Loop Gain')
+assert(
+  loop?.definition ===
+    'The gain is **critical** when $G_{crit}$ exceeds *one*.',
+  'bold, italics and math in the remainder are kept'
+)
+assert(
+  GlossaryText.plain(loop?.definition ?? '') ===
+    'The gain is critical when $G_{crit}$ exceeds one.',
+  'plain text drops emphasis markers and keeps math delimiters'
+)
+assert(
+  GlossaryText.prose(loop?.definition ?? '') ===
+    'The gain is critical when G_crit exceeds one.',
+  'meta text drops emphasis markers and TeX delimiters'
+)
+assert(
+  !GlossaryText.plain(loop?.definition ?? '').includes('**'),
+  'the plain consumer has no bold markers'
+)
+const critical = marked.find(entry => entry.term === 'Critical Loop Gain')
+assert(
+  critical?.definition ===
+    '**Critical Loop Gain (G_crit).** The Critical Loop Gain $G_{crit}$ is the threshold.',
+  'a parenthetical after the term is not treated as a label'
+)
+assert(
+  GlossaryText.plain(critical?.definition ?? '').includes('$G_{crit}$'),
+  'the plain reading of a parenthetical definition keeps the math'
+)
+assert(
+  !GlossaryText.plain(critical?.definition ?? '').includes('**'),
+  'the plain reading of a parenthetical definition has no bold markers'
+)
+const wrapped = marked.find(entry => entry.term === 'Wrapped Label')
+assert(
+  wrapped?.definition === '**The rest stays bold.**',
+  'a label inside one bold span keeps the remainder bold'
+)
+assert(
+  GlossaryText.plain(wrapped?.definition ?? '') === 'The rest stays bold.',
+  'the plain reading of a wrapped label has no markers'
 )
 
 const entries = parsed.map(entry => ({ term: entry.term, slug: entry.term }))
@@ -126,8 +210,60 @@ assert(
 const chapterPath = process.env.TREATISE_DIR
   ? TreatiseChapters.chapterTwo(process.env.TREATISE_DIR)
   : ''
+function legacyDefinition(raw: string, term: string) {
+  const text = raw.replace(/\s+/g, ' ').replace(/\*\*/g, '').trim()
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const labelled = text.match(
+    new RegExp(`^${escaped}\\s*[:.]\\s+([\\s\\S]+)$`, 'i')
+  )
+  return labelled ? labelled[1].trim() : text
+}
+
+function definitionRegion(body: string) {
+  const stop = body.search(
+    /^\*\*Explanation\.?\*\*|^\*Derivation:|^\*Epistemic Status:|^\*Cross-references:|^\*\*\*\s*$/m
+  )
+  return stop === -1 ? body : body.slice(0, stop)
+}
+
 if (chapterPath) {
-  const chapter = parseGlossaryEntries(readFileSync(chapterPath, 'utf8'))
+  const markdown = readFileSync(chapterPath, 'utf8')
+  const chapter = parseGlossaryEntries(markdown)
+  const rawByTerm = new Map<string, string>()
+  for (const part of markdown.split(/^### /m).slice(1)) {
+    const newline = part.indexOf('\n')
+    const heading = (newline === -1 ? part : part.slice(0, newline)).trim()
+    const body = newline === -1 ? '' : part.slice(newline + 1)
+    rawByTerm.set(heading, definitionRegion(body))
+  }
+  const drifted = chapter.filter(entry => {
+    const raw = rawByTerm.get(entry.term)
+    const legacy = legacyDefinition(raw ?? '', entry.term)
+      .replace(/\s+/g, ' ')
+      .trim()
+    const rich = entry.definition
+      .replace(/\*\*/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    return raw === undefined || legacy !== rich
+  })
+  assert(
+    drifted.length === 0,
+    `definition words changed: ${drifted
+      .slice(0, 8)
+      .map(entry => entry.term)
+      .join('; ')}`
+  )
+  assert(
+    chapter.every(
+      entry => !GlossaryText.plain(entry.definition).includes('**')
+    ),
+    'plain definitions have no bold markers'
+  )
+  assert(
+    chapter.some(entry => entry.definition.includes('**')),
+    'stored definitions keep markdown bold'
+  )
   const names = new Set(chapter.flatMap(entry => entry.cross_references))
   const missed = Array.from(names).filter(
     name => !resolveGlossaryName(name, chapter)
@@ -141,6 +277,7 @@ if (chapterPath) {
     'G_net^K',
     'G_net^Λ',
     'G_slow',
+    'M as Amplifier (Chapter 4, Section 4.5.3)',
     'Satiation (A)',
     'Section 14.5',
     'Type II (Prior Dominance)',

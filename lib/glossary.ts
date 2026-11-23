@@ -2,6 +2,7 @@ import { cached } from '@/lib/cached'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { GlossaryAliases } from '@/lib/glossary-aliases'
+import { GlossaryText } from '@/lib/glossary-text'
 
 export type GlossaryEntry =
   Database['public']['Tables']['glossary_entries']['Row']
@@ -27,7 +28,7 @@ function anonClient() {
 
 /** First sentence of a definition, capped so 680 previews stay under ~100 KB. */
 export function previewOf(definition: string, max = 140) {
-  const flat = definition.replace(/\s+/g, ' ').trim()
+  const flat = GlossaryText.plain(definition)
   const sentence = flat.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? flat
   const text =
     sentence.length <= max ? sentence : `${flat.slice(0, max - 1).trimEnd()}…`
