@@ -36,9 +36,14 @@ const COMMANDS: Record<string, string> = {
  * derived here, not a second copy in the database.
  */
 export class GlossaryText {
-  /** Collapse a definition and drop a leading "Term." label, keeping its markdown. */
+  /**
+   * Keep paragraph breaks and drop a leading "Term." label, keeping its markdown.
+   * Chapter 2 puts a sub-section such as "Diagnostic." in its own paragraph.
+   * Collapsing every whitespace run joined those paragraphs into one line, so
+   * the pop-up and the term page could not render the breaks.
+   */
   static richDefinition(raw: string, term: string) {
-    const text = raw.replace(/\s+/g, ' ').trim()
+    const text = GlossaryText.breaks(raw)
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     const match = text.match(
       new RegExp(`^(\\*{0,2})${escaped}(\\*{0,2})\\s*[:.](\\*{0,2})\\s+`, 'i')
@@ -57,6 +62,16 @@ export class GlossaryText {
       rest = `**${rest.slice(0, -2).trimEnd()}**`
     }
     return rest.trim()
+  }
+
+  /** Paragraph breaks stay. Spaces within a line collapse. */
+  static breaks(raw: string) {
+    return raw
+      .replace(/\r\n/g, '\n')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/[ \t]{2,}/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
   }
 
   /**

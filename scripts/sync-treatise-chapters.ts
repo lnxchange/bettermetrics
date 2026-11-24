@@ -100,10 +100,6 @@ const LETTER_HEADING = /^[—–-]\s*.\s*[—–-]$/
 const EXEMPT_HEADING =
   /^(Nomenclature|Reading Paths|How to Use|Common Confusions|Disaggregation Conventions|Epistemic Status Guide|USER GUIDE)\b/i
 
-function collapse(value: string) {
-  return value.replace(/\s+/g, ' ').trim()
-}
-
 function glossarySlug(term: string) {
   return term
     .toLowerCase()
@@ -175,7 +171,9 @@ export function parseGlossaryEntries(markdown: string): GlossaryDraft[] {
     entries.push({
       term: heading,
       definition,
-      explanation: explanationMatch ? collapse(explanationMatch[1]) : '',
+      explanation: explanationMatch
+        ? GlossaryText.breaks(explanationMatch[1])
+        : '',
       derivation: derivation ? derivation[1].trim() : '',
       epistemic_status: status ? status[1].trim() : null,
       cross_references: refs ? splitCrossReferences(refs[1]) : []

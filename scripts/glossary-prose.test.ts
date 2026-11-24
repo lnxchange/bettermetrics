@@ -60,9 +60,8 @@ assert(
   'a markdown list becomes a list'
 )
 assert(
-  explained.includes('<strong>') &&
-    explained.includes('The Object need not lie outside the Individual.'),
-  'explanation bold is kept'
+  explained.includes('<h3>The Object need not lie outside the Individual.</h3>'),
+  'an explanation label is its own sub-heading'
 )
 assert(
   explained.includes('<em>develop a capacity</em>'),
@@ -72,12 +71,42 @@ assert(
 const critical = GlossaryProse.html(
   '**Critical Loop Gain ($G_{crit}$).** The Critical Loop Gain $G_{crit}$ is the threshold value of the internal loop gain $G = \\kappa_S \\cdot \\beta \\cdot \\gamma \\cdot \\sigma\'(V^{*})$.'
 )
-assert(critical.includes('<strong>'), 'the term page bold is the same markup as the pop-up')
+assert(
+  critical.includes('<h3>') && critical.includes('Critical Loop Gain'),
+  'the pop-up and the term page give the label its own sub-heading'
+)
 assert(
   critical.includes('<math') && critical.includes('G_{crit}'),
   'the term page typesets G_crit as MathML'
 )
 assert(!critical.includes('**') && !critical.includes('$G_'), 'rendered prose has no raw markers')
+
+const admiration =
+  'Admiration is what you feel when you watch a master. **Diagnostic.** Does observing the Model make you want to *develop a capacity*? **Why hatred cannot ground Admiration.** Hatred-grounded fascination produces M-escalation.'
+const admirationHtml = GlossaryProse.html(admiration)
+assert(
+  admirationHtml.includes('<h3>Diagnostic.</h3>') &&
+    admirationHtml.includes('<h3>Why hatred cannot ground Admiration.</h3>'),
+  'joined sub-section labels become headings'
+)
+assert(
+  admirationHtml.includes('<em>develop a capacity</em>?'),
+  'italics inside a sub-section stay, and the sentence keeps its question mark'
+)
+assert(
+  admirationHtml.includes('watch a master.'),
+  'the sentence before a sub-section keeps its full stop'
+)
+assert(
+  admirationHtml.indexOf('<h3>Diagnostic.</h3>') <
+    admirationHtml.indexOf('<h3>Why hatred cannot ground Admiration.</h3>'),
+  'sub-sections stay in chapter order'
+)
+const whole = GlossaryProse.html(
+  '**Admiration is the Positive Mimesis response, and it transmits *wanting-to-develop* rather than *wanting-what-the-Model-has*.**'
+)
+assert(whole.includes('<strong>'), 'a fully bold definition stays bold')
+assert(!whole.includes('<h3>'), 'a fully bold definition is not split into a heading')
 
 const termPage = readFileSync('app/glossary/[slug]/page.tsx', 'utf8')
 const popup = readFileSync('components/glossary-lookup.tsx', 'utf8')
