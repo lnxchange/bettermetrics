@@ -55,6 +55,9 @@ export const loadGlossaryIndex = cached(
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 
+// v2 cached the plain text written while the treatise rewrite was removing
+// bold markers and TeX subscripts. That payload outlived the row that put
+// the markdown back, so the pop-up kept showing the plain definition.
 export const loadGlossaryEntry = cached(
   async (slug: string): Promise<GlossaryEntry | null> => {
     const supabase = anonClient()
@@ -67,7 +70,7 @@ export const loadGlossaryEntry = cached(
     if (error) throw new Error(`Glossary query failed: ${error.message}`)
     return data ?? null
   },
-  ['glossary-entry-v2'],
+  ['glossary-entry-v3'],
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 
