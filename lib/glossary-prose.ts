@@ -34,7 +34,8 @@ const PROSE_TAGS = new Set([
   'sup',
   'sub',
   'span',
-  'div'
+  'div',
+  'h3'
 ])
 
 const MATH_TAGS = new Set([
@@ -120,13 +121,32 @@ const SAFE_CLASS =
  */
 export class GlossaryProse {
   static html(source: string) {
-    const text = source.trim()
+    const text = GlossaryProse.sections(source.trim())
     if (!text) return ''
     const shielded = shieldMath(text)
     const parsed = new Marked({ gfm: true }).parse(shielded.markdown, {
       async: false
     }) as string
     return GlossaryProse.sanitize(restoreShieldedMath(parsed, shielded.slots))
+  }
+
+  /**
+   * A bold label that ends a sentence ("Diagnostic.", "Why hatred cannot
+   * ground Admiration.") is a sub-section. Chapter 2 gives it a paragraph.
+   * The stored row may already have joined that paragraph onto the previous
+   * one, so the label is lifted out either way.
+   */
+  private static sections(source: string) {
+    return source.replace(
+      /(^|\n+|(?:[.!?]["']?)\s+)\*\*([A-Z][^*\n]{1,90}?)\*\*\s+(?=\S)/g,
+      (full, lead: string, label: string) => {
+        const text = label.trim()
+        if (!/[.!?]$/.test(text) || text.split(/\s+/).length > 16) return full
+        const kept = lead.includes('\n') || lead === '' ? lead : lead.trimEnd()
+        const gap = kept.includes('\n') || kept === '' ? kept : `${kept}\n\n`
+        return `${gap}### ${text}\n\n`
+      }
+    )
   }
 
   private static sanitize(html: string) {

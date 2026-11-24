@@ -167,6 +167,68 @@ assert(
   !GlossaryText.plain(critical?.definition ?? '').includes('**'),
   'the plain reading of a parenthetical definition has no bold markers'
 )
+const sections = parseGlossaryEntries(`
+### Admiration
+
+**Admiration is the Positive Mimesis response.**
+
+**Explanation.** Admiration is what you feel.
+
+The distinction matters.
+
+**Diagnostic.** Does observing the Model make you want to develop a capacity?
+
+**Why hatred cannot ground Admiration.** Hatred-grounded fascination produces M-escalation.
+
+*Derivation:* Chapter 8, Section 8.11.4.
+`)
+const admiration = sections.find(entry => entry.term === 'Admiration')
+assert(
+  admiration?.definition === '**Admiration is the Positive Mimesis response.**',
+  'a one-paragraph definition stays one paragraph'
+)
+assert(
+  admiration?.explanation ===
+    [
+      'Admiration is what you feel.',
+      '',
+      'The distinction matters.',
+      '',
+      '**Diagnostic.** Does observing the Model make you want to develop a capacity?',
+      '',
+      '**Why hatred cannot ground Admiration.** Hatred-grounded fascination produces M-escalation.'
+    ].join('\n'),
+  'explanation sub-sections keep their paragraph breaks'
+)
+assert(
+  !admiration?.explanation.includes('feel. The distinction'),
+  'adjacent explanation paragraphs are not joined'
+)
+
+const riders = parseGlossaryEntries(`
+### Agentic Precedence Principle
+
+**Agentic Precedence Principle.** In any explanatory domain, agent-based explanation comes first.
+
+Two riders bound the principle.
+
+**Corollary (Gradient Survives).** The gradient remains.
+
+***
+`)
+const agentic = riders.find(entry => entry.term === 'Agentic Precedence Principle')
+assert(
+  agentic?.definition ===
+    [
+      'In any explanatory domain, agent-based explanation comes first.',
+      '',
+      'Two riders bound the principle.',
+      '',
+      '**Corollary (Gradient Survives).** The gradient remains.'
+    ].join('\n'),
+  'a definition keeps later paragraphs and their bold labels'
+)
+
 const wrapped = marked.find(entry => entry.term === 'Wrapped Label')
 assert(
   wrapped?.definition === '**The rest stays bold.**',
