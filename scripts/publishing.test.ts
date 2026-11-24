@@ -351,8 +351,8 @@ const atom = ArticleFeed.atom(
 )
 assert(atom.includes('<feed') && atom.includes('/articles/monday-piece'), 'Atom carries the canonical link')
 
-assert(TreatiseRefLink.href('4.2') === '/treatise/4#4.2', 'a section ref links into the chapter')
-assert(TreatiseRefLink.href('Chapter 7') === '/treatise/7', 'a chapter ref links to the chapter')
+assert(TreatiseRefLink.href('4.2') === '/treatise/chapter-4#4.2', 'a section ref links into the chapter')
+assert(TreatiseRefLink.href('Chapter 7') === '/treatise/chapter-7', 'a chapter ref links to the chapter')
 assert(TreatiseRefLink.href('Chapter 2') === '/glossary', 'chapter 2 is the glossary')
 
 const html = ArticleHtml.render('Mimetic Desire weighs $w_M$.', {
