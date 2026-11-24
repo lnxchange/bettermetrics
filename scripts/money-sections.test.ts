@@ -73,6 +73,10 @@ assert(
   MoneySections.arrival('12.17', bayesian).kind === 'ignore',
   '12.17 is not moved when 14.5.1 is absent'
 )
+assert(
+  MoneySections.arrival('12.17', new Set(['14.5.1', '14.1'])).kind === 'ignore',
+  '12.17 is not moved onto a chapter that still uses the old 14.x numbers'
+)
 
 const oldMoney = new Set(['12.1', '12.17', '12.39'])
 assert(

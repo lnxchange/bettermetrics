@@ -94,9 +94,10 @@ export class MoneySections {
   /**
    * What to do with a fragment on the page that has these heading ids.
    * A heading that exists is left alone. A known old fragment moves only
-   * when its new heading is on this page, so another chapter is not pulled
-   * across. 12.6 opens the reworked chapter at the top. 14.6 does the same
-   * only when the page has no heading of that id.
+   * on the reworked chapter, the page that has 14.2.1, and only when the
+   * new heading is there. A chapter that still uses the old 14.x numbers
+   * is left alone. 12.6 opens the reworked chapter at the top. 14.6 does
+   * the same only when the page has no heading of that id.
    */
   static arrival(
     fragment: string,
@@ -106,10 +107,9 @@ export class MoneySections {
     if (!id) return { kind: 'ignore' }
     if (headingIds.has(id)) return { kind: 'keep' }
     if (!successors.has(id)) return { kind: 'ignore' }
+    if (!headingIds.has(REWORKED)) return { kind: 'ignore' }
     const next = successors.get(id) ?? null
-    if (next === null) {
-      return headingIds.has(REWORKED) ? { kind: 'top' } : { kind: 'ignore' }
-    }
+    if (next === null) return { kind: 'top' }
     if (headingIds.has(next)) return { kind: 'move', id: next }
     return { kind: 'ignore' }
   }
