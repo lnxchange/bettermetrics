@@ -57,11 +57,11 @@ export interface TreatiseDraft {
   url: string
 }
 
-export async function loadTreatiseDraft(): Promise<TreatiseDraft | null> {
+async function loadEbookPointer(name: string): Promise<TreatiseDraft | null> {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
   if (!base) return null
   try {
-    const response = await fetch(`${base}/storage/v1/object/public/treatise-ebooks/current.json`, {
+    const response = await fetch(`${base}/storage/v1/object/public/treatise-ebooks/${name}`, {
       cache: 'no-store'
     })
     if (!response.ok) return null
@@ -77,6 +77,16 @@ export async function loadTreatiseDraft(): Promise<TreatiseDraft | null> {
   } catch {
     return null
   }
+}
+
+/** current.json, written when the draft ebook is published. */
+export function loadTreatiseDraft(): Promise<TreatiseDraft | null> {
+  return loadEbookPointer('current.json')
+}
+
+/** markdown.json, written when the Markdown archive is published. */
+export function loadTreatiseMarkdown(): Promise<TreatiseDraft | null> {
+  return loadEbookPointer('markdown.json')
 }
 
 export function formatSourceDate(yymmdd: string) {
