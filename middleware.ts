@@ -2,32 +2,14 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
+import { LegacyArticlePath } from '@/lib/publishing/legacy-path'
 import { LegacyRedirect } from '@/lib/publishing/public'
-
-// Old article URLs still indexed from usebettermetrics.com carried file
-// extensions and mixed case ("/articles/Report-14-The-Easterlin-Paradox.md").
-// Normalise them to the slug form with a permanent redirect so they resolve
-// (or 404 cleanly) instead of erroring.
-const LEGACY_ARTICLE_EXT = /\.(md|markdown|pdf|docx?|txt|html?)$/i
-
-function normaliseArticlePath(pathname: string): string | null {
-  const match = pathname.match(/^\/articles\/(.+)$/)
-  if (!match) return null
-  const raw = decodeURIComponent(match[1])
-  const slug = raw
-    .replace(LEGACY_ARTICLE_EXT, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-  if (!slug || slug === raw) return null
-  return `/articles/${slug}`
-}
 
 export async function middleware(req: NextRequest) {
   try {
     const res = NextResponse.next()
 
-    const normalisedArticle = normaliseArticlePath(req.nextUrl.pathname)
+    const normalisedArticle = LegacyArticlePath.normalise(req.nextUrl.pathname)
     if (normalisedArticle) {
       const redirectUrl = req.nextUrl.clone()
       redirectUrl.pathname = normalisedArticle

@@ -6,6 +6,7 @@ import { WeeklyDigest } from '../lib/publishing/digest'
 import { ArticleFeed } from '../lib/publishing/feed'
 import { ArticleFrontmatter } from '../lib/publishing/frontmatter'
 import { ArticleGate } from '../lib/publishing/gate'
+import { LegacyArticlePath } from '../lib/publishing/legacy-path'
 import { ArticleLoader } from '../lib/publishing/loader'
 import { MelbourneTime } from '../lib/publishing/melbourne-time'
 import { ArticlePublisher } from '../lib/publishing/publisher'
@@ -359,6 +360,15 @@ const html = ArticleHtml.render('Mimetic Desire weighs $w_M$.', {
   siteUrl: 'https://aimtheory.org',
   terms: [{ term: 'Mimetic Desire', slug: 'mimetic-desire-m' }]
 })
+assert(
+  LegacyArticlePath.normalise('/articles/Report-14-The-Easterlin-Paradox.md') ===
+    '/articles/report-14-the-easterlin-paradox',
+  'an old filename becomes a slug'
+)
+assert(LegacyArticlePath.normalise('/articles/feed.xml') === null, 'the RSS feed is not rewritten')
+assert(LegacyArticlePath.normalise('/articles/atom.xml') === null, 'the atom feed is not rewritten')
+assert(LegacyArticlePath.normalise('/articles/weights/og') === null, 'the card image route is not rewritten')
+
 assert(html.includes('data-glossary="mimetic-desire-m"'), 'defined terms link to the glossary')
 assert(html.includes('<math'), 'KaTeX mathematics is rendered')
 
