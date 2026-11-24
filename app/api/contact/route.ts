@@ -4,8 +4,6 @@ import { Resend } from 'resend'
 import { syncContactMessage } from '@/lib/crm/sync'
 import { SiteMail } from '@/lib/site-mail'
 
-const NOTIFY_TO = 'yule@attune.legal'
-
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, '&amp;')
@@ -159,7 +157,7 @@ export async function POST(req: NextRequest) {
         const { error: sendError } = await resend.emails.send(
           {
             from: SiteMail.from(),
-            to: [NOTIFY_TO],
+            to: [SiteMail.inbox],
             replyTo: email,
             subject: emailSubject,
             html: htmlContent,
@@ -173,7 +171,7 @@ export async function POST(req: NextRequest) {
           console.error('Email send error:', sendError)
         } else {
           emailSent = true
-          console.log('Email notification sent')
+          console.log(`Contact notification sent to ${SiteMail.inbox}`)
         }
       } catch (emailErr) {
         console.error('Email send error:', emailErr)

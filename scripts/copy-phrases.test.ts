@@ -98,14 +98,11 @@ for (const file of files) {
       `${relative} still contains "${phrase}"`
     )
   }
-  // The contact form still delivers to the private address. That address is not public copy.
-  if (!relative.startsWith(`app${path.sep}api${path.sep}`)) {
-    assert.equal(
-      prose.includes('yule@attune.legal'),
-      false,
-      `${relative} still shows yule@attune.legal`
-    )
-  }
+  assert.equal(
+    prose.includes('yule@attune.legal'),
+    false,
+    `${relative} still shows yule@attune.legal`
+  )
   const shortHub = text.match(/\bthe Hub\b/gi) ?? []
   assert.deepEqual(shortHub, [], `${relative} uses the short form "the Hub"`)
 }

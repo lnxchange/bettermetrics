@@ -138,6 +138,11 @@ assert.equal(SiteMail.from(), 'AIM Theory <notifications@aimtheory.org>')
 process.env.RESEND_FROM = 'AIM Theory <override@aimtheory.org>'
 assert.equal(SiteMail.from(), 'AIM Theory <override@aimtheory.org>')
 delete process.env.RESEND_FROM
+assert.equal(SiteMail.inbox, 'info@aimtheory.org')
+const contactRoute = source('app/api/contact/route.ts')
+assert.equal(contactRoute.includes('yule@attune.legal'), false)
+assert.equal(contactRoute.includes('to: [SiteMail.inbox]'), true)
+assert.equal(contactRoute.includes('from: SiteMail.from()'), true)
 const message = FrameworkUpdates.message({
   to: 'ada@example.com',
   userId: 'user-1',
