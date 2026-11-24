@@ -1,14 +1,19 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { Database } from '@/lib/db_types'
+import { PublicArticles } from '@/lib/publishing/public'
+import { PublishingSettings } from '@/lib/publishing/settings'
 import { SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'Articles Applying the AIM Framework' },
   description: 'Insights and analysis applying the AIM Framework to economics, psychology, law, organisations, and more.',
-  alternates: { canonical: '/articles' },
+  alternates: {
+    canonical: '/articles',
+    types: {
+      'application/rss+xml': '/articles/feed.xml',
+      'application/atom+xml': '/articles/atom.xml'
+    }
+  },
   openGraph: {
     title: 'Articles Applying the AIM Framework',
     description: 'Applying the AIM Framework to economics, psychology, law, organisations, and everyday life.',
@@ -19,18 +24,16 @@ export const metadata: Metadata = {
 }
 
 async function getPublishedArticles() {
-  const cookieStore = cookies()
-  const supabase = createServerComponentClient<Database>({
-    cookies: () => cookieStore
+  return PublicArticles.list(await PublishingSettings.gate())
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Australia/Melbourne'
   })
-
-  const { data } = await supabase
-    .from('articles')
-    .select('slug, title, meta_description, author, published_at, category, tags, featured_image_url')
-    .eq('status', 'published')
-    .order('published_at', { ascending: false })
-
-  return data || []
 }
 
 export default async function ArticlesPage() {
@@ -44,6 +47,11 @@ export default async function ArticlesPage() {
           <h1 className="text-5xl font-bold text-gray-900 mb-4">Articles</h1>
           <p className="text-xl text-gray-600">
             Applying the AIM Framework to economics, psychology, law, organisations, and everyday life.
+          </p>
+          <p className="mt-4 text-sm text-gray-500">
+            <a href="/articles/feed.xml" className="hover:underline">RSS</a>
+            <span className="mx-2">·</span>
+            <a href="/articles/atom.xml" className="hover:underline">Atom</a>
           </p>
         </div>
       </section>
@@ -72,13 +80,9 @@ export default async function ArticlesPage() {
                   )}
                   <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                     {article.author && <span>By {article.author}</span>}
-                    {article.published_at && (
-                      <time dateTime={article.published_at}>
-                        {new Date(article.published_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
+                    {(article.published_at || article.scheduled_publish_at) && (
+                      <time dateTime={(article.published_at || article.scheduled_publish_at) as string}>
+                        {formatDate((article.published_at || article.scheduled_publish_at) as string)}
                       </time>
                     )}
                   </div>

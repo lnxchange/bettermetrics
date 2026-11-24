@@ -2,6 +2,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
+import { LegacyRedirect } from '@/lib/publishing/public'
 
 // Old article URLs still indexed from usebettermetrics.com carried file
 // extensions and mixed case ("/articles/Report-14-The-Easterlin-Paradox.md").
@@ -31,6 +32,20 @@ export async function middleware(req: NextRequest) {
       const redirectUrl = req.nextUrl.clone()
       redirectUrl.pathname = normalisedArticle
       return NextResponse.redirect(redirectUrl, 301)
+    }
+
+    // After go-live, with the retirement switch on, the March 2026 articles
+    // move with a 301. Before that this returns immediately and does not
+    // touch the database.
+    const articleSlug = req.nextUrl.pathname.match(/^\/articles\/([a-z0-9]+(?:-[a-z0-9]+)*)$/)
+    if (articleSlug) {
+      const target = await LegacyRedirect.target(articleSlug[1])
+      if (target) {
+        const redirectUrl = req.nextUrl.clone()
+        redirectUrl.pathname = target
+        redirectUrl.search = ''
+        return NextResponse.redirect(redirectUrl, 301)
+      }
     }
 
     // Routes where we need to touch the Supabase session (to refresh cookies
