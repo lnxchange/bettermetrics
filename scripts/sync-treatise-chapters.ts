@@ -16,6 +16,7 @@ import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { prepareTreatiseMarkdown } from '../lib/treatise-render'
+import { TreatiseTitle } from '../lib/treatise-title'
 import { indexTreatise } from '../lib/rag/treatise-index'
 import { auditTreatiseDirectory } from './audit-treatise-citations'
 import {
@@ -53,14 +54,6 @@ interface SourceFile {
   kind: 'Chapter' | 'Appendix'
   code: string
   fullPath: string
-}
-
-function titleFromMarkdown(markdown: string, fallback: string) {
-  const line = markdown.split('\n').find(entry => entry.startsWith('# '))
-  if (!line) return fallback
-  const text = line.replace(/^#\s+/, '').replace(/\*\*/g, '').trim()
-  const stripped = text.replace(/^(?:chapter|appendix)\s+[0-9A-Za-z]+\s*[:—–-]\s*/i, '')
-  return stripped.trim() || fallback
 }
 
 function describe(file: SourceFile) {
@@ -401,6 +394,30 @@ function reportChanges(changes: SectionChange[], incoming: { label: string; mark
   }
 }
 
+/** Headwords used to keep defined-term capitals when a chapter title is in caps. */
+async function glossaryTermsForTitles(
+  supabase: ReturnType<typeof createClient<Database>>,
+  directory: string
+) {
+  const terms: string[] = []
+  const seen = new Set<string>()
+  const add = (term: string) => {
+    const text = term.trim()
+    if (!text || seen.has(text)) return
+    seen.add(text)
+    terms.push(text)
+  }
+  const file = await latestChapterTwo(directory)
+  if (file) {
+    const markdown = await readFile(file.fullPath, 'utf8')
+    for (const entry of parseGlossaryEntries(markdown)) add(entry.term)
+  }
+  const { data, error } = await supabase.from('glossary_entries').select('term')
+  if (error) console.log(`glossary titles: ${error.message}`)
+  else for (const row of data ?? []) add(row.term)
+  return terms
+}
+
 async function main() {
   const directory = process.env.TREATISE_DIR || DEFAULT_DIR
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -441,10 +458,15 @@ async function main() {
 
   const { data: stored, error: storedError } = await supabase
     .from('treatise_chapters')
-    .select('slug, markdown, source_sha, source_date')
+    .select('slug, title, markdown, source_sha, source_date')
   if (storedError) throw new Error(storedError.message)
   const storedRows = stored ?? []
-  const current = new Map(storedRows.map(row => [row.slug, { sha: row.source_sha, date: row.source_date }]))
+  const current = new Map(
+    storedRows.map(row => [
+      row.slug,
+      { sha: row.source_sha, date: row.source_date, title: row.title }
+    ])
+  )
 
   const previousIndex = buildCorpusIndex(storedRows)
   const nextIndex = buildCorpusIndex(incoming)
@@ -477,21 +499,29 @@ async function main() {
     }
   }
 
+  const glossaryTerms = await glossaryTermsForTitles(supabase, directory)
   const slugs: string[] = []
   for (const chapter of incoming) {
     const { slug, described } = chapter
     const markdown = chapter.markdown
     const source_sha = createHash('sha256').update(markdown).digest('hex')
     const existing = current.get(slug)
+    const title = TreatiseTitle.fromMarkdown(markdown, described.label, glossaryTerms)
     slugs.push(slug)
-    if (existing && existing.sha === source_sha && existing.date === chapter.date) {
+    // The chapter text can be unchanged while the stored title is still in capitals.
+    if (
+      existing &&
+      existing.sha === source_sha &&
+      existing.date === chapter.date &&
+      existing.title === title
+    ) {
       console.log(`${described.label}  ${chapter.date}  unchanged`)
       continue
     }
     const prepared = prepareTreatiseMarkdown(markdown)
     const row = {
       slug,
-      title: titleFromMarkdown(markdown, described.label),
+      title,
       label: described.label,
       part: described.part,
       markdown,
