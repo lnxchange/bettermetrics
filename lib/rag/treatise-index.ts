@@ -83,8 +83,11 @@ function documentKey(title: string, metadata: any) {
 /**
  * Embed every treatise chapter, appendix and the Chapter 2 glossary into the
  * chat's vector store (rag_documents + document_embeddings), tagged
- * source = 'aim-treatise'. Unchanged entries are skipped; changed ones are
- * re-embedded; entries no longer in the treatise are removed.
+ * source = 'aim-treatise'. Unchanged entries are skipped. A changed chapter,
+ * including Chapter 14, Appendix 14A, Chapter 2, Chapter 11, Chapter 19 and
+ * Chapter 4, is embedded again and the previous document and its chunks are
+ * deleted, so the old text is not kept beside the new. Entries no longer in
+ * the treatise are removed.
  */
 export async function indexTreatise(supabase: Client, options: { force?: boolean } = {}) {
   const retired = await TreatiseIndexKeys.deleteRetired(supabase)

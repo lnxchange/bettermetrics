@@ -180,4 +180,58 @@ assert(
   'Scalar matches once, and not inside The Scalar'
 )
 
+const moneyTerms = [
+  { term: 'Claim', slug: 'claim' },
+  { term: 'Debt', slug: 'debt' },
+  { term: 'Interest', slug: 'interest' },
+  { term: 'Claimed Self-Defence', slug: 'claimed-self-defence' },
+  { term: 'Interest-Only Threshold', slug: 'interest-only-threshold' },
+  { term: 'Debt to Society', slug: 'debt-to-society' },
+  { term: 'Forced Participation', slug: 'forced-participation' },
+  { term: 'Mimetic Lock-In', slug: 'mimetic-lock-in' },
+  { term: 'Aggregation Confabulation', slug: 'aggregation-confabulation' }
+]
+const moneyText = [
+  'A Claim rests on two Beliefs. claim stays a common word.',
+  'Interest is the premium. An interest payment stays plain.',
+  'Debt names the obligation. debt in passing stays plain.',
+  'Claimed Self-Defence keeps its own entry.',
+  'Interest-Only Threshold keeps its own entry.',
+  'Debt to Society keeps its own entry.',
+  'Forced Participation and Mimetic Lock-In and Aggregation Confabulation are defined.'
+].join(' ')
+const moneySpans = findGlossarySpans(moneyText, moneyTerms)
+const moneySlug = (label: string) => moneySpans.find(span => span.text === label)?.slug
+assert(moneySlug('Claim') === 'claim', 'capitalised Claim links to Claim')
+assert(
+  !moneySpans.some(span => span.text.toLowerCase() === 'claim' && span.text !== 'Claim'),
+  'a lowercase claim is not linked'
+)
+assert(moneySlug('Interest') === 'interest', 'capitalised Interest links to Interest')
+assert(
+  !moneySpans.some(span => span.text === 'interest'),
+  'a lowercase interest is not linked'
+)
+assert(moneySlug('Debt') === 'debt', 'capitalised Debt links to Debt')
+assert(
+  moneySlug('Claimed Self-Defence') === 'claimed-self-defence',
+  'Claimed Self-Defence keeps its own entry'
+)
+assert(
+  moneySlug('Interest-Only Threshold') === 'interest-only-threshold',
+  'Interest-Only Threshold keeps its own entry'
+)
+assert(
+  moneySlug('Debt to Society') === 'debt-to-society',
+  'Debt to Society keeps its own entry'
+)
+assert(
+  !moneySpans.some(
+    span =>
+      span.text === 'Claim' &&
+      moneyText.slice(span.start, span.start + 'Claimed'.length) === 'Claimed'
+  ),
+  'Claim is not taken out of Claimed Self-Defence'
+)
+
 console.log('glossary terms ok', found.join(', '))

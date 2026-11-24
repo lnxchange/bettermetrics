@@ -3,7 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { loadGlossaryIndex } from '@/lib/glossary'
 import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
+import { MoneySections } from '@/lib/money-sections'
 import { TreatiseAddress } from '@/lib/treatise-address'
+import { TreatisePlacement } from '@/lib/treatise-placement'
 import {
   buildCorpusIndex,
   composeRedirects,
@@ -89,6 +91,19 @@ export function formatSourceDate(yymmdd: string) {
   })
 }
 
+async function storedSlugFor(
+  supabase: NonNullable<ReturnType<typeof anonClient>>,
+  slug: string
+) {
+  if (slug !== '12' && slug !== '13' && slug !== '14') return slug
+  const { data, error } = await supabase
+    .from('treatise_chapters')
+    .select('slug, title')
+    .in('slug', ['12', '13', '14'])
+  if (error) throw new Error(`Treatise query failed: ${error.message}`)
+  return TreatisePlacement.storedSlug(slug, data ?? [])
+}
+
 function anonClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -143,7 +158,7 @@ export const loadTreatiseChapters = cached(
       .select('slug, title, label, part, source_date, position')
       .order('position', { ascending: true })
     if (error) throw new Error(`Treatise query failed: ${error.message}`)
-    return withChapterTwo((data ?? []).map(summaryFromRow))
+    return withChapterTwo((data ?? []).map(row => TreatisePlacement.present(summaryFromRow(row))))
   },
   ['treatise-chapters'],
   { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
@@ -153,9 +168,10 @@ export const loadCorpusIndex = cached(
   async (): Promise<CorpusIndex> => {
     const supabase = anonClient()
     if (!supabase) return buildCorpusIndex([])
-    const { data, error } = await supabase.from('treatise_chapters').select('slug, markdown')
+    const { data, error } = await supabase.from('treatise_chapters').select('slug, title, markdown')
     if (error) throw new Error(`Treatise query failed: ${error.message}`)
-    return buildCorpusIndex(data ?? [])
+    const rows = data ?? []
+    return TreatisePlacement.apply(buildCorpusIndex(rows), rows)
   },
   ['treatise-corpus-index'],
   { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
@@ -178,7 +194,10 @@ export const loadSectionMoves = cached(
 
 export async function loadTreatiseTargets() {
   const [index, moves] = await Promise.all([loadCorpusIndex(), loadSectionMoves()])
-  return { ...index, redirects: composeRedirects(moves, index) }
+  return {
+    ...index,
+    redirects: composeRedirects([...moves, ...MoneySections.storedMoves()], index)
+  }
 }
 
 export const loadTreatiseChapter = cached(
@@ -194,7 +213,8 @@ export const loadTreatiseChapter = cached(
     }
     // Appendix 14A is the new address of the page still stored as appendix-12a
     // until the next publish writes the new slug.
-    const row = (await read(slug)) ?? (slug === 'appendix-14a' ? await read('appendix-12a') : null)
+    const stored = await storedSlugFor(supabase, slug)
+    const row = (await read(stored)) ?? (slug === 'appendix-14a' ? await read('appendix-12a') : null)
     if (!row) return null
     const [index, glossary] = await Promise.all([
       loadCorpusIndex(),
@@ -205,7 +225,7 @@ export const loadTreatiseChapter = cached(
       index,
       glossary.map(entry => ({ term: entry.term, slug: entry.slug }))
     )
-    const summary = summaryFromRow(row)
+    const summary = TreatisePlacement.present(summaryFromRow(row))
     return {
       ...summary,
       href: slug === 'appendix-14a' ? TreatiseAddress.publicPath('appendix-14a') : summary.href,
