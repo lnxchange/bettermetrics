@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test'
  * accounts with no user_legal_consents row. These checks use an account that
  * has no consent row. E2E_EMAIL and E2E_PASSWORD identify that account.
  */
-const paths = ['/', '/treatise/4', '/chat']
+const paths = ['/', '/treatise/chapter-4', '/chat']
 const gate = /I am 18 or over|accept them before you continue|Could not save your acceptance|Tick the box to agree/
 
 test.describe('signed out', () => {
@@ -46,7 +46,7 @@ test.describe('signed-in account with no consent row', () => {
       await expect(page.getByText(gate)).toHaveCount(0)
       await expect(page.getByRole('heading', { name: 'Terms and privacy' })).toHaveCount(0)
       await expect(page.getByRole('link', { name: 'Sign in' })).toHaveCount(0)
-      if (process.env.E2E_SHOTS && (path === '/' || path === '/treatise/4')) {
+      if (process.env.E2E_SHOTS && (path === '/' || path === '/treatise/chapter-4')) {
         await page.screenshot({
           path: path === '/' ? '/opt/cursor/artifacts/open-home.png' : '/opt/cursor/artifacts/open-treatise.png',
           fullPage: false

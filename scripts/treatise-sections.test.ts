@@ -48,9 +48,9 @@ const linked = linkifyTreatiseMarkdown(
   'See Section 14.1 and Appendix 8F and Appendix 9Z.',
   { index }
 )
-assert(linked.includes('](/treatise/8#14.1)'), 'a live section is linked')
+assert(linked.includes('](/treatise/chapter-8#14.1)'), 'a live section is linked')
 assert(
-  linked.includes('](/treatise/8#8f)'),
+  linked.includes('](/treatise/chapter-8#8f)'),
   'an in-chapter appendix is linked to its chapter'
 )
 assert(
@@ -78,7 +78,7 @@ const followed = linkifyTreatiseMarkdown('See Section 13.10.1.', {
   history: { '13.10.1': { slug: '13', section: '13.9.1' } }
 })
 assert(
-  followed.includes('](/treatise/13#13.9.1)'),
+  followed.includes('](/treatise/chapter-13#13.9.1)'),
   'a moved section opens where it is now'
 )
 assert(
@@ -94,7 +94,7 @@ assert(
   removed.includes('The treatise has been updated since this chat.'),
   'a removed section says the book changed'
 )
-assert(removed.includes('](/treatise/13)'), 'the note links to the chapter')
+assert(removed.includes('](/treatise/chapter-13)'), 'the note links to the chapter')
 assert(!removed.includes('#13.10.1'), 'a removed section is not an anchor')
 
 const renumbered = diffChapterSections(

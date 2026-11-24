@@ -11,7 +11,7 @@ type FrameworkChapter = {
 const defaults = [
   {
     slug: '4',
-    href: '/treatise/4',
+    href: '/treatise/chapter-4',
     label: 'Chapter 4',
     title: 'The Minimal Architecture of AIM and Its Construction',
     role: 'States the minimal architecture and the premises it was built from.'

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { loadGlossaryIndex } from '@/lib/glossary'
 import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
+import { TreatiseAddress } from '@/lib/treatise-address'
 import {
   buildCorpusIndex,
   composeRedirects,
@@ -117,7 +118,7 @@ function summaryFromRow(row: {
     part: asPart(row.part),
     source_date: row.source_date,
     position: row.position,
-    href: `/treatise/${row.slug}`
+    href: TreatiseAddress.publicPath(row.slug)
   }
 }
 
@@ -184,29 +185,35 @@ export const loadTreatiseChapter = cached(
   async (slug: string): Promise<TreatiseChapter | null> => {
     const supabase = anonClient()
     if (!supabase) return null
-    const { data, error } = await supabase
-      .from('treatise_chapters')
-      .select('slug, title, label, part, markdown, headings, source_sha, source_date, position, updated_at')
-      .eq('slug', slug)
-      .maybeSingle()
-    if (error) throw new Error(`Treatise query failed: ${error.message}`)
-    if (!data) return null
+    const columns =
+      'slug, title, label, part, markdown, headings, source_sha, source_date, position, updated_at'
+    const read = async (key: string) => {
+      const { data, error } = await supabase.from('treatise_chapters').select(columns).eq('slug', key).maybeSingle()
+      if (error) throw new Error(`Treatise query failed: ${error.message}`)
+      return data
+    }
+    // Appendix 14A is the new address of the page still stored as appendix-12a
+    // until the next publish writes the new slug.
+    const row = (await read(slug)) ?? (slug === 'appendix-14a' ? await read('appendix-12a') : null)
+    if (!row) return null
     const [index, glossary] = await Promise.all([
       loadCorpusIndex(),
       loadGlossaryIndex()
     ])
     const prepared = prepareTreatiseMarkdown(
-      data.markdown,
+      row.markdown,
       index,
       glossary.map(entry => ({ term: entry.term, slug: entry.slug }))
     )
+    const summary = summaryFromRow(row)
     return {
-      ...summaryFromRow(data),
-      markdown: data.markdown,
+      ...summary,
+      href: slug === 'appendix-14a' ? TreatiseAddress.publicPath('appendix-14a') : summary.href,
+      markdown: row.markdown,
       headings: prepared.headings,
       html: prepared.html,
-      source_sha: data.source_sha,
-      updated_at: data.updated_at
+      source_sha: row.source_sha,
+      updated_at: row.updated_at
     }
   },
   ['treatise-chapter'],

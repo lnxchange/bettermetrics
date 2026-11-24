@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { SITE_URL } from '@/lib/site'
+import { TreatiseAddress } from '@/lib/treatise-address'
 
 /**
  * Sitemap as an explicit route handler rather than `app/sitemap.ts`.
@@ -92,11 +93,15 @@ async function collectSitemapEntries(): Promise<Entry[]> {
     })
   }
 
+  const seen = new Set<string>()
   for (const chapter of chapters.data ?? []) {
     // Chapter 2 is served at /glossary (already listed above).
     if (chapter.slug === '2') continue
+    const url = `${SITE_URL}${TreatiseAddress.publicPath(chapter.slug)}`
+    if (seen.has(url)) continue
+    seen.add(url)
     entries.push({
-      url: `${SITE_URL}/treatise/${chapter.slug}`,
+      url,
       lastModified: chapter.updated_at || sourceDateToIso(chapter.source_date) || now
     })
   }

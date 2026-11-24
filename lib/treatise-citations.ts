@@ -1,3 +1,5 @@
+import { TreatiseAddress } from '@/lib/treatise-address'
+
 export interface TreatiseHeading {
   id: string
   text: string
@@ -26,13 +28,11 @@ function citationPattern() {
 }
 
 export function chapterPath(chapter: string) {
-  const slug = String(Number(chapter))
-  if (slug === '2') return '/glossary'
-  return `/treatise/${slug}`
+  return TreatiseAddress.publicPath(String(Number(chapter)))
 }
 
 export function appendixPath(label: string) {
-  return `/treatise/appendix-${label.toLowerCase()}`
+  return TreatiseAddress.publicPath(`appendix-${label.toLowerCase()}`)
 }
 
 export function citationHref(chapter: string | undefined, appendix: string | undefined, section: string) {
@@ -53,10 +53,10 @@ export interface TreatiseSectionTarget {
 export function treatiseSectionTarget(href: string): TreatiseSectionTarget | null {
   try {
     const url = new URL(href, 'https://aimtheory.org')
-    const match = url.pathname.match(/^\/treatise\/([^/]+)$/)
-    if (!match || match[1] === '2') return null
+    const slug = TreatiseAddress.storageSlugFromPath(url.pathname)
+    if (!slug || slug === '2') return null
     const section = decodeURIComponent(url.hash.replace(/^#/, '')).toLowerCase()
-    return { slug: match[1], section }
+    return { slug, section }
   } catch {
     return null
   }
@@ -364,8 +364,7 @@ export function emptyCorpusIndex(): CorpusIndex {
 }
 
 export function treatisePath(slug: string, section?: string) {
-  if (slug === '2') return '/glossary'
-  const path = `/treatise/${slug}`
+  const path = TreatiseAddress.publicPath(slug)
   return section ? `${path}#${section}` : path
 }
 
