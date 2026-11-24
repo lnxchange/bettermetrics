@@ -6,6 +6,7 @@ import {
   formatSourceDate,
   loadTreatiseChapters,
   loadTreatiseDraft,
+  loadTreatiseMarkdown,
   TREATISE_PARTS,
   TreatiseChapterSummary
 } from '@/lib/treatise'
@@ -54,7 +55,11 @@ function ChapterList({ chapters }: { chapters: TreatiseChapterSummary[] }) {
 }
 
 export default async function TreatiseIndexPage() {
-  const [chapters, draft] = await Promise.all([loadTreatiseChapters(), loadTreatiseDraft()])
+  const [chapters, draft, markdown] = await Promise.all([
+    loadTreatiseChapters(),
+    loadTreatiseDraft(),
+    loadTreatiseMarkdown()
+  ])
   const loaded = chapters.filter(chapter => chapter.slug !== '2')
   const latest = loaded.reduce<string | null>((newest, chapter) => {
     if (!chapter.source_date) return newest
@@ -84,18 +89,36 @@ export default async function TreatiseIndexPage() {
             The book is unfinished. These pages change when the source text changes.
           </p>
           <FrameworkCore chapters={chapters} className="mt-8" />
-          {draft && (
-            <div className="mt-6">
-              <a
-                href={draft.url}
-                download={draft.filename}
-                className="inline-flex items-center rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
-              >
-                Download the draft ebook
-              </a>
-              <p className="mt-2 text-sm text-gray-500">
-                Draft of {formatSourceDate(draft.sourceDate)}. The book is unfinished.
-              </p>
+          {(draft || markdown) && (
+            <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start">
+              {draft && (
+                <div>
+                  <a
+                    href={draft.url}
+                    download={draft.filename}
+                    className="inline-flex items-center rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+                  >
+                    Download the draft ebook
+                  </a>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Draft of {formatSourceDate(draft.sourceDate)}. The book is unfinished.
+                  </p>
+                </div>
+              )}
+              {markdown && (
+                <div>
+                  <a
+                    href={markdown.url}
+                    download={markdown.filename}
+                    className="inline-flex items-center rounded-md border border-blue-700 bg-white px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+                  >
+                    Download the Markdown
+                  </a>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Working text of {formatSourceDate(markdown.sourceDate)}, as Markdown.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
