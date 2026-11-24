@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
 import { SITE_URL } from '@/lib/site'
 import { TreatiseAddress } from '@/lib/treatise-address'
+import { TreatisePlacement } from '@/lib/treatise-placement'
 
 /**
  * Sitemap as an explicit route handler rather than `app/sitemap.ts`.
@@ -75,7 +76,7 @@ async function collectSitemapEntries(): Promise<Entry[]> {
       .order('published_at', { ascending: false }),
     supabase
       .from('treatise_chapters')
-      .select('slug, updated_at, source_date')
+      .select('slug, title, updated_at, source_date')
       .order('position', { ascending: true }),
     supabase
       .from('glossary_entries')
@@ -97,7 +98,15 @@ async function collectSitemapEntries(): Promise<Entry[]> {
   for (const chapter of chapters.data ?? []) {
     // Chapter 2 is served at /glossary (already listed above).
     if (chapter.slug === '2') continue
-    const url = `${SITE_URL}${TreatiseAddress.publicPath(chapter.slug)}`
+    const placed = TreatisePlacement.present({
+      slug: chapter.slug,
+      title: chapter.title,
+      label: chapter.slug,
+      part: 'I',
+      position: 0,
+      href: TreatiseAddress.publicPath(chapter.slug)
+    })
+    const url = `${SITE_URL}${placed.href}`
     if (seen.has(url)) continue
     seen.add(url)
     entries.push({

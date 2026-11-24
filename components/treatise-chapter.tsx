@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArticleContent } from '@/components/article-content'
 import { LicenceNotice } from '@/components/licence-notice'
 import { TableOfContents, TableOfContentsMobile } from '@/components/table-of-contents'
+import { MoneySections } from '@/lib/money-sections'
 import { TreatiseHeading } from '@/lib/treatise-citations'
 
 function withReturn(href: string, returnTo: string | null) {
@@ -49,6 +50,25 @@ export function TreatiseChapterView({
     const alignToHash = () => {
       const hash = decodeURIComponent(window.location.hash.replace(/^#/, ''))
       if (!hash) return
+      const arrival = MoneySections.arrival(hash, ids)
+      if (arrival.kind === 'move') {
+        const next = `#${arrival.id}`
+        if (window.location.hash !== next) {
+          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${next}`)
+        }
+        setHashMissing(null)
+        const target = document.getElementById(arrival.id)
+        if (!target) return
+        const top = target.getBoundingClientRect().top + window.scrollY - 96
+        window.scrollTo({ top, behavior: 'auto' })
+        return
+      }
+      if (arrival.kind === 'top') {
+        window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
+        setHashMissing(null)
+        window.scrollTo({ top: 0, behavior: 'auto' })
+        return
+      }
       if (!ids.has(hash)) {
         setHashMissing(hash)
         return

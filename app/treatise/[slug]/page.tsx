@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { TreatiseChapterView } from '@/components/treatise-chapter'
+import { MoneySections } from '@/lib/money-sections'
 import { TreatiseAddress } from '@/lib/treatise-address'
 import { formatSourceDate, loadTreatiseChapter, loadTreatiseChapters } from '@/lib/treatise'
 import { SITE_OG_IMAGE, metaDescription } from '@/lib/site'
@@ -91,8 +92,12 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
           }
         : null
   const requested = searchParams?.section?.trim()
+  const headingIds = new Set(chapter.headings.map(heading => heading.id))
+  const arrival = requested ? MoneySections.arrival(requested, headingIds) : null
+  if (arrival?.kind === 'move') redirect(`${TreatiseAddress.publicPath(slug)}#${arrival.id}`)
+  if (arrival?.kind === 'top') redirect(TreatiseAddress.publicPath(slug))
   const missingSection =
-    requested && !chapter.headings.some(heading => heading.id === requested.toLowerCase())
+    requested && arrival?.kind !== 'keep' && !headingIds.has(requested.toLowerCase())
       ? requested
       : null
   const returnTo = chatReturnPath(searchParams?.from)
