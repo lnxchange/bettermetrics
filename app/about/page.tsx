@@ -144,16 +144,16 @@ export default function AboutPage() {
               allowing the reduction of friction in human interactions.
             </p>
             <p>
-              My work as a sound engineer and music producer is what enabled me to apply
-              engineering concepts to that issue. Summing stereo to mono means you cannot
+              My work as a sound engineer and music producer gave me the engineering concepts to see how motivation behaves as a system. Summing stereo to mono means you cannot
               recover the stereo mix from the mono mix afterwards, and a want that has been
               summed into one feeling cannot be separated back into the sources that produced
               it. Feedback requires dropping the volume below the level at which it took off
               to stop it, and a motivational loop that has taken off is not ended by a return
-              to the point where it began. Low-pass filters remove some frequencies while
-              leaving others legible, which is what a loose definition does to wants, needs,
-              and preferences: distinctions are taken out, and what remains still reads as if
-              it were the whole account.
+              to the point where it began. A low-pass filter lets the slow, steady frequencies
+              through and strips out the fast ones, and averaging across a whole population does
+              the same to motivation: appetites and intrinsic motivation rise and settle, so they
+              average out, while mimetic desire accumulates, so it is what remains. Hidden in any
+              single exchange, it becomes legible at scale.
             </p>
             <p>
               Contracts exist to manage rivalry; they make implicit expectations explicit and
@@ -171,13 +171,13 @@ export default function AboutPage() {
             <div className="border-l-4 border-amber-400 bg-amber-50 p-6">
               <p>
                 The AIM Framework is a synthetic theory. It provides a basis for
-                hypothesising predictions and tightly boundered tests in order to validate its
+                hypothesising predictions and tightly bounded tests in order to validate its
                 premise. I am not a professional psychologist, economist, philosopher or
                 neuro-scientist. Though I have read broadly across those fields. Therefore, I am
                 seeking assistance from experts in each of those fields to help me validate the
                 theory, because if what the AIM Framework suggests is correct, it may provide a
                 scientific basis for restructuring human societies, economies and governmental
-                structures to enable human flourishing – by removing memetic noise and distortion
+                structures to enable human flourishing – by removing mimetic noise and distortion
                 from areas where it should not override the intrinsic motivations of every
                 individual.
               </p>
@@ -185,7 +185,7 @@ export default function AboutPage() {
 
             <h3 className="pt-4 text-2xl font-bold text-gray-900">How It All Started</h3>
             <p>
-              One of my strongest early memories is believing I was an alien. I was no older than
+              One of my strongest early memories is feeling unrelated to my father. I was no older than
               4. I felt that my father didn&apos;t understand me and that I couldn&apos;t
               understand him. I couldn&apos;t relate to him or effectively communicate the
               importance of my wants and needs to him. That feeling persisted in various forms

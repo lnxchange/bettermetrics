@@ -248,36 +248,42 @@ export function ContactPage() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-6">Why Collaborate on the AIM Framework?</h2>
             <p className="text-xl max-w-4xl mx-auto">
-              This isn&apos;t an incremental improvement—it&apos;s a fundamental reorganization of how we understand human motivation, 
-              with implications for every field of human behavior.
+              The AIM Framework proposes that human motivation has three neurologically distinct sources,
+              and that much of what the behavioural sciences study follows from how those sources combine.
+              If that holds, it bears on every field that studies human behaviour. Testing whether it holds
+              is the reason to collaborate.
             </p>
           </div>
           
           <div className="grid lg:grid-cols-3 gap-8 mb-12">
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4">Not Incremental—Revolutionary</h3>
+              <h3 className="text-xl font-bold mb-4">Potentially Groundbreaking</h3>
               <p className="text-gray-100">
-                Most theories propose new mechanisms. The AIM Framework proposes new <strong>categories</strong>.
-                It provides the first neuroscientific basis for cross-disciplinary definitions of
-                fundamental human concepts, organizing existing evidence into a coherent taxonomic framework.
+                Most theories propose a new mechanism within existing categories. The AIM Framework proposes
+                new categories: Appetites, Intrinsic Motivation and Mimetic Desire. It grounds them in the
+                neuroscience of how motivation is produced, and it organises existing evidence from across
+                the behavioural sciences under them. The result is a single account of motivation from which
+                cross-disciplinary definitions of fundamental human concepts can be built.
               </p>
             </div>
             
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4">Unique Cross-Disciplinary Applications</h3>
+              <h3 className="text-xl font-bold mb-4">Shared Definitions Across Disciplines</h3>
               <p className="text-gray-100">
-                The AIM Framework enables scientific definitions of freedom, respect, fairness, and privacy that 
-                apply uniformly across economics, law, psychology, and policy—resolving conflicts 
-                between different fields&apos; approaches to human behavior.
+                The framework derives working definitions of concepts such as freedom, fairness, consent and
+                harm from the architecture itself, without importing moral premises. Because they come from
+                one model of motivation, the definitions can be applied the same way in economics, law,
+                psychology and policy. That gives these fields a common vocabulary where their approaches now differ.
               </p>
             </div>
             
             <div className="bg-white/10 p-6 rounded-xl backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4">Testable Predictions Existing Frameworks Cannot Make</h3>
+              <h3 className="text-xl font-bold mb-4">Testable Predictions</h3>
               <p className="text-gray-100">
-                The AIM Framework&apos;s tri-source model enables predictions about market failures, intervention backfires, 
-                and social dynamics escalation that no existing theory can make—providing a competitive 
-                advantage in research and practice.
+                The three-source model makes specific predictions about market failures, why some
+                interventions backfire, and how social conflict escalates. They are stated so they can be
+                tested, and so they can fail. Some will agree with what existing theories predict. Where they
+                differ, the difference is the test.
               </p>
             </div>
           </div>
@@ -285,9 +291,10 @@ export function ContactPage() {
           <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm text-center">
             <h3 className="text-2xl font-bold mb-4">The Opportunity</h3>
             <p className="text-lg text-gray-100 max-w-3xl mx-auto">
-              The AIM Framework represents the first time in history that concepts like &quot;freedom,&quot;
-              &quot;respect,&quot; &quot;fairness,&quot; and &quot;privacy&quot; can be defined scientifically rather than philosophically,
-              with testable predictions about when they are violated and how to restore them.
+              If the framework is right, concepts that have long been argued philosophically can also be
+              studied empirically, with testable predictions about when they are violated and how to restore
+              them. If it is wrong, testing it will show where. Either way, the work needs people from each
+              of the fields it touches.
             </p>
           </div>
         </div>
@@ -348,7 +355,7 @@ export function ContactPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Connect</h2>
         <p className="text-gray-600 mb-6">
-          Email: yule@attune.legal
+          Email: info@aimtheory.org
         </p>
         <p className="text-gray-600 mb-8">
           We aim to respond to all inquiries within 48 hours.
