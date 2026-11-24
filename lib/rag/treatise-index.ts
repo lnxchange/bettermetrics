@@ -6,6 +6,32 @@ import { DocumentProcessor } from '@/lib/rag/document-processor'
 // The source tag chat retrieval filters on (app/api/chat/route.ts, match_documents).
 export const TREATISE_SOURCE = 'aim-treatise'
 
+/**
+ * Filename keys from before the 261123 renumber. The chat index matches
+ * chapters by stored slug, so a later publish replaces a chapter whose
+ * number stayed and drops a slug that disappeared. These four titles are
+ * deleted by name as well, including a copy that has no source tag.
+ */
+export class TreatiseIndexKeys {
+  static readonly retired = [
+    'Chapter 12 - Money, Debt and the Architecture of Mimetic Extraction',
+    'Chapter 13 - Bayesian Belief Dynamics',
+    'Chapter 14 - Quantum Epistemology',
+    'Appendix 12A - Claims Against Generative Capacity'
+  ]
+
+  static async deleteRetired(supabase: Client): Promise<string[]> {
+    const { data, error } = await supabase
+      .from('rag_documents')
+      .select('id, title')
+      .in('title', [...TreatiseIndexKeys.retired])
+    if (error) throw new Error(`retired index keys: ${error.message}`)
+    const rows = data ?? []
+    for (const row of rows) await removeDocument(supabase, row.id)
+    return rows.map(row => row.title)
+  }
+}
+
 type Client = ReturnType<typeof createClient<Database>>
 
 interface IndexEntry {
@@ -61,6 +87,7 @@ function documentKey(title: string, metadata: any) {
  * re-embedded; entries no longer in the treatise are removed.
  */
 export async function indexTreatise(supabase: Client, options: { force?: boolean } = {}) {
+  const retired = await TreatiseIndexKeys.deleteRetired(supabase)
   const { data: chapters, error } = await supabase
     .from('treatise_chapters')
     .select('slug, label, title, markdown')
@@ -163,7 +190,7 @@ export async function indexTreatise(supabase: Client, options: { force?: boolean
     removed.push(row.title)
   }
 
-  return { indexed, unchanged, removed }
+  return { indexed, unchanged, removed: [...retired, ...removed] }
 }
 
 async function removeDocument(supabase: Client, id: string) {

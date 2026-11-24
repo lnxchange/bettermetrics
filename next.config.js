@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { RetiredRoutes } = require('./scripts/retired-routes')
+const treatiseRedirects = require('./lib/treatise-legacy-redirects.json')
 
 module.exports = {
   reactStrictMode: true,
@@ -55,6 +56,15 @@ module.exports = {
       // An old article copy of Treatise Chapter 2, which is served at /glossary.
       // Also skipped in app/sitemap.xml/route.ts.
       { source: '/articles/260106-chapter-2', destination: '/glossary', permanent: true },
+      // Bare chapter numbers keep the meaning they had before 261123.
+      // The pairs are written out in lib/treatise-legacy-redirects.json.
+      // Next keeps the query string. The fragment stays in the browser.
+      ...treatiseRedirects.map(([source, destination]) => ({
+        source,
+        destination,
+        permanent: true,
+        statusCode: 301
+      })),
       // The retired premises page, and the Chapter 2 headings retired with it.
       // Numbered fragments are handled on /architecture.
       ...RetiredRoutes.all(),

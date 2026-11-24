@@ -40,7 +40,10 @@ const APPENDIX_POSITION: Record<string, number> = {
   A: 101,
   B: 102,
   C: 103,
+  // 14A is the 261123 name of the appendix that was 12A. 12A stays so an
+  // older file keeps the same slot if it is the one being published.
   '12A': 104,
+  '14A': 104,
   '18A': 105,
   '18B': 106
 }

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { TreatiseChapterView } from '@/components/treatise-chapter'
+import { TreatiseAddress } from '@/lib/treatise-address'
 import { formatSourceDate, loadTreatiseChapter, loadTreatiseChapters } from '@/lib/treatise'
 import { SITE_OG_IMAGE, metaDescription } from '@/lib/site'
 
@@ -23,13 +24,26 @@ interface TreatiseChapterPageProps {
   searchParams?: { section?: string; from?: string }
 }
 
-export async function generateMetadata({ params }: TreatiseChapterPageProps): Promise<Metadata> {
-  if (params.slug === '2') {
-    return { title: 'Glossary', alternates: { canonical: '/glossary' } }
+function storedSlug(segment: string, searchParams?: TreatiseChapterPageProps['searchParams']) {
+  const destination = TreatiseAddress.destinationFor(`/treatise/${segment}`)
+  if (destination) {
+    const params = new URLSearchParams()
+    for (const [key, value] of Object.entries(searchParams ?? {})) {
+      if (typeof value === 'string' && value) params.set(key, value)
+    }
+    const query = params.toString()
+    redirect(query ? `${destination}?${query}` : destination)
   }
-  const chapter = await loadTreatiseChapter(params.slug)
+  const slug = TreatiseAddress.storageSlug(segment)
+  if (!slug) notFound()
+  return slug
+}
+
+export async function generateMetadata({ params }: TreatiseChapterPageProps): Promise<Metadata> {
+  const slug = storedSlug(params.slug)
+  const chapter = await loadTreatiseChapter(slug)
   if (!chapter) return { title: 'Chapter not found', robots: { index: false } }
-  const path = `/treatise/${chapter.slug}`
+  const path = TreatiseAddress.publicPath(slug)
   const description = metaDescription(
     `${chapter.label} of the AIM Treatise, a general theory of human motivation: ${chapter.title}. Current working text, updated as the book develops.`
   )
@@ -50,10 +64,10 @@ export async function generateMetadata({ params }: TreatiseChapterPageProps): Pr
 }
 
 export default async function TreatiseChapterPage({ params, searchParams }: TreatiseChapterPageProps) {
-  if (params.slug === '2') redirect('/glossary')
+  const slug = storedSlug(params.slug, searchParams)
 
   const [chapter, chapters] = await Promise.all([
-    loadTreatiseChapter(params.slug),
+    loadTreatiseChapter(slug),
     loadTreatiseChapters()
   ])
   if (!chapter) notFound()
@@ -72,7 +86,7 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
       : chapter.slug === 'appendix-a'
         ? {
             text: 'With Chapter 4, this appendix is the framework. Chapter 4 states it; this is its mathematics.',
-            href: '/treatise/4',
+            href: '/treatise/chapter-4',
             label: 'Chapter 4'
           }
         : null
