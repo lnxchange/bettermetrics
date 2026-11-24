@@ -34,11 +34,22 @@ export default async function PublishingSchedulePage() {
   const flags = PublishingConfig.flags(process.env, settings)
   const now = new Date()
   const legacy = articles.filter(article => article.pipeline !== 'corpus' && article.status === 'published')
-  const queued = articles.filter(
-    article => article.pipeline === 'corpus' && !article.preview_only && article.scheduled_publish_at && article.editorial_status === 'approved'
-  )
-  const previews = articles.filter(article => article.preview_only)
-  const taken = queued.map(article => new Date(article.scheduled_publish_at as string))
+  const queue = articles
+    .filter(article => {
+      const reviewable = article.editorial_status === 'draft' || article.editorial_status === 'approved'
+      if (!reviewable) return false
+      if (article.preview_only) return true
+      return article.pipeline === 'corpus'
+    })
+    .sort((a, b) => {
+      const left = a.scheduled_publish_at ? new Date(a.scheduled_publish_at).getTime() : Number.POSITIVE_INFINITY
+      const right = b.scheduled_publish_at ? new Date(b.scheduled_publish_at).getTime() : Number.POSITIVE_INFINITY
+      if (left !== right) return left - right
+      return a.slug.localeCompare(b.slug)
+    })
+  const taken = queue
+    .filter(article => !article.preview_only && article.scheduled_publish_at)
+    .map(article => new Date(article.scheduled_publish_at as string))
   const openFrom = now.getTime() < flags.goLiveAt.getTime() ? flags.goLiveAt : now
   const open = ArticleSchedule.openSlots(taken, openFrom, 6)
 
@@ -49,7 +60,7 @@ export default async function PublishingSchedulePage() {
           <p className="text-sm text-gray-500">Admin</p>
           <h1 className="mt-2 text-4xl font-bold text-gray-900">Publishing schedule</h1>
           <p className="mt-4 max-w-2xl text-gray-600">
-            Approved articles go out at 7:00am Melbourne time on Mondays, Wednesdays and Fridays, starting Monday 11 January 2027. Nothing in this workflow is public before then.
+            Drafts and approved articles sit on Monday, Wednesday and Friday at 7:00am Melbourne time, starting Monday 11 January 2027. A draft slot is tentative. Nothing is public until it is approved, the slot has passed, and the clock is on or after go-live.
           </p>
         </div>
       </section>
@@ -85,19 +96,25 @@ export default async function PublishingSchedulePage() {
           is for pasting into Substack. It does not send anything.
         </p>
 
-        <h2 className="mt-10 text-2xl font-bold text-gray-900">Queued</h2>
-        {queued.length === 0 ? (
-          <p className="mt-3 text-gray-600">No approved articles are on the public schedule yet.</p>
+        <h2 className="mt-10 text-2xl font-bold text-gray-900">Queue</h2>
+        <p className="mt-2 text-sm text-gray-600">
+          Ordered by slot. Preview rows are tests: they stay in this list so they can be edited, and they do not reserve a slot.
+        </p>
+        {queue.length === 0 ? (
+          <p className="mt-3 text-gray-600">No drafts or approved articles are queued yet.</p>
         ) : (
           <ul className="mt-4 divide-y divide-gray-200 border-y border-gray-200">
-            {queued.map(article => (
+            {queue.map(article => (
               <li key={article.slug} className="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between">
                 <Link href={`/admin/publishing/articles/${article.slug}`} className="font-medium text-primary-700 hover:underline">
                   {article.title}
                 </Link>
                 <span className="text-sm text-gray-500">
-                  {MelbourneTime.label(new Date(article.scheduled_publish_at as string))}
-                  {article.status === 'published' ? ' · public' : ' · waiting'}
+                  {article.preview_only || !article.scheduled_publish_at
+                    ? 'Not reserved'
+                    : MelbourneTime.label(new Date(article.scheduled_publish_at))}
+                  {' · '}
+                  {article.preview_only ? `Preview · ${article.editorial_status || 'draft'}` : article.editorial_status === 'approved' ? 'Approved' : 'Draft'}
                 </span>
               </li>
             ))}
@@ -111,22 +128,6 @@ export default async function PublishingSchedulePage() {
           ))}
         </ul>
 
-        <h2 className="mt-10 text-2xl font-bold text-gray-900">Preview only</h2>
-        <p className="mt-2 text-sm text-gray-600">These test articles are visible here and nowhere else. They do not take a Monday, Wednesday or Friday slot.</p>
-        {previews.length === 0 ? (
-          <p className="mt-3 text-gray-600">No test articles are loaded.</p>
-        ) : (
-          <ul className="mt-4 divide-y divide-gray-200 border-y border-gray-200">
-            {previews.map(article => (
-              <li key={article.slug} className="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between">
-                <Link href={`/admin/publishing/articles/${article.slug}`} className="font-medium text-primary-700 hover:underline">
-                  {article.title}
-                </Link>
-                <span className="text-sm text-amber-800">Test · {article.editorial_status || article.status}</span>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
     </div>
   )

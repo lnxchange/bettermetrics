@@ -8,6 +8,7 @@ import { ArticleFrontmatter } from '../lib/publishing/frontmatter'
 import { ArticleGate } from '../lib/publishing/gate'
 import { LegacyArticlePath } from '../lib/publishing/legacy-path'
 import { ArticleLoader } from '../lib/publishing/loader'
+import { ArticleReview } from '../lib/publishing/review'
 import { MelbourneTime } from '../lib/publishing/melbourne-time'
 import { ArticlePublisher } from '../lib/publishing/publisher'
 import { ArticleSchedule } from '../lib/publishing/schedule'
@@ -104,7 +105,8 @@ const assigned = ArticleSchedule.assign(
     { slug: 'beta', editorialStatus: 'approved', explicitPublishAt: null, existingSlot: null, previewOnly: false },
     { slug: 'alpha', editorialStatus: 'approved', explicitPublishAt: null, existingSlot: null, previewOnly: false },
     { slug: 'gamma', editorialStatus: 'approved', explicitPublishAt: null, existingSlot: null, previewOnly: false },
-    { slug: 'notes', editorialStatus: 'draft', explicitPublishAt: null, existingSlot: null, previewOnly: false }
+    { slug: 'notes', editorialStatus: 'draft', explicitPublishAt: null, existingSlot: null, previewOnly: false },
+    { slug: 'preview-test-appetites', editorialStatus: 'draft', explicitPublishAt: null, existingSlot: null, previewOnly: true }
   ],
   before,
   goLive
@@ -113,7 +115,38 @@ const slotOf = (slug: string) => assigned.find(item => item.slug === slug)?.slot
 assert(slotOf('alpha') === monday.toISOString(), 'the first new article, by slug, takes Monday')
 assert(slotOf('beta') === wednesday.toISOString(), 'the second takes Wednesday')
 assert(slotOf('gamma') === friday.toISOString(), 'the third takes Friday')
-assert(assigned.find(item => item.slug === 'notes')?.slot === null, 'a draft takes no slot')
+assert(
+  slotOf('notes') === MelbourneTime.nextSlotAfter(friday).toISOString(),
+  'a draft takes the next free slot after the approved ones'
+)
+assert(assigned.find(item => item.slug === 'notes')?.reason === 'draft', 'the draft slot is tentative')
+assert(assigned.find(item => item.slug === 'preview-test-appetites')?.slot === null, 'a preview draft takes no slot')
+const draftGate = corpus({ editorialStatus: 'draft', status: 'draft', scheduledPublishAt: assigned.find(item => item.slug === 'notes')?.slot ?? null })
+assert(!ArticleGate.isPublic(draftGate, gate(before)), 'a draft with a slot stays private before go-live')
+assert(
+  !ArticleGate.isPublic(draftGate, gate(new Date('2027-06-01T00:00:00+10:00'))),
+  'a draft with a past slot stays private after go-live'
+)
+const moved = ArticleSchedule.assign(
+  [
+    {
+      slug: 'notes',
+      editorialStatus: 'draft',
+      explicitPublishAt: friday,
+      existingSlot: monday,
+      previewOnly: false
+    }
+  ],
+  before,
+  goLive
+)
+assert(moved[0]?.slot?.toISOString() === monday.toISOString(), 'a stored draft slot beats a later file date')
+assert(ArticleReview.snap(new Date('2026-06-01T00:00:00+10:00'), goLive).toISOString() === monday.toISOString(), 'a draft date before go-live snaps to the first slot')
+assert(ArticleReview.approve('draft').editorial_status === 'approved', 'approve sets the editorial status')
+assert(ArticleReview.approve('draft').status === 'scheduled', 'approve does not mark the row published')
+assert(ArticleReview.unapprove().status === 'draft' && ArticleReview.unapprove().editorial_status === 'draft', 'un-approve returns the row to draft')
+assert(ArticleReview.collision([{ slug: 'other', at: monday.toISOString() }], 'notes', monday), 'a taken slot is rejected')
+assert(!ArticleReview.collision([{ slug: 'notes', at: monday.toISOString() }], 'notes', monday), 'an article can keep its own slot')
 
 const bumped = ArticleSchedule.assign(
   [
@@ -262,6 +295,106 @@ const second = ArticleLoader.plan(
 )
 assert(second.upserts.every(row => row.changed === false), 'a second sync with the same files writes nothing')
 
+const draftFile = `---
+title: "A draft note"
+slug: queue-note
+summary: A draft waiting for review.
+status: draft
+---
+
+The first wording.
+`
+const firstDraft = ArticleLoader.plan(
+  [{ name: 'queue-note.md', raw: draftFile, previewOnly: false }],
+  [],
+  before,
+  goLive,
+  false
+)
+const draftRow = firstDraft.upserts[0]
+assert(draftRow?.scheduled_publish_at === monday.toISOString(), 'a new draft takes Monday 11 January 2027')
+assert(draftRow?.status === 'draft' && draftRow.editorial_status === 'draft', 'the draft is stored as a draft')
+assert(
+  !ArticleGate.isPublic(
+    ArticleGate.fromRow({
+      pipeline: 'corpus',
+      status: draftRow?.status,
+      editorial_status: draftRow?.editorial_status,
+      scheduled_publish_at: draftRow?.scheduled_publish_at,
+      preview_only: false
+    }),
+    gate(new Date('2027-06-01T00:00:00+10:00'))
+  ),
+  'loading a draft does not make it public'
+)
+const storedDraft = {
+  slug: 'queue-note',
+  status: 'draft',
+  scheduledPublishAt: monday.toISOString(),
+  contentHash: draftRow?.content_hash ?? null,
+  pipeline: 'corpus',
+  previewOnly: false,
+  editorialStatus: 'draft',
+  title: 'A draft note',
+  summary: 'A draft waiting for review.',
+  content: 'Lex rewrote this in the app.'
+}
+const edited = ArticleLoader.plan(
+  [{ name: 'queue-note.md', raw: draftFile.replace('The first wording.', 'The file was rewritten.'), previewOnly: false }],
+  [storedDraft],
+  before,
+  goLive,
+  false
+)
+assert(edited.conflicts.length === 1 && edited.conflicts[0]?.reason === 'edited in the app', 'an in-app edit is reported as a conflict')
+assert(edited.upserts[0]?.changed === false, 'the sync does not write over the edit')
+assert(edited.upserts[0]?.content === 'Lex rewrote this in the app.', 'the in-app wording stays')
+assert(edited.upserts[0]?.scheduled_publish_at === monday.toISOString(), 'the conflict keeps the slot')
+assert(edited.upserts[0]?.editorial_status === 'draft', 'the conflict does not change the editorial status')
+const promoted = ArticleLoader.plan(
+  [{ name: 'queue-note.md', raw: draftFile.replace('status: draft', 'status: approved'), previewOnly: false }],
+  [{ ...storedDraft, content: 'The first wording.' }],
+  before,
+  goLive,
+  false
+)
+assert(promoted.conflicts.length === 0, 'an unedited draft can take an approval from the file')
+assert(promoted.upserts[0]?.editorial_status === 'approved', 'approval is applied')
+assert(promoted.upserts[0]?.scheduled_publish_at === monday.toISOString(), 'approval keeps the Monday slot')
+assert(promoted.upserts[0]?.status === 'scheduled', 'approval does not publish the row')
+assert(
+  !ArticleGate.isPublic(
+    ArticleGate.fromRow({
+      pipeline: 'corpus',
+      status: 'scheduled',
+      editorial_status: 'approved',
+      scheduled_publish_at: monday.toISOString(),
+      preview_only: false
+    }),
+    gate(before)
+  ),
+  'an approved slot is still private before go-live'
+)
+const blocked = ArticleLoader.plan(
+  [{ name: 'queue-note.md', raw: draftFile.replace('The first wording.', 'A later file.'), previewOnly: false }],
+  [
+    {
+      ...storedDraft,
+      status: 'scheduled',
+      editorialStatus: 'approved',
+      content: 'The first wording.',
+      contentHash: promoted.upserts[0]?.content_hash ?? null
+    }
+  ],
+  before,
+  goLive,
+  false
+)
+assert(blocked.conflicts.some(item => item.reason === 'approved in the app'), 'an approved article is not overwritten')
+assert(blocked.upserts[0]?.content === 'The first wording.', 'the approved wording stays')
+assert(blocked.upserts[0]?.editorial_status === 'approved', 'the approval stays')
+assert(blocked.upserts[0]?.changed === false, 'the approved row is not written')
+
 const earlyCandidate = {
   id: '1',
   slug: 'first-real',
@@ -272,6 +405,13 @@ const earlyCandidate = {
   previewOnly: false
 }
 assert(ArticlePublisher.due([earlyCandidate], gate(before)).length === 0, 'the cron publishes nothing before go-live')
+assert(
+  ArticlePublisher.due(
+    [{ ...earlyCandidate, editorialStatus: 'draft', status: 'draft', scheduledPublishAt: monday }],
+    gate(new Date('2027-06-01T00:00:00+10:00'))
+  ).length === 0,
+  'the cron does not publish a draft, even after its slot and go-live'
+)
 assert(ArticlePublisher.heldReason(gate(before)) === 'before-go-live', 'the reason is the go-live gate')
 assert(
   ArticlePublisher.due([{ ...earlyCandidate, scheduledPublishAt: monday, previewOnly: true }], gate(monday)).length === 0,

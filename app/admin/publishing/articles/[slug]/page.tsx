@@ -5,6 +5,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { ArticleView } from '@/components/article-view'
+import { PublishingEditor } from '@/components/publishing-editor'
 import { ArticleHtml } from '@/lib/publishing/article-html'
 import { MelbourneTime } from '@/lib/publishing/melbourne-time'
 import { ArticleRecord } from '@/lib/publishing/public'
@@ -57,11 +58,27 @@ export default async function PreviewArticlePage({ params }: PreviewProps) {
     terms: glossary.map(entry => ({ term: entry.term, slug: entry.slug }))
   })
 
+  const editable = article.pipeline === 'corpus' || article.preview_only === true
+  const slotDate = article.scheduled_publish_at ? MelbourneTime.calendarDate(new Date(article.scheduled_publish_at)) : ''
+
   return (
     <div>
-      <p className="sr-only">
-        <Link href="/admin/publishing">Back to the schedule</Link>
+      <p className="border-b border-gray-100 bg-white">
+        <Link href="/admin/publishing" className="mx-auto block max-w-4xl px-4 py-3 text-sm text-primary-700 hover:underline sm:px-6 lg:px-8">
+          Back to the queue
+        </Link>
       </p>
+      {editable && (
+        <PublishingEditor
+          slug={article.slug}
+          title={article.title}
+          summary={article.meta_description || ''}
+          content={article.content || ''}
+          date={slotDate}
+          editorialStatus={article.editorial_status || 'draft'}
+          previewOnly={article.preview_only === true}
+        />
+      )}
       <ArticleView
         mode="preview"
         title={article.title}

@@ -2,6 +2,7 @@ import { ArticleFrontmatter, ParsedArticle } from '@/lib/publishing/frontmatter'
 import { ArticleGate } from '@/lib/publishing/gate'
 import { MelbourneTime } from '@/lib/publishing/melbourne-time'
 import { ArticleSchedule, ScheduleItem, SlotAssignment } from '@/lib/publishing/schedule'
+import { SyncState } from '@/lib/publishing/sync-state'
 import { PublicationStatus } from '@/lib/publishing/types'
 import { SITE_AUTHOR } from '@/lib/site'
 
@@ -19,6 +20,14 @@ export interface StoredArticle {
   pipeline: string | null
   previewOnly: boolean
   editorialStatus: string | null
+  title?: string | null
+  summary?: string | null
+  content?: string | null
+}
+
+export interface SyncConflict {
+  slug: string
+  reason: string
 }
 
 export interface ArticleUpsert {
@@ -47,7 +56,12 @@ export interface ArticleUpsert {
 /**
  * Idempotent plan for website/articles. Rows are matched on slug. Nothing is
  * deleted. The loader never marks a row published: the cron does that, and
- * only after go-live. A preview file is forced to draft.
+ * only after go-live. A preview file is stored as a draft in the publication
+ * column.
+ *
+ * A stored slot is kept. If the database copy was edited in the app, or it
+ * is already approved, a changed file is reported as a conflict and is not
+ * written. See SyncState.
  */
 export class ArticleLoader {
   static plan(files: SourceFile[], stored: StoredArticle[], now: Date, goLiveAt: Date, paused: boolean) {
@@ -65,9 +79,15 @@ export class ArticleLoader {
     const parsedSlugs = new Set(parsed.map(item => item.article.slug))
     const items: ScheduleItem[] = parsed.map(item => {
       const previous = stored.find(row => row.slug === item.article.slug)
+      const editorialStatus =
+        previous?.editorialStatus === 'approved' || item.article.status === 'approved'
+          ? 'approved'
+          : item.article.status === 'retired'
+            ? 'retired'
+            : 'draft'
       return {
         slug: item.article.slug,
-        editorialStatus: item.article.status,
+        editorialStatus,
         explicitPublishAt: item.article.publishAt,
         existingSlot: ArticleLoader.storedSlot(previous),
         previewOnly: item.previewOnly
@@ -77,12 +97,12 @@ export class ArticleLoader {
     for (const row of stored) {
       if (parsedSlugs.has(row.slug)) continue
       if (row.pipeline !== 'corpus' || row.previewOnly) continue
-      if (row.editorialStatus !== 'approved') continue
+      if (row.editorialStatus !== 'approved' && row.editorialStatus !== 'draft') continue
       const slot = ArticleLoader.storedSlot(row)
       if (!slot || !MelbourneTime.isSlot(slot) || slot.getTime() < goLiveAt.getTime()) continue
       items.push({
         slug: row.slug,
-        editorialStatus: 'approved',
+        editorialStatus: row.editorialStatus === 'approved' ? 'approved' : 'draft',
         explicitPublishAt: null,
         existingSlot: slot,
         previewOnly: false
@@ -91,38 +111,61 @@ export class ArticleLoader {
 
     const assignments = ArticleSchedule.assign(items, now, goLiveAt)
     const bySlug = new Map(assignments.map(item => [item.slug, item]))
+    const conflicts: SyncConflict[] = []
     const upserts: ArticleUpsert[] = parsed.map(item => {
       const assignment = bySlug.get(item.article.slug)
       const previous = stored.find(row => row.slug === item.article.slug)
-      const slot = assignment?.slot ?? null
-      const status = ArticleLoader.publicationStatus({
-        previewOnly: item.previewOnly,
-        editorial: item.article.status,
-        slot,
-        current: previous?.status ?? null,
-        now,
-        goLiveAt,
-        paused
-      })
-      const hash = ArticleFrontmatter.hash(item.raw)
+      const fileHash = ArticleFrontmatter.hash(item.raw)
+      const fileBodyHash = SyncState.bodyHash(item.article.title, item.article.summary, item.article.body)
+      const knownBody = previous?.title !== undefined || previous?.content !== undefined || previous?.summary !== undefined
+      const dbBodyHash = knownBody
+        ? SyncState.bodyHash(previous?.title ?? '', previous?.summary ?? '', previous?.content ?? '')
+        : null
+      const hold = previous
+        ? SyncState.holds({
+            storedHash: previous.contentHash,
+            fileHash,
+            fileBodyHash,
+            dbBodyHash,
+            editorialStatus: previous.editorialStatus
+          })
+        : false
+      const fileUnchanged = Boolean(previous && SyncState.unpack(previous.contentHash).fileHash === fileHash)
+      if (previous && hold && !fileUnchanged) {
+        conflicts.push({
+          slug: item.article.slug,
+          reason: previous.editorialStatus === 'approved' ? 'approved in the app' : 'edited in the app'
+        })
+      }
+      const keep = Boolean(previous && (hold || fileUnchanged))
+      const storedEditorial =
+        previous?.editorialStatus === 'approved' || previous?.editorialStatus === 'retired' ? previous.editorialStatus : 'draft'
+      const editorial = keep ? storedEditorial : item.article.status
+      const slot = keep ? ArticleLoader.storedSlot(previous) : assignment?.slot ?? null
+      const status = keep
+        ? ArticleLoader.keptStatus(previous?.status ?? null)
+        : ArticleLoader.publicationStatus({
+            previewOnly: item.previewOnly,
+            editorial,
+            slot,
+            current: previous?.status ?? null,
+            now,
+            goLiveAt,
+            paused
+          })
       const slotIso = slot ? slot.toISOString() : null
-      const previousSlot = ArticleLoader.storedSlot(previous)?.toISOString() ?? null
-      const changed =
-        !previous ||
-        previous.contentHash !== hash ||
-        previousSlot !== slotIso ||
-        previous.status !== status ||
-        previous.editorialStatus !== item.article.status ||
-        previous.previewOnly !== item.previewOnly ||
-        previous.pipeline !== 'corpus'
+      const title = keep && previous?.title !== undefined && previous.title !== null ? previous.title : item.article.title
+      const summary = keep && previous?.summary !== undefined && previous.summary !== null ? previous.summary : item.article.summary
+      const content = keep && previous?.content !== undefined && previous.content !== null ? previous.content : item.article.body
+      const writtenBody = SyncState.bodyHash(title, summary, content)
       return {
         slug: item.article.slug,
-        title: item.article.title,
-        content: item.article.body,
-        meta_description: item.article.summary,
+        title,
+        content,
+        meta_description: summary,
         tags: item.article.tags,
-        editorial_status: item.article.status,
-        pipeline: 'corpus',
+        editorial_status: editorial === 'approved' || editorial === 'retired' ? editorial : 'draft',
+        pipeline: 'corpus' as const,
         preview_only: item.previewOnly,
         scheduled_publish_at: slotIso,
         status,
@@ -132,14 +175,20 @@ export class ArticleLoader {
         source_papers: item.article.sourcePapers,
         treatise_refs: item.article.treatiseRefs,
         replaces_slugs: item.article.replaces,
-        content_hash: hash,
+        content_hash: keep && previous?.contentHash ? previous.contentHash : SyncState.pack(fileHash, writtenBody),
         author: SITE_AUTHOR,
-        changed,
+        changed: !keep,
         reason: assignment?.reason ?? 'not-approved'
       }
     })
 
-    return { errors, upserts, assignments }
+    return { errors, upserts, assignments, conflicts }
+  }
+
+  /** A kept row stays unpublished unless the cron has already published it. */
+  private static keptStatus(status: string | null): PublicationStatus {
+    if (status === 'published' || status === 'scheduled') return status
+    return 'draft'
   }
 
   static publicationStatus(input: {

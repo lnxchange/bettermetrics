@@ -8,6 +8,20 @@
  * --seeds also loads the two preview-only test articles. They are marked TEST
  * and cannot become public. The run matches on slug, skips unchanged rows,
  * and never deletes. It does not mark anything published.
+ *
+ * Conflict rule. content_hash is "<file sha256>.<body sha256>". The file half
+ * is the raw markdown last applied. The body half is title, summary and body
+ * as written by that sync. Saving or approving in the app does not change
+ * content_hash.
+ *
+ * - The same file is a quiet skip. Nothing is written.
+ * - A changed file is applied only when the row is still a draft and its
+ *   title, summary and body still match the body half. The stored slot stays.
+ * - A changed file is a conflict when the row was edited in the app (the body
+ *   half no longer matches) or editorial_status is approved. The body, the
+ *   approval and the slot are left as they are, and the run prints
+ *   "conflict <slug>: ...". Conflicts do not fail the run. A file that cannot
+ *   be parsed still does.
  */
 import { config as loadEnv } from 'dotenv'
 import { readdir, readFile } from 'fs/promises'
@@ -19,7 +33,7 @@ import { PublishingDb } from '../lib/publishing/public'
 loadEnv({ path: path.join(process.cwd(), '.env.local') })
 
 const COLUMN =
-  'slug, status, scheduled_publish_at, content_hash, pipeline, preview_only, editorial_status'
+  'slug, title, meta_description, content, status, scheduled_publish_at, content_hash, pipeline, preview_only, editorial_status'
 
 async function filesIn(dir: string, previewOnly: boolean) {
   let names: string[]
@@ -68,7 +82,10 @@ async function main() {
       contentHash: row.content_hash ?? null,
       pipeline: row.pipeline ?? null,
       previewOnly: row.preview_only === true,
-      editorialStatus: row.editorial_status ?? null
+      editorialStatus: row.editorial_status ?? null,
+      title: row.title ?? null,
+      summary: row.meta_description ?? null,
+      content: row.content ?? null
     }))
   } else if (!dryRun) {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required')
@@ -77,11 +94,14 @@ async function main() {
   const plan = ArticleLoader.plan(files, stored, new Date(), flags.goLiveAt, flags.publishingPaused)
   const writing = plan.upserts.filter(row => row.changed)
   console.log(
-    `articles: ${files.length} files, ${writing.length} to write, ${plan.upserts.length - writing.length} unchanged, ${plan.errors.length} unreadable`
+    `articles: ${files.length} files, ${writing.length} to write, ${plan.conflicts.length} conflicts, ${plan.upserts.length - writing.length - plan.conflicts.length} unchanged, ${plan.errors.length} unreadable`
   )
   for (const row of plan.upserts) {
     const when = row.scheduled_publish_at ? row.scheduled_publish_at : 'no slot'
     console.log(`  ${row.changed ? 'write' : 'keep '} ${row.slug} ${row.editorial_status} ${row.preview_only ? 'preview' : row.status} ${when}`)
+  }
+  for (const conflict of plan.conflicts) {
+    console.log(`  conflict ${conflict.slug}: ${conflict.reason}, file not applied`)
   }
   for (const error of plan.errors) console.error(`  error ${error}`)
 

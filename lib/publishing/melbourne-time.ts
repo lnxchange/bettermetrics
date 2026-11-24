@@ -71,6 +71,13 @@ export class MelbourneTime {
     return new Date(utc)
   }
 
+  static calendarDate(instant: Date) {
+    const part = MelbourneTime.parts(instant)
+    const month = String(part.month).padStart(2, '0')
+    const day = String(part.day).padStart(2, '0')
+    return `${part.year}-${month}-${day}`
+  }
+
   static addDays(instant: Date, days: number) {
     const part = MelbourneTime.parts(instant)
     const shifted = new Date(Date.UTC(part.year, part.month - 1, part.day + days))
