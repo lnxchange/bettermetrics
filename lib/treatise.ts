@@ -6,6 +6,7 @@ import { prepareTreatiseMarkdown } from '@/lib/treatise-render'
 import { MoneySections } from '@/lib/money-sections'
 import { TreatiseAddress } from '@/lib/treatise-address'
 import { TreatisePlacement } from '@/lib/treatise-placement'
+import { TreatiseTitle } from '@/lib/treatise-title'
 import {
   buildCorpusIndex,
   composeRedirects,
@@ -118,22 +119,35 @@ function asPart(value: string): TreatisePart {
   return 'I'
 }
 
-function summaryFromRow(row: {
-  slug: string
-  title: string
-  label: string
-  part: string
-  source_date: string | null
-  position: number
-}): TreatiseChapterSummary {
+function summaryFromRow(
+  row: {
+    slug: string
+    title: string
+    label: string
+    part: string
+    source_date: string | null
+    position: number
+  },
+  terms: readonly string[]
+): TreatiseChapterSummary {
   return {
     slug: row.slug,
-    title: row.title,
+    title: TreatiseTitle.normalise(row.title, terms),
     label: row.label,
     part: asPart(row.part),
     source_date: row.source_date,
     position: row.position,
     href: TreatiseAddress.publicPath(row.slug)
+  }
+}
+
+/** Defined terms for title case. A glossary miss still leaves ordinary title case. */
+async function loadTitleTerms() {
+  try {
+    const index = await loadGlossaryIndex()
+    return index.map(entry => entry.term)
+  } catch {
+    return []
   }
 }
 
@@ -158,7 +172,10 @@ export const loadTreatiseChapters = cached(
       .select('slug, title, label, part, source_date, position')
       .order('position', { ascending: true })
     if (error) throw new Error(`Treatise query failed: ${error.message}`)
-    return withChapterTwo((data ?? []).map(row => TreatisePlacement.present(summaryFromRow(row))))
+    const terms = await loadTitleTerms()
+    return withChapterTwo(
+      (data ?? []).map(row => TreatisePlacement.present(summaryFromRow(row, terms)))
+    )
   },
   ['treatise-chapters'],
   { revalidate: TREATISE_REVALIDATE, tags: ['treatise'] }
@@ -225,7 +242,8 @@ export const loadTreatiseChapter = cached(
       index,
       glossary.map(entry => ({ term: entry.term, slug: entry.slug }))
     )
-    const summary = TreatisePlacement.present(summaryFromRow(row))
+    const terms = glossary.map(entry => entry.term)
+    const summary = TreatisePlacement.present(summaryFromRow(row, terms))
     return {
       ...summary,
       href: slug === 'appendix-14a' ? TreatiseAddress.publicPath('appendix-14a') : summary.href,
