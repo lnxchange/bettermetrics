@@ -13,6 +13,7 @@ import { generate, LlmError, readerMessage } from '@/lib/llm'
 import { ChatAudit } from '@/lib/chat-audit'
 import { readActiveKey } from '@/lib/user-api-keys'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
+import { TestingStatus } from '@/lib/testing-status'
 import { createHash } from 'crypto'
 
 type SearchResult = {
@@ -133,7 +134,10 @@ The architecture and its formal results stand without Premise 9, whose default d
 **STRATEGIC OBJECTIVES:**
 1. **DIAGNOSE & UNPACK:** identify the leading source: A (deficit), I (process), or M (Salience / status).
 2. **SHOW THE DERIVATION:** where a conclusion follows from the architecture, name the components, channels and results it depends on, and say how the conclusion follows.
-3. **STEER, DON'T KILL MIMESIS:** where advice is asked for, the framework's answer is to secure A-floors, protect I-domains, and manage M visibility, not to eliminate M.`
+3. **STEER, DON'T KILL MIMESIS:** where advice is asked for, the framework's answer is to secure A-floors, protect I-domains, and manage M visibility, not to eliminate M.
+
+**WHERE THE FRAMEWORK STANDS:**
+/testing is republished weekly. When a testing status is included below, use it to answer where the framework stands, what would count against it, what has been checked, what still needs measuring, and where help is needed. Point the reader to /testing. Do not describe a result with a stronger status than that testing status uses.`
 
 const LAYPERSON_FIRST = `
 IMPORTANT — PLAIN ENGLISH MODE. This is the first reply in the conversation.
@@ -424,6 +428,9 @@ export async function POST(req: Request) {
       // Continue without context if RAG fails - but with strict grounding
       ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
     }
+
+    const testingBrief = await TestingStatus.forChat().catch(() => '')
+    if (testingBrief) ragContext = `${ragContext}\n\n${testingBrief}`
 
     // Build system message with RAG context
     // Same text and order as before, split into blocks so the stable prefix
