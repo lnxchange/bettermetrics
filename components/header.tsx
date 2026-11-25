@@ -21,6 +21,7 @@ const navLinks = [
   { href: '/theory', label: 'The Theory' },
   { href: '/architecture', label: 'Architecture' },
   { href: '/treatise', label: 'Treatise' },
+  { href: '/testing', label: 'Testing the Framework' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' }
@@ -45,7 +46,7 @@ export function Header({ session }: HeaderProps) {
   const isAdmin = session?.user?.user_metadata?.is_admin
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-white/95 px-4 backdrop-blur-xl md:px-6 lg:px-8">
+    <header className="min-h-16 sticky top-0 z-50 flex w-full shrink-0 flex-wrap items-center justify-between gap-y-2 border-b bg-white/95 px-4 py-2 backdrop-blur-xl md:px-6 lg:px-8">
       <div className="flex items-center">
         <Link href="/" className="flex items-center" aria-label="The AIM Framework home">
           <AimMark className="h-6 w-auto sm:h-7" />
@@ -66,7 +67,7 @@ export function Header({ session }: HeaderProps) {
       </div>
 
       {/* Desktop */}
-      <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+      <nav className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-x-4 gap-y-2 md:ml-6 md:flex" aria-label="Primary">
         {navLinks.map(l => (
           <Link
             key={l.href}
