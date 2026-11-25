@@ -1,0 +1,303 @@
+{
+ "schemaVersion": 1,
+ "lastUpdated": "2026-11-25",
+ "latestChange": "2026-11-25",
+ "page": {
+  "title": "Testing the Framework",
+  "summary": "What would show the AIM framework is wrong, what has been checked so far, what still needs measuring, and where help is needed. The aim is to make the framework straightforward to test.",
+  "intro": "A theory earns confidence by surviving tests that could have refuted it. This page keeps a current account of how the AIM framework stands against that standard: the predictions that would count against it, the results that have been checked and how, the quantities that still have to be measured, and the open problems where outside expertise would help most. It is updated weekly. Detail lives in the treatise: Appendix A sets out the mathematics and Appendix B the validation roadmap."
+ },
+ "vocabulary": {
+  "result_status": {
+   "machine-checked": "Proved in the Lean proof assistant against the Mathlib library, with no unproved steps.",
+   "derived": "Derived by hand in the treatise and not yet machine-checked.",
+   "cited": "Rests on a standard published theorem that is cited rather than proved here.",
+   "open": "Not yet established."
+  },
+  "prediction_status": {
+   "untested": "No published test bears on it yet, as far as the literature check has found.",
+   "check pending": "The literature check has not yet been run.",
+   "supported": "Published evidence is consistent with it and none found contradicts it.",
+   "contested": "Published evidence points both ways.",
+   "contradicted": "Published evidence counts against it."
+  },
+  "task_status": {
+   "open": "Not started.",
+   "in progress": "Work is under way.",
+   "partly done": "Part of the task is complete.",
+   "done": "Complete."
+  }
+ },
+ "falsification": {
+  "note": "Each prediction follows from the framework's stated premises. Where the step from premises to prediction has been machine-checked, a failed prediction counts against a premise rather than against the derivation. Appendix B, Section B.2 sets out the full falsification surface.",
+  "predictions": [
+   {
+    "id": "jump-not-oscillation",
+    "prediction": "Under positive feedback, loss of stability is a sudden jump to a distant state, not a growing oscillation, preceded by critical slowing down and followed by hysteresis.",
+    "would_count_against": "Crises under positive feedback that resolve by smooth reversal or sustained oscillation, or the absence of the slowing-down signature before the jump.",
+    "basis": "Appendix A, Section A.5.3",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   },
+   {
+    "id": "threshold-independent-of-speed",
+    "prediction": "The tipping threshold for a population of similar Individuals does not depend on how fast each Individual's states relax. Reaction speed moves the timing of a crisis, not where it occurs.",
+    "would_count_against": "A measured threshold that shifts with reaction speed in a population that otherwise matches the conditions.",
+    "basis": "Appendix A, Section A.5.7.4",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   },
+   {
+    "id": "decoupled-body-survives",
+    "prediction": "A body that takes in nothing from a collapsing order survives that order's fold, whatever influence it exerts in return.",
+    "would_count_against": "A body demonstrably decoupled from a collapsing order, judged on evidence dated before the collapse, that collapses with it.",
+    "basis": "Appendix A, Section A.5.7.6",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   },
+   {
+    "id": "attention-caps-amplification",
+    "prediction": "Network amplification is bounded by the share of attention people spend on one another, not by who is connected to whom. Where attention budgets bind, adding connections does not raise susceptibility, and capturing more attention does.",
+    "would_count_against": "Susceptibility that tracks the number of connections rather than the share of attention, where attention budgets are full.",
+    "basis": "Appendix A, Sections A.5.7.4 and A.5.7.5",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   },
+   {
+    "id": "camps-move-apart",
+    "prediction": "Where a population is split into two camps that trust within and distrust between, the first instability moves the camps apart rather than together.",
+    "would_count_against": "A first instability in such a population that draws the camps together.",
+    "basis": "Appendix A, Section A.5.7.6",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   },
+   {
+    "id": "satisfaction-does-not-end-mimesis",
+    "prediction": "Satisfying Appetitive and Intrinsic needs does not by itself reduce mimetic drive while others remain observable.",
+    "would_count_against": "Mimetic drive that falls with Appetitive and Intrinsic satisfaction while observation of others is held constant.",
+    "basis": "Appendix A, Equation A.4-1",
+    "derivation": "machine-checked",
+    "status": "check pending"
+   }
+  ]
+ },
+ "validation": {
+  "internal": {
+   "summary": "Calibration-independent results of Appendix A and Appendix 13A have been proved in the Lean 4 proof assistant against the Mathlib library. Every proof rests only on Lean's three standard axioms. The Lean project is available on request.",
+   "toolchain": "Lean 4 v4.36.0 with Mathlib v4.36.0",
+   "results": [
+    {
+     "area": "Source Opacity",
+     "claim": "The integrated value cannot be decomposed back into its three sources.",
+     "basis": "Appendix A, M3 and M5a",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Mimetic drive",
+     "claim": "Mimetic drive stays above a positive floor while others remain observable, whatever the Appetitive and Intrinsic state.",
+     "basis": "Appendix A, Equation A.4-1",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Tipping point",
+     "claim": "Under positive gain the system cannot reach an oscillatory (Hopf) instability; it tips at loop gain 1.",
+     "basis": "Appendix A, Section A.5.3",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Fold conditions",
+     "claim": "The algebraic conditions for a sudden-jump (saddle-node) bifurcation hold at the tipping point.",
+     "basis": "Appendix A, Section A.5.3",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Fold conclusion",
+     "claim": "Those conditions imply a saddle-node bifurcation.",
+     "basis": "Appendix A, Section A.5.3 (Sotomayor; Kuznetsov)",
+     "status": "cited"
+    },
+    {
+     "area": "Belief updating",
+     "claim": "Classical conditioning is order-independent, so order effects need another source; the two-dimensional order effect is at most one half.",
+     "basis": "Appendix 13A",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Parasitism properties",
+     "claim": "The mimetic channel drives value one way, and the gain meeting the threshold is a product of the host system's couplings.",
+     "basis": "Appendix A, Section A.5.4",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Network enclave",
+     "claim": "A body that takes in nothing from the rest of a network has its stability decided separately and survives the rest's tipping.",
+     "basis": "Appendix A, Section A.5.7",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Network threshold",
+     "claim": "For identical Individuals the network tips exactly when some network pattern meets the threshold condition, independent of relaxation times.",
+     "basis": "Appendix A, Section A.5.7.4",
+     "status": "machine-checked"
+    },
+    {
+     "area": "First network crossing",
+     "claim": "The first pattern to tip is the strongest one, and the crossing is real rather than oscillatory.",
+     "basis": "Appendix A, Sections A.5.7.4 and A.5.7.6 (Perron–Frobenius)",
+     "status": "cited"
+    },
+    {
+     "area": "Attention ceiling",
+     "claim": "Network amplification is at most the largest attention budget, and equals it when budgets are equal and fully spent.",
+     "basis": "Appendix A, Section A.5.7.4",
+     "status": "machine-checked"
+    },
+    {
+     "area": "Heterogeneous populations",
+     "claim": "The network threshold when Individuals differ.",
+     "basis": "Appendix A, Section A.5.7.4",
+     "status": "open"
+    }
+   ]
+  },
+  "external": {
+   "summary": "Published evidence bearing on each prediction is being gathered by an adversarial literature check that searches for contrary evidence as deliberately as for support. Results appear against each prediction above as they come in."
+  }
+ },
+ "calibration": {
+  "note": "The framework's thresholds are structural; where a real population sits relative to them is an empirical question. These are the measurements Appendix A names. Each lists the kind of expertise it needs.",
+  "tasks": [
+   {
+    "title": "Neural calibration of the Decision Hub weight",
+    "detail": "Estimate how strongly observed valuations of others enter integrated value, from neuroimaging studies of social influence.",
+    "expertise": "Neuroeconomics, fMRI",
+    "status": "open"
+   },
+   {
+    "title": "Behavioural calibration of mimetic ignition and its time constant",
+    "detail": "Estimate the ignition gain and response time of mimetic drive from controlled exposure and timing experiments.",
+    "expertise": "Experimental psychology, behavioural economics",
+    "status": "open"
+   },
+   {
+    "title": "Field calibration of status feedback and salience coupling",
+    "detail": "Estimate the status feedback gain and salience coupling from field experiments that vary observability, or from market data.",
+    "expertise": "Field experiments, empirical economics",
+    "status": "open"
+   },
+   {
+    "title": "Identifiability of the parameter set",
+    "detail": "Determine which parameters can be recovered from which observations.",
+    "expertise": "Statistics, system identification",
+    "status": "open"
+   },
+   {
+    "title": "Spectral estimation of observability networks",
+    "detail": "Estimate the spectral radius of who-observes-whom in real information environments, against pre-digital baselines.",
+    "expertise": "Network science, computational social science",
+    "status": "open"
+   },
+   {
+    "title": "Spectral estimation of evidence-coupling networks",
+    "detail": "Estimate how strongly people credit one another's claims, as a function of source and relationship.",
+    "expertise": "Social psychology, network experiments",
+    "status": "open"
+   },
+   {
+    "title": "Empirical measurement of the critical coupling",
+    "detail": "Identify historical or contemporary populations at or near the critical threshold and calibrate it.",
+    "expertise": "Quantitative history, complex systems",
+    "status": "open"
+   },
+   {
+    "title": "Efficacy of the Knowledge Patch at population scale",
+    "detail": "Measure how much individual adoption lowers population-level amplification.",
+    "expertise": "Intervention studies, education research",
+    "status": "open"
+   },
+   {
+    "title": "Fast-to-slow coupling between valuation and belief",
+    "detail": "Calibrate how fast-layer valuation feeds slow belief revision.",
+    "expertise": "Computational cognitive science",
+    "status": "open"
+   }
+  ]
+ },
+ "openProblems": {
+  "note": "Self-contained questions where the framework meets open mathematics or missing tools. Each could be taken up without the rest of the programme.",
+  "problems": [
+   {
+    "title": "Perron–Frobenius in Mathlib",
+    "detail": "A Perron–Frobenius theorem for non-negative and Metzler matrices in the Mathlib library, which would turn the cited network results above into machine-checked ones.",
+    "field": "Formal mathematics"
+   },
+   {
+    "title": "The saddle-node theorem from its algebraic conditions",
+    "detail": "A machine-checkable route from the fold conditions to the saddle-node conclusion, without a general centre-manifold reduction.",
+    "field": "Dynamical systems, formal mathematics"
+   },
+   {
+    "title": "Non-Metzler network couplings",
+    "detail": "The type of the first instability when attention is allocated in proportion to salience, or when hostile couplings do not split cleanly into two camps.",
+    "field": "Dynamical systems, network science"
+   },
+   {
+    "title": "Weakly coupled enclaves",
+    "detail": "A bound showing that a weakly coupled body is drawn toward a fold only in proportion to its coupling.",
+    "field": "Matrix analysis"
+   },
+   {
+    "title": "Heterogeneous populations",
+    "detail": "The network threshold when Individuals differ, where the network no longer separates into independent patterns.",
+    "field": "Dynamical systems"
+   }
+  ]
+ },
+ "collaborators": [],
+ "log": [
+  {
+   "date": "2026-11-25",
+   "kind": "page",
+   "title": "Testing the Framework page started",
+   "detail": "This page now gathers the framework's falsifiable predictions, what has been checked, the measurements still needed, and open problems. It is republished every week."
+  },
+  {
+   "date": "2026-11-25",
+   "kind": "correction",
+   "title": "Network density stated at a fixed weight per connection",
+   "detail": "Machine-checking showed that the treatise's statement that a denser network has a larger spectral radius \"for a given average coupling weight\" does not hold: adding a connection at a fixed average weight can lower it. The text now states the result at a given weight per connection, strictly where the denser network is strongly connected."
+  },
+  {
+   "date": "2026-11-25",
+   "kind": "proof",
+   "title": "Network-layer results machine-checked",
+   "detail": "The decoupled enclave, the attention ceiling, monotonicity of amplification in coupling, structurally balanced camps, and the tipping threshold for a population of identical Individuals were proved in Lean."
+  },
+  {
+   "date": "2026-11-25",
+   "kind": "correction",
+   "title": "Routh–Hurwitz range corrected",
+   "detail": "Machine-checking showed that the third Routh–Hurwitz inequality holds for every loop gain above −8, not for every gain below 1 as the text had it. The text was corrected. The tipping threshold of 1 under positive gain is unaffected."
+  },
+  {
+   "date": "2026-11-25",
+   "kind": "proof",
+   "title": "Single-Individual results machine-checked",
+   "detail": "Source Opacity, the persistence of mimetic drive, the exclusion of oscillatory instability under positive gain, the fold conditions, the Parasitism properties, and three belief-updating identities were proved in Lean."
+  }
+ ],
+ "derived": {
+  "resultCounts": {
+   "machine-checked": 9,
+   "cited": 2,
+   "open": 1
+  },
+  "predictionCounts": {
+   "check pending": 6
+  },
+  "taskCounts": {
+   "open": 9
+  },
+  "machineCheckedTheorems": 69
+ }
+}
