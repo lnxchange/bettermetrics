@@ -1,12 +1,13 @@
 /**
  * The Minimal Architecture page.
  *
- * Canonical statements are Chapter 4, Section 4.2.1 of the AIM Treatise
- * (aim-treatise main, cfc8eac). The carried-by column is Section 4.4.2.
- * Section numbers are the current chapter: Body Manager 4.3.1, Thinker 4.3.2,
- * Observer 4.3.3, Decision Hub 4.3.4, Signed Valuation Principle 4.3.5,
- * Belief Register 4.3.6, Default Priors 4.3.7. Do not add a sentence the
- * Treatise does not supply.
+ * Plain lines on this page are summaries. The formal definition behind each
+ * disclosure is the function-only specification of that section in the
+ * published Chapter 4, read by ArchitectureSpecifications. Do not paste those
+ * specifications here. Section numbers are the current chapter: Body Manager
+ * 4.3.1, Thinker 4.3.2, Observer 4.3.3, Decision Hub 4.3.4, Signed Valuation
+ * Principle 4.3.5, Belief Register 4.3.6, Default Priors 4.3.7. The carried-by
+ * column is Section 4.4.2. Do not add a sentence the treatise does not supply.
  */
 
 export type PremiseStanding =
@@ -34,8 +35,6 @@ export interface ArchitectureComponent {
   section: string
   /** Page line, shown under the heading. */
   plain: string
-  /** Treatise definition, behind the Formal definition disclosure. */
-  text: string
 }
 
 const SPECIFIED: PremiseStanding = 'specified by the architecture'
@@ -62,40 +61,35 @@ export class MinimalArchitecture {
       slug: 'decision-hub',
       section: '4.3.4',
       plain:
-        'Combines the three signals into one value for each option and selects the action.',
-      text: 'The Decision Hub is the component whose primary function is action-selection. The Decision Hub receives valuation inputs from the other three components, integrates them into a single Common-Currency Scalar, and emits a selected action for execution.'
+        'Combines the three signals into one value for each option and selects the action.'
     },
     {
       name: 'Body Manager',
       slug: 'body-manager',
       section: '4.3.1',
       plain:
-        'Signals when the body is short of something (food, water, warmth, rest, relief from pain) and goes quiet once the shortfall is repaired.',
-      text: 'The Body Manager is the component whose primary function is homeostatic deficit signalling and deficit-repair termination. The Body Manager produces valuation signals scaled to the deficit states of the body or body-analogous system it monitors, and terminates those signals on consumption or repair.'
+        'Signals when the body is short of something (food, water, warmth, rest, relief from pain) and goes quiet once the shortfall is repaired.'
     },
     {
       name: 'Thinker',
       slug: 'thinker',
       section: '4.3.2',
       plain:
-        'Holds what you believe about the world and yourself, and works out explanations, including what a given want is about.',
-      text: 'The Thinker is the component whose two architecturally inseparable primary functions are, first, continuous maintenance of the priors that make assessment, recognition, and resolution possible for the whole system, and, second, Ground-Resolution, the evaluative operation that resolves whatever the Thinker is attending to into its best-supported explanation by redistributing probability mass across the Hypothesis Space, of which the resolution of the Decision Hub\u2019s tag-stripped Scalar into a ground-attribution (an answer to what the value is grounded in) is the source-attribution special case.'
+        'Holds what you believe about the world and yourself, and works out explanations, including what a given want is about.'
     },
     {
       name: 'Observer',
       slug: 'observer',
       section: '4.3.3',
       plain:
-        'Continuously reads which things around you stand out as worth pursuing or avoiding, shaped by what you already believe.',
-      text: 'The Observer is the component whose primary function is continuous conditional Salience assessment over the perceived Object field, conditioned on priors maintained by the Thinker.'
+        'Continuously reads which things around you stand out as worth pursuing or avoiding, shaped by what you already believe.'
     },
     {
       name: 'Belief Register',
       slug: 'belief-register',
       section: '4.3.6',
       plain:
-        'Holds the Thinker\u2019s current conclusions so the Observer can use them instantly. It stores; it does not compute.',
-      text: 'The Belief Register is the architectural form in which the Thinker\u2019s current posteriors and Salience-conditioning templates are made available for downstream access at timescales shorter than the Thinker\u2019s deliberative cycle permits. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four.'
+        'Holds the Thinker\u2019s current conclusions so the Observer can use them instantly. It stores; it does not compute.'
     }
   ]
 

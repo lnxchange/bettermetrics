@@ -5,19 +5,30 @@ import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { ArchitectureHash } from '@/components/architecture-hash'
 import { AIMIntegrationEquation } from '@/components/aim-definitions'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
+import { GlossaryProseView } from '@/components/glossary-prose'
 import {
   MinimalArchitecture,
+  type ArchitectureComponent,
   type ConstructionPremise,
   type PremiseStanding
 } from '@/lib/architecture-data'
+import { ArchitectureSpecifications } from '@/lib/architecture-specifications'
+import { GlossaryText } from '@/lib/glossary-text'
 import { SITE_OG_IMAGE } from '@/lib/site'
+import { loadCorpusIndex, loadTreatiseChapter } from '@/lib/treatise'
 
 const standingStyles: Record<PremiseStanding, string> = {
   'specified by the architecture': 'bg-blue-50 text-blue-900 border-blue-200',
   'derived from the architecture': 'bg-amber-50 text-amber-950 border-amber-200'
 }
 
-function ArchitectureJsonLd() {
+export const dynamic = 'force-dynamic'
+
+function ArchitectureJsonLd({
+  components
+}: {
+  components: (ArchitectureComponent & { formal: string })[]
+}) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -43,15 +54,13 @@ function ArchitectureJsonLd() {
         '@type': 'ItemList',
         '@id': 'https://aimtheory.org/architecture#components',
         name: 'The four primary components and the Belief Register',
-        numberOfItems: MinimalArchitecture.components.length,
-        itemListElement: MinimalArchitecture.components.map(
-          (component, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
-            name: component.name,
-            description: component.text
-          })
-        )
+        numberOfItems: components.length,
+        itemListElement: components.map((component, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: component.name,
+          description: GlossaryText.prose(component.formal)
+        }))
       }
     ]
   }
@@ -131,10 +140,27 @@ function PremiseCard({ premise }: { premise: ConstructionPremise }) {
   )
 }
 
-export default function ArchitecturePage() {
+export default async function ArchitecturePage() {
+  const [chapter, index] = await Promise.all([
+    loadTreatiseChapter('4'),
+    loadCorpusIndex()
+  ])
+  if (!chapter?.markdown) {
+    throw new Error(
+      'Chapter 4 is not published, so the formal definitions on this page cannot be shown.'
+    )
+  }
+  const components = MinimalArchitecture.components.map(component => ({
+    ...component,
+    formal: ArchitectureSpecifications.cited(
+      ArchitectureSpecifications.of(chapter.markdown, component.section),
+      index
+    )
+  }))
+
   return (
     <div className="bg-white">
-      <ArchitectureJsonLd />
+      <ArchitectureJsonLd components={components} />
       <ArchitectureHash />
 
       <section className="border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-gray-50 py-14">
@@ -162,7 +188,7 @@ export default function ArchitecturePage() {
             The four primary components and the Belief Register
           </h2>
           <div className="space-y-6">
-            {MinimalArchitecture.components.map(component => (
+            {components.map(component => (
               <article
                 key={component.slug}
                 id={component.slug}
@@ -181,9 +207,10 @@ export default function ArchitecturePage() {
                   <summary className="cursor-pointer select-none text-sm font-medium text-blue-700 hover:underline">
                     Formal definition
                   </summary>
-                  <p className="mt-3 text-base leading-relaxed text-gray-800">
-                    {component.text}
-                  </p>
+                  <GlossaryProseView
+                    text={component.formal}
+                    className="mt-3 text-base leading-relaxed text-gray-800"
+                  />
                 </details>
               </article>
             ))}
@@ -228,9 +255,9 @@ export default function ArchitecturePage() {
               The Observer row is read subject to the Minimum Installation
               Condition (4.3.3.1): in the social special case its output
               terminates asymmetrically, positive-valence installation being
-              interminable in the M-channel until acquisition, which then re-ranks
-              the Object-field, and negative-valence installation terminating
-              pursuit while retaining monitoring-Salience.
+              interminable in the M-channel until acquisition, which then
+              re-ranks the Object-field, and negative-valence installation
+              terminating pursuit while retaining monitoring-Salience.
             </p>
           </details>
           <p className="mt-3 text-sm text-gray-500">
