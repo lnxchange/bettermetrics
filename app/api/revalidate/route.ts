@@ -22,5 +22,6 @@ export async function POST(req: NextRequest) {
   }
   revalidateTag('treatise')
   revalidateTag('glossary')
-  return NextResponse.json({ revalidated: true, tags: ['treatise', 'glossary'] })
+  revalidateTag('articles')
+  return NextResponse.json({ revalidated: true, tags: ['treatise', 'glossary', 'articles'] })
 }

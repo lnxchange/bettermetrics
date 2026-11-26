@@ -93,6 +93,14 @@ export function Header({ session }: HeaderProps) {
         </Link>
         {isAdmin && (
           <Link
+            href="/admin/publishing"
+            className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+          >
+            Schedule
+          </Link>
+        )}
+        {isAdmin && (
+          <Link
             href="/admin"
             className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
           >
@@ -151,6 +159,15 @@ export function Header({ session }: HeaderProps) {
             >
               Contact
             </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/publishing"
+                className="block rounded px-3 py-2.5 text-base font-medium text-gray-800 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Schedule
+              </Link>
+            )}
             {isAdmin && (
               <Link
                 href="/admin"
