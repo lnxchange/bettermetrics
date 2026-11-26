@@ -201,6 +201,17 @@ async function main() {
     'the hero area links once to /architecture, on the minimal architecture CTA'
   )
   assert(
+    heroSection.includes('A Unifying General Theory of Human Motivation'),
+    'the hero names the book as a unifying general theory'
+  )
+  const homepageText = homepage.replace(/\s+/g, ' ')
+  assert(
+    homepageText.includes('the dopaminergic system for the Thinker') &&
+      homepageText.includes('Intrinsic Motivation, from the Thinker') &&
+      !homepageText.includes('dopamine system for intrinsic engagement'),
+    'the front page attaches the dopaminergic system to the Thinker'
+  )
+  assert(
     MinimalArchitecture.lead[0] ===
       'The AIM Framework describes the system that produces wanting as four working parts and one store of beliefs. The Body Manager reports what the body lacks. The Observer reads what stands out around you. The Thinker holds your beliefs and works out what a want is about. The Decision Hub combines all three into one value and picks an action. The Belief Register holds what the Thinker has concluded, so the Observer can use it instantly.',
     'the architecture intro is the plain paragraph'

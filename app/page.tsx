@@ -9,12 +9,12 @@ import { TwoQuestionDiagnostic } from '@/components/two-question-diagnostic'
 import { DecisionHubDiagram } from '@/components/decision-hub-diagram'
 
 export const metadata: Metadata = {
-  title: { absolute: 'The AIM Framework | A General Theory of Human Motivation' },
+  title: { absolute: 'The AIM Framework | A Unifying General Theory of Human Motivation' },
   description:
-    'A general theory of human motivation: three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what mixing hides.',
+    'A unifying general theory of human motivation: three sources of wanting (Appetites, Intrinsic Motivation, Mimetic Desire), one decision signal, and what mixing hides.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'The AIM Framework | A General Theory of Human Motivation',
+    title: 'The AIM Framework | A Unifying General Theory of Human Motivation',
     description:
       'Three sources of wanting, one decision signal, and what gets lost in the mixing.',
     url: '/',
@@ -32,7 +32,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
         <div className="relative mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            A General Theory of Human Motivation
+            A Unifying General Theory of Human Motivation
           </h1>
           <p className="max-w-3xl text-xl text-blue-100">
             The AIM Framework is a model of the system that produces wanting. Three systems in
@@ -88,9 +88,9 @@ export default function HomePage() {
             what is rewarding in the doing, and an Observer continuously reads which objects in
             the surrounding field stand out as valuable. All three feed a Decision Hub, which
             converts them into one value per option and selects an action. (Candidate brain
-            systems: homeostatic signalling for the Body Manager, the dopamine system for
-            intrinsic engagement, the mirror neuron system for the Observer, and the
-            ventromedial prefrontal cortex and ventral striatum for the Decision Hub.)
+            systems: homeostatic signalling for the Body Manager, the dopaminergic system for
+            the Thinker, the mirror neuron system for the Observer, and the ventromedial
+            prefrontal cortex and ventral striatum for the Decision Hub.)
           </p>
           <DecisionHubDiagram />
 
@@ -98,9 +98,10 @@ export default function HomePage() {
             The asymmetry: two deficits and one Salience signal
           </h3>
           <p className="mb-4 text-lg text-gray-700">
-            The three signals are not the same kind of report. Appetites and Intrinsic
-            Motivation each report a deficit: something is missing, and the right object would
-            close it. Hunger ends when you eat. The Observer reports something
+            The three signals are not the same kind of report. Appetites, from the Body
+            Manager, and Intrinsic Motivation, from the Thinker, each report a deficit:
+            something is missing, and the right object would close it. Hunger ends when you
+            eat. The Observer reports something
             else, which is Salience: where value appears to be. It reports no deficit, so
             there is nothing to close and it has no off switch.
           </p>

@@ -132,7 +132,7 @@ export default function TheoryPage() {
             an Observer continuously reads which objects in the surrounding field stand out as
             valuable. All three feed a Decision Hub, which converts them into one value per
             option and selects an action. (Candidate brain systems: homeostatic signalling for
-            the Body Manager, the dopamine system for intrinsic engagement, the mirror neuron
+            the Body Manager, the dopaminergic system for the Thinker, the mirror neuron
             system for the Observer, and the ventromedial prefrontal cortex and ventral
             striatum for the Decision Hub.)
           </P>
