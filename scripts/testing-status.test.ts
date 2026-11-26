@@ -64,7 +64,7 @@ assert.equal(TestingStatus.brief(withConsent).includes('2026-11-01'), false)
 assert.equal(TestingStatus.brief(withConsent).includes('consent'), false)
 
 const book: CorpusIndex = {
-  chapters: ['appendix-a', '13'],
+  chapters: ['appendix-a', 'appendix-b', '13'],
   owners: { a: 'appendix-a', '13a': '13' },
   sections: {
     'a.5.3': { slug: 'appendix-a', text: 'A.5.3' },
@@ -199,6 +199,44 @@ assert.equal(
   true,
   'the chip definition is in the page'
 )
+assert.equal(basis('Appendix A').href, '/treatise/appendix-a')
+assert.equal(basis('Appendix B').href, '/treatise/appendix-b')
+const intro = page.slice(
+  page.indexOf('Detail lives in the treatise:'),
+  page.indexOf('What would count against the framework')
+)
+assert.equal(intro.includes('href="/treatise/appendix-a"'), true)
+assert.equal(intro.includes('>Appendix A</a>'), true)
+assert.equal(intro.includes('href="/treatise/appendix-b"'), true)
+assert.equal(intro.includes('>Appendix B</a>'), true)
+assert.equal(intro.includes('sets out the mathematics and'), true)
+assert.equal(intro.includes('the validation roadmap.'), true)
+TestingBasis.forgetWarnings()
+const plainWarnings: string[] = []
+const warn = console.warn
+console.warn = (message?: unknown) => {
+  plainWarnings.push(String(message))
+}
+let withoutB = ''
+try {
+  withoutB = htmlFor(fixture, {
+    ...book,
+    chapters: book.chapters.filter(slug => slug !== 'appendix-b')
+  })
+} finally {
+  console.warn = warn
+}
+const plainIntro = withoutB.slice(
+  withoutB.indexOf('Detail lives in the treatise:'),
+  withoutB.indexOf('What would count against the framework')
+)
+assert.equal(plainIntro.includes('href="/treatise/appendix-b"'), false)
+assert.equal(plainIntro.includes('Appendix B'), true)
+assert.equal(plainIntro.includes('the validation roadmap.'), true)
+assert.equal(plainIntro.includes('href="/treatise/appendix-a"'), true)
+assert.deepEqual(plainWarnings, [
+  '[testing] Unresolved basis, rendered as text: Appendix B'
+])
 assert.equal(page.includes('href="/treatise/appendix-a#a.5.3"'), true)
 assert.equal(page.includes('href="/treatise/chapter-13#13a"'), true)
 assert.equal(page.includes('href="/treatise/appendix-13a"'), false)

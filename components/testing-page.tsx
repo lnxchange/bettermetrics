@@ -59,6 +59,23 @@ function StatusChip({
   )
 }
 
+function IntroText({ text, index }: { text: string; index: CorpusIndex }) {
+  const parts = TestingBasis.prose(text, index)
+  return (
+    <p className="text-lg leading-relaxed text-foreground/90">
+      {parts.map((part, partIndex) =>
+        part.href ? (
+          <a key={partIndex} href={part.href} className={linkClass}>
+            {part.text}
+          </a>
+        ) : (
+          <span key={partIndex}>{part.text}</span>
+        )
+      )}
+    </p>
+  )
+}
+
 function Prose({ children }: { children: string }) {
   return (
     <p className="text-base leading-relaxed text-foreground/90">{children}</p>
@@ -261,9 +278,7 @@ export function TestingDocument({
       </header>
 
       <div className="mx-auto max-w-3xl space-y-14 px-4 py-12 sm:px-6 lg:max-w-4xl lg:px-8">
-        <p className="text-lg leading-relaxed text-foreground/90">
-          {status.page.intro}
-        </p>
+        <IntroText text={status.page.intro} index={index} />
 
         <section
           aria-labelledby="what-would-count-against-the-framework"

@@ -32,6 +32,20 @@ export class TestingBasis {
       : { href: null, text: basis.trim(), note: '' }
   }
 
+  /**
+   * The intro names whole appendices. Each name is linked only when the
+   * treatise index has that page. The surrounding sentence stays as published.
+   */
+  static prose(text: string, index: CorpusIndex): ResolvedBasis[] {
+    return splitCitations(text).map(part => {
+      if (!part.href) return { href: null, text: part.text, note: '' }
+      const resolved = TestingBasis.resolve(part.text, index)
+      return resolved.href
+        ? { href: resolved.href, text: part.text, note: '' }
+        : { href: null, text: part.text, note: '' }
+    })
+  }
+
   /** Clears the once-per-process warning set. Tests use this. */
   static forgetWarnings() {
     TestingBasis.warned.clear()
