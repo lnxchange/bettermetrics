@@ -21,6 +21,7 @@ const links = [
   { href: '/theory', label: 'The Theory' },
   { href: '/architecture', label: 'Architecture' },
   { href: '/treatise', label: 'Treatise' },
+  { href: '/testing', label: 'Testing the Framework' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' },

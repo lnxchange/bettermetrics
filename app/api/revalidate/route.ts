@@ -1,5 +1,6 @@
 import { timingSafeEqual } from 'crypto'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { TestingStatus } from '@/lib/testing-status'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -8,7 +9,9 @@ export const dynamic = 'force-dynamic'
 // Drops the treatise page cache after the publish Action writes new chapters.
 // The Action sends Authorization: Bearer <REVALIDATE_SECRET>.
 function authorized(header: string | null, secret: string) {
-  const token = header?.startsWith('Bearer ') ? header.slice('Bearer '.length) : ''
+  const token = header?.startsWith('Bearer ')
+    ? header.slice('Bearer '.length)
+    : ''
   const given = Buffer.from(token)
   const expected = Buffer.from(secret)
   if (given.length !== expected.length) return false
@@ -23,5 +26,10 @@ export async function POST(req: NextRequest) {
   revalidateTag('treatise')
   revalidateTag('glossary')
   revalidateTag('articles')
-  return NextResponse.json({ revalidated: true, tags: ['treatise', 'glossary', 'articles'] })
+  revalidateTag(TestingStatus.cacheTag)
+  revalidatePath(TestingStatus.path)
+  return NextResponse.json({
+    revalidated: true,
+    tags: ['treatise', 'glossary', 'articles', TestingStatus.cacheTag]
+  })
 }
