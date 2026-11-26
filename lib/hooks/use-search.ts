@@ -88,3 +88,42 @@ export function useSearch() {
   }
 }
 
+interface GlossarySearchHit {
+  slug: string
+  term: string
+  preview: string
+}
+
+/**
+ * Glossary entries for this query, already ranked. A defined term, or the
+ * entry concentrated on the query, is listed before ordinary pages because
+ * its derivation line points at the section.
+ */
+export async function searchGlossary(query: string): Promise<SearchResult[]> {
+  const q = query.trim()
+  if (q.length < 2) return []
+  try {
+    const response = await fetch(`/api/glossary/search?q=${encodeURIComponent(q.slice(0, 200))}`)
+    if (!response.ok) return []
+    const data = await response.json()
+    if (!Array.isArray(data?.results)) return []
+    return data.results
+      .filter((entry: GlossarySearchHit) => entry?.slug && entry?.term)
+      .map((entry: GlossarySearchHit) => ({
+        page: {
+          title: entry.term,
+          url: `/glossary/${entry.slug}`,
+          sections: []
+        },
+        section: {
+          heading: 'Glossary',
+          anchor: '',
+          content: entry.preview || ''
+        },
+        score: 0
+      }))
+  } catch {
+    return []
+  }
+}
+

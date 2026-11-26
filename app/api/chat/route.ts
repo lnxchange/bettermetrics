@@ -372,8 +372,9 @@ export async function POST(req: Request) {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
         const threshold = userQuery.length > 150 ? 0.35 : 0.4
-        // A named glossary term brings its definition and chapter. Search would
-        // let other passages compete with that definition, so it stays out.
+        // A named glossary term, or an entry concentrated on a phrase in the
+        // question, brings its definition and the section in its derivation
+        // line. Search would let other passages compete with that, so it stays out.
         const treatise = await treatiseContext(retrievalQuery, settings.treatiseContextMaxChars).catch(error => {
           ChatAudit.failed()
           return { text: '', grounded: false, sectionIds: [] as string[] }

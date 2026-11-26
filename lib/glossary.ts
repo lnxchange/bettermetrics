@@ -17,6 +17,16 @@ export interface GlossaryIndexEntry {
 
 export const GLOSSARY_REVALIDATE = 3600
 
+/** Server-side search corpus: the definition, the explanation, and the derivation line. */
+export interface GlossarySearchRow {
+  slug: string
+  term: string
+  letter: string
+  definition: string
+  explanation: string
+  derivation: string | null
+}
+
 function anonClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -52,6 +62,22 @@ export const loadGlossaryIndex = cached(
     }))
   },
   ['glossary-index-v2'],
+  { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
+)
+
+export const loadGlossarySearchCorpus = cached(
+  async (): Promise<GlossarySearchRow[]> => {
+    const supabase = anonClient()
+    if (!supabase) return []
+    const { data, error } = await supabase
+      .from('glossary_entries')
+      .select('slug, term, letter, definition, explanation, derivation')
+      .order('position', { ascending: true })
+      .limit(1000)
+    if (error) throw new Error(`Glossary query failed: ${error.message}`)
+    return data ?? []
+  },
+  ['glossary-search-v1'],
   { revalidate: GLOSSARY_REVALIDATE, tags: ['glossary'] }
 )
 

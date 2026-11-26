@@ -1,10 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
+import { GlossarySearch } from '@/lib/glossary-search'
 import { citationTargets, indexChapter } from '@/lib/treatise-citations'
 
-// When the user names a glossary term, the definition and the chapter that
-// derives it are the answer. Otherwise, a short chapter opening still helps
-// a question that names a chapter without naming a term.
+// When the user names a glossary term, or an entry is concentrated on a
+// phrase they used, that definition and the section named in its derivation
+// line are the answer. Otherwise, a short chapter opening still helps a
+// question that names a chapter without naming a term.
 
 const CACHE_MS = 10 * 60 * 1000
 const CHAPTER_OPENING_CHARS = 8000
@@ -52,7 +54,6 @@ interface GlossaryRow {
   explanation: string
   derivation: string | null
   epistemic_status: string | null
-  pattern: RegExp
 }
 
 interface ChapterSummary {
@@ -92,17 +93,6 @@ function client() {
   })
 }
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-// "Money (M-Object)" is matched as "money"; plural forms match too.
-function termPattern(term: string) {
-  const base = term.replace(/\s*\([^)]*\)\s*$/, '').trim()
-  const words = base.split(/\s+/).map(escapeRegExp).join('[\\s-]+')
-  return new RegExp(`\\b${words}(?:s|es)?\\b`, 'i')
-}
-
 function wordsOf(text: string) {
   return text.toLowerCase().match(/[a-z]+/g) ?? []
 }
@@ -122,8 +112,7 @@ async function glossary() {
       definition: row.definition,
       explanation: row.explanation ?? '',
       derivation: row.derivation,
-      epistemic_status: row.epistemic_status,
-      pattern: termPattern(row.term)
+      epistemic_status: row.epistemic_status
     }))
   glossaryCache = { at: Date.now(), rows }
   return rows
@@ -152,9 +141,10 @@ async function chapters() {
 }
 
 function matchDefinitions(rows: GlossaryRow[], text: string) {
-  return rows
-    .filter(row => row.pattern.test(text))
-    .sort((a, b) => b.term.length - a.term.length)
+  // Every named term, then up to three entries concentrated on a phrase in
+  // the question. The derivation on each of those entries is what brings
+  // the section in below.
+  return GlossarySearch.matches(rows, text, { focusLimit: 3 }).map(hit => hit.document)
 }
 
 function matchChapters(rows: ChapterSummary[], text: string) {

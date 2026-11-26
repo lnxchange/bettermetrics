@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { HiSearch, HiX } from 'react-icons/hi'
-import { useSearch, SearchResult } from '@/lib/hooks/use-search'
+import { useSearch, searchGlossary, SearchResult } from '@/lib/hooks/use-search'
 import { SearchResults } from './search-results'
 
 interface SearchBarProps {
@@ -32,21 +32,32 @@ export function SearchBar({ onClose, className = '', autoFocus = false }: Search
     setIsOpen(true)
   }, [isLoaded, loadSearchIndex])
 
-  // Debounced search
+  // Debounced search. Glossary entries come first: a defined term, or the
+  // entry concentrated on the query, carries the derivation line.
   useEffect(() => {
     if (!query.trim()) {
       setResults([])
       return
     }
 
+    let cancel = false
     const timeoutId = setTimeout(() => {
-      const searchResults = search(query)
-      setResults(searchResults)
+      const pages = search(query)
+      setResults(pages.slice(0, 10))
       setSelectedIndex(0)
+      searchGlossary(query).then(glossary => {
+        if (cancel) return
+        const seen = new Set(glossary.map(result => result.page.url))
+        setResults([...glossary, ...pages.filter(result => !seen.has(result.page.url))].slice(0, 10))
+        setSelectedIndex(0)
+      })
     }, 300)
 
-    return () => clearTimeout(timeoutId)
-  }, [query, search])
+    return () => {
+      cancel = true
+      clearTimeout(timeoutId)
+    }
+  }, [query, search, isLoaded])
 
   // Click outside to close
   useEffect(() => {

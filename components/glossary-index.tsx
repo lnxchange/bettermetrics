@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { HiArrowRight, HiSearch } from 'react-icons/hi'
 import { AskAI } from '@/components/ask-ai'
@@ -48,15 +48,68 @@ function HighlightedText({ text, query }: { text: string; query: string }) {
 export function GlossaryIndex({ entries }: { entries: GlossaryIndexEntry[] }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
+  const [remote, setRemote] = useState<GlossaryIndexEntry[]>([])
 
   const letters = useMemo(() => Array.from(new Set(entries.map(entry => entry.letter))).sort(), [entries])
 
   const query = searchQuery.trim().toLowerCase()
+
+  // The list shipped to the browser only has a short preview, so a query such
+  // as "Veblen goods" is invisible there. The search API reads the definition
+  // and explanation and puts a defined term, or the entry concentrated on the
+  // query, first. Its preview includes the derivation line.
+  useEffect(() => {
+    if (query.length < 2) {
+      setRemote([])
+      return
+    }
+    setRemote([])
+    const controller = new AbortController()
+    const timer = window.setTimeout(() => {
+      fetch(`/api/glossary/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+        .then(response => (response.ok ? response.json() : null))
+        .then(data => {
+          if (!Array.isArray(data?.results)) {
+            setRemote([])
+            return
+          }
+          setRemote(
+            data.results
+              .filter((entry: GlossaryIndexEntry) => entry?.slug && entry?.term)
+              .map((entry: GlossaryIndexEntry) => ({
+                slug: entry.slug,
+                term: entry.term,
+                letter: entry.letter,
+                preview: entry.preview
+              }))
+          )
+        })
+        .catch(error => {
+          if (error instanceof DOMException && error.name === 'AbortError') return
+          setRemote([])
+        })
+    }, 200)
+    return () => {
+      controller.abort()
+      window.clearTimeout(timer)
+    }
+  }, [query])
+
   const visible = useMemo(() => {
     const tokens = queryTokens(query)
+    const seen = new Set<string>()
+    const leading: GlossaryIndexEntry[] = []
+    if (query) {
+      for (const entry of remote) {
+        if (seen.has(entry.slug)) continue
+        seen.add(entry.slug)
+        leading.push(entry)
+      }
+    }
     const ranked: { entry: GlossaryIndexEntry; rank: number }[] = []
     for (const entry of entries) {
-      if (selectedLetter && entry.letter !== selectedLetter) continue
+      if (seen.has(entry.slug)) continue
+      if (!query && selectedLetter && entry.letter !== selectedLetter) continue
       if (!query) {
         ranked.push({ entry, rank: 0 })
         continue
@@ -65,8 +118,8 @@ export function GlossaryIndex({ entries }: { entries: GlossaryIndexEntry[] }) {
       if (r >= 0) ranked.push({ entry, rank: r })
     }
     if (query) ranked.sort((a, b) => a.rank - b.rank || a.entry.term.localeCompare(b.entry.term))
-    return ranked.map(item => item.entry)
-  }, [entries, query, selectedLetter])
+    return [...leading, ...ranked.map(item => item.entry)]
+  }, [entries, query, remote, selectedLetter])
 
   // Group by letter when browsing; flat ranked list when searching.
   const groups = useMemo(() => {
