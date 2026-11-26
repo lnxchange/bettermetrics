@@ -4,11 +4,33 @@
  * Each one is the function-only specification of that component's section in
  * the published Chapter 4. The paragraph is taken whole, including its label
  * and any TeX, so the page cannot drift onto a shortened paraphrase.
+ * Section and chapter references are linked with the treatise citation
+ * resolver. A reference that does not match a published heading stays text.
  */
+
+import {
+  CorpusIndex,
+  linkifyTreatiseMarkdown,
+  unresolvedCitations,
+  UnresolvedCitation
+} from '@/lib/treatise-citations'
 
 const LABEL = '**Function-only specification.**'
 
 export class ArchitectureSpecifications {
+  /** Markdown links for every citation the published book can open. */
+  static cited(paragraph: string, index: CorpusIndex) {
+    return linkifyTreatiseMarkdown(paragraph, { index })
+  }
+
+  /** Citations the resolver left as text because no heading matches. */
+  static unresolved(
+    paragraph: string,
+    index: CorpusIndex
+  ): UnresolvedCitation[] {
+    return unresolvedCitations(paragraph, index)
+  }
+
   static of(markdown: string, sectionId: string) {
     const paragraph = ArchitectureSpecifications.paragraphs(
       ArchitectureSpecifications.sectionBody(markdown, sectionId)

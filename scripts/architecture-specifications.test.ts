@@ -1,6 +1,7 @@
 import { ArchitectureSpecifications } from '../lib/architecture-specifications'
 import { GlossaryProse } from '../lib/glossary-prose'
 import { GlossaryText } from '../lib/glossary-text'
+import { buildCorpusIndex } from '../lib/treatise-citations'
 
 function assert(condition: boolean, message: string) {
   if (!condition) throw new Error(message)
@@ -29,7 +30,7 @@ A later paragraph in the same section is not the specification.
 
 ### 4.3.3 The Observer
 
-**Function-only specification.** The Observer is the component whose primary function is continuous conditional Salience assessment over the perceived Object field, conditioned on priors maintained by the Thinker. The reading is locative as well as scalar (it says where each Object sits as well as how much it matters).
+**Function-only specification.** The Observer is the component whose primary function is continuous conditional Salience assessment over the perceived Object field, conditioned on priors maintained by the Thinker. The reading is locative as well as scalar (it says where each Object sits as well as how much it matters). That is what produces the error modes (Section 4.5.1).
 
 #### 4.3.3.2 Observer Quiescence and Thinker Privacy
 
@@ -37,7 +38,7 @@ A later paragraph in the same section is not the specification.
 
 ### 4.3.4 The Decision Hub
 
-**Function-only specification.** The Decision Hub is the component whose primary function is action-selection. The Decision Hub receives valuation inputs from the other three components, integrates them into a single Common-Currency Scalar, and emits a selected action for execution. The Decision Hub also returns the integrated Scalar to the Thinker as the feedback signal on which Bayesian ground-resolution operates. Action-selection is single-channel: the Decision Hub emits one selected action at a time.
+**Function-only specification.** The Decision Hub is the component whose primary function is action-selection. The Decision Hub receives valuation inputs from the other three components, integrates them into a single Common-Currency Scalar, and emits a selected action for execution. The Decision Hub also returns the integrated Scalar to the Thinker as the feedback signal on which Bayesian ground-resolution operates. An unselected claim is held as a prior (Chapter 14, Section 14.2.3). Action-selection is single-channel: the Decision Hub emits one selected action at a time. The Decision Hub is therefore the bottleneck (Section 4.1).
 
 ### 4.3.6 The Belief Register
 
@@ -121,5 +122,81 @@ try {
   blank = error instanceof Error && error.message.includes('no function-only')
 }
 assert(blank, 'a label with no specification is refused')
+
+const book = buildCorpusIndex([
+  {
+    slug: '4',
+    markdown: '## 4.1 A Specified Architecture\n\n## 4.5.1 Source Opacity\n\n'
+  },
+  {
+    slug: '14',
+    markdown: '## 14.2.3 The Chain of Objects and What Can Be Afforded\n\n'
+  },
+  {
+    slug: 'appendix-a',
+    markdown: '## A.5.6 The Fast-to-Slow Coupling\n\n'
+  }
+])
+
+const linkedHub = ArchitectureSpecifications.cited(hub, book)
+assert(
+  linkedHub.includes(
+    '[Chapter 14, Section 14.2.3](/treatise/chapter-14#14.2.3)'
+  ) && linkedHub.includes('[Section 4.1](/treatise/chapter-4#4.1)'),
+  'Decision Hub references link to the published headings'
+)
+assert(
+  ArchitectureSpecifications.unresolved(hub, book).length === 0,
+  'both Decision Hub references resolve'
+)
+
+const linkedObserver = ArchitectureSpecifications.cited(observer, book)
+assert(
+  linkedObserver.includes('[Section 4.5.1](/treatise/chapter-4#4.5.1)'),
+  'the Observer reference links to Section 4.5.1'
+)
+
+const linkedBelief = ArchitectureSpecifications.cited(belief, book)
+assert(
+  linkedBelief.includes('$b_t$') &&
+    linkedBelief.includes('[Appendix A.5.6](/treatise/appendix-a#a.5.6)'),
+  'the Belief Register symbol stays TeX beside its appendix link'
+)
+const beliefHtml = GlossaryProse.html(linkedBelief)
+assert(
+  beliefHtml.includes('<math') && !beliefHtml.includes('$b_t$'),
+  'a citation link does not stop the maths renderer'
+)
+assert(
+  beliefHtml.includes('href="/treatise/appendix-a#a.5.6"'),
+  'the appendix link survives the prose renderer'
+)
+
+const hubHtml = GlossaryProse.html(linkedHub)
+assert(
+  hubHtml.includes('href="/treatise/chapter-14#14.2.3"') &&
+    hubHtml.includes('href="/treatise/chapter-4#4.1"'),
+  'the Decision Hub links survive the prose renderer'
+)
+assert(
+  !GlossaryText.prose(linkedHub).includes('/treatise/') &&
+    GlossaryText.prose(linkedBelief).includes('b_t') &&
+    !GlossaryText.prose(linkedBelief).includes('$'),
+  'structured data keeps the words and the symbol, without the link addresses'
+)
+
+const mixed = 'See Section 9.9.9 and Section 4.1.'
+const linkedMixed = ArchitectureSpecifications.cited(mixed, book)
+assert(
+  linkedMixed.includes('Section 9.9.9') &&
+    !linkedMixed.includes('9.9.9]') &&
+    linkedMixed.includes('[Section 4.1](/treatise/chapter-4#4.1)'),
+  'a reference with no heading stays plain text'
+)
+const unresolved = ArchitectureSpecifications.unresolved(mixed, book)
+assert(
+  unresolved.length === 1 && unresolved[0].text === 'Section 9.9.9',
+  'the unresolved reference is reported'
+)
 
 console.log('architecture specification tests passed')

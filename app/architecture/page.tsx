@@ -15,7 +15,7 @@ import {
 import { ArchitectureSpecifications } from '@/lib/architecture-specifications'
 import { GlossaryText } from '@/lib/glossary-text'
 import { SITE_OG_IMAGE } from '@/lib/site'
-import { loadTreatiseChapter } from '@/lib/treatise'
+import { loadCorpusIndex, loadTreatiseChapter } from '@/lib/treatise'
 
 const standingStyles: Record<PremiseStanding, string> = {
   'specified by the architecture': 'bg-blue-50 text-blue-900 border-blue-200',
@@ -141,7 +141,10 @@ function PremiseCard({ premise }: { premise: ConstructionPremise }) {
 }
 
 export default async function ArchitecturePage() {
-  const chapter = await loadTreatiseChapter('4')
+  const [chapter, index] = await Promise.all([
+    loadTreatiseChapter('4'),
+    loadCorpusIndex()
+  ])
   if (!chapter?.markdown) {
     throw new Error(
       'Chapter 4 is not published, so the formal definitions on this page cannot be shown.'
@@ -149,7 +152,10 @@ export default async function ArchitecturePage() {
   }
   const components = MinimalArchitecture.components.map(component => ({
     ...component,
-    formal: ArchitectureSpecifications.of(chapter.markdown, component.section)
+    formal: ArchitectureSpecifications.cited(
+      ArchitectureSpecifications.of(chapter.markdown, component.section),
+      index
+    )
   }))
 
   return (
