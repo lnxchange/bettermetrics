@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import path from 'path'
+import { NextRequest } from 'next/server'
 import { ArticleHtml } from '../lib/publishing/article-html'
 import { PublishingConfig } from '../lib/publishing/config'
 import { WeeklyDigest } from '../lib/publishing/digest'
@@ -521,19 +522,65 @@ const testEnv = {
   X_ACCESS_TOKEN_SECRET: 'ts'
 }
 let fetched = false
-void ArticleSyndication.deliver(
-  testEnv,
-  { slug: 'first-real', title: 'Weights', summary: 'A note', previewOnly: false },
-  { now: monday, goLiveAt: goLive, syndicationEnabled: true },
-  'https://aimtheory.org',
-  (async () => {
-    fetched = true
-    throw new Error('network')
-  }) as typeof fetch
-)
-  .then(result => {
+
+function cronRequest(method: 'GET' | 'POST', authorization?: string) {
+  const headers = new Headers()
+  if (authorization) headers.set('authorization', authorization)
+  return new NextRequest('http://localhost/api/publishing/run', { method, headers })
+}
+
+async function assertCronAuth() {
+  const saved = {
+    CRON_SECRET: process.env.CRON_SECRET,
+    REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY
+  }
+  process.env.CRON_SECRET = 'cron-test-token'
+  delete process.env.REVALIDATE_SECRET
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL
+  delete process.env.SUPABASE_URL
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY
+  try {
+    const { GET, POST } = await import('../app/api/publishing/run/route')
+    const missing = await GET(cronRequest('GET'))
+    assert(missing.status === 401, 'GET without a token is refused')
+    const wrong = await GET(cronRequest('GET', 'Bearer cron-test-wrong'))
+    assert(wrong.status === 401, 'GET with the wrong token is refused')
+    const valid = await GET(cronRequest('GET', 'Bearer cron-test-token'))
+    assert(valid.status === 500, 'GET with the cron token passes the bearer check')
+    const body = (await valid.json()) as { error?: string }
+    assert(body.error === 'Publishing storage is not configured', 'a valid cron token reaches the publisher')
+    const posted = await POST(cronRequest('POST'))
+    assert(posted.status === 401, 'POST without a token is refused')
+    const postedValid = await POST(cronRequest('POST', 'Bearer cron-test-token'))
+    assert(postedValid.status === valid.status, 'POST uses the same publisher as GET')
+  } finally {
+    for (const [key, value] of Object.entries(saved)) {
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+  }
+}
+
+void Promise.all([
+  assertCronAuth(),
+  ArticleSyndication.deliver(
+    testEnv,
+    { slug: 'first-real', title: 'Weights', summary: 'A note', previewOnly: false },
+    { now: monday, goLiveAt: goLive, syndicationEnabled: true },
+    'https://aimtheory.org',
+    (async () => {
+      fetched = true
+      throw new Error('network')
+    }) as typeof fetch
+  ).then(result => {
     assert(result.posted === false && result.reason === 'test', 'a test run does not post')
     assert(!fetched, 'a test run does not call fetch')
+  })
+])
+  .then(() => {
     console.log('publishing tests passed')
   })
   .catch(error => {
