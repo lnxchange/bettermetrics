@@ -17,24 +17,26 @@ export const dynamic = 'force-dynamic'
 
 const CACHE_SECONDS = 3600
 
-const STATIC_ROUTES = [
-  '/',
-  '/theory',
-  '/architecture',
-  '/glossary',
-  '/treatise',
-  '/articles',
-  '/articles/feed.xml',
-  '/articles/atom.xml',
-  '/about',
-  '/diagnostic',
-  '/contact',
-  '/terms'
+const STATIC_ROUTES: { path: string; changefreq?: 'weekly' }[] = [
+  { path: '/' },
+  { path: '/theory' },
+  { path: '/architecture' },
+  { path: '/glossary' },
+  { path: '/treatise' },
+  { path: '/testing', changefreq: 'weekly' },
+  { path: '/articles' },
+  { path: '/articles/feed.xml' },
+  { path: '/articles/atom.xml' },
+  { path: '/about' },
+  { path: '/diagnostic' },
+  { path: '/contact' },
+  { path: '/terms' }
 ]
 
 interface Entry {
   url: string
   lastModified?: string | Date
+  changefreq?: 'weekly'
 }
 
 function anonClient() {
@@ -49,11 +51,18 @@ function anonClient() {
 function sourceDateToIso(yymmdd: string | null): string | undefined {
   if (!yymmdd || !/^\d{6}$/.test(yymmdd)) return undefined
   const year = 2000 + Number(yymmdd.slice(0, 2))
-  return new Date(Date.UTC(year, Number(yymmdd.slice(2, 4)) - 1, Number(yymmdd.slice(4, 6)))).toISOString()
+  return new Date(
+    Date.UTC(year, Number(yymmdd.slice(2, 4)) - 1, Number(yymmdd.slice(4, 6)))
+  ).toISOString()
 }
 
 function escapeXml(value: string) {
-  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
 }
 
 function toIso(value: string | Date | undefined): string | undefined {
@@ -64,9 +73,10 @@ function toIso(value: string | Date | undefined): string | undefined {
 
 async function collectSitemapEntries(): Promise<Entry[]> {
   const now = new Date()
-  const entries: Entry[] = STATIC_ROUTES.map(path => ({
-    url: `${SITE_URL}${path}`,
-    lastModified: now
+  const entries: Entry[] = STATIC_ROUTES.map(route => ({
+    url: `${SITE_URL}${route.path}`,
+    lastModified: now,
+    changefreq: route.changefreq
   }))
 
   const supabase = anonClient()
@@ -111,7 +121,8 @@ async function collectSitemapEntries(): Promise<Entry[]> {
     seen.add(url)
     entries.push({
       url,
-      lastModified: chapter.updated_at || sourceDateToIso(chapter.source_date) || now
+      lastModified:
+        chapter.updated_at || sourceDateToIso(chapter.source_date) || now
     })
   }
 
@@ -133,7 +144,12 @@ export async function GET() {
     entries
       .map(entry => {
         const lastmod = toIso(entry.lastModified)
-        return `  <url>\n    <loc>${escapeXml(entry.url)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}\n  </url>`
+        const changefreq = entry.changefreq
+          ? `\n    <changefreq>${entry.changefreq}</changefreq>`
+          : ''
+        return `  <url>\n    <loc>${escapeXml(entry.url)}</loc>${
+          lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''
+        }${changefreq}\n  </url>`
       })
       .join('\n') +
     '\n</urlset>\n'

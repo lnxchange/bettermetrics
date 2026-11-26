@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(__dirname, '..', 'public', 'search-index.json');
 // wrapper). Headings and paragraphs are read from the component instead.
 const CONTENT_SOURCES = {
   '/contact': path.join(__dirname, '..', 'components', 'contact-page.tsx'),
+  '/testing': path.join(__dirname, '..', 'components', 'testing-page.tsx'),
   '/diagnostic': path.join(__dirname, '..', 'components', 'diagnostic-page.tsx'),
   // Canonical statements live in this module and are rendered into <p> tags.
   '/architecture': path.join(__dirname, '..', 'lib', 'architecture-data.ts')

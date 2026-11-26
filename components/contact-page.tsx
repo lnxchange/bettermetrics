@@ -253,6 +253,13 @@ export function ContactPage() {
               If that holds, it bears on every field that studies human behaviour. Testing whether it holds
               is the reason to collaborate.
             </p>
+            <p className="mx-auto mt-6 max-w-4xl text-xl">
+              Where the framework stands, and where help is needed, is set out at{' '}
+              <Link href="/testing" className="underline underline-offset-2">
+                Testing the Framework
+              </Link>
+              .
+            </p>
           </div>
           
           <div className="grid lg:grid-cols-3 gap-8 mb-12">

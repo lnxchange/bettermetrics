@@ -6,6 +6,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "test": "tsx scripts/run-unit-tests.ts",
     "build": "npm --prefix crm ci --include=dev --ignore-scripts && npm run build:crm && node scripts/generate-search-index.js && next build",
     "build:crm": "VITE_SUPABASE_URL=\"${CRM_SUPABASE_URL:-${CRM_NEXT_PUBLIC_SUPABASE_URL:-}}\" VITE_SB_PUBLISHABLE_KEY=\"${CRM_SUPABASE_ANON_KEY:-${CRM_NEXT_PUBLIC_SUPABASE_ANON_KEY:-}}\" npm --prefix crm run build",
     "build:search": "node scripts/generate-search-index.js",
@@ -73,7 +74,8 @@
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
     "resend": "^6.34.1",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^12.0.0",
