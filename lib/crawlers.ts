@@ -1,7 +1,7 @@
 /**
  * Public pages are open to every crawler, including AI crawlers.
- * Only signed-in and private paths are disallowed. The lists are the same
- * for every user agent so no crawler is treated differently.
+ * Only signed-in, private, and unlisted tool paths are disallowed. The lists
+ * are the same for every user agent so no crawler is treated differently.
  */
 export class CrawlerPolicy {
   static readonly agents = [
@@ -23,6 +23,7 @@ export class CrawlerPolicy {
     '/share/',
     '/sign-in',
     '/sign-up',
+    '/tools',
     '/unsubscribe',
     '/update-password'
   ]
