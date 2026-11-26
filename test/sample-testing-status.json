@@ -85,6 +85,9 @@
   "internal": {
    "summary": "Calibration-independent results of Appendix A and Appendix 13A have been proved in the Lean 4 proof assistant against the Mathlib library. Every proof rests only on Lean's three standard axioms. The Lean project is available on request.",
    "toolchain": "Lean 4 v4.36.0 with Mathlib v4.36.0",
+   "download": {
+    "href": "https://mlwjklukwwaljtwysmna.supabase.co/storage/v1/object/public/treatise-ebooks/aim-pilot.zip"
+   },
    "results": [
     {
      "area": "Source Opacity",

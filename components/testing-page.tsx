@@ -2,6 +2,7 @@ import React from 'react'
 import { CorpusIndex } from '@/lib/treatise-citations'
 import { ResolvedBasis, TestingBasis } from '@/lib/testing-basis'
 import { TestingChip } from '@/lib/testing-chip'
+import { TestingDownload } from '@/lib/testing-download'
 import { TestingStatus, TestingStatusFile } from '@/lib/testing-status'
 
 const linkClass =
@@ -79,6 +80,26 @@ function IntroText({ text, index }: { text: string; index: CorpusIndex }) {
 function Prose({ children }: { children: string }) {
   return (
     <p className="text-base leading-relaxed text-foreground/90">{children}</p>
+  )
+}
+
+function CheckedSummary({
+  summary,
+  href
+}: {
+  summary: string
+  href: string | null
+}) {
+  const sentence = TestingDownload.sentence(summary, href)
+  if (!sentence || !href) return <Prose>{summary}</Prose>
+  return (
+    <p className="text-base leading-relaxed text-foreground/90">
+      {sentence.before}
+      <a href={href} className={linkClass}>
+        {TestingDownload.linkText}
+      </a>
+      {sentence.after}
+    </p>
   )
 }
 
@@ -342,7 +363,10 @@ export function TestingDocument({
           >
             What has been checked
           </h2>
-          <Prose>{status.validation.internal.summary}</Prose>
+          <CheckedSummary
+            summary={status.validation.internal.summary}
+            href={TestingDownload.href(status.validation.internal.download)}
+          />
           {resultLine ? (
             <p className="text-sm font-medium text-foreground">{resultLine}</p>
           ) : null}

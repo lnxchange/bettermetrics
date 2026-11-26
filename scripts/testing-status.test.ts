@@ -164,6 +164,36 @@ function htmlFor(status: TestingStatusFile | null, index: CorpusIndex = book) {
 }
 
 const page = htmlFor(fixture)
+assert.equal(
+  page.includes(
+    'href="https://mlwjklukwwaljtwysmna.supabase.co/storage/v1/object/public/treatise-ebooks/aim-pilot.zip"'
+  ),
+  true
+)
+assert.equal(page.includes('available for download'), true)
+assert.equal(page.includes('available on request'), false)
+
+const withoutDownload = JSON.parse(JSON.stringify(fixtureJson)) as Record<
+  string,
+  unknown
+>
+const internal = (
+  withoutDownload.validation as { internal: Record<string, unknown> }
+).internal
+delete internal.download
+const plain = TestingStatus.parse(withoutDownload)
+assert.ok(plain)
+assert.equal(htmlFor(plain).includes('available on request'), true)
+assert.equal(htmlFor(plain).includes('aim-pilot.zip'), false)
+
+const hostile = JSON.parse(JSON.stringify(fixtureJson)) as {
+  validation: { internal: { download: { href: string } } }
+}
+hostile.validation.internal.download.href = 'javascript:alert(1)'
+const refused = TestingStatus.parse(hostile)
+assert.ok(refused)
+assert.equal(refused.validation.internal.download, undefined)
+assert.equal(htmlFor(refused).includes('available on request'), true)
 const headings = [
   'What would count against the framework',
   'What has been checked',
@@ -306,6 +336,7 @@ const fixedSources = [
   'lib/testing-basis.ts',
   'lib/testing-chip.ts',
   'lib/testing-metadata.ts',
+  'lib/testing-download.ts',
   'app/testing/page.tsx',
   'app/testing/fixture/page.tsx'
 ]

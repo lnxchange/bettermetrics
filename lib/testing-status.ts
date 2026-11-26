@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TestingDownload } from './testing-download'
 
 const isoDate = z
   .string()
@@ -53,6 +54,13 @@ const testingStatusSchema = z.object({
     internal: z.object({
       summary: z.string(),
       toolchain: z.string(),
+      download: z.preprocess(value => {
+        if (!value || typeof value !== 'object') return undefined
+        const href = (value as { href?: unknown }).href
+        return typeof href === 'string' && TestingDownload.safe(href)
+          ? { href }
+          : undefined
+      }, z.object({ href: z.string() }).optional()),
       results: z.array(
         z.object({
           area: z.string(),
