@@ -2,6 +2,7 @@ import { createRequire } from 'module'
 import { readFileSync } from 'fs'
 import { MinimalArchitecture } from '../lib/architecture-data'
 import { ArchitectureSpecifications } from '../lib/architecture-specifications'
+import { ArchitecturePrompt } from '../lib/architecture-prompt'
 import { ArchitectureFragments } from './architecture-fragments'
 
 const require = createRequire(__filename)
@@ -264,8 +265,27 @@ async function main() {
     'the prompt names four primary components'
   )
   assert(
-    prompt.includes('not a fifth processing component'),
-    'the prompt keeps the Belief Register off the processing count'
+    !prompt.includes("persistent store of the Thinker's committed posteriors"),
+    'the shortened Belief Register line is gone'
+  )
+  assert(
+    !prompt.includes('The Belief Register is the state component.'),
+    'the redundant Belief Register note is gone'
+  )
+  assert(
+    prompt.includes('ArchitecturePrompt.specification'),
+    'the prompt takes the Belief Register from the Chapter 4 specification'
+  )
+  const filled = ArchitecturePrompt.apply(
+    'The AIM Framework rests on the Minimal Architecture.\n{{BELIEF_REGISTER}}\n',
+    belief
+  )
+  assert(
+    filled.includes(belief) &&
+      filled.includes('not a fifth processing component') &&
+      filled.includes('$b_t$') &&
+      !filled.includes('{{BELIEF_REGISTER}}'),
+    'the prompt keeps the Belief Register off the processing count by using the specification'
   )
   for (const file of [
     'app/page.tsx',

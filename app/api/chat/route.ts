@@ -6,14 +6,24 @@ import { revalidatePath } from 'next/cache'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { VectorSearch } from '@/lib/rag/vector-search'
-import { extendContextSnapshot, treatiseContext } from '@/lib/rag/treatise-context'
+import {
+  extendContextSnapshot,
+  treatiseContext
+} from '@/lib/rag/treatise-context'
 import { ChatProvider } from '@/lib/chat-provider-ids'
-import { loadChatSettings, PAUSED_MESSAGE, questionAllowed, recordChatUsage } from '@/lib/chat-settings'
+import {
+  loadChatSettings,
+  PAUSED_MESSAGE,
+  questionAllowed,
+  recordChatUsage
+} from '@/lib/chat-settings'
 import { generate, LlmError, readerMessage } from '@/lib/llm'
 import { ChatAudit } from '@/lib/chat-audit'
 import { readActiveKey } from '@/lib/user-api-keys'
 import { adminSiteKey, isSiteAdmin } from '@/lib/site-keys'
 import { TestingStatus } from '@/lib/testing-status'
+import { ArchitecturePrompt } from '@/lib/architecture-prompt'
+import { loadTreatiseChapter } from '@/lib/treatise'
 import { createHash } from 'crypto'
 
 type SearchResult = {
@@ -42,12 +52,23 @@ async function loadContextSnapshot(
   id: string,
   userId: string
 ) {
-  const { data } = await supabase.from('chats').select('payload').eq('id', id).eq('user_id', userId).maybeSingle()
-  const snapshot = (data?.payload as { contextSnapshot?: { text?: string; sectionIds?: string[] } } | null)?.contextSnapshot
+  const { data } = await supabase
+    .from('chats')
+    .select('payload')
+    .eq('id', id)
+    .eq('user_id', userId)
+    .maybeSingle()
+  const snapshot = (
+    data?.payload as {
+      contextSnapshot?: { text?: string; sectionIds?: string[] }
+    } | null
+  )?.contextSnapshot
   if (!snapshot || typeof snapshot.text !== 'string') return null
   return {
     text: snapshot.text,
-    sectionIds: Array.isArray(snapshot.sectionIds) ? snapshot.sectionIds.filter(id => typeof id === 'string') : []
+    sectionIds: Array.isArray(snapshot.sectionIds)
+      ? snapshot.sectionIds.filter(id => typeof id === 'string')
+      : []
   }
 }
 
@@ -56,7 +77,10 @@ function trim(text: string, maxChars: number) {
   return text.slice(0, maxChars - 1) + '…'
 }
 
-function prepareRagContext(results: SearchResult[], userQueryLength: number = 0) {
+function prepareRagContext(
+  results: SearchResult[],
+  userQueryLength: number = 0
+) {
   // Use 12 chunks for longer questions, 10 for shorter — larger chunks (2500 chars each)
   // give Claude ~25-30K chars of context per query for deep AIM Framework reasoning
   const topK = userQueryLength > 100 ? 12 : 10
@@ -64,7 +88,10 @@ function prepareRagContext(results: SearchResult[], userQueryLength: number = 0)
     .sort((a, b) => (b.similarity_score ?? 0) - (a.similarity_score ?? 0))
     .slice(0, topK * 2) // Get more candidates for deduplication
 
-  const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(0, topK)
+  const unique = dedupeBy(top, r => `${r.document_id}:${r.chunk_index}`).slice(
+    0,
+    topK
+  )
   const trimmed = unique.map(r => {
     const text = trim(r.chunk_text, 3000)
     // Treatise chunks already open with "[Treatise, Chapter N: Title]"
@@ -98,12 +125,12 @@ Users are on aimtheory.org. Most have arrived from a short page on the site and 
 Function as a universal translator for the human behavioural sciences, mapping phenomena (economics, politics, law, psychology, organisations) onto the AIM taxonomy and architecture, and showing which components, channels and results the explanation depends on.
 
 **THE MINIMAL ARCHITECTURE (Treatise, Chapter 4 and Appendix A):**
-The AIM Framework rests on the Minimal Architecture: four primary components and the operational loop that couples them under a finite energy budget. The Belief Register is the state component. It is not a fifth processing component.
+The AIM Framework rests on the Minimal Architecture: four primary components and the operational loop that couples them under a finite energy budget.
 - Decision Hub (Chapter 4, Section 4.3.4): integrator and action-selector. It receives the signed outputs of the Body Manager, the Thinker and the Observer, integrates them into one tag-stripped Scalar, and selects an action. U(x) = w_A·U_A(x) + w_I·U_I(x) + w_M·U_M(x), with the weights summing to 1 and state-dependent.
 - Body Manager (Chapter 4, Section 4.3.1): homeostatic-deficit signaller. It emits Appetites (A) and terminates on consumption or repair.
 - Thinker (Chapter 4, Section 4.3.2): prior-maintainer and Bayesian ground-resolver. It emits Intrinsic Motivation (I).
 - Observer (Chapter 4, Section 4.3.3): continuous conditional Salience assessor over the perceived Object field. It emits the Mimetic input (M).
-- Belief Register (Chapter 4, Section 4.3.6): persistent store of the Thinker's committed posteriors, written only by the Thinker and read by the Observer. It computes nothing.
+{{BELIEF_REGISTER}}
 The operational loop (Chapter 4, Section 4.4): at each cycle the Body Manager reports its deficit, the Observer assesses the field conditioned on the Belief Register, the Thinker's previous resolution contributes its direct input, and the Decision Hub compresses the three streams into a tag-stripped Scalar and selects an action. Where the Scalar poses an open question, the Thinker resolves it and writes the posterior to the Belief Register, which conditions the Observer's next cycle. The mathematics of that loop is Appendix A.
 Signed Valuation Principle (Chapter 4, Section 4.3.5): each of the three inputs is a signed scalar.
 Key derived terms: Salience-Deficit Conflation, Mimetic Premium and Status (Status-Premium Duality), the Mimetic Treadmill, Behavioural Signatures, the Two-Question Diagnostic (Q1, A-Test: "Would I still need this if my survival were secure?"; Q2, I-Test: "Would I still want this if no one could ever see me having or doing it?"; failing both identifies M by elimination), I-Override, the Knowledge Patch and its Seven Operations, Crisis State Architecture, Relationalism.
@@ -182,7 +209,6 @@ This conversation has already begun. Continue from what has been said. Do not de
 const DEFINITION_RULE = `**DEFINITIONS ARE MANDATORY:**
 A supplied Treatise Definition is the meaning of that word, including where ordinary usage differs. State it and use it. The supplied chapter is the argument. Do not answer from the ordinary meaning of the word, and do not set the definition aside.`
 
-
 // 5. Natural, conversational responses without forced structures
 // 6. Superior at avoiding unnecessary disclaimers and meta-commentary
 // 7. 8K output tokens for complete answers
@@ -207,13 +233,18 @@ export async function POST(req: Request) {
     }
 
     const cookieStore = cookies()
-    
+
     // Check if Supabase is configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
       ChatAudit.failed()
-      return new Response('Service unavailable - Supabase not configured', { status: 503 })
+      return new Response('Service unavailable - Supabase not configured', {
+        status: 503
+      })
     }
-    
+
     // Create Supabase client
     let supabase: ReturnType<typeof createRouteHandlerClient<Database>>
     try {
@@ -224,14 +255,17 @@ export async function POST(req: Request) {
       ChatAudit.failed()
       return new Response('Service unavailable', { status: 503 })
     }
-    
+
     const json = await req.json()
     const { messages, previewToken, mode } = json
 
     const settings = await loadChatSettings()
     if (settings.paused) {
       return new Response(
-        JSON.stringify({ error: 'chat_paused', message: settings.pausedMessage }),
+        JSON.stringify({
+          error: 'chat_paused',
+          message: settings.pausedMessage
+        }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }
       )
     }
@@ -258,7 +292,8 @@ export async function POST(req: Request) {
     // Every request resends the whole conversation, so its size is the input
     // cost. Guests get a short, small conversation; everyone gets a ceiling.
     const conversationChars = messages.reduce(
-      (sum: number, msg: any) => sum + (typeof msg?.content === 'string' ? msg.content.length : 0),
+      (sum: number, msg: any) =>
+        sum + (typeof msg?.content === 'string' ? msg.content.length : 0),
       0
     )
     const maxMessages = settings.maxMessages
@@ -301,7 +336,8 @@ export async function POST(req: Request) {
           return new Response(
             JSON.stringify({
               error: 'api_key_required',
-              message: 'Add an API key in your profile. Questions are billed to that key.'
+              message:
+                'Add an API key in your profile. Questions are billed to that key.'
             }),
             { status: 403, headers: { 'Content-Type': 'application/json' } }
           )
@@ -311,7 +347,8 @@ export async function POST(req: Request) {
         return new Response(
           JSON.stringify({
             error: 'provider_off',
-            message: 'That provider is turned off. Choose another key on your profile.'
+            message:
+              'That provider is turned off. Choose another key on your profile.'
           }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }
         )
@@ -327,7 +364,9 @@ export async function POST(req: Request) {
     }
 
     const ipHash = createHash('sha256')
-      .update(req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown')
+      .update(
+        req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+      )
       .digest('hex')
       .slice(0, 32)
     const throttle = await questionAllowed(userId, ipHash, settings)
@@ -356,7 +395,9 @@ export async function POST(req: Request) {
     const userQuery = messages[messages.length - 1]?.content || ''
     // Follow-ups ("and in chapter 12?") need the earlier questions to retrieve well
     const recentUserText = messages
-      .filter((msg: any) => msg.role === 'user' && typeof msg.content === 'string')
+      .filter(
+        (msg: any) => msg.role === 'user' && typeof msg.content === 'string'
+      )
       .slice(-3)
       .map((msg: any) => msg.content)
       .join('\n')
@@ -364,14 +405,24 @@ export async function POST(req: Request) {
 
     // Search for relevant context using RAG with strict AIM definition
     let ragContext = ''
-    let contextSnapshot: { text: string; sectionIds: string[] } = { text: '', sectionIds: [] }
+    let contextSnapshot: { text: string; sectionIds: string[] } = {
+      text: '',
+      sectionIds: []
+    }
     let hasRagResults = false
-    const savedSnapshot = userId && json.id ? await loadContextSnapshot(supabase, json.id, userId) : null
+    const savedSnapshot =
+      userId && json.id
+        ? await loadContextSnapshot(supabase, json.id, userId)
+        : null
     try {
       // Check if required environment variables are available for RAG
-      if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      if (
+        !process.env.OPENAI_API_KEY ||
+        !process.env.SUPABASE_SERVICE_ROLE_KEY
+      ) {
         ChatAudit.failed()
-        ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
+        ragContext =
+          '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
       } else {
         const vectorSearch = new VectorSearch()
         // Dynamic threshold based on query length - more permissive for complex questions
@@ -379,19 +430,32 @@ export async function POST(req: Request) {
         // A named glossary term, or an entry concentrated on a phrase in the
         // question, brings its definition and the section in its derivation
         // line. Search would let other passages compete with that, so it stays out.
-        const treatise = await treatiseContext(retrievalQuery, settings.treatiseContextMaxChars).catch(error => {
+        const treatise = await treatiseContext(
+          retrievalQuery,
+          settings.treatiseContextMaxChars
+        ).catch(error => {
           ChatAudit.failed()
           return { text: '', grounded: false, sectionIds: [] as string[] }
         })
         if (savedSnapshot?.text) {
-          contextSnapshot = extendContextSnapshot(savedSnapshot, treatise, settings.treatiseContextMaxChars)
+          contextSnapshot = extendContextSnapshot(
+            savedSnapshot,
+            treatise,
+            settings.treatiseContextMaxChars
+          )
           ragContext = contextSnapshot.text
           hasRagResults = true
         } else {
           const results = treatise.grounded
             ? []
             : await vectorSearch
-                .searchSimilarDocuments(retrievalQuery, 24, 'rag', threshold, 'aim-treatise')
+                .searchSimilarDocuments(
+                  retrievalQuery,
+                  24,
+                  'rag',
+                  threshold,
+                  'aim-treatise'
+                )
                 .catch(error => {
                   ChatAudit.failed()
                   return []
@@ -400,9 +464,15 @@ export async function POST(req: Request) {
           if (hasRagResults) {
             const filteredResults = results.map(result => ({
               ...result,
-              chunk_text: result.chunk_text.replace(/Chantal McNaught/gi, 'a PhD candidate')
+              chunk_text: result.chunk_text.replace(
+                /Chantal McNaught/gi,
+                'a PhD candidate'
+              )
             }))
-            const contextBlock = [treatise.text, prepareRagContext(filteredResults, userQuery.length)]
+            const contextBlock = [
+              treatise.text,
+              prepareRagContext(filteredResults, userQuery.length)
+            ]
               .filter(Boolean)
               .join('\n\n---\n\n')
               .replace(/Chantal McNaught/gi, 'a PhD candidate')
@@ -416,7 +486,10 @@ export async function POST(req: Request) {
 5. If the Context does not fully address the question, state what IS covered and what is missing.
 6. DO NOT invent analogies or connections not explicitly present in the Context.`
             ragContext = `Context:\n${contextBlock}\n\n${grounding}`
-            contextSnapshot = { text: ragContext, sectionIds: treatise.sectionIds }
+            contextSnapshot = {
+              text: ragContext,
+              sectionIds: treatise.sectionIds
+            }
           } else {
             ragContext = `\n\nINSTRUCTION: No specific AIM research documents matched this query. Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.`
             contextSnapshot = { text: ragContext, sectionIds: [] }
@@ -426,7 +499,8 @@ export async function POST(req: Request) {
     } catch (error) {
       ChatAudit.failed()
       // Continue without context if RAG fails - but with strict grounding
-      ragContext = '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
+      ragContext =
+        '\n\nINSTRUCTION: Apply the core AIM three-source model (Appetites/Intrinsic/Mimetic) and first principles to answer fully. DO NOT invent or hallucinate content beyond the established AIM taxonomy.'
     }
 
     const testingBrief = await TestingStatus.forChat().catch(() => '')
@@ -437,10 +511,15 @@ export async function POST(req: Request) {
     // (system prompt, then the Treatise context) can be cached. The mode
     // instructions change between the first reply and follow-ups, so they come
     // last and are not cached.
-    const continuing = messages.some((msg: { role?: string }) => msg.role === 'assistant')
-    const modeInstructions = mode === 'academic'
-      ? `${ACADEMIC_STYLE}\n${continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST}`.trim()
-      : mode === 'layperson'
+    const continuing = messages.some(
+      (msg: { role?: string }) => msg.role === 'assistant'
+    )
+    const modeInstructions =
+      mode === 'academic'
+        ? `${ACADEMIC_STYLE}\n${
+            continuing ? ACADEMIC_CONTINUE : ACADEMIC_FIRST
+          }`.trim()
+        : mode === 'layperson'
         ? (continuing ? LAYPERSON_CONTINUE : LAYPERSON_FIRST).trim()
         : ''
     const model = settings.models[provider]
@@ -455,7 +534,10 @@ export async function POST(req: Request) {
 
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: 'api_key_required', message: 'Add an API key in your profile.' }),
+        JSON.stringify({
+          error: 'api_key_required',
+          message: 'Add an API key in your profile.'
+        }),
         { status: 403, headers: { 'Content-Type': 'application/json' } }
       )
     }
@@ -473,11 +555,32 @@ export async function POST(req: Request) {
     let inputTokens = 0
     let outputTokens = 0
     let cachedTokens = 0
+    let systemPrompt: string
+    try {
+      const chapter = await loadTreatiseChapter('4')
+      if (!chapter?.markdown) {
+        throw new Error('Chapter 4 is not published.')
+      }
+      systemPrompt = ArchitecturePrompt.apply(
+        AIM_SYSTEM_PROMPT,
+        ArchitecturePrompt.specification(chapter.markdown)
+      )
+    } catch {
+      return new Response(
+        JSON.stringify({
+          error: 'unavailable',
+          message:
+            'The treatise is unavailable just now. Please try again shortly.'
+        }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
     try {
       const result = await generate(provider, {
         apiKey,
         model,
-        systemPrompt: AIM_SYSTEM_PROMPT,
+        systemPrompt,
         treatiseContext: ragContext.trim(),
         modeInstructions,
         messages: chatMessages,
@@ -511,7 +614,10 @@ export async function POST(req: Request) {
         ipHash
       })
       return new Response(
-        JSON.stringify({ error: 'provider_error', message: readerMessage(code) }),
+        JSON.stringify({
+          error: 'provider_error',
+          message: readerMessage(code)
+        }),
         { status: 502, headers: { 'Content-Type': 'application/json' } }
       )
     }
@@ -552,11 +658,14 @@ export async function POST(req: Request) {
         }
 
         ChatAudit.saved({ id, userId, messageCount: payload.messages.length })
-        await supabase.from('chats').upsert({
-          id,
-          payload,
-          user_id: userId
-        }).throwOnError()
+        await supabase
+          .from('chats')
+          .upsert({
+            id,
+            payload,
+            user_id: userId
+          })
+          .throwOnError()
 
         // Revalidate chat pages so sidebar updates with new chat
         revalidatePath('/chat')
@@ -577,7 +686,7 @@ export async function POST(req: Request) {
 
         for (let i = 0; i < words.length; i += chunkSize) {
           const chunk = words.slice(i, i + chunkSize).join(' ')
-          const separator = (i + chunkSize < words.length) ? ' ' : ''
+          const separator = i + chunkSize < words.length ? ' ' : ''
           controller.enqueue(encoder.encode(chunk + separator))
         }
 
@@ -601,17 +710,20 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
+        Connection: 'keep-alive'
       }
     })
   } catch (error) {
     ChatAudit.failed()
-    return new Response(JSON.stringify({
-      error: 'Chat request failed',
-      message: 'The model could not answer. Try again in a moment.'
-    }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return new Response(
+      JSON.stringify({
+        error: 'Chat request failed',
+        message: 'The model could not answer. Try again in a moment.'
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   }
 }

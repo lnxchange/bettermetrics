@@ -6,6 +6,7 @@ import { TestingDocument } from '../components/testing-page'
 import { CorpusIndex, emptyCorpusIndex } from '../lib/treatise-citations'
 import { TestingBasis } from '../lib/testing-basis'
 import { TestingChip } from '../lib/testing-chip'
+import { TestingDownload } from '../lib/testing-download'
 import { TestingStatus, TestingStatusFile } from '../lib/testing-status'
 import fixtureJson from '../test/sample-testing-status.json'
 
@@ -164,6 +165,97 @@ function htmlFor(status: TestingStatusFile | null, index: CorpusIndex = book) {
 }
 
 const page = htmlFor(fixture)
+assert.equal(
+  page.includes(
+    'href="https://mlwjklukwwaljtwysmna.supabase.co/storage/v1/object/public/treatise-ebooks/aim-pilot.zip"'
+  ),
+  true
+)
+assert.equal(page.includes('available for download'), true)
+assert.equal(page.includes('available on request'), false)
+
+const withoutDownload = JSON.parse(JSON.stringify(fixtureJson)) as Record<
+  string,
+  unknown
+>
+const internal = (
+  withoutDownload.validation as { internal: Record<string, unknown> }
+).internal
+delete internal.download
+const plain = TestingStatus.parse(withoutDownload)
+assert.ok(plain)
+assert.equal(htmlFor(plain).includes('available on request'), true)
+assert.equal(htmlFor(plain).includes('aim-pilot.zip'), false)
+
+const hostile = JSON.parse(JSON.stringify(fixtureJson)) as {
+  validation: { internal: { download: { href: string } } }
+}
+hostile.validation.internal.download.href = 'javascript:alert(1)'
+const refused = TestingStatus.parse(hostile)
+assert.ok(refused)
+assert.equal(refused.validation.internal.download, undefined)
+assert.equal(htmlFor(refused).includes('available on request'), true)
+
+const archiveHost = TestingDownload.host()
+const archivePath = TestingDownload.objectPath
+const archiveUrl = `https://${archiveHost}${archivePath}`
+assert.equal(TestingDownload.safe(archiveUrl), true, 'the project host passes')
+assert.equal(
+  TestingDownload.safe(`https://example.com${archivePath}`),
+  false,
+  'a different host with the same path is rejected'
+)
+assert.equal(
+  TestingDownload.safe(`http://${archiveHost}${archivePath}`),
+  false,
+  'http is rejected'
+)
+assert.equal(
+  TestingDownload.safe(`https://${archiveHost}.evil.example${archivePath}`),
+  false,
+  'a host with the project name as a prefix label is rejected'
+)
+assert.equal(
+  TestingDownload.safe(`https://evil.${archiveHost}${archivePath}`),
+  false,
+  'a host with an extra label in front of the project is rejected'
+)
+assert.equal(
+  TestingDownload.safe(`https://not${archiveHost}${archivePath}`),
+  false,
+  'a host that glues text onto the project name is rejected'
+)
+const foreign = JSON.parse(JSON.stringify(fixtureJson)) as {
+  validation: { internal: { download: { href: string } } }
+}
+foreign.validation.internal.download.href = `https://example.com${archivePath}`
+const foreignStatus = TestingStatus.parse(foreign)
+assert.ok(foreignStatus)
+assert.equal(foreignStatus.validation.internal.download, undefined)
+assert.equal(htmlFor(foreignStatus).includes('available on request'), true)
+assert.equal(htmlFor(foreignStatus).includes('available for download'), false)
+
+const previousSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://other-project.supabase.co'
+try {
+  assert.equal(TestingDownload.host(), 'other-project.supabase.co')
+  assert.equal(
+    TestingDownload.safe(
+      'https://other-project.supabase.co/storage/v1/object/public/treatise-ebooks/aim-pilot.zip'
+    ),
+    true
+  )
+  assert.equal(
+    TestingDownload.safe(
+      `https://${TestingDownload.knownHost}/storage/v1/object/public/treatise-ebooks/aim-pilot.zip`
+    ),
+    false,
+    'the known host is rejected when another project is configured'
+  )
+} finally {
+  if (previousSupabaseUrl === undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL
+  else process.env.NEXT_PUBLIC_SUPABASE_URL = previousSupabaseUrl
+}
 const headings = [
   'What would count against the framework',
   'What has been checked',
@@ -306,6 +398,7 @@ const fixedSources = [
   'lib/testing-basis.ts',
   'lib/testing-chip.ts',
   'lib/testing-metadata.ts',
+  'lib/testing-download.ts',
   'app/testing/page.tsx',
   'app/testing/fixture/page.tsx'
 ]
