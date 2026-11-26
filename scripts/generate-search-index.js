@@ -147,8 +147,14 @@ function generateSearchIndex() {
   pageFiles.forEach(filePath => {
     try {
       const url = getUrlFromPath(filePath);
+
+      // The feature-image tool is unlisted. Keep it out of site search.
+      if (url === '/tools' || url.startsWith('/tools/')) {
+        return;
+      }
+
       const { title, h1s, h2s, h3s, paragraphs } = extractContent(filePath, url);
-      
+
       // Skip if no meaningful content
       if (!title && h1s.length === 0 && h2s.length === 0) {
         return;
