@@ -1,6 +1,7 @@
 import { createRequire } from 'module'
 import { readFileSync } from 'fs'
 import { MinimalArchitecture } from '../lib/architecture-data'
+import { ArchitectureSpecifications } from '../lib/architecture-specifications'
 import { ArchitectureFragments } from './architecture-fragments'
 
 const require = createRequire(__filename)
@@ -155,17 +156,23 @@ async function main() {
     'premise 9 keeps the approved line'
   )
   const homepage = readFileSync('app/page.tsx', 'utf8')
-  const heroSection = homepage.slice(0, homepage.indexOf('How the system works'))
+  const heroSection = homepage.slice(
+    0,
+    homepage.indexOf('How the system works')
+  )
   const heroParagraph = heroSection.match(
     /<p className="max-w-3xl text-xl text-blue-100">([\s\S]*?)<\/p>/
   )
   if (!heroParagraph) throw new Error('the homepage hero paragraph is present')
   const heroBody = heroParagraph[1]
-  const heroText = heroBody.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+  const heroText = heroBody
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
   assert(
     heroText ===
       'The AIM Framework is a model of the system that produces wanting. Three systems in the brain each produce a signal. One tracks what the body needs (Appetites). One runs thinking and problem-solving, and rewards what is worth doing for its own sake (Intrinsic Motivation). One tracks what stands out as salient around you (Mimetic Desire). A Decision Hub merges them into a single sense of how much you want something, and acts on it.',
-    'the hero uses Lex\'s replacement sentence'
+    "the hero uses Lex's replacement sentence"
   )
   assert(
     !heroSection.includes('four primary components') &&
@@ -179,7 +186,8 @@ async function main() {
     ['Decision Hub', '/glossary/decision-hub']
   ] as const) {
     assert(
-      heroBody.includes(`href="${slug}"`) && heroBody.includes(`>${term}</Link>`),
+      heroBody.includes(`href="${slug}"`) &&
+        heroBody.includes(`>${term}</Link>`),
       `the hero links ${term} to ${slug}`
     )
   }
@@ -201,11 +209,30 @@ async function main() {
     MinimalArchitecture.lead.length === 1,
     'the architecture intro is one paragraph'
   )
+  const belief = ArchitectureSpecifications.of(
+    [
+      '### 4.3.6 The Belief Register',
+      '',
+      '**Function-only specification.** The Belief Register ($b_t$ in Appendix A.5.6) is the architectural form in which the Thinker\u2019s current posteriors are made available. The Belief Register is the architecture\u2019s state component: the persistent store over the Hypothesis Space, written only by the Thinker, read by the Observer, and computing nothing. The Belief Register is not a fifth processing component, and the minimality of the specification is a claim about the components that compute, which remain four.',
+      '',
+      '### 4.3.7 The Thinker\u2019s Default Priors',
+      '',
+      '**Function-only specification.** A later section must not be read as the Belief Register.'
+    ].join('\n'),
+    '4.3.6'
+  )
   assert(
-    MinimalArchitecture.components
-      .find(component => component.name === 'Belief Register')
-      ?.text.includes('not a fifth processing component') === true,
-    'the Belief Register formal definition stays off the processing count'
+    belief.includes('not a fifth processing component') &&
+      belief.includes('$b_t$') &&
+      belief.includes('state component') &&
+      !belief.includes('A later section'),
+    'the Belief Register formal definition stays off the processing count and keeps its mathematics'
+  )
+  assert(
+    !readFileSync('lib/architecture-data.ts', 'utf8').includes(
+      'primary function is action-selection'
+    ),
+    'the architecture data does not paste a formal definition'
   )
 
   const prompt = readFileSync('app/api/chat/route.ts', 'utf8')
