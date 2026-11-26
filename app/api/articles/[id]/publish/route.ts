@@ -3,6 +3,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { Database } from '@/lib/db_types'
 import { optimizeArticleSEO } from '@/lib/seo-optimizer'
+import { ArticleGate } from '@/lib/publishing/gate'
+import { PublishingConfig } from '@/lib/publishing/config'
 
 export async function POST(
   req: NextRequest,
@@ -14,6 +16,23 @@ export async function POST(
 
     const body = await req.json()
     const { linkedinMessage, facebookMessage, xMessage } = body
+
+    const { data: existing, error: readError } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (readError || !existing) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    if (ArticleGate.blocksManualPublish(ArticleGate.fromRow(existing), PublishingConfig.gate(process.env, new Date()))) {
+      return NextResponse.json(
+        { error: 'This article stays off the public site until its Monday, Wednesday or Friday slot, on or after 11 January 2027.' },
+        { status: 409 }
+      )
+    }
 
     // 1. Update article status to published
     const { data: article, error: articleError } = await supabase

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/lib/db_types'
+import { PublicArticles } from '@/lib/publishing/public'
+import { PublishingSettings } from '@/lib/publishing/settings'
 import { SITE_URL } from '@/lib/site'
 import { TreatiseAddress } from '@/lib/treatise-address'
 import { TreatisePlacement } from '@/lib/treatise-placement'
@@ -22,6 +24,8 @@ const STATIC_ROUTES = [
   '/glossary',
   '/treatise',
   '/articles',
+  '/articles/feed.xml',
+  '/articles/atom.xml',
   '/about',
   '/diagnostic',
   '/contact',
@@ -69,11 +73,7 @@ async function collectSitemapEntries(): Promise<Entry[]> {
   if (!supabase) return entries
 
   const [articles, chapters, terms] = await Promise.all([
-    supabase
-      .from('articles')
-      .select('slug, updated_at, published_at')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false }),
+    PublicArticles.list(await PublishingSettings.gate()).catch(() => []),
     supabase
       .from('treatise_chapters')
       .select('slug, title, updated_at, source_date')
@@ -85,7 +85,7 @@ async function collectSitemapEntries(): Promise<Entry[]> {
       .limit(1000)
   ])
 
-  for (const article of articles.data ?? []) {
+  for (const article of articles) {
     // Redirected to /glossary in next.config.js.
     if (article.slug === '260106-chapter-2') continue
     entries.push({
