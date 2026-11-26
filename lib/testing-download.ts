@@ -9,8 +9,35 @@
 export class TestingDownload {
   static readonly phrase = 'available on request'
   static readonly linkText = 'available for download'
-  static readonly objectPath =
-    '/storage/v1/object/public/treatise-ebooks/aim-pilot.zip'
+  static readonly objectPrefix = '/storage/v1/object/public/treatise-ebooks/'
+  static readonly objectName = 'aim-pilot.zip'
+  static readonly objectPath = `${TestingDownload.objectPrefix}${TestingDownload.objectName}`
+  /** Public storage host of the treatise-ebooks bucket. */
+  static readonly knownHost = 'mlwjklukwwaljtwysmna.supabase.co'
+
+  /**
+   * The storage host for this deployment. NEXT_PUBLIC_SUPABASE_URL is the
+   * project the testing page already reads. When that value is missing or
+   * not an https URL, the known project host stands.
+   */
+  static host(): string {
+    const configured = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!configured) return TestingDownload.knownHost
+    try {
+      const url = new URL(configured)
+      if (url.protocol === 'https:' && url.hostname !== '') return url.hostname
+    } catch {
+      return TestingDownload.knownHost
+    }
+    return TestingDownload.knownHost
+  }
+
+  static matchesPath(pathname: string): boolean {
+    return (
+      pathname.startsWith(TestingDownload.objectPrefix) &&
+      pathname.endsWith(`/${TestingDownload.objectName}`)
+    )
+  }
 
   static safe(href: string): boolean {
     let url: URL
@@ -23,7 +50,9 @@ export class TestingDownload {
       url.protocol === 'https:' &&
       url.username === '' &&
       url.password === '' &&
-      url.pathname === TestingDownload.objectPath
+      url.port === '' &&
+      url.hostname === TestingDownload.host() &&
+      TestingDownload.matchesPath(url.pathname)
     )
   }
 
