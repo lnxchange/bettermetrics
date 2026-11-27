@@ -5,6 +5,9 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://aimtheory.org').replace(/\/$/, '')
 export const SITE_NAME = 'The AIM Framework'
 export const SITE_AUTHOR = 'Yule Guttenbeil'
+/** ORCID iD for the author. Display it as a full https URI, with the iD icon. */
+export const SITE_AUTHOR_ORCID = '0009-0007-7306-7651'
+export const SITE_AUTHOR_ORCID_URL = `https://orcid.org/${SITE_AUTHOR_ORCID}`
 export const SITE_LOGO_PATH = '/aim-logo.png'
 export const SITE_OG_IMAGE_PATH = '/aim-og.png'
 

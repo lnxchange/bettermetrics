@@ -1,4 +1,4 @@
-import { SITE_LOGO_PATH, SITE_NAME, SITE_URL } from '@/lib/site'
+import { SITE_AUTHOR_ORCID_URL, SITE_LOGO_PATH, SITE_NAME, SITE_URL } from '@/lib/site'
 
 export function AIMJsonLd() {
   const structuredData = {
@@ -89,7 +89,13 @@ export function AIMJsonLd() {
         "jobTitle": "Principal Commercial Lawyer & Behavioral Systems Architect",
         "description": "Creator of the AIM Framework. Technology lawyer, sound engineer and music producer. Specializes in definitional systems architecture and cross-disciplinary synthesis in behavioral sciences.",
         "url": "https://aimtheory.org",
+        "identifier": {
+          "@type": "PropertyValue",
+          "propertyID": "ORCID",
+          "value": SITE_AUTHOR_ORCID_URL
+        },
         "sameAs": [
+          SITE_AUTHOR_ORCID_URL,
           "https://aimtheory.org"
         ],
         "knowsAbout": [

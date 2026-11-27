@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { HiArrowRight } from 'react-icons/hi'
 import { AskAI, AskAIGroup } from '@/components/ask-ai'
 import { FrameworkCore } from '@/components/framework-core'
-import { SITE_OG_IMAGE } from '@/lib/site'
+import { SITE_AUTHOR_ORCID_URL, SITE_OG_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'About the Author and the AIM Framework' },
@@ -52,6 +52,21 @@ const partTwo = [
   'The Dissolution of Individualism and the Derivation of Relationalism', 'The Governance Architecture'
 ]
 
+function OrcidIcon() {
+  return (
+    <svg viewBox="0 0 256 256" aria-hidden="true" className="h-5 w-5 shrink-0">
+      <path
+        fill="#A6CE39"
+        d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"
+      />
+      <path
+        fill="#fff"
+        d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7 0-21.5-13.7-39.7-43.7-39.7h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1-5.6 0-10.1-4.6-10.1-10.1 0-5.6 4.5-10.1 10.1-10.1 5.6 0 10.1 4.5 10.1 10.1z"
+      />
+    </svg>
+  )
+}
+
 export default function AboutPage() {
   return (
     <div className="bg-white">
@@ -76,7 +91,16 @@ export default function AboutPage() {
               className="h-40 w-40 shrink-0 rounded-lg object-cover shadow"
             />
             <div>
-              <h2 className="mb-3 text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
+              <h2 className="text-3xl font-bold text-gray-900">Yule Guttenbeil</h2>
+              <a
+                href={SITE_AUTHOR_ORCID_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mb-3 mt-2 inline-flex max-w-full items-center gap-2 text-sm text-gray-800 hover:text-blue-800"
+              >
+                <OrcidIcon />
+                <span className="underline underline-offset-2 break-all">{SITE_AUTHOR_ORCID_URL}</span>
+              </a>
               <p className="text-lg text-gray-700">
                 I&apos;m <strong>Yule Guttenbeil</strong>, the person who formulated the AIM
                 Framework and creator of aimtheory.org.
