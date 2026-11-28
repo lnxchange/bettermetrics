@@ -12,6 +12,8 @@ export class AccountDeletion {
     if (chats.error) return false
     const keys = await client.from('user_api_keys').delete().eq('user_id', userId)
     if (keys.error) return false
+    const places = await client.from('reading_places').delete().eq('user_id', userId)
+    if (places.error) return false
     await client.from('api_key_save_attempts').delete().eq('bucket', `user:${userId}`)
     const suppressed = await MailingList.deleted(email, userId)
     if (!suppressed) return false

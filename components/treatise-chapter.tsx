@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArticleContent } from '@/components/article-content'
 import { LicenceNotice } from '@/components/licence-notice'
 import { TableOfContents, TableOfContentsMobile } from '@/components/table-of-contents'
+import { useReadingPlace } from '@/components/use-reading-place'
 import { MoneySections } from '@/lib/money-sections'
+import { ReadingPlace } from '@/lib/reading-place'
 import { TreatiseHeading } from '@/lib/treatise-citations'
 
 function withReturn(href: string, returnTo: string | null) {
@@ -28,7 +30,10 @@ export function TreatiseChapterView({
   missingSection,
   previous,
   next,
-  returnTo = null
+  returnTo = null,
+  slug,
+  signedIn = false,
+  readingPlace = null
 }: {
   label: string
   title: string
@@ -41,10 +46,16 @@ export function TreatiseChapterView({
   previous: { href: string; label: string } | null
   next: { href: string; label: string } | null
   returnTo?: string | null
+  slug: string
+  signedIn?: boolean
+  readingPlace?: ReadingPlace | null
 }) {
   const ids = useMemo(() => new Set(headings.map(heading => heading.id)), [headings])
   const [activeId, setActiveId] = useState('')
   const [hashMissing, setHashMissing] = useState<string | null>(missingSection)
+  const reading = useReadingPlace({ slug, headings, signedIn, place: readingPlace })
+  const readingRef = useRef(reading)
+  readingRef.current = reading
 
   useEffect(() => {
     const alignToHash = () => {
@@ -52,13 +63,14 @@ export function TreatiseChapterView({
       if (!hash) return
       const arrival = MoneySections.arrival(hash, ids)
       if (arrival.kind === 'move') {
-        const next = `#${arrival.id}`
-        if (window.location.hash !== next) {
-          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${next}`)
+        const nextHash = `#${arrival.id}`
+        if (window.location.hash !== nextHash) {
+          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`)
         }
         setHashMissing(null)
         const target = document.getElementById(arrival.id)
         if (!target) return
+        readingRef.current.noteHeading(arrival.id)
         const top = target.getBoundingClientRect().top + window.scrollY - 96
         window.scrollTo({ top, behavior: 'auto' })
         return
@@ -66,6 +78,7 @@ export function TreatiseChapterView({
       if (arrival.kind === 'top') {
         window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
         setHashMissing(null)
+        readingRef.current.noteTop()
         window.scrollTo({ top: 0, behavior: 'auto' })
         return
       }
@@ -76,6 +89,7 @@ export function TreatiseChapterView({
       setHashMissing(null)
       const element = document.getElementById(hash)
       if (!element) return
+      readingRef.current.noteHeading(hash)
       const top = element.getBoundingClientRect().top + window.scrollY - 96
       window.scrollTo({ top, behavior: 'auto' })
     }
@@ -107,6 +121,7 @@ export function TreatiseChapterView({
       setHashMissing(id)
       return
     }
+    reading.noteHeading(id)
     const top = element.getBoundingClientRect().top + window.scrollY - 96
     window.scrollTo({ top, behavior: 'smooth' })
     history.replaceState(null, '', `#${id}`)
