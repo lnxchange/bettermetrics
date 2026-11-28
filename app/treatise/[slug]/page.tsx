@@ -1,7 +1,9 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { TreatiseChapterView } from '@/components/treatise-chapter'
 import { MoneySections } from '@/lib/money-sections'
+import { chapterReadingPlace } from '@/lib/reading-place-store'
 import { TreatiseAddress } from '@/lib/treatise-address'
 import { formatSourceDate, loadTreatiseChapter, loadTreatiseChapters } from '@/lib/treatise'
 import { SITE_OG_IMAGE, metaDescription } from '@/lib/site'
@@ -101,9 +103,11 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
       ? requested
       : null
   const returnTo = chatReturnPath(searchParams?.from)
+  const reading = await chapterReadingPlace(chapter.slug, cookies())
 
   return (
     <TreatiseChapterView
+      key={chapter.slug}
       label={chapter.label}
       title={chapter.title}
       updatedOn={dated}
@@ -115,6 +119,9 @@ export default async function TreatiseChapterPage({ params, searchParams }: Trea
       missingSection={missingSection}
       previous={previous ? { href: previous.href, label: previous.label } : null}
       next={next ? { href: next.href, label: next.label } : null}
+      slug={chapter.slug}
+      signedIn={reading.signedIn}
+      readingPlace={reading.place}
     />
   )
 }

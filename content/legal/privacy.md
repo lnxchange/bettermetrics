@@ -26,17 +26,19 @@ You can read the Site without an account and without giving me any personal info
 - **Your questions and answers:** Conversations are stored only so that you can see your own history. You can delete them, and they are deleted when you close your account.
 - **Technical information:** server logs (IP address, browser type, time of request and errors), used to keep the Site secure and working and kept for 1 day. These logs do not record API keys or the content of questions.
 - **Analytics and cookies:** Vercel Web Analytics counts visits. It identifies a visit with a hash of the request rather than a third-party cookie, and discards that session after 24 hours. Vercel Speed Insights records anonymous loading measurements, including the page, browser, device, country and a web vital. Google Analytics is also used (measurement ID G-8FH4WH9DQH) and sets its own cookies. Sign-in uses essential cookies from Supabase.
+- **Where you left off in a chapter:** Opening a treatise chapter again continues from the place you had reached on that page, including a place you opened from a link on the page. A cookie in your browser holds that place. If you are not signed in, I do not add it to any account. If you are signed in, I save it with your account so the same place is there on another device, and I delete it when you close your account.
 - **Messages you send me** by email or through the contact form.
 
 ## 4. How I collect it
 
-I collect information directly from you when you sign up, save a key or contact me. The only information I receive from your provider is whether it accepted your key. Technical information is collected automatically when you use the Site. You can set your browser to refuse cookies, but you may then be unable to sign in.
+I collect information directly from you when you sign up, save a key or contact me. The only information I receive from your provider is whether it accepted your key. Technical information is collected automatically when you use the Site. You can set your browser to refuse cookies, but you may then be unable to sign in, and a chapter will open at the top.
 
 ## 5. How I use it
 
 I use your information to:
 
 - run your account;
+- open a treatise chapter where you left off;
 - send your requests to your chosen provider;
 - keep the Site secure and prevent misuse;
 - reply to your messages;
@@ -98,7 +100,7 @@ If I become aware that keys or account information have been accessed without au
 
 ## 13. Keeping and deleting information
 
-When you close your account, I delete your account details, your stored key, your stored conversations and your record in my contact database. I keep only your email address on a do-not-contact list, so that you are not emailed again. Deleted information may remain in backups for up to 7 days before it is overwritten.
+When you close your account, I delete your account details, your stored key, your stored conversations, the places you had reached in the treatise, and your record in my contact database. I keep only your email address on a do-not-contact list, so that you are not emailed again. Deleted information may remain in backups for up to 7 days before it is overwritten.
 
 When I no longer need personal information and am not required by law to keep it, I take reasonable steps to destroy it or de-identify it.
 
